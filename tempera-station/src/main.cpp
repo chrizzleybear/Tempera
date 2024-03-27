@@ -30,7 +30,7 @@
 #define B_AW D5
 // Set their colors (rgb value):
 #define B_DW_COLOR {0, 0, 255}
-#define B_MT_COLOR {255, 0, 255}
+#define B_MT_COLOR {255, 40, 10}
 #define B_OO_COLOR {255, 0, 0}
 #define B_AW_COLOR {0, 64, 0}
 
@@ -115,7 +115,19 @@ class LED {
 
 
 
-// ############### SETUP CODE ############### 
+// ############### BLE SETUP ###############
+
+
+
+
+
+
+
+
+
+
+// ############### SETUP CODE ###############
+
 void setup() {
   // Setup for the rgb-led pins
   pinMode(LED_R, OUTPUT);
