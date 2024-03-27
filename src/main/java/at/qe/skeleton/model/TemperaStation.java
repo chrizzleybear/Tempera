@@ -2,6 +2,7 @@ package at.qe.skeleton.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 
 import java.util.UUID;
@@ -15,6 +16,7 @@ public class TemperaStation {
     private UUID id;
     @OneToOne
     private Userx user;
+
     private boolean enabled;
 
     public TemperaStation () {
