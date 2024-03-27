@@ -1,0 +1,7 @@
+
+# For Intellij
+.idea
+
+# Tempera Station PlatformIO project
+/tempera-station/.pio
+/tempera-station/.vscode
