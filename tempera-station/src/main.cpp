@@ -1,5 +1,4 @@
 
-// LIBRARIES
 #include <Arduino.h>
 #include <ArduinoBLE.h>
 
@@ -13,7 +12,10 @@
 
 
 
-// DEFINITIONS
+// ############### MAKROS ############### 
+
+// Toggle additional Informations in serial output:
+#define INFO 1
 
 // Define Output Pins for LED
 #define LED_R A0
@@ -28,24 +30,33 @@
 #define B_AW D5
 // Set their colors (rgb value):
 #define B_DW_COLOR {0, 0, 255}
-#define B_MT_COLOR {255, 32, 0}
+#define B_MT_COLOR {255, 0, 255}
 #define B_OO_COLOR {255, 0, 0}
 #define B_AW_COLOR {0, 64, 0}
 
 // Serial data rate in bits/s
 #define SERIAL_DATA_RATE 9600
 
-// Delay time after each iteration
-#define DELAY 500
+// Delay after which a new button press will be accepted
+#define BUTTON_COOLDOWN 500
 
 
 
 
 
-// FUNCTIONS AND STRUCT DECLARATIONS
+// ############### FUNCTIONS DECLARATIONS ############### 
 
 pin_size_t whichButtonPressed();
-struct color getButtonColor(pin_size_t button);
+struct color findButtonColor(pin_size_t button);
+void printSessionUpdate();
+void printLEDUpdate();
+
+
+
+
+
+// ############### CLASS AND STRUCT DECLARATIONS ############### 
+// Attributes are public to skip Getter and Setter.
 
 struct color {
   int red;
@@ -53,55 +64,58 @@ struct color {
   int blue;
 };
 
-
-
-
-
-// CLASS DECLARATIONS
-class LED {
-  int ledStatus = 0;
-  struct color color = {0, 0, 0};
-
+class timedSession {
   public:
+    int active = 0;
+    int workMode = 0;
+    unsigned long startTime = millis();
+    unsigned long lastSessionDuration = 0;
 
-  void toggleLED() {
-    this->ledStatus = !this->ledStatus;
-    this->ledStatus ? turnOn() : turnOff();
-    return;
-  }
+    int toggleActive () {
+      this->active = !this->active;
+      return this->active;
+    }
+};
 
-  void setColor(struct color color) {
-    this->color.red = color.red;
-    this->color.green = color.green;
-    this->color.blue = color.blue;
-    return;
-  }
+class LED {
+  public:
+    int ledStatus = 0;
+    struct color color = {0, 0, 0};
 
-  void turnOn() {
-    this->ledStatus = 1;
-    analogWrite(LED_R, color.red);
-    analogWrite(LED_G, color.green);
-    analogWrite(LED_B, color.blue);
-    return;
-  }
+    void toggleLED() {
+      this->ledStatus = !this->ledStatus;
+      this->ledStatus ? turnOn() : turnOff();
+      return;
+    }
 
-  void turnOff() {
-    setColor({0, 0, 0});
-    turnOn();
-    this->ledStatus = 0;
-    return;
-  }
+    void turnOn() {
+      this->ledStatus = 1;
+      analogWrite(LED_R, color.red);
+      analogWrite(LED_G, color.green);
+      analogWrite(LED_B, color.blue);
+      return;
+    }
 
-  int getStatus() {
-    return this->ledStatus;
-  }
+    void turnOff() {
+      setColor({0, 0, 0});
+      turnOn();
+      this->ledStatus = 0;
+      return;
+    }
+
+    void setColor(struct color color) {
+      this->color.red = color.red;
+      this->color.green = color.green;
+      this->color.blue = color.blue;
+      return;
+    }
 };
 
 
 
 
 
-// SETUP CODE
+// ############### SETUP CODE ############### 
 void setup() {
   // Setup for the rgb-led pins
   pinMode(LED_R, OUTPUT);
@@ -116,34 +130,54 @@ void setup() {
 
   // Set serial output data rate in bits/s
   Serial.begin(SERIAL_DATA_RATE);
-
 }
 
-// Get the LED Object
+// Create objects
 LED led;
+timedSession session;
 
 
 
 
 
-// RUNTIME CODE
+// ############### RUNTIME CODE ###############
+
 void loop() {
 
+  // If a button has been pressed change the following:
   if (pin_size_t b = whichButtonPressed()) {
-    led.setColor(getButtonColor(b));
+
+    // Update the work session info so the duration and time etc since the last mode change
+    if (session.toggleActive()) {
+      session.workMode = b;
+      session.startTime = millis();
+      session.lastSessionDuration = 0;
+    } else {
+      session.workMode = 0;
+      session.lastSessionDuration = millis() - session.startTime;
+      session.startTime = 0;
+    }
+    if (INFO) printSessionUpdate();
+    
+    // Update LED status and print
+    led.setColor(findButtonColor(b));
     led.toggleLED();
+    if (INFO) printLEDUpdate();
+    
+    delay(BUTTON_COOLDOWN);
   }
 
   // Wait for a bit
-  delay(DELAY);
+  delay(300);
 }
 
 
 
 
 
-// FUNCTION 
+// ############### FUNCTIONS ###############
 
+// Checks if one of the four buttons is currently pressed and returns the pressed one or 0 
 pin_size_t whichButtonPressed() {
   if (!digitalRead(B_DW)) {
     return B_DW;
@@ -158,7 +192,8 @@ pin_size_t whichButtonPressed() {
   }
 }
 
-struct color getButtonColor(pin_size_t button) {
+// Returns the corresponding color for each button
+struct color findButtonColor(pin_size_t button) {
   switch (button) {
   case B_AW: 
     return B_AW_COLOR;
@@ -178,3 +213,28 @@ struct color getButtonColor(pin_size_t button) {
   }
 }
 
+void printSessionUpdate() {
+  Serial.println("Tempera > [INFO] Session Info has been updated:");
+  Serial.print("Tempera > [INFO]    Active: ");
+  Serial.println(session.active);
+  Serial.print("Tempera > [INFO]    Current work mode: ");
+  Serial.println(session.workMode);
+  Serial.print("Tempera > [INFO]    Start time: ");
+  Serial.println(session.startTime);
+  Serial.print("Tempera > [INFO]    Last session duration: ");
+  Serial.println(session.lastSessionDuration);
+  return;
+}
+
+void printLEDUpdate() {
+  Serial.println("Tempera > [INFO] LED state has been updated:");
+  Serial.print("Tempera > [INFO]    Active: ");
+  Serial.println(led.ledStatus);
+  Serial.print("Tempera > [INFO]    Color (R-G-B): ");
+  Serial.print(led.color.red);
+  Serial.print(" ");
+  Serial.print(led.color.green);
+  Serial.print(" ");
+  Serial.println(led.color.blue);
+  return;
+}
