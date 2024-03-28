@@ -3,6 +3,7 @@ package at.qe.skeleton.model;
 import at.qe.skeleton.exceptions.TemperaStationIsNotEnabledException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 import java.util.HashSet;
@@ -16,6 +17,8 @@ public class Accesspoint {
     private UUID id;
     @OneToMany
     private Set<TemperaStation> temperaStations;
+    @ManyToOne
+    private Room room;
     private boolean enabled;
 
     public Accesspoint() {
@@ -47,6 +50,8 @@ public class Accesspoint {
         return enabled;
     }
 
+    //todo think about: what should we do, when Accesspoint gets disabled
+    // -> do associated TemperaStations get disabled as well?
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
