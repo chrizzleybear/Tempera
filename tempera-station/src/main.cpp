@@ -1,3 +1,15 @@
+/*
+TO-DO:
+- Richtige Implementierung der Zeitabrechnung bezüglich Zeit overflow
+- Dauerhaft Out of Office wenn nix gewählt
+- nochmaliges Drüken um Neu abzurechnen
+- Am Arduino im Device eine ID hinzufügen die im Backend generiert wird 
+
+- Gschlachtenbretzingen Easter Egg?
+- 
+*/
+
+
 
 #include <Arduino.h>
 #include <ArduinoBLE.h>
@@ -142,6 +154,8 @@ void setup() {
 
   // Set serial output data rate in bits/s
   Serial.begin(SERIAL_DATA_RATE);
+
+  Serial.println("Tempera > [INFO] System started...");
 }
 
 // Create objects
@@ -167,6 +181,13 @@ void loop() {
     } else {
       session.workMode = 0;
       session.lastSessionDuration = millis() - session.startTime;
+      
+      // check for overflow, if yes correct the time
+      // an overflow will happen after leaving the device on for than approximately 50 consecutive days
+      if (session.lastSessionDuration < 0) {
+        
+      }
+      
       session.startTime = 0;
     }
     if (INFO) printSessionUpdate();
