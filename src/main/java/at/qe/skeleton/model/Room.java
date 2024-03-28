@@ -15,7 +15,7 @@ public class Room {
     private int roomId;
 
     @OneToMany
-    private Set<Threshhold> thresholds;
+    private Set<Threshold> thresholds;
 
     public Room() {
         this.thresholds = new HashSet<>();
@@ -25,7 +25,7 @@ public class Room {
         return roomId;
     }
 
-    public Set<Threshhold> getThresholds() {
+    public Set<Threshold> getThresholds() {
         return thresholds;
     }
 
@@ -37,10 +37,14 @@ public class Room {
      * with the same ThresholdType and SensorType.
      *
      */
-    public void addThreshold(Threshhold threshold) {
-        Optional<Threshhold> existingThreshold =
-                thresholds.stream().filter(t -> t.)
+    public boolean addThreshold(Threshold threshold) {
+        Optional<Threshold> existingThreshold =
+                thresholds
+                        .stream()
+                        .filter(t -> t.getSensorType()==threshold.getSensorType() && t.getThresholdType() == threshold.getThresholdType())
+                        .findAny();
 
         this.thresholds.add(threshold);
+        return existingThreshold.isEmpty();
     }
 }

@@ -2,6 +2,10 @@ package at.qe.skeleton.model;
 
 import jakarta.persistence.*;
 
+/**
+ * seems like this is a Value Object (in DDD lingo)
+ */
+
 @Entity
 public class Measurement {
 

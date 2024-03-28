@@ -1,9 +1,8 @@
 package at.qe.skeleton.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import at.qe.skeleton.model.enums.SensorType;
+import at.qe.skeleton.model.enums.ThresholdType;
+import jakarta.persistence.*;
 
 @Entity
 public class Threshold {
@@ -14,8 +13,11 @@ public class Threshold {
     private SensorType sensorType;
     private ThresholdType thresholdType;
     private double value;
-    private String modificationReason;
-    private String tip;
+    @OneToOne
+    private ModificationReason modificationReason;
+
+    @OneToOne
+    private ThresholdTip tip;
 
 
     public SensorType getSensorType() {
@@ -56,6 +58,11 @@ public class Threshold {
 
     public void setTip(String tip) {
         this.tip = tip;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }
 

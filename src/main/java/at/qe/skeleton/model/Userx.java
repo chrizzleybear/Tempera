@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
+
+import at.qe.skeleton.model.enums.State;
+import at.qe.skeleton.model.enums.UserxRole;
+import at.qe.skeleton.model.enums.Visibility;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
