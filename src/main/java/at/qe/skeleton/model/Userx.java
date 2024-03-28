@@ -56,6 +56,16 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     @Enumerated(EnumType.STRING)
     private Set<UserxRole> roles;
 
+    public Userx() {
+    }
+
+    public Userx(String username, String email, String password, LocalDateTime createDate) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.createDate = createDate;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -193,9 +203,9 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
         return (null == createDate);
     }
 
-	@Override
-	public int compareTo(Userx o) {
-		return this.username.compareTo(o.getUsername());
-	}
+    @Override
+    public int compareTo(Userx o) {
+        return this.username.compareTo(o.getUsername());
+    }
 
 }

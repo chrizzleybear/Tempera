@@ -10,7 +10,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service for accessing and manipulating user data.
@@ -20,7 +24,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Scope("application")
-public class UserService {
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserxRepository userRepository;
@@ -83,4 +87,15 @@ public class UserService {
         return userRepository.findFirstByUsername(auth.getName());
     }
 
+    /**
+     * For interface which is needed for JWT
+     */
+    @Override
+    @Transactional
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Userx user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+
+        return UserDetailsImpl.build(user);
+    }
 }
