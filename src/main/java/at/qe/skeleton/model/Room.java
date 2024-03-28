@@ -1,11 +1,12 @@
 package at.qe.skeleton.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import at.qe.skeleton.exceptions.TemperaStationIsNotEnabledException;
+import jakarta.persistence.*;
 
 import java.io.Serial;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 @Entity
 public class Room {
@@ -13,10 +14,33 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int roomId;
 
+    @OneToMany
+    private Set<Threshhold> thresholds;
+
+    public Room() {
+        this.thresholds = new HashSet<>();
+    }
+
     public int getRoomId() {
         return roomId;
     }
 
+    public Set<Threshhold> getThresholds() {
+        return thresholds;
+    }
 
+    /**
+     * returns true if TemperaStation was not already part of the Set
+     *
+     * @param threshold to be added to this Room
+     * @return true if this Accesspoint did not already contain a threshold
+     * with the same ThresholdType and SensorType.
+     *
+     */
+    public void addThreshold(Threshhold threshold) {
+        Optional<Threshhold> existingThreshold =
+                thresholds.stream().filter(t -> t.)
 
+        this.thresholds.add(threshold);
+    }
 }
