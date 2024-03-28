@@ -1,0 +1,48 @@
+<div id="app">
+  <nav>
+    <ul>
+      <li>
+        <a href="/home" routerLink="home">Home </a>
+      </li>
+      @if (showAdminBoard) {
+        <li>
+          <a href="/admin" routerLink="admin">Admin Board</a>
+        </li>
+      }
+      @if (showModeratorBoard) {
+        <li>
+          <a href="/mod" routerLink="mod">Moderator Board</a>
+        </li>
+      }
+      @if (isLoggedIn) {
+        <li>
+          <a href="/user" routerLink="user">User</a>
+        </li>
+      }
+    </ul>
+
+    @if (!isLoggedIn) {
+      <ul>
+        <li>
+          <a href="/register" routerLink="register">Sign Up</a>
+        </li>
+        <li>
+          <a href="/login" routerLink="login">Login</a>
+        </li>
+      </ul>
+    } @else {
+      <ul>
+        <li>
+          <a href="/profile" routerLink="profile">{{ username }}</a>
+        </li>
+        <li>
+          <a href (click)="logout()">LogOut</a>
+        </li>
+      </ul>
+    }
+  </nav>
+
+  <div>
+    <router-outlet />
+  </div>
+</div>
