@@ -44,19 +44,19 @@ public class Threshold {
         this.value = value;
     }
 
-    public String getModificationReason() {
+    public ModificationReason getModificationReason() {
         return modificationReason;
     }
 
-    public void setModificationReason(String modificationReason) {
+    public void setModificationReason(ModificationReason modificationReason) {
         this.modificationReason = modificationReason;
     }
 
-    public String getTip() {
+    public ThresholdTip getTip() {
         return tip;
     }
 
-    public void setTip(String tip) {
+    public void setTip(ThresholdTip tip) {
         this.tip = tip;
     }
 
