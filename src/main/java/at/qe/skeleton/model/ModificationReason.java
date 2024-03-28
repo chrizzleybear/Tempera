@@ -33,10 +33,9 @@ public class ModificationReason {
         if (o == null) {
             return false;
         }
-        if (o.getClass() != ModificationReason.class) {
+        if (!(o instanceof ModificationReason other)) {
             return false;
         }
-        ModificationReason other = (ModificationReason) o;
         return other.reason.equals(this.reason);
     }
 

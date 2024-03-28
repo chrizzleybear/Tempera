@@ -34,10 +34,9 @@ public class ThresholdTip {
         if (o == null) {
             return false;
         }
-        if (o.getClass() != ThresholdTip.class) {
+        if (!(o instanceof ThresholdTip other)) {
             return false;
         }
-        ThresholdTip other = (ThresholdTip) o;
         return other.tip.equals(this.tip);
     }
 
