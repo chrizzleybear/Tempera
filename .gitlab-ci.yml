@@ -1,16 +1,17 @@
 image: alpine:3.17
 
-stages:          # List of stages for jobs, and their order of execution
+stages: # List of stages for jobs, and their order of execution
   - test
   - sonarCheck
+  - python-lint
 
 .before_script_template:
   before_script:
     - apk add --update maven
 
-unit-test-job:   # This job runs in the test stage.
+unit-test-job: # This job runs in the test stage.
   extends: .before_script_template
-  stage: test    
+  stage: test
   script:
     - echo "Running unit tests..."
     - mvn test
@@ -26,3 +27,10 @@ sonarqube-check:
     - echo Running sonar analysis for ${SONAR_PROJECT_KEY}
     - mvn -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} ${GITLAB_USER_NAME}" --fail-at-end verify sonar:sonar
   allow_failure: true
+
+python-lint:
+  stage: pyton-lint
+  runs-on: ubuntu-latest
+  steps:
+    with:
+      src: "tempera-accesspoint"
