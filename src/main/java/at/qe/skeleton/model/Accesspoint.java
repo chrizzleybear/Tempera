@@ -1,18 +1,32 @@
 package at.qe.skeleton.model;
 
 import at.qe.skeleton.exceptions.TemperaStationIsNotEnabledException;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+import org.springframework.data.domain.Persistable;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
-public class Accesspoint {
+public class Accesspoint implements Persistable<UUID>, Serializable {
+
+    // We need to implement Persistable since we set UUID manually
+    // the following strategy for the isNew Method comes from spring documentation:
+    // https://docs.spring.io/spring-data/jpa/reference/jpa/entity-persistence.html
+    @Transient
+    private boolean isNew = true;
+    @Override
+    public boolean isNew() {
+        return isNew;
+    }
+    @PrePersist
+    @PostLoad
+    void markNotNew() {
+        this.isNew = false;
+    }
 
     @Id
     private UUID id;
@@ -73,5 +87,10 @@ public class Accesspoint {
     @Override
     public String toString(){
       return id.toString();
+    }
+
+    @Override
+    public UUID getId() {
+        return id;
     }
 }

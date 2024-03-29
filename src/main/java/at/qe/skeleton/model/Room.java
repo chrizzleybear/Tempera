@@ -2,6 +2,7 @@ package at.qe.skeleton.model;
 
 import at.qe.skeleton.exceptions.TemperaStationIsNotEnabledException;
 import jakarta.persistence.*;
+import org.springframework.data.domain.Persistable;
 
 import java.io.Serial;
 import java.util.HashSet;
@@ -10,7 +11,29 @@ import java.util.Optional;
 import java.util.Set;
 
 @Entity
-public class Room {
+public class Room implements Persistable<String> {
+
+    // We need to implement Persistable since we set UUID manually
+    // the following strategy for the isNew Method comes from spring documentation:
+    // https://docs.spring.io/spring-data/jpa/reference/jpa/entity-persistence.html
+    @Transient
+    private boolean isNew = true;
+
+    @Override
+    public String getId() {
+        return roomId;
+    }
+
+    @Override
+    public boolean isNew() {
+        return isNew;
+    }
+    @PrePersist
+    @PostLoad
+    void markNotNew() {
+        this.isNew = false;
+    }
+
     @Id
     private String roomId;
 

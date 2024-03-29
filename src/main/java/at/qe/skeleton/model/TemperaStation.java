@@ -1,13 +1,16 @@
 package at.qe.skeleton.model;
 
 import jakarta.persistence.*;
+import org.springframework.data.domain.Persistable;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-public class TemperaStation {
+public class TemperaStation implements Persistable<UUID> {
+
+
 
     // wir wählen UUID, weil sie nicht nur innerhalb eines DBS sondern weltweit einmalig sind.
     // Daher ist eine eindeutige identifikation Problemlos möglich.
@@ -18,6 +21,22 @@ public class TemperaStation {
     private boolean enabled;
     @OneToMany
     private List<SuperiorTimeRecord> superiorTimeRecords;
+
+    // We need to implement Persistable since we set UUID manually
+    // the following strategy for the isNew Method comes from spring documentation:
+    // https://docs.spring.io/spring-data/jpa/reference/jpa/entity-persistence.html
+    @Transient
+    private boolean isNew = true;
+
+    @Override
+    public UUID getId() {
+        return id;
+    }
+
+    @Override
+    public boolean isNew() {
+        return isNew;
+    }
 
     public TemperaStation () {
         this.id = UUID.randomUUID();
