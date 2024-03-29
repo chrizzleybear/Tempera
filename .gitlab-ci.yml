@@ -33,4 +33,5 @@ python-lint:
   image:
     python:3.11.8-alpine
   script:
+    - pip install black==24.3.0
     - black tempera-accesspoint/ --check --verbose --diff --color
