@@ -4,6 +4,7 @@ import at.qe.skeleton.model.enums.AlertType;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 public class Alert {
@@ -50,6 +51,57 @@ public class Alert {
     public Alert(AlertType alertType, String message){
         this.alertType = alertType;
         this.message = message;
-
     }
+
+    /**
+     * Non-Arg protected Constructor for JPA only.
+     */
+    protected Alert() {};
+
+    public boolean isAcknowledged() {
+        return acknowledged;
+    }
+
+    public void setAcknowledged(boolean acknowledged) {
+        this.acknowledged = acknowledged;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public Threshold getThreshold() {
+        return threshold;
+    }
+
+    public LocalDateTime getTimeStamp() {
+        return timeStamp;
+    }
+
+    public AlertType getAlertType() {
+        return alertType;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Alert alert = (Alert) o;
+        return Objects.equals(timeStamp, alert.timeStamp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(timeStamp);
+    }
+
+
 }

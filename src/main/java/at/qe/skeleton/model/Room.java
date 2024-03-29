@@ -5,23 +5,30 @@ import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
 @Entity
 public class Room {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int roomId;
+    private String roomId;
 
     @OneToMany
     private Set<Threshold> thresholds;
 
-    public Room() {
+    /**
+     * User can choose roomid but RoomService must ensure, that this id is not yet taken.
+     * @param roomId the id, the user assignes to this room. it should be unique.
+     */
+    public Room(String roomId) {
+        this.roomId = roomId;
         this.thresholds = new HashSet<>();
     }
 
-    public int getRoomId() {
+    protected Room() {};
+
+    public String getRoomId() {
         return roomId;
     }
 
@@ -50,5 +57,23 @@ public class Room {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Room room = (Room) o;
+        return Objects.equals(roomId, room.roomId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(roomId);
+    }
+
+    @Override
+    public String toString() {
+        return this.roomId;
     }
 }

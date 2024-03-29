@@ -1,10 +1,10 @@
 package at.qe.skeleton.model;
 
 import at.qe.skeleton.model.enums.SensorType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Sensor {
@@ -17,9 +17,13 @@ public class Sensor {
 
     private String unit;
 
+    @OneToMany
+    private List<Measurement> measurementList;
+
     public Sensor(SensorType sensorType, String unit) {
         this.sensorType = sensorType;
         this.unit = unit;
+        this.measurementList = new ArrayList<>();
     }
     protected Sensor() {}
 
@@ -41,5 +45,9 @@ public class Sensor {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public void addMeasurement(Measurement measurement){
+        this.measurementList.add(measurement);
     }
 }

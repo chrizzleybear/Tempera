@@ -4,6 +4,8 @@ import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.ThresholdType;
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 public class Threshold {
 
@@ -61,8 +63,21 @@ public class Threshold {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Threshold threshold = (Threshold) o;
+        return id == threshold.id;
+    }
+
+    @Override
     public int hashCode() {
-        return super.hashCode();
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(id);
     }
 }
 

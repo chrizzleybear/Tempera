@@ -20,6 +20,12 @@ public class Group {
     @ManyToMany
     private List<Userx> members;
 
+    /**
+     * For Creating Groups, this Constructor should be used.
+     * @param name the name of the Group.
+     * @param description a short description of the purpose of the group
+     * @param groupLead the Grouplead in Charge of that group
+     */
     public Group(String name, String description, Userx groupLead) {
         this.name = name;
         this.description = description;
@@ -27,7 +33,7 @@ public class Group {
         this.members = new ArrayList<>();
     }
 
-    public Group() {}
+    protected Group() {}
 
     public String getName() {
         return name;

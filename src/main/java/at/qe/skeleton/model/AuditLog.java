@@ -14,7 +14,7 @@ public class AuditLog {
     private long id;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime localDateTime;
+    private LocalDateTime timeStamp;
 
     private String message;
 
@@ -24,4 +24,45 @@ public class AuditLog {
     private Userx triggeringUser;
 
     private LogEvent event;
+
+    /**
+     * For creating AuditLogs only this Constructor should be used.
+     * @param message The message to store in the Log-Entry - should contain some information on what exactly happened.
+     * @param affectedType The Class that was affected by the action which is being logged.
+     * @param triggeringUser The Userx that initiated the Action that is being logged.
+     * @param event A categorization of the Action that is being logged.
+     */
+    public AuditLog(String message, LogAffectedType affectedType, Userx triggeringUser, LogEvent event) {
+        this.message = message;
+        this.affectedType = affectedType;
+        this.triggeringUser = triggeringUser;
+        this.event = event;
+        this.timeStamp = LocalDateTime.now();
+    }
+
+    protected AuditLog() {};
+
+    public long getId() {
+        return id;
+    }
+
+    public LocalDateTime getTimeStamp() {
+        return timeStamp;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public LogAffectedType getAffectedType() {
+        return affectedType;
+    }
+
+    public Userx getTriggeringUser() {
+        return triggeringUser;
+    }
+
+    public LogEvent getEvent() {
+        return event;
+    }
 }
