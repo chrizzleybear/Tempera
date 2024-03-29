@@ -15,8 +15,10 @@ app = FastAPI()
 
 @app.post("/temperature/")
 async def put_temperature_data(station_id: int, t_data: TemperatureData):
-    return {"station": f"{station_id}",
-            "message": f"Delivered the station data: {t_data}"}
+    return {
+        "station": f"{station_id}",
+        "message": f"Delivered the station data: {t_data}",
+    }
 
 
 @app.get("/")

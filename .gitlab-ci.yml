@@ -29,6 +29,7 @@ sonarqube-check:
   allow_failure: true
 
 python-lint:
+  # make the pipeline fail if python project files are not formatted properly with black
   stage: python-lint
   image:
     python:3.11.8-alpine
