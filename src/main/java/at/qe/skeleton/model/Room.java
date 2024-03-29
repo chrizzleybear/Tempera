@@ -45,6 +45,10 @@ public class Room {
                         .findAny();
 
         this.thresholds.add(threshold);
-        return existingThreshold.isEmpty();
+        if (existingThreshold.isPresent()){
+            thresholds.remove(existingThreshold.get());
+            return false;
+        }
+        return true;
     }
 }

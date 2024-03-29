@@ -1,10 +1,8 @@
 package at.qe.skeleton.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -16,8 +14,9 @@ public class TemperaStation {
     private UUID id;
     @OneToOne
     private Userx user;
-
     private boolean enabled;
+    @OneToMany
+    private List<SuperiorTimeRecord> superiorTimeRecords;
 
     public TemperaStation () {
         this.id = UUID.randomUUID();
@@ -37,5 +36,16 @@ public class TemperaStation {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public List<SuperiorTimeRecord> getSuperiorTimeRecords() {
+        return superiorTimeRecords;
+    }
+
+    public void addSuperiorTimeRecord(SuperiorTimeRecord superiorTimeRecord) {
+        if (superiorTimeRecord == null) {
+            throw new NullPointerException("superiorTimeRecord should not be null");
+        }
+        this.superiorTimeRecords.add(superiorTimeRecord);
     }
 }
