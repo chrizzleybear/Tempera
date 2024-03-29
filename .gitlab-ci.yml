@@ -29,7 +29,7 @@ sonarqube-check:
   allow_failure: true
 
 python-lint:
-  stage: pyton-lint
+  stage: python-lint
   image:
     python:3.11.8-alpine
   script:
