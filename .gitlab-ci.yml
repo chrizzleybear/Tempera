@@ -31,6 +31,5 @@ sonarqube-check:
 python-lint:
   stage: pyton-lint
   runs-on: ubuntu-latest
-  steps:
-    with:
-      src: "tempera-accesspoint"
+  script:
+    - black tempera-accesspoint/ --check --verbose --diff --color
