@@ -30,6 +30,7 @@ sonarqube-check:
 
 python-lint:
   stage: pyton-lint
-  runs-on: ubuntu-latest
+  image:
+    python:3.11.8-alpine
   script:
     - black tempera-accesspoint/ --check --verbose --diff --color
