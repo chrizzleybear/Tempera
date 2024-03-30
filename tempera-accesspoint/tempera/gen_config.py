@@ -27,8 +27,9 @@ def main():
 
     with open(config_file, "w") as cf:
         config["sending_interval"] = prompt(
+            # TODO: add info about interval duration unit to prompt
             "Please set a data transfer interval\n"
-            "between access point and web server>> ",
+            "between access point and web server >> ",
             parse_float=True,
         )
         config["webserver_address"] = prompt(
