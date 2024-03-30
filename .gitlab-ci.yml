@@ -53,4 +53,4 @@ python-build-job:
     - python -m build tempera-accesspoint/
   artifacts:
     paths:
-      - build/*
+      - tempera-accesspoint/dist/*
