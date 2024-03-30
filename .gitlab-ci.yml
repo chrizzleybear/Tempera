@@ -44,9 +44,6 @@ python-build-job:
   image: python:3.11.8-alpine
   script:
     - python --version ; pip --version
-    #    alternative if venv doesn't work as desired
-    #    - pip install virtualenv
-    #    - virtualenv venv
     - python -m venv venv
     - source venv/bin/activate
     - pip install build
@@ -54,3 +51,4 @@ python-build-job:
   artifacts:
     paths:
       - tempera-accesspoint/dist/*
+    expire_in: 2 days
