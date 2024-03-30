@@ -3,7 +3,7 @@ import sqlite3
 from pathlib import Path
 from typing import List, Literal, Tuple, Any
 
-SensorType = (Literal["TEMPERATURE", "AIRQUALITY", "LIGHTINTENSITY", "HUMIDITY"],)
+SensorType = Literal["TEMPERATURE", "AIRQUALITY", "LIGHTINTENSITY", "HUMIDITY"]
 
 
 database_path = Path(__file__).parent.parent / "database" / "data.sqlite"
