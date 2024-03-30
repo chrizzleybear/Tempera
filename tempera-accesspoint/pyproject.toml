@@ -4,6 +4,11 @@
 requires = ["setuptools >= 61.0"]
 build-backend = "setuptools.build_meta"
 
+
+[tool.setuptools.packages.find]
+where = ["tempera"]
+
+
 [project]
 name = "tempera"
 dynamic = ["version"]
@@ -24,18 +29,22 @@ maintainers = [
 #readme = "README.md"
 #license = {text = "MIT License"}
 
+
 [project.urls]
 Repository = "https://git.uibk.ac.at/informatik/qe/swess24/group4/g4t1"
 Issues = "https://git.uibk.ac.at/informatik/qe/swess24/group4/g4t1/-/issues"
 
+
 [project.scripts]
 configure = "tempera.gen_config:main"
+
 
 [project.optional-dependencies]
 format = ["black>=24.3.0"]
 all = [
     "black>=24.3.0",
 ]
+
 
 [tool.setuptools.dynamic]
 version = { attr = "tempera.__version__" }
