@@ -19,9 +19,6 @@ public class TemperaStation implements Persistable<String> {
     private boolean enabled;
 
     @OneToMany
-    private List<Sensor> sensorList;
-
-    @OneToMany
     private List<SuperiorTimeRecord> superiorTimeRecords;
 
     // We need to implement Persistable since we set Id manually
@@ -69,14 +66,6 @@ public class TemperaStation implements Persistable<String> {
 
     public List<SuperiorTimeRecord> getSuperiorTimeRecords() {
         return superiorTimeRecords;
-    }
-
-    public void setSensorList(List<Sensor> sensorList) {
-        this.sensorList = sensorList;
-    }
-
-    public List<Sensor> getSensorList() {
-        return sensorList;
     }
 
     public void addSuperiorTimeRecord(SuperiorTimeRecord superiorTimeRecord) {

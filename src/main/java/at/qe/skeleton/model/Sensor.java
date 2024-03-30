@@ -13,6 +13,9 @@ public class Sensor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    private TemperaStation temperaStation;
+
     private SensorType sensorType;
 
     private String unit;
@@ -26,6 +29,14 @@ public class Sensor {
         this.measurementList = new ArrayList<>();
     }
     protected Sensor() {}
+
+    public TemperaStation getTemperaStation() {
+        return temperaStation;
+    }
+
+    public List<Measurement> getMeasurementList() {
+        return measurementList;
+    }
 
     public long getId() {
         return id;
