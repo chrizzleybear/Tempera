@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.UUID;
 
-public interface TemperaStationRepository extends AbstractRepository<TemperaStation, UUID> {
+public interface TemperaStationRepository extends AbstractRepository<TemperaStation, String> {
 
     @Query("SELECT t FROM TemperaStation t WHERE t.enabled = :enabled")
     List<TemperaStation> findAllByEnabled(@Param("enabled") boolean enabled);

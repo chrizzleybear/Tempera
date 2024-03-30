@@ -8,12 +8,12 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-public class TemperaStation implements Persistable<UUID> {
+public class TemperaStation implements Persistable<String> {
 
     // wir wählen UUID, weil sie nicht nur innerhalb eines DBS sondern weltweit einmalig sind.
     // Daher ist eine eindeutige identifikation Problemlos möglich.
     @Id
-    private UUID id;
+    private String id;
     @OneToOne
     private Userx user;
     private boolean enabled;
@@ -24,14 +24,14 @@ public class TemperaStation implements Persistable<UUID> {
     @OneToMany
     private List<SuperiorTimeRecord> superiorTimeRecords;
 
-    // We need to implement Persistable since we set UUID manually
+    // We need to implement Persistable since we set Id manually
     // the following strategy for the isNew Method comes from spring documentation:
     // https://docs.spring.io/spring-data/jpa/reference/jpa/entity-persistence.html
     @Transient
     private boolean isNew = true;
 
     @Override
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
@@ -40,9 +40,16 @@ public class TemperaStation implements Persistable<UUID> {
         return isNew;
     }
 
-    public TemperaStation () {
-        this.id = UUID.randomUUID();
+    @PrePersist
+    @PostLoad
+    void markNotNew() {
+        this.isNew = false;
     }
+
+    public TemperaStation (String id) {
+        this.id = id;
+    }
+    protected TemperaStation(){};
 
     public void setUser (Userx user) {
         this.user = user;
@@ -94,6 +101,6 @@ public class TemperaStation implements Persistable<UUID> {
 
     @Override
     public String toString() {
-        return this.id.toString();
+        return this.id;
     }
 }
