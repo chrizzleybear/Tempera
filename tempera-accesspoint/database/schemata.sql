@@ -4,8 +4,6 @@ CREATE TABLE station
     -- sqlite doesn't have booleans -> 0 = false ; 1 = true
     -- TRUE & FALSE can still be used
     enabled    INTEGER,
-    sensor_id  INTEGER,
-    CONSTRAINT sensor_fk FOREIGN KEY (sensor_id) REFERENCES sensor (sensor_id),
     CONSTRAINT station_pk PRIMARY KEY (station_id)
 );
 
