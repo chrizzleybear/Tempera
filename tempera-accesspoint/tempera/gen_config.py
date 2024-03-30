@@ -38,7 +38,7 @@ def main():
         config["accesspoint_id"] = prompt("Please set the ID of this access point >> ")
         yaml.dump(config, cf)
 
-    print("Setup done! ✨🚀✨\nGood bye. ")
+    print("\nSetup done! ✨🚀✨\nGood bye. ")
     import time
 
     time.sleep(0.5)
