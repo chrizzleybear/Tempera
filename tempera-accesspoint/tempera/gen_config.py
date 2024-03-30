@@ -9,7 +9,7 @@ welcome_art = """
 #  / ___/ _ \| \ | |  ___|_ _/ ___| | | |  _ \| ____| #
 # | |  | | | |  \| | |_   | | |  _| | | | |_) |  _|   #
 # | |__| |_| | |\  |  _|  | | |_| | |_| |  _ <| |___  #
-#  \____\___/|_|_\_|_|___|___\____|\___/|_| \_\_____| #
+#  \____\___/|_| \_|_|   |___\____|\___/|_| \_\_____| #
 # |_   _| ____|  \/  |  _ \| ____|  _ \    / \        #
 #   | | |  _| | |\/| | |_) |  _| | |_) |  / _ \       #
 #   | | | |___| |  | |  __/| |___|  _ <  / ___ \      #
@@ -49,13 +49,13 @@ def prompt(message: str, parse_float: bool = False) -> str | float:
     while not param:
         param = input(message)
         if not param:
-            print("---\n❌ No input provided ❌\nPlease provide an input.\n---")
+            print("---\n❌ No input provided ❌\n➡️  Please provide an input.\n---")
         elif parse_float:
             try:
                 return float(param)
             except ValueError:
                 print(
-                    "---\n❌ The sending interval must be a number (int or float) ❌\nPlease try again.\n---"
+                    "---\n❌ The sending interval must be a number (int or float) ❌\n➡️  Please try again.\n---"
                 )
                 param = None  # or the loop wouldn't continue
     return param
