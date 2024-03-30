@@ -26,21 +26,21 @@ def main():
     config_file = Path(__file__).parent.parent / "conf.yaml"
 
     with open(config_file, "w") as cf:
-        config['sending_interval'] = prompt(
-            'Please set a data transfer interval\n'
-            'between access point and web server>> ', parse_float=True
+        config["sending_interval"] = prompt(
+            "Please set a data transfer interval\n"
+            "between access point and web server>> ",
+            parse_float=True,
         )
-        config['webserver_address'] = prompt(
-            'Please provide the IP-address of the web server >> '
+        config["webserver_address"] = prompt(
+            "Please provide the IP-address of the web server >> "
         )
-        config['accesspoint_id'] = prompt(
-            'Please set the ID of this access point >> '
-        )
+        config["accesspoint_id"] = prompt("Please set the ID of this access point >> ")
         yaml.dump(config, cf)
 
     print("Setup done! ✨🚀✨\nGood bye. ")
     import time
-    time.sleep(.5)
+
+    time.sleep(0.5)
 
 
 def prompt(message: str, parse_float: bool = False) -> str | float:
@@ -48,12 +48,14 @@ def prompt(message: str, parse_float: bool = False) -> str | float:
     while not param:
         param = input(message)
         if not param:
-            print('---\n❌ No input provided ❌\nPlease provide an input.\n---')
+            print("---\n❌ No input provided ❌\nPlease provide an input.\n---")
         elif parse_float:
             try:
                 return float(param)
             except ValueError:
-                print('---\n❌ The sending interval must be a number (int or float) ❌\nPlease try again.\n---')
+                print(
+                    "---\n❌ The sending interval must be a number (int or float) ❌\nPlease try again.\n---"
+                )
                 param = None  # or the loop wouldn't continue
     return param
 
