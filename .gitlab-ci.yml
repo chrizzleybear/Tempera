@@ -3,7 +3,8 @@ image: alpine:3.17
 stages: # List of stages for jobs, and their order of execution
   - test
   - sonarCheck
-  - python-lint
+  - format
+  - build
 
 .before_script_template:
   before_script:
@@ -28,11 +29,28 @@ sonarqube-check:
     - mvn -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} ${GITLAB_USER_NAME}" --fail-at-end verify sonar:sonar
   allow_failure: true
 
-python-lint:
+python-format-job:
   # make the pipeline fail if python project files are not formatted properly with black
-  stage: python-lint
+  stage: format
   image:
     python:3.11.8-alpine
   script:
-    - pip install black==24.3.0
+    - pip install black>=24.3.0
     - black tempera-accesspoint/ --check --verbose --diff --color
+  allow_failure: true
+
+python-build-job:
+  stage: build
+  image: python:3.11.8-alpine
+  script:
+    - python --version ; pip --version
+    #    alternative if venv doesn't work as desired
+    #    - pip install virtualenv
+    #    - virtualenv venv
+    - python -m venv venv
+    - source venv/bin/activate
+    - pip install build
+    - python -m build tempera-accesspoint/
+  artifacts:
+    paths:
+      - build/*
