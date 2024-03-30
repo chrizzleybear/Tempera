@@ -11,7 +11,7 @@ public class Threshold {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private SensorType sensorType;
     private ThresholdType thresholdType;
     private double value;

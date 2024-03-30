@@ -13,7 +13,7 @@ import java.util.Objects;
 public class Measurement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private double value;
 

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class SubordinateTimeRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime start;

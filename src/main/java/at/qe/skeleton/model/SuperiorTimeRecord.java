@@ -11,7 +11,7 @@ import java.util.List;
 public class SuperiorTimeRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime start;
