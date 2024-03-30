@@ -10,8 +10,6 @@ import java.util.UUID;
 @Entity
 public class TemperaStation implements Persistable<UUID> {
 
-
-
     // wir wählen UUID, weil sie nicht nur innerhalb eines DBS sondern weltweit einmalig sind.
     // Daher ist eine eindeutige identifikation Problemlos möglich.
     @Id
@@ -19,6 +17,10 @@ public class TemperaStation implements Persistable<UUID> {
     @OneToOne
     private Userx user;
     private boolean enabled;
+
+    @OneToMany
+    private List<Sensor> sensorList;
+
     @OneToMany
     private List<SuperiorTimeRecord> superiorTimeRecords;
 
@@ -60,6 +62,14 @@ public class TemperaStation implements Persistable<UUID> {
 
     public List<SuperiorTimeRecord> getSuperiorTimeRecords() {
         return superiorTimeRecords;
+    }
+
+    public void setSensorList(List<Sensor> sensorList) {
+        this.sensorList = sensorList;
+    }
+
+    public List<Sensor> getSensorList() {
+        return sensorList;
     }
 
     public void addSuperiorTimeRecord(SuperiorTimeRecord superiorTimeRecord) {
