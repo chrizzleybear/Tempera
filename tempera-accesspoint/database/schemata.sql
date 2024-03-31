@@ -27,3 +27,12 @@ CREATE TABLE measurement
     CONSTRAINT sensor_fk FOREIGN KEY (sensor_id) REFERENCES sensor (sensor_id) ON DELETE CASCADE,
     CONSTRAINT measurement_pk PRIMARY KEY (measurement_id)
 );
+
+CREATE TABLE timerecord
+(
+    timerecord_id INTEGER,
+    mode          TEXT,
+    start_time    TEXT,
+    end_time      TEXT,
+    CONSTRAINT timerecord_pk PRIMARY KEY (timerecord_id)
+);
