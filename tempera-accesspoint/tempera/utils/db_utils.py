@@ -65,10 +65,11 @@ def get_measurements(
 
 
 def delete_measurements(
-    sensor_id: int,
+    sensor_id: int | None = None,
     timestamp: datetime | None = None,
     measurement_id: int | None = None,
     value: float | None = None,
+    all: bool = False,
 ) -> None:
     kwargs = {
         "sensor_id": sensor_id,
@@ -76,13 +77,14 @@ def delete_measurements(
         "measurement_id": measurement_id,
         "value": value,
     }
+    if all:
+        query = "DELETE FROM measurement WHERE TRUE"
+    else:
+        query = "DELETE FROM measurement"
+        query = _append_to_query(query, **kwargs)
+        kwargs["timestamp"] = _adapt_date(timestamp)
 
-    query = "DELETE FROM measurement"
-    query = _append_to_query(query, **kwargs)
-
-    kwargs["timestamp"] = _adapt_date(timestamp)
-
-    _execute_query(query, **kwargs)
+    _execute_insert(query, **kwargs)
 
 
 def _execute_query(query: str, **kwargs) -> List[Any]:
@@ -108,7 +110,7 @@ def _execute_insert(insert: str, **kwargs) -> None:
         con.rollback()
         con.close()
         raise sqlite3.DatabaseError(
-            f"No entry found for query: {insert} and args: {kwargs}"
+            f"Failed to execute sql: {insert} with args: {kwargs}"
         )
 
 
