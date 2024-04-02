@@ -2,6 +2,7 @@ package at.qe.skeleton.rest.controllers;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.SuperiorTimeRecord;
+import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.repositories.SuperiorTimeRecordRepository;
 import at.qe.skeleton.rest.dtos.SuperiorTimeRecordDto;
 import at.qe.skeleton.rest.mappers.SuperiorTimeRecordMapper;
@@ -9,6 +10,7 @@ import at.qe.skeleton.services.TimeRecordService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 //code was written with workshop 5 code as template
@@ -28,6 +30,13 @@ public class TimeRecordController {
         Optional<SuperiorTimeRecord> entity = timeRecordService.findSuperiorTimeRecordById(id);
         return entity.map(superiorTimeRecord -> ResponseEntity.ok(timeRecordMapper.mapToDto(superiorTimeRecord)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/hello")
+    private ResponseEntity<SuperiorTimeRecordDto> testTimeRecord() {
+        LocalDateTime nowaday = LocalDateTime.now().minusHours(1);
+        SuperiorTimeRecordDto testDto = new SuperiorTimeRecordDto(1L, "someStation1", nowaday, LocalDateTime.now(), State.DEEPWORK);
+        return ResponseEntity.ok(testDto);
     }
 
     @PostMapping("")
