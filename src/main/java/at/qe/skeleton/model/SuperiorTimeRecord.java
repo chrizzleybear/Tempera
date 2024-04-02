@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 public class SuperiorTimeRecord {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Temporal(TemporalType.TIMESTAMP)

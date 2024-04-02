@@ -49,5 +49,25 @@ public class TimeRecordController {
         }
     }
 
+    @PutMapping("")
+    private ResponseEntity<SuperiorTimeRecordDto> putTimeRecord(@RequestBody SuperiorTimeRecordDto timeRecordDto) {
+        try {
+            SuperiorTimeRecord entity = timeRecordService.save(timeRecordMapper.mapFromDto(timeRecordDto));
+            return ResponseEntity.ok(timeRecordMapper.mapToDto(entity));
+        } catch (CouldNotFindEntityException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("")
+    private ResponseEntity deleteTimeRecord(@RequestBody SuperiorTimeRecordDto dto) {
+        try {
+            timeRecordService.delete(timeRecordMapper.mapFromDto(dto));
+            return ResponseEntity.ok().build();
+        } catch (CouldNotFindEntityException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     //todo: implement put & delete.
 }

@@ -61,6 +61,7 @@ public class SuperiorTimeRecordMapper
                   () ->
                       new CouldNotFindEntityException(
                           "could not find SuperiorTimeRecord with the id %d".formatted(dto.Id())));
+      return entity;
     }
 
     // todo: is it better to just store the id in the SuperiorTimeRecord? because now i have to
