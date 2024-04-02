@@ -15,6 +15,7 @@ public class Measurement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name="measurement_value")
     private double value;
 
     @Temporal(TemporalType.TIMESTAMP)

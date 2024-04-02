@@ -22,6 +22,7 @@ public class Alert {
 
     private AlertType alertType;
 
+    @Column(name="alert_value")
     private double value;
 
     private String message;

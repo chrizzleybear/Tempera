@@ -17,6 +17,7 @@ public class SuperiorTimeRecord {
     private LocalDateTime start;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="time_end")
     private LocalDateTime end;
 
     @ManyToOne
