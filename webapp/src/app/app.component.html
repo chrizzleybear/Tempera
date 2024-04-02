@@ -1,48 +1,21 @@
-<div id="app">
-  <nav>
-    <ul>
-      <li>
-        <a href="/home" routerLink="home">Home </a>
-      </li>
-      @if (showAdminBoard) {
-        <li>
-          <a href="/admin" routerLink="admin">Admin Board</a>
-        </li>
-      }
-      @if (showModeratorBoard) {
-        <li>
-          <a href="/mod" routerLink="mod">Moderator Board</a>
-        </li>
-      }
-      @if (isLoggedIn) {
-        <li>
-          <a href="/user" routerLink="user">User</a>
-        </li>
-      }
-    </ul>
+<!-- app.component.html -->
 
-    @if (!isLoggedIn) {
-      <ul>
-        <li>
-          <a href="/register" routerLink="register">Sign Up</a>
-        </li>
-        <li>
-          <a href="/login" routerLink="login">Login</a>
-        </li>
+<div id="app">
+  <nav class="navbar">
+    <div class="container">
+      <ul class="nav-list">
+        <li class="nav-item"><a routerLink="/home">Home</a></li>
+        <li class="nav-item" *ngIf="!isLoggedIn"><a routerLink="/login">Login</a></li>
+        <li class="nav-item" *ngIf="!isLoggedIn"><a routerLink="/register">Register</a></li>
+        <li class="nav-item" *ngIf="isLoggedIn"><a routerLink="/profile">Profile</a></li>
+        <li class="nav-item" *ngIf="showAdminBoard"><a routerLink="/admin">Admin Board</a></li>
+        <li class="nav-item" *ngIf="showModeratorBoard"><a routerLink="/mod">Manager Board</a></li>
+        <li class="nav-item" *ngIf="isLoggedIn"><a (click)="logout()">Logout</a></li>
       </ul>
-    } @else {
-      <ul>
-        <li>
-          <a href="/profile" routerLink="profile">{{ username }}</a>
-        </li>
-        <li>
-          <a href (click)="logout()">LogOut</a>
-        </li>
-      </ul>
-    }
+    </div>
   </nav>
 
-  <div>
-    <router-outlet />
+  <div class="container">
+    <router-outlet></router-outlet>
   </div>
 </div>

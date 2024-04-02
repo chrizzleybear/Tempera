@@ -2,11 +2,12 @@ import {Component} from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { StorageService } from './_services/storage.service';
 import { AuthService } from './_services/auth.service';
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIf],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -16,6 +17,8 @@ export class AppComponent {
   public showAdminBoard = false;
   public showModeratorBoard = false;
   public username?: string;
+  title: any = 'webapp';
+
 
   constructor(private storageService: StorageService, private authService: AuthService) { }
 

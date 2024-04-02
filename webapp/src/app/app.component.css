@@ -1,0 +1,32 @@
+.navbar {
+  background-color: #676767;
+  color: #fff; /* Set text color */
+  padding: 10px 0; /* Add padding to top and bottom */
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.nav-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-item {
+  display: inline-block;
+  margin-right: 50px;
+}
+
+.nav-item a {
+  text-decoration: none;
+  color: #fff;
+}
+
+.nav-item a:hover {
+  color: #ffc107; /* Change link color on hover */
+}
