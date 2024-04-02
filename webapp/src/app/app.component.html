@@ -16,7 +16,13 @@
             <li class="nav-subitem"><a routerLink="/admin/page2">TS Management</a></li>
             <li class="nav-subitem"><a routerLink="/admin/page2">Room Management</a></li>
           </ul>
-        <li class="nav-item" *ngIf="showModeratorBoard"><a routerLink="/mod">Manager Board</a></li>
+        <li class="nav-item" *ngIf="showModeratorBoard"><a (click)="toggleModeratorMenu()">Manager Board</a></li>
+        <ul *ngIf="showModeratorMenu" class="dropdown-menu">
+          <li class="nav-subitem"><a routerLink="/mod">Manager Test</a></li>
+          <li class="nav-subitem"><a routerLink="/mod/page1">Project Management</a></li>
+          <li class="nav-subitem"><a routerLink="/mod/page2">Time Data</a></li>
+          <li class="nav-subitem"><a routerLink="/mod/page2">Time Distribution </a></li>
+          </ul>
         <li class="nav-item" *ngIf="isLoggedIn"><a (click)="logout()">Logout</a></li>
       </ul>
     </div>
