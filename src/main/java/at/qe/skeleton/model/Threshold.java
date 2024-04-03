@@ -16,7 +16,7 @@ public class Threshold {
     private ThresholdType thresholdType;
     private double value;
     @OneToOne
-    private ModificationReason modificationReason;
+    private Modification modification;
 
     @OneToOne
     private ThresholdTip tip;
@@ -46,12 +46,12 @@ public class Threshold {
         this.value = value;
     }
 
-    public ModificationReason getModificationReason() {
-        return modificationReason;
+    public Modification getModificationReason() {
+        return modification;
     }
 
-    public void setModificationReason(ModificationReason modificationReason) {
-        this.modificationReason = modificationReason;
+    public void setModificationReason(Modification modification) {
+        this.modification = modification;
     }
 
     public ThresholdTip getTip() {
