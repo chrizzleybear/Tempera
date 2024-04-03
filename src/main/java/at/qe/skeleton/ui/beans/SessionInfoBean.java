@@ -1,7 +1,7 @@
 package at.qe.skeleton.ui.beans;
 
 import at.qe.skeleton.model.Userx;
-import at.qe.skeleton.model.UserxRole;
+import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.services.UserService;
 import java.io.Serializable;
 import org.springframework.beans.factory.annotation.Autowired;

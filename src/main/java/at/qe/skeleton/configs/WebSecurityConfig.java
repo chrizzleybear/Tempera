@@ -2,7 +2,7 @@ package at.qe.skeleton.configs;
 
 import javax.sql.DataSource;
 
-import at.qe.skeleton.model.UserxRole;
+import at.qe.skeleton.model.enums.UserxRole;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
+
+import at.qe.skeleton.model.enums.State;
+import at.qe.skeleton.model.enums.UserxRole;
+import at.qe.skeleton.model.enums.Visibility;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -47,9 +51,9 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     private String firstName;
     private String lastName;
     private String email;
-    private String phone;
-
     boolean enabled;
+    private State state;
+    private Visibility stateVisibility;
 
     @ElementCollection(targetClass = UserxRole.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "Userx_UserxRole")
@@ -94,14 +98,6 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public boolean isEnabled() {
@@ -150,6 +146,26 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
 
     public void setUpdateDate(LocalDateTime updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public Visibility getStateVisibility() {
+        return stateVisibility;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public void setStateVisibility(Visibility stateVisibility) {
+        if (this.roles.contains(UserxRole.ADMIN)) {
+            this.stateVisibility = Visibility.PUBLIC;
+            return;
+        }
+        this.stateVisibility = stateVisibility;
     }
 
     @Override
