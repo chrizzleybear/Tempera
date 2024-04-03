@@ -42,12 +42,14 @@ public class TimeRecordController {
     @PostMapping("")
     private ResponseEntity<SuperiorTimeRecordDto> postTimeRecord(@RequestBody SuperiorTimeRecordDto timeRecordDto) {
         try {
-        SuperiorTimeRecord entity = timeRecordService.save(timeRecordMapper.mapFromDto(timeRecordDto));
+        SuperiorTimeRecord entity = timeRecordService.addRecord(timeRecordMapper.mapFromDto(timeRecordDto));
         return ResponseEntity.status(201).body(timeRecordMapper.mapToDto(entity));
         } catch (CouldNotFindEntityException e) {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    /*
 
     @PutMapping("")
     private ResponseEntity<SuperiorTimeRecordDto> putTimeRecord(@RequestBody SuperiorTimeRecordDto timeRecordDto) {
@@ -69,5 +71,5 @@ public class TimeRecordController {
         }
     }
 
-    //todo: implement put & delete.
+     */
 }
