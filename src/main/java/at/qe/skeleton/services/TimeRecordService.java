@@ -1,15 +1,17 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.SuperiorTimeRecord;
+import at.qe.skeleton.model.TemperaStation;
+import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.SuperiorTimeRecordRepository;
-import org.jboss.jdeparser.FormatPreferences;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
-
 @Component
 @Scope("application")
 public class TimeRecordService {
@@ -17,9 +19,11 @@ public class TimeRecordService {
     private final Logger logger =Logger.getLogger("logger");
 
     private final SuperiorTimeRecordRepository superiorTimeRecordRepository;
+    //private final UserService userService;
     @Autowired
-    public TimeRecordService (SuperiorTimeRecordRepository superiorTimeRecordRepository) {
+    public TimeRecordService (SuperiorTimeRecordRepository superiorTimeRecordRepository, UserService userService) {
         this.superiorTimeRecordRepository = superiorTimeRecordRepository;
+        //this.userService = userService;
     }
 
     public Optional<SuperiorTimeRecord> findSuperiorTimeRecordById(Long id) {
@@ -30,14 +34,44 @@ public class TimeRecordService {
         return superiorTimeRecordRepository.findFirstByOrderByStartDesc();
     }
 
-    public SuperiorTimeRecord save(SuperiorTimeRecord superiorTimeRecord) {
-        logger.info("Saving superiorTimeRecord %s".formatted(superiorTimeRecord.toString()));
-        return superiorTimeRecordRepository.save(superiorTimeRecord);
+
+
+    /**
+     * this method saves a new SuperiorTimeRecord and adds the start-Time of the new TimeRecord as the End-Time to
+     * the SuperiorTimeRecord entity that was stored last for that user.
+     * @param newTimeRecord
+     * @return the SuperiorTimeRecord that was newly created.
+     */
+    @Transactional
+    public SuperiorTimeRecord addRecord(SuperiorTimeRecord newTimeRecord) {
+        if (newTimeRecord.getStart() == null) {
+            throw new NullPointerException("SuperiorTimeRecord must have a Start Time when being added to db.");
+        }
+        TemperaStation temperaStation = newTimeRecord.getTemperaStation();
+        Optional<SuperiorTimeRecord> lastTimeRecordOptional = findLastTimeRecordByUser(temperaStation.getUser());
+        if (lastTimeRecordOptional.isPresent()){
+            SuperiorTimeRecord lastTimeRecord = lastTimeRecordOptional.get();
+            lastTimeRecord.setEnd(newTimeRecord.getStart());
+            superiorTimeRecordRepository.save(lastTimeRecord);
+            logger.info("saved lastTimeRecord %s".formatted(lastTimeRecord.toString()));
+        }
+        logger.info("Saving newTimeRecord %s".formatted(newTimeRecord.toString()));
+        return superiorTimeRecordRepository.save(newTimeRecord);
     }
 
     public void delete(SuperiorTimeRecord superiorTimeRecord) {
         superiorTimeRecordRepository.delete(superiorTimeRecord);
     }
+
+
+    private Optional<SuperiorTimeRecord> findLastTimeRecordByUser(Userx user) {
+        List<SuperiorTimeRecord> timeRecords = superiorTimeRecordRepository.findLastSavedByUser(user.getUsername());
+        return timeRecords.isEmpty() ? Optional.empty() : Optional.of(timeRecords.get(0));
+    }
+
+
+
+
 
 
 }
