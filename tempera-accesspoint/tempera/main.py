@@ -45,12 +45,15 @@ async def main():
 
         while True:
             for service in client.services:
-                print(f"Service: {service}")
+                print(
+                    f"Service[desc:{service.description};handle:{service.handle};uuid:{service.uuid}]"
+                )
                 for characteristic in service.characteristics:
-                    print(f"Characteristics: {characteristic}")
+                    print(
+                        f"Characteristics[desc:{characteristic.description};uuid:{characteristic.uuid}]"
+                    )
 
-            for val in uuids.values():
-                await start_notify(client, val)
+                    await start_notify(characteristic, characteristic.uuid)
 
             await asyncio.sleep(data_collection_interval)
 
