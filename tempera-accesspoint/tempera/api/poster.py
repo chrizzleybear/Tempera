@@ -5,10 +5,7 @@ import requests
 
 from utils.db_utils import get_measurements, delete_measurements
 
-
-def temperature_data():
-    data = get_measurements(sensor_id=1)
-    return {"temperature data": data}
+uuids = {"temperature": "00002a6e-0000-1000-8000-00805f9b34fb"}
 
 
 class UuidInfo(NamedTuple):
@@ -17,8 +14,13 @@ class UuidInfo(NamedTuple):
     endpoint: str
 
 
+def temperature_data():
+    data = get_measurements(sensor_id=1)
+    return {"temperature data": data}
+
+
 def map_uuid(uuid: str) -> UuidInfo:
-    if uuid == "00002a6e-0000-1000-8000-00805f9b34fb":
+    if uuid == uuids["temperature"]:
         return UuidInfo(
             sensor_id=1,
             callback=temperature_data(),
