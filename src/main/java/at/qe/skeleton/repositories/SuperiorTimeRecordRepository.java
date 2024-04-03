@@ -16,10 +16,10 @@ public interface SuperiorTimeRecordRepository extends AbstractRepository<Superio
 
     @Query("SELECT s FROM SuperiorTimeRecord s " +
             "JOIN s.temperaStation t " +
-            "JOIN t.userx u " +
+            "JOIN t.user u " +
             "WHERE u.username = :username " +
             "ORDER BY s.start DESC " +
-            "LIMIT 1")
+            "Limit 1")
     List<SuperiorTimeRecord> findLastSavedByUser(@Param("username") String username);
 
 }

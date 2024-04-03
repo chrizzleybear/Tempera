@@ -19,11 +19,9 @@ public class TimeRecordService {
     private final Logger logger =Logger.getLogger("logger");
 
     private final SuperiorTimeRecordRepository superiorTimeRecordRepository;
-    //private final UserService userService;
     @Autowired
-    public TimeRecordService (SuperiorTimeRecordRepository superiorTimeRecordRepository, UserService userService) {
+    public TimeRecordService (SuperiorTimeRecordRepository superiorTimeRecordRepository) {
         this.superiorTimeRecordRepository = superiorTimeRecordRepository;
-        //this.userService = userService;
     }
 
     public Optional<SuperiorTimeRecord> findSuperiorTimeRecordById(Long id) {
@@ -38,7 +36,7 @@ public class TimeRecordService {
 
     /**
      * this method saves a new SuperiorTimeRecord and adds the start-Time of the new TimeRecord as the End-Time to
-     * the SuperiorTimeRecord entity that was stored last for that user.
+     * the SuperiorTimeRecord entity with the latest start datetime before the current one.
      * @param newTimeRecord
      * @return the SuperiorTimeRecord that was newly created.
      */

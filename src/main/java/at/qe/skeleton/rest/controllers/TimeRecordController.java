@@ -39,6 +39,7 @@ public class TimeRecordController {
         return ResponseEntity.ok(testDto);
     }
 
+
     @PostMapping("")
     private ResponseEntity<SuperiorTimeRecordDto> postTimeRecord(@RequestBody SuperiorTimeRecordDto timeRecordDto) {
         try {
