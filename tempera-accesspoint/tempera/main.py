@@ -30,9 +30,6 @@ async def main():
     for device in devices:
         if "G4T1" in device.name:
             devs.append(device)
-        # TODO: remove for production
-        elif "Mi 9 Lite" in device.name:  # for testing only
-            devs.append(device)
 
     print(f"Tempera stations found {devs}")
     # TODO: adapt to multiple connected devices
