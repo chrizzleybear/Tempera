@@ -1,0 +1,50 @@
+# adapted from https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
+
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+
+[tool.setuptools]
+packages = ["tempera"]
+
+
+[project]
+name = "tempera"
+dynamic = ["version"]
+description = "Accesspoint functionality to connect sensor stations to the backend."
+dependencies = [
+    "bleak",
+    "requests",
+    "fastapi[all]",
+    "pyyaml"
+]
+requires-python = ">=3.11"
+authors = [
+    { name = "Leonardo Pedri", email = "Leonardo.Pedri@uibk.ac.at" },
+]
+maintainers = [
+    { name = "Leonardo Pedri", email = "Leonardo.Pedri@uibk.ac.at" },
+]
+#readme = "README.md"
+#license = {text = "MIT License"}
+
+
+[project.urls]
+Repository = "https://git.uibk.ac.at/informatik/qe/swess24/group4/g4t1"
+Issues = "https://git.uibk.ac.at/informatik/qe/swess24/group4/g4t1/-/issues"
+
+
+[project.scripts]
+configure = "tempera.gen_config:main"
+
+
+[project.optional-dependencies]
+format = ["black>=24.3.0"]
+all = [
+    "black>=24.3.0",
+]
+
+
+[tool.setuptools.dynamic]
+version = { attr = "tempera.__version__" }
