@@ -1,12 +1,11 @@
 package at.qe.skeleton.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 
 @Entity
-public class ModificationReason {
+public class Modification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,13 +13,22 @@ public class ModificationReason {
 
     private String reason;
 
-    public ModificationReason(String reason) {
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime timeStamp;
+
+    public Modification(String reason) {
+        timeStamp = LocalDateTime.now();
         this.reason = reason;
     }
-    public ModificationReason() {}
+
+    public Modification() {}
 
     public String getReason() {
         return reason;
+    }
+
+    public LocalDateTime getTimeStamp() {
+        return timeStamp;
     }
 
     @Override
@@ -33,7 +41,7 @@ public class ModificationReason {
         if (o == null) {
             return false;
         }
-        if (!(o instanceof ModificationReason other)) {
+        if (!(o instanceof Modification other)) {
             return false;
         }
         return other.reason.equals(this.reason);
