@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import at.qe.skeleton.jwt.JwtUtils;
 import at.qe.skeleton.model.Userx;
-import at.qe.skeleton.model.UserxRole;
+import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.payload.request.LoginRequest;
 import at.qe.skeleton.payload.request.SignupRequest;
 import at.qe.skeleton.payload.response.MessageResponse;

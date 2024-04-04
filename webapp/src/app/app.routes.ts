@@ -6,7 +6,6 @@ import { BoardModeratorComponent } from './board-moderator/board-moderator.compo
 import { BoardUserComponent } from './board-user/board-user.component';
 import { BoardAdminComponent } from './board-admin/board-admin.component';
 import { HomeComponent } from './home/home.component';
-import { RolesComponent} from "./roles/roles.component";
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -16,6 +15,5 @@ export const routes: Routes = [
   { path: 'user', component: BoardUserComponent },
   { path: 'mod', component: BoardModeratorComponent },
   { path: 'admin', component: BoardAdminComponent },
-  { path: 'roles', component: RolesComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
