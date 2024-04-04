@@ -34,6 +34,8 @@ public class TimeRecordService {
 
 
 
+    //todo: jetzt wird IMMER der letzte Time-Record-Endzeitpunkt verändert -> ist potentiell ein Risiko, sollte man vllt
+    // einen Check einführen (nur ändern wenn Endzeitpunkt leer ist oder so)
     /**
      * this method saves a new SuperiorTimeRecord and adds the start-Time of the new TimeRecord as the End-Time to
      * the SuperiorTimeRecord entity with the latest start datetime before the current one.
