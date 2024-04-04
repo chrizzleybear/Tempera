@@ -1,0 +1,35 @@
+<div>
+  <div>
+    <img id="profile-img" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="profile image" />
+    @if (!isLoggedIn) {
+      <form name="form" [formGroup]="this.form" (ngSubmit)="this.form.valid && this.onSubmit()">
+        <div>
+          <label for="username">Username</label>
+          <input type="text" name="username" formControlName="username" id="username"/>
+          @if (this.form.controls.username.errors?.['required']) {
+            <div>Username is required!</div>
+          }
+        </div>
+        <div>
+          <label for="password">Password</label>
+          <input type="password" name="password" formControlName="password" id="password" />
+          @if (this.form.controls.password.errors?.['required']) {
+            <div>Password is required!</div>
+          }
+        </div>
+        <div>
+          <button>Login</button>
+        </div>
+        <div>
+          @if (this.submitted && this.isLoginFailed) {
+            <div role="alert">
+              Login failed: {{ errorMessage }}
+            </div>
+          }
+        </div>
+      </form>
+    } @else {
+      <div>Logged in as {{ roles }}</div>
+    }
+  </div>
+</div>
