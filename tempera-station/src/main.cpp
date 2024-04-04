@@ -1,15 +1,3 @@
-/*
-TO-DO:
-- Richtige Implementierung der Zeitabrechnung bezüglich Zeit overflow
-- Dauerhaft Out of Office wenn nix gewählt
-- nochmaliges Drüken um Neu abzurechnen
-- Am Arduino im Device eine ID hinzufügen die im Backend generiert wird 
-
-- Gschlachtenbretzingen Easter Egg?
-- 
-*/
-
-
 
 #include <Arduino.h>
 #include <ArduinoBLE.h>
@@ -140,6 +128,10 @@ class LED {
 
 // ############### SETUP CODE ###############
 
+// Create objects
+LED led;
+timedSession session;
+
 void setup() {
   // Setup for the rgb-led pins
   pinMode(LED_R, OUTPUT);
@@ -155,12 +147,14 @@ void setup() {
   // Set serial output data rate in bits/s
   Serial.begin(SERIAL_DATA_RATE);
 
-  Serial.println("Tempera > [INFO] System started...");
-}
+  // Set to Out-Of-Office when device is started
+  session.workMode = 4;
+  session.startTime = millis();
+  session.lastSessionDuration = 0;
 
-// Create objects
-LED led;
-timedSession session;
+  led.setColor(findButtonColor(session.workMode));
+  led.toggleLED();
+}
 
 
 
@@ -174,27 +168,15 @@ void loop() {
   if (pin_size_t b = whichButtonPressed()) {
 
     // Update the work session info so the duration and time etc since the last mode change
-    if (session.toggleActive()) {
-      session.workMode = b;
-      session.startTime = millis();
-      session.lastSessionDuration = 0;
-    } else {
-      session.workMode = 0;
-      session.lastSessionDuration = millis() - session.startTime;
-      
-      // check for overflow, if yes correct the time
-      // an overflow will happen after leaving the device on for than approximately 50 consecutive days
-      if (session.lastSessionDuration < 0) {
-        
-      }
-      
-      session.startTime = 0;
-    }
+    session.workMode = b;
+    session.startTime = millis();
+    session.lastSessionDuration = 0;
+
     if (INFO) printSessionUpdate();
     
     // Update LED status and print
     led.setColor(findButtonColor(b));
-    led.toggleLED();
+    led.turnOn();
     if (INFO) printLEDUpdate();
     
     delay(BUTTON_COOLDOWN);
