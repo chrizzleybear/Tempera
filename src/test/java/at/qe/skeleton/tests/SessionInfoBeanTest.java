@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import at.qe.skeleton.model.UserxRole;
+import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.services.UserService;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
 

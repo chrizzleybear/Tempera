@@ -10,7 +10,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import at.qe.skeleton.model.Userx;
-import at.qe.skeleton.model.UserxRole;
+import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.services.UserService;
 
 /**
@@ -126,7 +126,7 @@ public class UserServiceTest {
         toBeCreatedUser.setFirstName(fName);
         toBeCreatedUser.setLastName(lName);
         toBeCreatedUser.setEmail(email);
-        toBeCreatedUser.setPhone(phone);
+        //toBeCreatedUser.setPhone(phone);
         toBeCreatedUser.setRoles(Sets.newSet(UserxRole.EMPLOYEE, UserxRole.MANAGER));
         userService.saveUser(toBeCreatedUser);
 
@@ -137,7 +137,7 @@ public class UserServiceTest {
         Assertions.assertEquals(fName, freshlyCreatedUser.getFirstName(), "User \"" + username + "\" does not have a the correct firstName attribute stored being saved");
         Assertions.assertEquals(lName, freshlyCreatedUser.getLastName(), "User \"" + username + "\" does not have a the correct lastName attribute stored being saved");
         Assertions.assertEquals(email, freshlyCreatedUser.getEmail(), "User \"" + username + "\" does not have a the correct email attribute stored being saved");
-        Assertions.assertEquals(phone, freshlyCreatedUser.getPhone(), "User \"" + username + "\" does not have a the correct phone attribute stored being saved");
+        //Assertions.assertEquals(phone, freshlyCreatedUser.getPhone(), "User \"" + username + "\" does not have a the correct phone attribute stored being saved");
         Assertions.assertTrue(freshlyCreatedUser.getRoles().contains(UserxRole.MANAGER), "User \"" + username + "\" does not have role MANAGER");
         Assertions.assertTrue(freshlyCreatedUser.getRoles().contains(UserxRole.EMPLOYEE), "User \"" + username + "\" does not have role EMPLOYEE");
         Assertions.assertNotNull(freshlyCreatedUser.getCreateUser(), "User \"" + username + "\" does not have a createUser defined after being saved");
