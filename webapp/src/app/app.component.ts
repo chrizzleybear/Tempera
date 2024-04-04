@@ -18,8 +18,16 @@ export class AppComponent {
   public showModeratorBoard = false;
   public username?: string;
   title: any = 'webapp';
+  showAdminMenu = false;
+  showModeratorMenu = false;
+  isNavbarCollapsed = true;
 
-
+  toggleAdminMenu() {
+    this.showAdminMenu = !this.showAdminMenu;
+  }
+  toggleModeratorMenu() {
+    this.showModeratorMenu = !this.showModeratorMenu;
+  }
   constructor(private storageService: StorageService, private authService: AuthService) { }
 
   ngOnInit(): void {
