@@ -1,16 +1,18 @@
 image: alpine:3.17
 
-stages:          # List of stages for jobs, and their order of execution
+stages: # List of stages for jobs, and their order of execution
   - test
   - sonarCheck
+  - format
+  - build
 
 .before_script_template:
   before_script:
     - apk add --update maven
 
-unit-test-job:   # This job runs in the test stage.
+unit-test-job: # This job runs in the test stage.
   extends: .before_script_template
-  stage: test    
+  stage: test
   script:
     - echo "Running unit tests..."
     - mvn test
@@ -26,3 +28,27 @@ sonarqube-check:
     - echo Running sonar analysis for ${SONAR_PROJECT_KEY}
     - mvn -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} ${GITLAB_USER_NAME}" --fail-at-end verify sonar:sonar
   allow_failure: true
+
+python-format-job:
+  # make the pipeline fail if python project files are not formatted properly with black
+  stage: format
+  image:
+    python:3.11.8-alpine
+  script:
+    - pip install black>=24.3.0
+    - black tempera-accesspoint/ --check --verbose --diff --color
+  allow_failure: true
+
+python-build-job:
+  stage: build
+  image: python:3.11.8-alpine
+  script:
+    - python --version ; pip --version
+    - python -m venv venv
+    - source venv/bin/activate
+    - pip install build
+    - python -m build tempera-accesspoint/
+  artifacts:
+    paths:
+      - tempera-accesspoint/dist/*
+    expire_in: 2 days
