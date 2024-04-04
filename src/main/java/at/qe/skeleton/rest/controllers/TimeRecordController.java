@@ -20,6 +20,9 @@ public class TimeRecordController {
     private TimeRecordService timeRecordService;
     private SuperiorTimeRecordMapper timeRecordMapper;
 
+
+    //todo: wenn fehlerhafte anfrage von raspberry kommt -> 400 zurück geben
+
     public TimeRecordController(TimeRecordService timeRecordService, SuperiorTimeRecordMapper timeRecordMapper) {
         this.timeRecordService = timeRecordService;
         this.timeRecordMapper = timeRecordMapper;
