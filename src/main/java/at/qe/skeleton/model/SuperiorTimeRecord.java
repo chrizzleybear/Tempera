@@ -10,24 +10,31 @@ import java.util.List;
 @Entity
 public class SuperiorTimeRecord {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime start;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="time_end")
     private LocalDateTime end;
+
+    @ManyToOne
+    private TemperaStation temperaStation;
 
     @OneToMany
     private List<SubordinateTimeRecord> subordinateRecords;
 
     private State state;
 
-    public SuperiorTimeRecord(LocalDateTime start) {
+    public SuperiorTimeRecord() {};
+    public SuperiorTimeRecord(TemperaStation temperaStation, LocalDateTime start, LocalDateTime end, State state) {
+        this.temperaStation = temperaStation;
         this.start = start;
-    }
-    protected SuperiorTimeRecord() {};
+        this.end = end;
+        this.state = state;
+    };
 
     public LocalDateTime getStart() {
         return start;
@@ -69,6 +76,15 @@ public class SuperiorTimeRecord {
     public void setState(State state) {
         this.state = state;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public TemperaStation getTemperaStation() {
+        return temperaStation;
+    }
+
     @Override
     public int hashCode() {
         return start.hashCode();

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -38,21 +39,27 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         
-        try {   
+        try {
 
             http
-            .cors(cors -> cors.disable())
-            .csrf(csrf -> csrf.disable())
-            .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin)) // needed for H2 console
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/**.jsf")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/jakarta.faces.resource/**")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/error/**")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAnyAuthority("ADMIN")
-                .requestMatchers(new AntPathRequestMatcher("/secured/**")).hasAnyAuthority(ADMIN, MANAGER, EMPLOYEE)
-                .anyRequest().authenticated()
+                    .cors(cors -> cors.disable())
+                    .csrf(csrf -> csrf.disable());
+            http
+
+                    .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin));
+            http// needed for H2 console
+                    .authorizeHttpRequests(authorize -> authorize.requestMatchers("/api/**").authenticated()).httpBasic(Customizer.withDefaults())
+                    .authorizeHttpRequests(authorize -> authorize
+                            .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
+                            .requestMatchers("/api/**").authenticated()
+                            .requestMatchers(new AntPathRequestMatcher("/**.jsf")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/jakarta.faces.resource/**")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/error/**")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAnyAuthority("ADMIN")
+                            .requestMatchers(new AntPathRequestMatcher("/secured/**")).hasAnyAuthority(ADMIN, MANAGER, EMPLOYEE)
+                            .anyRequest().authenticated()
+
             )
             // :TODO: user failureUrl(/login.xhtml?error) and make sure that a corresponding message is displayed
             .formLogin(form -> form

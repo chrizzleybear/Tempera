@@ -14,6 +14,7 @@ public class Threshold {
     private Long id;
     private SensorType sensorType;
     private ThresholdType thresholdType;
+    @Column(name="threshold_value")
     private double value;
     @OneToOne
     private Modification modification;

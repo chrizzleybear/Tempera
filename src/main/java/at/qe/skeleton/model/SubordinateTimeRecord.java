@@ -14,6 +14,7 @@ public class SubordinateTimeRecord {
     private LocalDateTime start;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="time_end")
     private LocalDateTime end;
 
     //bidirectional one-to-many association
