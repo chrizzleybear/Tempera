@@ -1,15 +1,3 @@
-/*
-TO-DO:
-- Richtige Implementierung der Zeitabrechnung bezüglich Zeit overflow
-- Dauerhaft Out of Office wenn nix gewählt
-- nochmaliges Drüken um Neu abzurechnen
-- Am Arduino im Device eine ID hinzufügen die im Backend generiert wird 
-
-- Gschlachtenbretzingen Easter Egg?
-- 
-*/
-
-
 
 #include <Arduino.h>
 #include <ArduinoBLE.h>
