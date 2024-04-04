@@ -3,6 +3,8 @@ package at.qe.skeleton.repositories;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.UserxRole;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -16,6 +18,12 @@ public interface UserxRepository extends AbstractRepository<Userx, String> {
 
 
     Userx findFirstByUsername(String username);
+
+    Optional<Userx> findByUsername(String username);
+
+    Boolean existsByUsername(String username);
+
+    Boolean existsByEmail(String email);
 
     List<Userx> findByUsernameContaining(String username);
 

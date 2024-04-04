@@ -1,0 +1,57 @@
+@import "primeng/resources/themes/saga-blue/theme.css";
+@import "primeng/resources/primeng.min.css";
+@import "primeicons/primeicons.css";
+
+.navbar {
+  background-color: #676767;
+  color: #fff;
+  padding: 10px 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.nav-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-item {
+  display: inline-block;
+  margin-right: 50px;
+}
+
+.nav-item a {
+  text-decoration: none;
+  color: #fff;
+}
+
+.nav-item a:hover {
+  color: #ffc107;
+}
+
+.nav-subitem {
+  display: block;
+  top: 100%;
+  padding: 10px;
+  background-color: #737373;
+}
+
+.nav-item:hover .nav-subitem {
+  display: block;
+}
+
+.nav-subitem a {
+  text-decoration: none;
+  color: #fff;
+  display: block;
+}
+
+.nav-subitem a:hover {
+  color: #ffc107;
+}
