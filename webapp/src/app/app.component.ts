@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { StorageService } from './_services/storage.service';
-import { AuthService } from './_services/auth.service';
+import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
+import {StorageService} from './_services/storage.service';
+import {AuthService} from './_services/auth.service';
 import {NgIf} from "@angular/common";
 
 @Component({
@@ -20,15 +20,17 @@ export class AppComponent {
   title: any = 'webapp';
   showAdminMenu = false;
   showModeratorMenu = false;
-  isNavbarCollapsed = true;
 
   toggleAdminMenu() {
     this.showAdminMenu = !this.showAdminMenu;
   }
+
   toggleModeratorMenu() {
     this.showModeratorMenu = !this.showModeratorMenu;
   }
-  constructor(private storageService: StorageService, private authService: AuthService) { }
+
+  constructor(private storageService: StorageService, private authService: AuthService) {
+  }
 
   ngOnInit(): void {
     this.isLoggedIn = this.storageService.isLoggedIn();
