@@ -24,11 +24,11 @@
 #define LED_B A2
 
 // Define aliases for the button modes
-// Order: Deep-Work, Meeting, Out-Of-Office, Anwesend
-#define B_DW D2 
-#define B_MT D3
-#define B_OO D4
-#define B_AW D5
+// Order: Deep-Work, Meeting, Out-Of-Office, Present
+#define DW D2 
+#define MT D3
+#define OO D4
+#define AW D5
 // Set their colors (rgb value):
 #define B_DW_COLOR {0, 0, 255}
 #define B_MT_COLOR {255, 40, 10}
@@ -54,8 +54,10 @@
 
 pin_size_t whichButtonPressed();
 struct color findButtonColor(pin_size_t button);
+
 void printSessionUpdate();
 void printLEDUpdate();
+void printReadButtonError();
 
 
 
@@ -65,14 +67,14 @@ void printLEDUpdate();
 // Attributes are public to skip Getter and Setter.
 
 struct color {
-  int red;
-  int green;
-  int blue;
+  unsigned red;
+  unsigned green;
+  unsigned blue;
 };
 
 class timedSession {
   public:
-    int workMode = 0;
+    unsigned workMode = 0;
     unsigned long startTime = millis();
     unsigned long lastSessionDuration = 0;
 
@@ -166,6 +168,7 @@ void setup() {
   session.startTime = millis();
   session.lastSessionDuration = 0;
   led.setColor(findButtonColor(session.workMode));
+  led.turnOn();
 
   // BLE: Setup for BLE connectivity and device infos
   if (INFO) {
@@ -219,7 +222,7 @@ void loop() {
 
   // send the current work status after a given time interval
   if (lastUpdate + UPDATE_INTERVAL < millis()) {
-    writeElapsedTimeCharacteristicStructure({0, UPDATE_INTERVAL, 0, 0, session.workMode});
+    writeElapsedTimeCharacteristicStructure({0, UPDATE_INTERVAL, 0, 0, (uint8_t) session.workMode});
     session.lastSessionDuration = millis() - session.startTime; // to-do: fix possible overflow error
     session.startTime = millis();
     lastUpdate = millis();
@@ -230,7 +233,8 @@ void loop() {
   if (pin_size_t b = whichButtonPressed()) {
 
     // Update the work session info so the duration and time etc since the last mode change
-    writeElapsedTimeCharacteristicStructure({0, (millis()-lastUpdate), 0, 0, session.workMode});
+    writeElapsedTimeCharacteristicStructure({0, (millis()-lastUpdate), 0, 0, (uint8_t) session.workMode});
+    lastUpdate = millis();
     session.workMode = b;
     session.lastSessionDuration = millis() - session.startTime; // to-do: fix possible overflow error
     session.startTime = millis();
@@ -254,7 +258,7 @@ void loop() {
   BLE.poll();
 
   // Wait for a bit
-  delay(1000);
+  delay(300);
 }
 
 
@@ -265,15 +269,16 @@ void loop() {
 
 // Checks if one of the four buttons is currently pressed and returns the pressed one or 0 
 pin_size_t whichButtonPressed() {
-  if (!digitalRead(B_DW)) {
-    return B_DW;
-  } else if (!digitalRead(B_MT)) {
-    return B_MT;
-  } else if (!digitalRead(B_OO)) {
-    return B_OO;
-  } else if (!digitalRead(B_AW)) {
-    return B_AW;
+  if (!digitalRead(DW)) {
+    return DW;
+  } else if (!digitalRead(MT)) {
+    return MT;
+  } else if (!digitalRead(OO)) {
+    return OO;
+  } else if (!digitalRead(AW)) {
+    return AW;
   } else {
+    if (INFO) printReadButtonError();
     return 0;
   }
 }
@@ -307,7 +312,6 @@ void printSessionUpdate() {
   Serial.println(session.startTime);
   Serial.print("Tempera > [INFO]    Last session duration: ");
   Serial.println(session.lastSessionDuration);
-  return;
 }
 
 void printLEDUpdate() {
@@ -318,7 +322,10 @@ void printLEDUpdate() {
   Serial.print(led.color.green);
   Serial.print(" ");
   Serial.println(led.color.blue);
-  return;
+}
+
+void printReadButtonError() {
+  Serial.println("Tempera > [ERROR] Button press could not be resolved.");
 }
 
 void blePeripheralConnectHandler(BLEDevice central) {
@@ -342,12 +349,13 @@ void readManufacturerName(BLEDevice central, BLECharacteristic characteristic) {
 void readElapsedTime(BLEDevice central, BLECharacteristic characteristic) {
   Serial.println("Tempera > [INFO] Elapsed time in current work mode: ");
   Serial.print("Tempera > [INFO]    ");
-  Serial.println(central.address()); // to-do correct value
+  Serial.println("<placeholder>"); // to-do print correct value
 }
 
 void readSerialNumber(BLEDevice central, BLECharacteristic characteristic) {
-  Serial.println("Tempera > [INFO] SystemID has been read.");
-  // to-do insert system id
+  Serial.println("Tempera > [INFO] Serial number has been read.");
+  Serial.print("Tempera > [INFO]    ");
+  Serial.println("<placeholder>"); // to-do print correct value
 }
 
 void writeElapsedTimeCharacteristicStructure(elapsedTimeCharacteristicStructure structure) {
