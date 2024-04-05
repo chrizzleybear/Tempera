@@ -127,6 +127,15 @@ struct elapsedTimeCharacteristicStructure {
 BLEService elapsedTimeService("183F");
 BLECharacteristic currentElapsedTimeCharacteristic("2BF2", BLERead | BLEIndicate, 10);
 
+// Setup for the climate measurements:
+/*
+ESS service: 0x181A
+Temperature char.: 0x2A6E
+Irradiance char.: 0x2A77
+Humidity char.: 0x2A6F
+NMVOC char.: 0x2BD3
+*/
+
 // Functions for connection and data transfer
 void blePeripheralConnectHandler(BLEDevice central);
 void blePeripheralDisconnectHandler(BLEDevice central);
@@ -344,15 +353,17 @@ void readManufacturerName(BLEDevice central, BLECharacteristic characteristic) {
 }
 
 void readElapsedTime(BLEDevice central, BLECharacteristic characteristic) {
+  unsigned long time = characteristic.value();
   Serial.println("Tempera > [INFO] Elapsed time in current work mode: ");
   Serial.print("Tempera > [INFO]    ");
-  Serial.println("<placeholder>"); // to-do print correct value
+  Serial.println(time);
 }
 
 void readSerialNumber(BLEDevice central, BLECharacteristic characteristic) {
+  std::string serialNumber = characteristic.value();
   Serial.println("Tempera > [INFO] Serial number has been read.");
   Serial.print("Tempera > [INFO]    ");
-  Serial.println("<placeholder>"); // to-do print correct value
+  Serial.println(serialNumber.c_str());
 }
 
 void writeElapsedTimeCharacteristicStructure(elapsedTimeCharacteristicStructure structure) {
