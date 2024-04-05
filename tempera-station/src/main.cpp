@@ -45,7 +45,8 @@
 #define DEVICE_NAME "Tempera-Station #1"
 #define DEVICE_ID "1234567890"
 
-
+// Set the update interval in which the station transmits the current state
+#define UPDATE_INTERVAL 60000
 
 
 
@@ -71,30 +72,17 @@ struct color {
 
 class timedSession {
   public:
-    int active = 0;
     int workMode = 0;
     unsigned long startTime = millis();
     unsigned long lastSessionDuration = 0;
 
-    int toggleActive () {
-      this->active = !this->active;
-      return this->active;
-    }
 };
 
 class LED {
   public:
-    int ledStatus = 0;
     struct color color = {0, 0, 0};
 
-    void toggleLED() {
-      this->ledStatus = !this->ledStatus;
-      this->ledStatus ? turnOn() : turnOff();
-      return;
-    }
-
     void turnOn() {
-      this->ledStatus = 1;
       analogWrite(LED_R, color.red);
       analogWrite(LED_G, color.green);
       analogWrite(LED_B, color.blue);
@@ -104,7 +92,6 @@ class LED {
     void turnOff() {
       setColor({0, 0, 0});
       turnOn();
-      this->ledStatus = 0;
       return;
     }
 
@@ -116,10 +103,6 @@ class LED {
     }
 };
 
-struct uint48 {
-    uint64_t x:48;
-} __attribute__((packed));
-
 
 
 
@@ -128,8 +111,8 @@ struct uint48 {
 
 // Setup the device information service
 BLEService deviceInformationService("180A");
-BLEStringCharacteristic serialNumberCharacteristic("2A25", BLERead, 32);
 BLEStringCharacteristic manufacturerNameCharacteristic("2A29", BLERead, 64);
+BLECharacteristic serialNumberCharacteristic("2A25", BLERead, 64);
 
 // Setup the elapsed time service for the work time tracking
 struct elapsedTimeCharacteristicStructure {
@@ -137,9 +120,10 @@ struct elapsedTimeCharacteristicStructure {
   uint32_t timeValue;
   uint8_t timeSyncSource;
   uint8_t offset;
+  uint8_t workMode; // for our purpose the clock status bit is used
 };
 BLEService elapsedTimeService("183F");
-BLECharacteristic currentElapsedTimeCharacteristic("2BF2", BLERead, 9);
+BLECharacteristic currentElapsedTimeCharacteristic("2BF2", BLERead | BLEIndicate, 10);
 
 // Functions for connection and data transfer
 void blePeripheralConnectHandler(BLEDevice central);
@@ -154,10 +138,11 @@ void writeElapsedTimeCharacteristicStructure(elapsedTimeCharacteristicStructure 
 
 // ############### SETUP CODE ###############
 
-// Create objects
+// Create objects and variables
+unsigned long lastUpdate = millis();
 LED led;
 timedSession session;
-elapsedTimeCharacteristicStructure currentElapsedTime = {0, 0, 0, 0};
+elapsedTimeCharacteristicStructure currentElapsedTime = {0, 0, 0, 0, 1};
 
 
 void setup() {
@@ -181,7 +166,6 @@ void setup() {
   session.startTime = millis();
   session.lastSessionDuration = 0;
   led.setColor(findButtonColor(session.workMode));
-  led.toggleLED();
 
   // BLE: Setup for BLE connectivity and device infos
   if (INFO) {
@@ -197,13 +181,12 @@ void setup() {
   BLE.setDeviceName(DEVICE_NAME);
   BLE.setAdvertisedService(deviceInformationService);
 
-  // BLE: Setup for user description and system ID
+  // BLE: Setup for user description and serial number
   BLEDescriptor deviceInfoDescriptor("2901", "Sensor station with group number");
   manufacturerNameCharacteristic.addDescriptor(deviceInfoDescriptor);
   manufacturerNameCharacteristic.writeValue("G4T1");
   manufacturerNameCharacteristic.setEventHandler(BLERead, readManufacturerName);
   deviceInformationService.addCharacteristic(manufacturerNameCharacteristic);
-
   // to-do: serial number is not correctly transmitted? 
   // only the first characteristic can be accessed
   BLEDescriptor serialInfoDescriptor("2901", "Unique serial number");
@@ -217,11 +200,10 @@ void setup() {
   // BLE: Setup for elapsed time characteristic
   BLEDescriptor elapsedTimeDescriptor("2901", "Elapsed Time service used for time tracking.");
   currentElapsedTimeCharacteristic.addDescriptor(elapsedTimeDescriptor);
-  currentElapsedTimeCharacteristic.setEventHandler(BLERead, readElapsedTime);
+  currentElapsedTimeCharacteristic.setEventHandler(BLERead | BLEIndicate, readElapsedTime);
   elapsedTimeService.addCharacteristic(currentElapsedTimeCharacteristic);
   BLE.addService(elapsedTimeService);
-  elapsedTimeCharacteristicStructure initialValue = {0, 0, 0, 0};
-  writeElapsedTimeCharacteristicStructure(initialValue);
+  writeElapsedTimeCharacteristicStructure({0, 0, 0, 0, 1});
 
   // BLE: Advertise services
   BLE.advertise();
@@ -235,14 +217,23 @@ void setup() {
 
 void loop() {
 
+  // send the current work status after a given time interval
+  if (lastUpdate + UPDATE_INTERVAL < millis()) {
+    writeElapsedTimeCharacteristicStructure({0, UPDATE_INTERVAL, 0, 0, session.workMode});
+    session.lastSessionDuration = millis() - session.startTime; // to-do: fix possible overflow error
+    session.startTime = millis();
+    lastUpdate = millis();
+    if (INFO) printSessionUpdate();
+  }
+
   // If a button has been pressed change the following:
   if (pin_size_t b = whichButtonPressed()) {
 
     // Update the work session info so the duration and time etc since the last mode change
+    writeElapsedTimeCharacteristicStructure({0, (millis()-lastUpdate), 0, 0, session.workMode});
     session.workMode = b;
+    session.lastSessionDuration = millis() - session.startTime; // to-do: fix possible overflow error
     session.startTime = millis();
-    session.lastSessionDuration = 0;
-
     if (INFO) printSessionUpdate();
     
     // Update LED status and print
@@ -255,6 +246,7 @@ void loop() {
 
 
   // Test
+  currentElapsedTime.timeValue = millis();
   currentElapsedTimeCharacteristic.writeValue((uint8_t *)&currentElapsedTime, sizeof(currentElapsedTime));
   
 
@@ -309,8 +301,6 @@ struct color findButtonColor(pin_size_t button) {
 
 void printSessionUpdate() {
   Serial.println("Tempera > [INFO] Session Info has been updated:");
-  Serial.print("Tempera > [INFO]    Active: ");
-  Serial.println(session.active);
   Serial.print("Tempera > [INFO]    Current work mode: ");
   Serial.println(session.workMode);
   Serial.print("Tempera > [INFO]    Start time: ");
@@ -322,8 +312,6 @@ void printSessionUpdate() {
 
 void printLEDUpdate() {
   Serial.println("Tempera > [INFO] LED state has been updated:");
-  Serial.print("Tempera > [INFO]    Active: ");
-  Serial.println(led.ledStatus);
   Serial.print("Tempera > [INFO]    Color (R-G-B): ");
   Serial.print(led.color.red);
   Serial.print(" ");
@@ -352,7 +340,7 @@ void readManufacturerName(BLEDevice central, BLECharacteristic characteristic) {
 }
 
 void readElapsedTime(BLEDevice central, BLECharacteristic characteristic) {
-  Serial.println("Tempera > [INFO] Elapsed time in current workmode: ");
+  Serial.println("Tempera > [INFO] Elapsed time in current work mode: ");
   Serial.print("Tempera > [INFO]    ");
   Serial.println(central.address()); // to-do correct value
 }
@@ -367,4 +355,5 @@ void writeElapsedTimeCharacteristicStructure(elapsedTimeCharacteristicStructure 
   currentElapsedTimeCharacteristic.writeValue(structure.timeValue);
   currentElapsedTimeCharacteristic.writeValue(structure.timeSyncSource);
   currentElapsedTimeCharacteristic.writeValue(structure.offset);
+  currentElapsedTimeCharacteristic.writeValue(structure.workMode);
 }
