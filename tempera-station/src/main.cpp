@@ -17,6 +17,7 @@
 
 // Toggle additional Informations in serial output:
 #define INFO 1
+#define ERROR 1
 
 // Define Output Pins for LED
 #define LED_R A0
@@ -28,12 +29,12 @@
 #define DW D2 
 #define MT D3
 #define OO D4
-#define AW D5
+#define PT D5
 // Set their colors (rgb value):
-#define B_DW_COLOR {0, 0, 255}
-#define B_MT_COLOR {255, 40, 10}
-#define B_OO_COLOR {255, 0, 0}
-#define B_AW_COLOR {0, 64, 0}
+#define DW_COLOR {0, 0, 255}
+#define MT_COLOR {255, 40, 10}
+#define OO_COLOR {255, 0, 0}
+#define PT_COLOR {0, 64, 0}
 
 // Serial data rate in bits/s
 #define SERIAL_DATA_RATE 9600
@@ -57,7 +58,6 @@ struct color findButtonColor(pin_size_t button);
 
 void printSessionUpdate();
 void printLEDUpdate();
-void printReadButtonError();
 
 
 
@@ -154,10 +154,10 @@ void setup() {
   pinMode(LED_B, OUTPUT);
 
   // Setup for the button pins
-  pinMode(B_DW, INPUT_PULLUP);
-  pinMode(B_MT, INPUT_PULLUP);
-  pinMode(B_OO, INPUT_PULLUP);
-  pinMode(B_AW, INPUT_PULLUP);
+  pinMode(DW, INPUT_PULLUP);
+  pinMode(MT, INPUT_PULLUP);
+  pinMode(OO, INPUT_PULLUP);
+  pinMode(PT, INPUT_PULLUP);
 
   // Set serial output data rate in bits/s
   Serial.begin(SERIAL_DATA_RATE);
@@ -171,7 +171,7 @@ void setup() {
   led.turnOn();
 
   // BLE: Setup for BLE connectivity and device infos
-  if (INFO) {
+  if (ERROR) {
     if (!BLE.begin()) {
       Serial.println("Tempera > [ERROR] Starting BLE failed!");
       while(1);
@@ -231,13 +231,15 @@ void loop() {
 
   // If a button has been pressed change the following:
   if (pin_size_t b = whichButtonPressed()) {
+    led.turnOff();
+    delay(100);
 
     // Update the work session info so the duration and time etc since the last mode change
     writeElapsedTimeCharacteristicStructure({0, (millis()-lastUpdate), 0, 0, (uint8_t) session.workMode});
-    lastUpdate = millis();
     session.workMode = b;
     session.lastSessionDuration = millis() - session.startTime; // to-do: fix possible overflow error
     session.startTime = millis();
+    lastUpdate = millis();
     if (INFO) printSessionUpdate();
     
     // Update LED status and print
@@ -275,10 +277,9 @@ pin_size_t whichButtonPressed() {
     return MT;
   } else if (!digitalRead(OO)) {
     return OO;
-  } else if (!digitalRead(AW)) {
-    return AW;
+  } else if (!digitalRead(PT)) {
+    return PT;
   } else {
-    if (INFO) printReadButtonError();
     return 0;
   }
 }
@@ -286,17 +287,17 @@ pin_size_t whichButtonPressed() {
 // Returns the corresponding color for each button
 struct color findButtonColor(pin_size_t button) {
   switch (button) {
-  case B_AW: 
-    return B_AW_COLOR;
+  case PT: 
+    return PT_COLOR;
     break;
-  case B_DW:
-    return B_DW_COLOR;
+  case DW:
+    return DW_COLOR;
     break;
-  case B_MT:
-    return B_MT_COLOR;
+  case MT:
+    return MT_COLOR;
     break;
-  case B_OO:
-    return B_OO_COLOR;
+  case OO:
+    return OO_COLOR;
     break;
   default:
     return {0, 0, 0};
@@ -322,10 +323,6 @@ void printLEDUpdate() {
   Serial.print(led.color.green);
   Serial.print(" ");
   Serial.println(led.color.blue);
-}
-
-void printReadButtonError() {
-  Serial.println("Tempera > [ERROR] Button press could not be resolved.");
 }
 
 void blePeripheralConnectHandler(BLEDevice central) {
@@ -364,4 +361,5 @@ void writeElapsedTimeCharacteristicStructure(elapsedTimeCharacteristicStructure 
   currentElapsedTimeCharacteristic.writeValue(structure.timeSyncSource);
   currentElapsedTimeCharacteristic.writeValue(structure.offset);
   currentElapsedTimeCharacteristic.writeValue(structure.workMode);
+  if (INFO) Serial.println("Tempera > [INFO] Elapsed time characteristic has been updated.");
 }
