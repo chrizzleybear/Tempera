@@ -39,15 +39,17 @@
 // Serial data rate in bits/s
 #define SERIAL_DATA_RATE 9600
 
-// Delay after which a new button press will be accepted
+// Delay in ms after which a new button press will be accepted
 #define BUTTON_COOLDOWN 500
 
-// Set the device name and custom id
+// Update interval in ms after which the station transmits the current state
+#define UPDATE_INTERVAL 60000
+
+// Device name and custom id
 #define DEVICE_NAME "Tempera-Station #1"
 #define DEVICE_ID "1234567890"
 
-// Set the update interval in which the station transmits the current state
-#define UPDATE_INTERVAL 60000
+
 
 
 
@@ -259,12 +261,6 @@ void loop() {
     delay(BUTTON_COOLDOWN);
   }
 
-
-  // Test
-  currentElapsedTime.timeValue = millis();
-  currentElapsedTimeCharacteristic.writeValue((uint8_t *)&currentElapsedTime, sizeof(currentElapsedTime));
-  
-
   // Check for events
   BLE.poll();
 
@@ -353,24 +349,25 @@ void readManufacturerName(BLEDevice central, BLECharacteristic characteristic) {
 }
 
 void readElapsedTime(BLEDevice central, BLECharacteristic characteristic) {
-  unsigned long time = characteristic.value();
+  unsigned long time = 0; // to-do: add correct value
   Serial.println("Tempera > [INFO] Elapsed time in current work mode: ");
   Serial.print("Tempera > [INFO]    ");
   Serial.println(time);
 }
 
 void readSerialNumber(BLEDevice central, BLECharacteristic characteristic) {
-  std::string serialNumber = characteristic.value();
+  std::string serialNumber = "placeholder"; // to-do: add correct value
   Serial.println("Tempera > [INFO] Serial number has been read.");
   Serial.print("Tempera > [INFO]    ");
   Serial.println(serialNumber.c_str());
 }
 
 void writeElapsedTimeCharacteristicStructure(elapsedTimeCharacteristicStructure structure) {
-  currentElapsedTimeCharacteristic.writeValue(structure.flags);
-  currentElapsedTimeCharacteristic.writeValue(structure.timeValue);
-  currentElapsedTimeCharacteristic.writeValue(structure.timeSyncSource);
-  currentElapsedTimeCharacteristic.writeValue(structure.offset);
-  currentElapsedTimeCharacteristic.writeValue(structure.workMode);
+  uint8_t buffer[sizeof(structure)];
+  memcpy(buffer, &structure, sizeof(structure));
+  if (!currentElapsedTimeCharacteristic.writeValue(buffer, sizeof(buffer)) && ERROR) {
+    Serial.println("Tempera > [ERROR] Could not write to elapsed time characteristic.");
+    return;
+  }
   if (INFO) Serial.println("Tempera > [INFO] Elapsed time characteristic has been updated.");
 }
