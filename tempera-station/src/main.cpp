@@ -198,8 +198,7 @@ void setup() {
   manufacturerNameCharacteristic.writeValue("G4T1");
   manufacturerNameCharacteristic.setEventHandler(BLERead, readManufacturerName);
   deviceInformationService.addCharacteristic(manufacturerNameCharacteristic);
-  // to-do: serial number is not correctly transmitted? 
-  // only the first characteristic can be accessed
+
   BLEDescriptor serialInfoDescriptor("2901", "Unique serial number");
   serialNumberCharacteristic.addDescriptor(serialInfoDescriptor);
   serialNumberCharacteristic.writeValue(DEVICE_ID);
@@ -211,10 +210,9 @@ void setup() {
   // BLE: Setup for elapsed time characteristic
   BLEDescriptor elapsedTimeDescriptor("2901", "Elapsed Time service used for time tracking.");
   currentElapsedTimeCharacteristic.addDescriptor(elapsedTimeDescriptor);
-  currentElapsedTimeCharacteristic.setEventHandler(BLERead | BLEIndicate, readElapsedTime);
+  currentElapsedTimeCharacteristic.setEventHandler(BLERead, readElapsedTime);
   elapsedTimeService.addCharacteristic(currentElapsedTimeCharacteristic);
   BLE.addService(elapsedTimeService);
-  writeElapsedTimeCharacteristicStructure({0, 0, 0, 0, 1, 0});
 
   // BLE: Advertise services
   BLE.advertise();
@@ -342,21 +340,28 @@ void blePeripheralDisconnectHandler(BLEDevice central) {
 void readManufacturerName(BLEDevice central, BLECharacteristic characteristic) {
   Serial.println("Tempera > [INFO] Manufacturer Specifications have been read: ");
   Serial.print("Tempera > [INFO]    ");
-  Serial.println(central.address()); 
+  char buffer[64];
+  characteristic.readValue(buffer, 64);
+  Serial.println(buffer); 
 }
 
 void readElapsedTime(BLEDevice central, BLECharacteristic characteristic) {
-  unsigned long time = 0; // to-do: add correct value
-  Serial.println("Tempera > [INFO] Elapsed time in current work mode: ");
+  uint8_t buffer[sizeof(elapsedTimeCharacteristicStructure)];
+  characteristic.readValue(buffer, sizeof(buffer));
+  Serial.println("Tempera > [INFO] Elapsed time characteristic has been read: ");
   Serial.print("Tempera > [INFO]    ");
-  Serial.println(time);
+  for (uint8_t num : buffer) {
+    Serial.print(num);
+  }
+  Serial.println();
 }
 
 void readSerialNumber(BLEDevice central, BLECharacteristic characteristic) {
-  std::string serialNumber = "placeholder"; // to-do: add correct value
   Serial.println("Tempera > [INFO] Serial number has been read.");
   Serial.print("Tempera > [INFO]    ");
-  Serial.println(serialNumber.c_str());
+  char buffer[64];
+  characteristic.readValue(buffer, 64);
+  Serial.println(buffer);
 }
 
 void writeElapsedTimeCharacteristicStructure(elapsedTimeCharacteristicStructure structure) {
@@ -366,5 +371,12 @@ void writeElapsedTimeCharacteristicStructure(elapsedTimeCharacteristicStructure 
     Serial.println("Tempera > [ERROR] Could not write to elapsed time characteristic.");
     return;
   }
-  if (INFO) Serial.println("Tempera > [INFO] Elapsed time characteristic has been updated.");
+  if (INFO) {
+    Serial.println("Tempera > [INFO] Elapsed time characteristic has been updated.");
+    Serial.print("Tempera > [INFO]    Value: ");
+    for (uint8_t num : buffer) {
+    Serial.print(num);
+    }
+    Serial.println();
+  }
 }
