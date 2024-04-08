@@ -79,7 +79,6 @@ class timedSession {
     unsigned workMode = 0;
     unsigned long startTime = millis();
     unsigned long lastSessionDuration = 0;
-
 };
 
 class LED {
@@ -90,20 +89,17 @@ class LED {
       analogWrite(LED_R, color.red);
       analogWrite(LED_G, color.green);
       analogWrite(LED_B, color.blue);
-      return;
     }
 
     void turnOff() {
       setColor({0, 0, 0});
       turnOn();
-      return;
     }
 
     void setColor(struct color color) {
       this->color.red = color.red;
       this->color.green = color.green;
       this->color.blue = color.blue;
-      return;
     }
 };
 
@@ -116,18 +112,19 @@ class LED {
 // Setup the device information service
 BLEService deviceInformationService("180A");
 BLEStringCharacteristic manufacturerNameCharacteristic("2A29", BLERead, 64);
-BLECharacteristic serialNumberCharacteristic("2A25", BLERead, 64);
+BLEStringCharacteristic serialNumberCharacteristic("2A25", BLERead, 64);
 
 // Setup the elapsed time service for the work time tracking
 struct elapsedTimeCharacteristicStructure {
-  uint8_t flags;
-  uint32_t timeValue;
-  uint8_t timeSyncSource;
-  uint8_t offset;
-  uint8_t workMode; // for our purpose the clock status bit is used
+  uint8_t flags = 0;
+  uint32_t timeValue; // to-do: update timeValue to its maximum possible size of uint_48
+  uint8_t timeSyncSource = 0;
+  uint8_t offset = 0;
+  uint8_t workMode; // for our purpose the clock status bit is used as the workMode
+  uint8_t clockCapabilities = 0; // not used but needed for transmission
 };
 BLEService elapsedTimeService("183F");
-BLECharacteristic currentElapsedTimeCharacteristic("2BF2", BLERead | BLEIndicate, 10);
+BLECharacteristic currentElapsedTimeCharacteristic("2BF2", BLERead | BLEIndicate, sizeof(elapsedTimeCharacteristicStructure));
 
 // Setup for the climate measurements:
 /*
@@ -155,7 +152,7 @@ void writeElapsedTimeCharacteristicStructure(elapsedTimeCharacteristicStructure 
 unsigned long lastUpdate = millis();
 LED led;
 timedSession session;
-elapsedTimeCharacteristicStructure currentElapsedTime = {0, 0, 0, 0, 1};
+elapsedTimeCharacteristicStructure currentElapsedTime = {0, 0, 0, 0, 1, 0};
 
 
 void setup() {
@@ -217,7 +214,7 @@ void setup() {
   currentElapsedTimeCharacteristic.setEventHandler(BLERead | BLEIndicate, readElapsedTime);
   elapsedTimeService.addCharacteristic(currentElapsedTimeCharacteristic);
   BLE.addService(elapsedTimeService);
-  writeElapsedTimeCharacteristicStructure({0, 0, 0, 0, 1});
+  writeElapsedTimeCharacteristicStructure({0, 0, 0, 0, 1, 0});
 
   // BLE: Advertise services
   BLE.advertise();
@@ -233,7 +230,7 @@ void loop() {
 
   // send the current work status after a given time interval
   if (lastUpdate + UPDATE_INTERVAL < millis()) {
-    writeElapsedTimeCharacteristicStructure({0, UPDATE_INTERVAL, 0, 0, (uint8_t) session.workMode});
+    writeElapsedTimeCharacteristicStructure({0, UPDATE_INTERVAL, 0, 0, (uint8_t) session.workMode, 0});
     session.lastSessionDuration = millis() - session.startTime; // to-do: fix possible overflow error
     session.startTime = millis();
     lastUpdate = millis();
@@ -246,7 +243,7 @@ void loop() {
     delay(100);
 
     // Update the work session info so the duration and time etc since the last mode change
-    writeElapsedTimeCharacteristicStructure({0, (millis()-lastUpdate), 0, 0, (uint8_t) session.workMode});
+    writeElapsedTimeCharacteristicStructure({0, (millis()-lastUpdate), 0, 0, (uint8_t) session.workMode, 0});
     session.workMode = b;
     session.lastSessionDuration = millis() - session.startTime; // to-do: fix possible overflow error
     session.startTime = millis();
