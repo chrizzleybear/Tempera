@@ -14,7 +14,6 @@
 
 // ############### CLASS AND STRUCT DECLARATIONS ############### 
 
-
 struct uint48_t {
     uint64_t x: 48;
 };
@@ -36,18 +35,18 @@ class LED {
     public:
         struct color color = {0, 0, 0};
 
-        void turnOn() {
+    void turnOn() {
         analogWrite(LED_R, color.red);
         analogWrite(LED_G, color.green);
         analogWrite(LED_B, color.blue);
-        }
+    }
 
-        void turnOff() {
+    void turnOff() {
         setColor({0, 0, 0});
         turnOn();
-        }
+    }
 
-        void setColor(struct color color) {
+    void setColor(struct color color) {
         this->color.red = color.red;
         this->color.green = color.green;
         this->color.blue = color.blue;

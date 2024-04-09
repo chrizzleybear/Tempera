@@ -52,7 +52,7 @@ struct color findButtonColor(pin_size_t button) {
   }
 };
 
-void printSessionUpdate() {
+void printSessionUpdate(timedSession session) {
   Serial.println("Tempera > [INFO] Session Info has been updated:");
   Serial.print("Tempera > [INFO]    Current work mode: ");
   Serial.println(session.workMode);
@@ -62,7 +62,7 @@ void printSessionUpdate() {
   Serial.println(session.lastSessionDuration);
 };
 
-void printLEDUpdate() {
+void printLEDUpdate(LED led) {
   Serial.println("Tempera > [INFO] LED state has been updated:");
   Serial.print("Tempera > [INFO]    Color (R-G-B): ");
   Serial.print(led.color.red);

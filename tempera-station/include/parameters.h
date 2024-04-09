@@ -37,7 +37,11 @@
 #define UPDATE_INTERVAL 60000
 
 // Device name and custom id
-#define DEVICE_NAME "G4T1 - Tempera-Station #1"
+#define DEVICE_NAME "G4T1-Tempera-Station #1"
 #define DEVICE_ID "1234567890"
+
+
+
+
 
 #endif
