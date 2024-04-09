@@ -26,7 +26,7 @@ java-sonarqube-check:
     GIT_DEPTH: "0"
   script:
     - echo Running sonar analysis for ${SONAR_PROJECT_KEY}
-    - mvn -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} ${GITLAB_USER_NAME}" --fail-at-end verify sonar:sonar
+    - mvn -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} Webapp ${GITLAB_USER_NAME}" --fail-at-end verify sonar:sonar
   allow_failure: true
 
 python-format-job:
@@ -63,7 +63,7 @@ python-sonarqube-check:
     GIT_DEPTH: "0"
   script:
     - echo Running sonar analysis of the access point code for ${SONAR_PROJECT_KEY}
-    - sonar-scanner -Dsonar.sources=tempera-accesspoint/tempera -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} ${GITLAB_USER_NAME}" -Dsonar.python.version=3.11.8
+    - sonar-scanner -Dsonar.sources=tempera-accesspoint/tempera -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} Raspberry ${GITLAB_USER_NAME}" -Dsonar.python.version=3.11.8
   allow_failure: true
 
 cpp-sonarqube-check:
@@ -76,5 +76,5 @@ cpp-sonarqube-check:
     GIT_DEPTH: "0"
   script:
     - echo Running sonar analysis of the tempera station code for ${SONAR_PROJECT_KEY}
-    - sonar-scanner -Dsonar.sources=tempera-station/src -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} ${GITLAB_USER_NAME}"
+    - sonar-scanner -Dsonar.sources=tempera-station/src -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} Arduino ${GITLAB_USER_NAME}"
   allow_failure: true
