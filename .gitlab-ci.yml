@@ -6,6 +6,10 @@ stages: # List of stages for jobs, and their order of execution
   - format
   - build
 
+variables:
+  SONAR_USER_HOME: "${CI_PROJECT_DIR}/code/.sonar"
+  GIT_DEPTH: "0"
+
 .before_script_template:
   before_script:
     - apk add --update maven
@@ -21,9 +25,6 @@ unit-test-job: # This job runs in the test stage.
 java-sonarqube-check:
   extends: .before_script_template
   stage: sonarCheck
-  variables:
-    SONAR_USER_HOME: "${CI_PROJECT_DIR}/code/.sonar"
-    GIT_DEPTH: "0"
   script:
     - echo Running sonar analysis for ${SONAR_PROJECT_KEY}
     - mvn -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} Webapp ${GITLAB_USER_NAME}" --fail-at-end verify sonar:sonar
@@ -58,10 +59,17 @@ python-sonarqube-check:
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: [""]
   stage: sonarCheck
-  variables:
-    SONAR_USER_HOME: "${CI_PROJECT_DIR}/code/.sonar"
-    GIT_DEPTH: "0"
   script:
-    - echo Running sonar analysis of the access point code for ${SONAR_PROJECT_KEY}
+    - echo Running sonar analysis of the Raspberry code for ${SONAR_PROJECT_KEY}
     - sonar-scanner -Dsonar.sources=tempera-accesspoint/tempera -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} Raspberry ${GITLAB_USER_NAME}" -Dsonar.python.version=3.11.8
+  allow_failure: true
+
+typescript-sonarqube-check:
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  stage: sonarCheck
+  script:
+    - echo Running sonar analysis of the front end code for ${SONAR_PROJECT_KEY}
+    - sonar-scanner -Dsonar.sources=webapp -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} angular ${GITLAB_USER_NAME}"
   allow_failure: true
