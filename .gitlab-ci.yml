@@ -63,5 +63,5 @@ python-sonarqube-check:
     GIT_DEPTH: "0"
   script:
     - echo Running sonar analysis of the access point code for ${SONAR_PROJECT_KEY}
-    - sonar-scanner -Dsonar.sources=tempera-accesspoint/tempera -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} ${GITLAB_USER_NAME}" --fail-at-end
+    - sonar-scanner -Dsonar.sources=tempera-accesspoint/tempera -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} ${GITLAB_USER_NAME}"
   allow_failure: true
