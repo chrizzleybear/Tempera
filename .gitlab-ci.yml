@@ -65,3 +65,16 @@ python-sonarqube-check:
     - echo Running sonar analysis of the access point code for ${SONAR_PROJECT_KEY}
     - sonar-scanner -Dsonar.sources=tempera-accesspoint/tempera -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} ${GITLAB_USER_NAME}" -Dsonar.python.version=3.11.8
   allow_failure: true
+
+cpp-sonarqube-check:
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  stage: sonarCheck
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/code/.sonar"
+    GIT_DEPTH: "0"
+  script:
+    - echo Running sonar analysis of the tempera station code for ${SONAR_PROJECT_KEY}
+    - sonar-scanner -Dsonar.sources=tempera-station/src -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} ${GITLAB_USER_NAME}"
+  allow_failure: true
