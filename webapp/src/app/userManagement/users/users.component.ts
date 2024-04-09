@@ -1,8 +1,8 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UsersService} from '../../_services/users.service';
 import {NgForOf} from "@angular/common";
 import {User} from "../../models/user.model";
-import {Table, TableModule} from 'primeng/table';
+import {TableModule} from 'primeng/table';
 import {InputTextModule} from "primeng/inputtext";
 
 @Component({
@@ -19,7 +19,7 @@ import {InputTextModule} from "primeng/inputtext";
 export class UsersComponent implements OnInit{
 
   users: User[] = [];
-  @ViewChild('dt') table!: Table;
+  filteredUsers: User[] = [];
 
   constructor(private usersService: UsersService) {
 
@@ -27,11 +27,18 @@ export class UsersComponent implements OnInit{
   ngOnInit(): void {
     this.usersService.getAllUsers().subscribe(users => {
       this.users = users;
+      this.filteredUsers = users;
     });
   }
 
-  applyFilter($event: Event) {
-    const filterValue = ($event.target as HTMLInputElement).value;
-    this.table.filterGlobal(filterValue, 'contains');
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    if (filterValue) {
+      this.filteredUsers = this.users.filter(user =>
+        user.username.toLowerCase().includes(filterValue.toLowerCase())
+      );
+    } else {
+      this.filteredUsers = this.users;
+    }
   }
 }

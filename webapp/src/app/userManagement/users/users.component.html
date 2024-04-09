@@ -1,5 +1,5 @@
 <input type="text" pInputText placeholder="Search by username" (input)="applyFilter($event)">
-<p-table [value]="users" [globalFilterFields]="['username']" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+<p-table [value]="filteredUsers" [paginator]="true" [rows]="10" responsiveLayout="scroll">
   <ng-template pTemplate="header">
     <tr>
       <th scope="col" pSortableColumn="username">Benutzername<p-sortIcon field="username"></p-sortIcon></th>
