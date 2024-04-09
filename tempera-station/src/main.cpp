@@ -125,7 +125,7 @@ struct elapsedTimeCharacteristicStructure {
   uint8_t timeSyncSource = 0;
   uint8_t offset = 0;
   uint8_t workMode; // for our purpose the clock status bit is used as the workMode
-  uint8_t clockCapabilities = 0; // to-do: set 7 if button was pressed when already in given workMode
+  uint8_t clockCapabilities; // to-do: set 7 if button was pressed when already in given workMode
 };
 BLEService elapsedTimeService("183F");
 BLECharacteristic currentElapsedTimeCharacteristic("2BF2", BLERead | BLEIndicate, sizeof(elapsedTimeCharacteristicStructure));
@@ -148,6 +148,9 @@ void readElapsedTime(BLEDevice central, BLECharacteristic characteristic);
 void readSerialNumber(BLEDevice central, BLECharacteristic characteristic);
 
 void writeElapsedTimeCharacteristicStructure(elapsedTimeCharacteristicStructure structure);
+
+
+
 
 
 // ############### SETUP CODE ###############
@@ -233,7 +236,7 @@ void loop() {
 
   // send the current work status after a given time interval
   if (lastUpdate + UPDATE_INTERVAL < millis()) {
-    writeElapsedTimeCharacteristicStructure({0, UPDATE_INTERVAL, 0, 0, (uint8_t) session.workMode, 0});
+    writeElapsedTimeCharacteristicStructure({0, UPDATE_INTERVAL, 0, 0, (uint8_t) session.workMode, (uint8_t) 0});
     session.lastSessionDuration = millis() - session.startTime; // to-do: fix possible overflow error
     session.startTime = millis();
     lastUpdate = millis();
@@ -246,7 +249,7 @@ void loop() {
     delay(100);
 
     // Update the work session info so the duration and time etc since the last mode change
-    writeElapsedTimeCharacteristicStructure({0, (millis()-lastUpdate), 0, 0, (uint8_t) session.workMode, 0});
+    writeElapsedTimeCharacteristicStructure({0, (millis()-lastUpdate), 0, 0, (uint8_t) session.workMode, (uint8_t) 7});
     session.workMode = b;
     session.lastSessionDuration = millis() - session.startTime; // to-do: fix possible overflow error
     session.startTime = millis();
