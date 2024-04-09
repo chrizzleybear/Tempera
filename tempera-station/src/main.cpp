@@ -46,7 +46,7 @@
 #define UPDATE_INTERVAL 60000
 
 // Device name and custom id
-#define DEVICE_NAME "Tempera-Station #1"
+#define DEVICE_NAME "G4T1 - Tempera-Station #1"
 #define DEVICE_ID "1234567890"
 
 
@@ -67,6 +67,10 @@ void printLEDUpdate();
 
 // ############### CLASS AND STRUCT DECLARATIONS ############### 
 // Attributes are public to skip Getter and Setter.
+
+struct uint48_t {
+  uint64_t x: 48;
+};
 
 struct color {
   unsigned red;
@@ -117,11 +121,11 @@ BLEStringCharacteristic serialNumberCharacteristic("2A25", BLERead, 64);
 // Setup the elapsed time service for the work time tracking
 struct elapsedTimeCharacteristicStructure {
   uint8_t flags = 0;
-  uint32_t timeValue; // to-do: update timeValue to its maximum possible size of uint_48
+  uint48_t timeValue;
   uint8_t timeSyncSource = 0;
   uint8_t offset = 0;
   uint8_t workMode; // for our purpose the clock status bit is used as the workMode
-  uint8_t clockCapabilities = 0; // not used but needed for transmission
+  uint8_t clockCapabilities = 0; // to-do: set 7 if button was pressed when already in given workMode
 };
 BLEService elapsedTimeService("183F");
 BLECharacteristic currentElapsedTimeCharacteristic("2BF2", BLERead | BLEIndicate, sizeof(elapsedTimeCharacteristicStructure));
@@ -225,6 +229,7 @@ void setup() {
 // ############### RUNTIME CODE ###############
 
 void loop() {
+  //to-do: activate built in led when a device is connected
 
   // send the current work status after a given time interval
   if (lastUpdate + UPDATE_INTERVAL < millis()) {
@@ -352,6 +357,7 @@ void readElapsedTime(BLEDevice central, BLECharacteristic characteristic) {
   Serial.print("Tempera > [INFO]    ");
   for (uint8_t num : buffer) {
     Serial.print(num);
+    Serial.print(" ");
   }
   Serial.println();
 }
@@ -376,6 +382,7 @@ void writeElapsedTimeCharacteristicStructure(elapsedTimeCharacteristicStructure 
     Serial.print("Tempera > [INFO]    Value: ");
     for (uint8_t num : buffer) {
     Serial.print(num);
+    Serial.print(" ");
     }
     Serial.println();
   }
