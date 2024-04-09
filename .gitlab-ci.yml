@@ -18,7 +18,7 @@ unit-test-job: # This job runs in the test stage.
     - mvn test
   allow_failure: true
 
-sonarqube-check:
+java-sonarqube-check:
   extends: .before_script_template
   stage: sonarCheck
   variables:
@@ -52,3 +52,16 @@ python-build-job:
     paths:
       - tempera-accesspoint/dist/*
     expire_in: 2 days
+
+python-sonarqube-check:
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  stage: sonarCheck
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/code/.sonar"
+    GIT_DEPTH: "0"
+  script:
+    - echo Running sonar analysis of the access point code for ${SONAR_PROJECT_KEY}
+    - sonar-scanner -Dsonar.sources=tempera-accesspoint/tempera -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} ${GITLAB_USER_NAME}" --fail-at-end
+  allow_failure: true
