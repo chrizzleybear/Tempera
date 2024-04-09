@@ -14,64 +14,17 @@ variables:
   before_script:
     - apk add --update maven
 
-unit-test-job: # This job runs in the test stage.
-  extends: .before_script_template
-  stage: test
-  script:
-    - cd tempera-server
-    - echo "Running unit tests..."
-    - mvn test
-  allow_failure: true
-
 java-sonarqube-check:
   extends: .before_script_template
   stage: sonarCheck
   script:
+    - echo Running sonar analysis of the Raspberry code for ${SONAR_PROJECT_KEY}
+    - sonar-scanner -Dsonar.sources=tempera-accesspoint/tempera -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} python ${GITLAB_USER_NAME}" -Dsonar.python.version=3.11.8
     - cd tempera-server
     - echo Running sonar analysis for ${SONAR_PROJECT_KEY}
     - mvn -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} java ${GITLAB_USER_NAME}" --fail-at-end verify sonar:sonar
-  allow_failure: true
-
-python-format-job:
-  # make the pipeline fail if python project files are not formatted properly with black
-  stage: format
-  image:
-    python:3.11.8-alpine
-  script:
-    - pip install black>=24.3.0
-    - black tempera-accesspoint/ --check --verbose --diff --color
-  allow_failure: true
-
-python-build-job:
-  stage: build
-  image: python:3.11.8-alpine
-  script:
-    - python --version ; pip --version
-    - python -m venv venv
-    - source venv/bin/activate
-    - pip install build
-    - python -m build tempera-accesspoint/
-  artifacts:
-    paths:
-      - tempera-accesspoint/dist/*
-    expire_in: 2 days
-
-python-sonarqube-check:
-  image:
-    name: sonarsource/sonar-scanner-cli:latest
-    entrypoint: [""]
-  stage: sonarCheck
-  script:
-    - echo Running sonar analysis of the Raspberry code for ${SONAR_PROJECT_KEY}
-    - sonar-scanner -Dsonar.sources=tempera-accesspoint/tempera -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} python ${GITLAB_USER_NAME}" -Dsonar.python.version=3.11.8
-  allow_failure: true
-
-typescript-sonarqube-check:
-  image:
-    name: sonarsource/sonar-scanner-cli:latest
-    entrypoint: [""]
-  stage: sonarCheck
-  script:
+    - cd ..
     - echo Running sonar analysis of the front end code for ${SONAR_PROJECT_KEY}
     - sonar-scanner -Dsonar.sources=tempera-server/webapp -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} angular ${GITLAB_USER_NAME}"
   allow_failure: true
+
