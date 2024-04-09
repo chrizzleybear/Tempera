@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../_services/user.service';
 import { StorageService } from '../_services/storage.service';
+import { UsersComponent} from "../userManagement/users/users.component";
 
 @Component({
   selector: 'app-board-admin',
   standalone: true,
-  imports: [],
+  imports: [UsersComponent],
   templateUrl: './board-admin.component.html',
   styleUrl: './board-admin.component.css'
 })
