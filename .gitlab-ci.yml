@@ -19,7 +19,7 @@ unit-test-job: # This job runs in the test stage.
   stage: test
   script:
     - echo "Running unit tests..."
-    - mvn test
+    - mvn tempera-server/test
   allow_failure: true
 
 java-sonarqube-check:
