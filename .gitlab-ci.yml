@@ -27,7 +27,7 @@ java-sonarqube-check:
   stage: sonarCheck
   script:
     - echo Running sonar analysis for ${SONAR_PROJECT_KEY}
-    - mvn -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} Webapp ${GITLAB_USER_NAME}" --fail-at-end verify sonar:sonar
+    - mvn -Dsonar.sources=tempera-server -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} java ${GITLAB_USER_NAME}" --fail-at-end verify sonar:sonar
   allow_failure: true
 
 python-format-job:
@@ -61,7 +61,7 @@ python-sonarqube-check:
   stage: sonarCheck
   script:
     - echo Running sonar analysis of the Raspberry code for ${SONAR_PROJECT_KEY}
-    - sonar-scanner -Dsonar.sources=tempera-accesspoint/tempera -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} Raspberry ${GITLAB_USER_NAME}" -Dsonar.python.version=3.11.8
+    - sonar-scanner -Dsonar.sources=tempera-accesspoint/tempera -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} python ${GITLAB_USER_NAME}" -Dsonar.python.version=3.11.8
   allow_failure: true
 
 typescript-sonarqube-check:
@@ -71,5 +71,5 @@ typescript-sonarqube-check:
   stage: sonarCheck
   script:
     - echo Running sonar analysis of the front end code for ${SONAR_PROJECT_KEY}
-    - sonar-scanner -Dsonar.sources=webapp -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} angular ${GITLAB_USER_NAME}"
+    - sonar-scanner -Dsonar.sources=tempera-server/webapp -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} angular ${GITLAB_USER_NAME}"
   allow_failure: true
