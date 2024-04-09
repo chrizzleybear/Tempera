@@ -18,14 +18,16 @@ unit-test-job: # This job runs in the test stage.
   extends: .before_script_template
   stage: test
   script:
+    - cd tempera-server
     - echo "Running unit tests..."
-    - mvn tempera-server/test
+    - mvn test
   allow_failure: true
 
 java-sonarqube-check:
   extends: .before_script_template
   stage: sonarCheck
   script:
+    - cd tempera-server
     - echo Running sonar analysis for ${SONAR_PROJECT_KEY}
     - mvn -Dsonar.sources=tempera-server -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} java ${GITLAB_USER_NAME}" --fail-at-end verify sonar:sonar
   allow_failure: true
