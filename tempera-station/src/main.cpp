@@ -1,4 +1,8 @@
 
+// Standard libraries
+#include <stdint.h>
+
+// Arduino libraries
 #include <Arduino.h>
 #include <ArduinoBLE.h>
 
@@ -8,104 +12,11 @@
 #include <Adafruit_Sensor.h>
 #include "Adafruit_BME680.h"
 
-#include <stdint.h>
+// Include further headers
+#include "../include/classesStructs.h"
+#include "../include/parameters.h"
+#include "../include/functions.h"
 
-
-
-
-// ############### PARAMETERS ############### 
-
-// Toggle additional Informations in serial output:
-#define INFO 1
-#define ERROR 1
-
-// Define Output Pins for LED
-#define LED_R A0
-#define LED_G A1
-#define LED_B A2
-
-// Define aliases for the button modes
-// Order: Deep-Work, Meeting, Out-Of-Office, Present
-#define DW D2 
-#define MT D3
-#define OO D4
-#define PT D5
-// Set their colors (rgb value):
-#define DW_COLOR {0, 0, 255}
-#define MT_COLOR {255, 40, 10}
-#define OO_COLOR {255, 0, 0}
-#define PT_COLOR {0, 64, 0}
-
-// Serial data rate in bits/s
-#define SERIAL_DATA_RATE 9600
-
-// Delay in ms after which a new button press will be accepted
-#define BUTTON_COOLDOWN 500
-
-// Update interval in ms after which the station transmits the current state
-#define UPDATE_INTERVAL 60000
-
-// Device name and custom id
-#define DEVICE_NAME "G4T1 - Tempera-Station #1"
-#define DEVICE_ID "1234567890"
-
-
-
-
-
-// ############### FUNCTIONS DECLARATIONS ############### 
-
-pin_size_t whichButtonPressed();
-struct color findButtonColor(pin_size_t button);
-
-void printSessionUpdate();
-void printLEDUpdate();
-
-
-
-
-
-// ############### CLASS AND STRUCT DECLARATIONS ############### 
-// Attributes are public to skip Getter and Setter.
-
-struct uint48_t {
-  uint64_t x: 48;
-};
-
-struct color {
-  unsigned red;
-  unsigned green;
-  unsigned blue;
-};
-
-class timedSession {
-  public:
-    unsigned workMode = 0;
-    unsigned long startTime = millis();
-    unsigned long lastSessionDuration = 0;
-};
-
-class LED {
-  public:
-    struct color color = {0, 0, 0};
-
-    void turnOn() {
-      analogWrite(LED_R, color.red);
-      analogWrite(LED_G, color.green);
-      analogWrite(LED_B, color.blue);
-    }
-
-    void turnOff() {
-      setColor({0, 0, 0});
-      turnOn();
-    }
-
-    void setColor(struct color color) {
-      this->color.red = color.red;
-      this->color.green = color.green;
-      this->color.blue = color.blue;
-    }
-};
 
 
 
@@ -273,65 +184,6 @@ void loop() {
 
 
 
-
-
-// ############### FUNCTIONS ###############
-
-// Checks if one of the four buttons is currently pressed and returns the pressed one or 0 
-pin_size_t whichButtonPressed() {
-  if (!digitalRead(DW)) {
-    return DW;
-  } else if (!digitalRead(MT)) {
-    return MT;
-  } else if (!digitalRead(OO)) {
-    return OO;
-  } else if (!digitalRead(PT)) {
-    return PT;
-  } else {
-    return 0;
-  }
-}
-
-// Returns the corresponding color for each button
-struct color findButtonColor(pin_size_t button) {
-  switch (button) {
-  case PT: 
-    return PT_COLOR;
-    break;
-  case DW:
-    return DW_COLOR;
-    break;
-  case MT:
-    return MT_COLOR;
-    break;
-  case OO:
-    return OO_COLOR;
-    break;
-  default:
-    return {0, 0, 0};
-    break;
-  }
-}
-
-void printSessionUpdate() {
-  Serial.println("Tempera > [INFO] Session Info has been updated:");
-  Serial.print("Tempera > [INFO]    Current work mode: ");
-  Serial.println(session.workMode);
-  Serial.print("Tempera > [INFO]    Start time: ");
-  Serial.println(session.startTime);
-  Serial.print("Tempera > [INFO]    Last session duration: ");
-  Serial.println(session.lastSessionDuration);
-}
-
-void printLEDUpdate() {
-  Serial.println("Tempera > [INFO] LED state has been updated:");
-  Serial.print("Tempera > [INFO]    Color (R-G-B): ");
-  Serial.print(led.color.red);
-  Serial.print(" ");
-  Serial.print(led.color.green);
-  Serial.print(" ");
-  Serial.println(led.color.blue);
-}
 
 void blePeripheralConnectHandler(BLEDevice central) {
   Serial.println("Tempera > [INFO] Connected event, central: ");
