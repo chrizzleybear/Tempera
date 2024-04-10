@@ -24,7 +24,7 @@ unit-test-job: # This job runs in the test stage.
   allow_failure: true
 
 # scan job will be skipped (because of "." before the name)
-.java-sonarqube-check:
+java-sonarqube-check:
   extends: .before_script_template
   stage: sonarCheck
   script:
@@ -58,18 +58,18 @@ python-build-job:
     expire_in: 2 days
 
 # scan job will be skipped (because of "." before the name)
-.python-sonarqube-check:
+python-sonarqube-check:
   image:
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: [""]
   stage: sonarCheck
   script:
     - echo Running sonar analysis of the Raspberry code for ${SONAR_PROJECT_KEY}
-    - sonar-scanner -Dsonar.sources=tempera-accesspoint/tempera -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} python ${GITLAB_USER_NAME}" -Dsonar.python.version=3.11.8
+    - sonar-scanner -Dsonar.login=${SONAR_ACCESSPOINT_TOKEN} -Dsonar.sources=tempera-accesspoint/tempera -Dsonar.projectKey=${SONAR_ACCESSPOINT_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} access point ${GITLAB_USER_NAME}" -Dsonar.python.version=3.11.8
   allow_failure: true
 
 # scan job will be performed and appear in Sonar Qube website
-typescript-sonarqube-check:
+.typescript-sonarqube-check:
   image:
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: [""]
