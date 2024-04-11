@@ -4,6 +4,6 @@
 /skeleton.iml
 
 # Ignores for the platformIO project / arduino code
-/tempera-station/source-code/.vscode/
-/tempera-station/source-code/.pio/
+/source-code/.vscode/
+/source-code/.pio/
 
