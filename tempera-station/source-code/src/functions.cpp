@@ -71,10 +71,3 @@ void printLEDUpdate(LED led) {
   Serial.print(" ");
   Serial.println(led.color.blue);
 };
-
-// Used to convert float to the ISO/IEEE 11073-20601 medfloat16 standard
-medfloat16 floatToMedfloat16(float num) {
-  medfloat16 value;
-  return value;
-}
-

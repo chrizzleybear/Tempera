@@ -37,6 +37,7 @@ BLEService environmentalSensingService("181A");
 BLECharacteristic temperatureCharacteristic("2A6E", BLERead, sizeof(temperatureCharacteristicStructure));
 BLECharacteristic irradianceCharacteristic("2A77", BLERead, sizeof(irradianceCharacteristicStructure));
 BLECharacteristic humidityCharacteristic("2A6F", BLERead, sizeof(humidityCharacteristicStructure));
+// nmvocCharacteristic does not adhere to the BLE specifications, see definition of nmvocCharacteristicStructure  
 BLECharacteristic nmvocCharacteristic("2BD3", BLERead, sizeof(nmvocCharacteristicStructure));
 
 

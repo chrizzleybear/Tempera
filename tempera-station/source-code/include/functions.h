@@ -22,6 +22,4 @@ struct color findButtonColor(pin_size_t button);
 void printSessionUpdate(timedSession session);
 void printLEDUpdate(LED led);
 
-medfloat16 floatToMedfloat16(float num);
-
 #endif

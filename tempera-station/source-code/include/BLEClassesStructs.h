@@ -36,8 +36,12 @@ struct humidityCharacteristicStructure {
   uint16_t humidity; // in %, range 0 to 100, accuracy of 0.01
 };
 
+/* This characteristic uses a medfloat16 value according to the specificaions. 
+* For our purpose we simplify this by using a scaled uint16_t value.
+* To scale the value, we change the units from kg/m^3 to g/m^3.
+*/
 struct nmvocCharacteristicStructure {
-  float_t nmvoc; // in kg/m^3 
+  uint16_t nmvoc; // in g/m^3 
 }
 
 
