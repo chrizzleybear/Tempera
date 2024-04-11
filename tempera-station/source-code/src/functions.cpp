@@ -71,3 +71,34 @@ void printLEDUpdate(LED led) {
   Serial.print(" ");
   Serial.println(led.color.blue);
 };
+
+// Used to convert float to the ISO/IEEE 11073-20601 medfloat16 standard
+medfloat16 floatToMedfloat16(float num) {
+
+  medfloat16 value;
+  int exponent = 0;
+  int sign = (num < 0) ? 8 : 0;
+  num = fabsf(num);
+
+  if (num == 0.0f) {
+      value.mantissa = 0;
+      value.exponent = 0;
+      value.sign = 0;
+      return value;
+  }
+
+  while (num >= 2.0f) { num /= 2.0f; exponent++; }
+  while (num < 1.0f) { num *= 2.0f; exponent--; }
+
+  uint16_t mantissa = (uint16_t)(num * 512); // 2^9 = 512
+  if (exponent > 7) exponent = 7;
+  if (exponent < -4) exponent = -4;
+  if (mantissa > 511) mantissa = 511;
+
+  value.mantissa = mantissa;
+  value.exponent = exponent + 4; // Bias is 4
+  value.sign = sign;
+
+  return value;
+}
+

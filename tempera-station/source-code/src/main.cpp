@@ -23,23 +23,21 @@
 
 // ############### BLE SETUP ###############
 
-// Setup the device information service
+// Set up the device information service
 BLEService deviceInformationService("180A");
 BLEStringCharacteristic manufacturerNameCharacteristic("2A29", BLERead, 64);
 BLEStringCharacteristic serialNumberCharacteristic("2A25", BLERead, 64);
 
-
+// Set up the elapsed time service for time tracking
 BLEService elapsedTimeService("183F");
 BLECharacteristic currentElapsedTimeCharacteristic("2BF2", BLERead | BLEIndicate, sizeof(elapsedTimeCharacteristicStructure));
 
-// Setup for the climate measurements:
-/*
-ESS service: 0x181A
-Temperature char.: 0x2A6E
-Irradiance char.: 0x2A77
-Humidity char.: 0x2A6F
-NMVOC char.: 0x2BD3
-*/
+// Set up the environmental sensing service for room climate measurements
+BLEService environmentalSensingService("181A");
+BLECharacteristic temperatureCharacteristic("2A6E", BLERead, sizeof(temperatureCharacteristicStructure));
+BLECharacteristic irradianceCharacteristic("2A77", BLERead, sizeof(irradianceCharacteristicStructure));
+BLECharacteristic humidityCharacteristic("2A6F", BLERead, sizeof(humidityCharacteristicStructure));
+BLECharacteristic nmvocCharacteristic("2BD3", BLERead, sizeof(nmvocCharacteristicStructure));
 
 
 
