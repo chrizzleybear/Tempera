@@ -3,10 +3,8 @@ package at.qe.skeleton.controllers;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 
@@ -21,9 +19,22 @@ public class UserManagementController{
         this.userService = userService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<Userx>> getAllUsers() {
         List<Userx> users = userService.getAllUsers().stream().toList();
         return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<Userx> getUser(@PathVariable String id) {
+        Userx user = userService.loadUser(id);
+        return ResponseEntity.ok(user);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable String id) {
+
+        userService.deleteUser(id);
+        return ResponseEntity.ok("User deleted");
     }
 }

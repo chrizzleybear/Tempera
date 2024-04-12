@@ -20,6 +20,7 @@ export class UsersComponent implements OnInit{
 
   users: User[] = [];
   filteredUsers: User[] = [];
+  selectedUsers: User[] = []
 
   constructor(private usersService: UsersService) {
 
@@ -41,4 +42,16 @@ export class UsersComponent implements OnInit{
       this.filteredUsers = this.users;
     }
   }
+
+  deleteSelectedUsers(): void {
+    console.log("delete selected users");
+    this.selectedUsers.forEach(user => {
+      this.usersService.deleteUser(user.id);
+    });
+  }
+
+  getSelectedUsers(): void {
+
+  }
+
 }

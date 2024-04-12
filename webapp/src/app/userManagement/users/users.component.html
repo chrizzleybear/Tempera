@@ -1,5 +1,6 @@
 <input type="text" pInputText placeholder="Search by username" (input)="applyFilter($event)">
-<p-table [value]="filteredUsers" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+<button type="button" (click)="deleteSelectedUsers()" [disabled]="!selectedUsers || selectedUsers.length === 0">Delete Selected Users</button>
+<p-table [value]="filteredUsers" [paginator]="true" [rows]="10" selectionMode="multiple" [(selection)]="selectedUsers" dataKey="id" responsiveLayout="scroll">
   <ng-template pTemplate="header">
     <tr>
       <th scope="col" pSortableColumn="username">Benutzername<p-sortIcon field="username"></p-sortIcon></th>
@@ -20,6 +21,7 @@
         </ul>
       </td>
       <td>{{ user.enabled ? "Ja" : "Nein" }}</td>
+      <td> <p-tableCheckbox [value]="user"></p-tableCheckbox> </td>
     </tr>
   </ng-template>
 </p-table>

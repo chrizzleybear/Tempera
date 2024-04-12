@@ -4,6 +4,7 @@ import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.UserxRepository;
 import java.util.Collection;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -96,5 +97,14 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 
         return UserDetailsImpl.build(user);
+    }
+
+    public void deleteUser(String id) {
+       Optional<Userx> userx = userRepository.findById(id);
+         if(userx.isPresent()){
+              userRepository.delete(userx.get());
+             System.out.println("User with id: " + id + " deleted");
+         }
+
     }
 }
