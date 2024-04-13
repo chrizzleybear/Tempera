@@ -7,7 +7,14 @@ import at.qe.skeleton.rest.dtos.MeasurementDto;
 import at.qe.skeleton.services.SensorService;
 import at.qe.skeleton.services.TemperaStationService;
 import at.qe.skeleton.services.MeasurementService;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+/**
+ * Mapper for {@link Measurement} entities.
+ */
+@Service
 public class MeasurementMapper implements DTOMapper<Measurement, MeasurementDto> {
   private final MeasurementService measurementService;
   private final TemperaStationService temperaStationService;
@@ -54,6 +61,7 @@ public class MeasurementMapper implements DTOMapper<Measurement, MeasurementDto>
       measurement.setSensor(sensor);
       measurement.setTimestamp(dto.timestamp());
       measurement.setValue(dto.value());
+      return measurement;
     }
     measurement = new Measurement(dto.value(), sensor);
     return measurement;
