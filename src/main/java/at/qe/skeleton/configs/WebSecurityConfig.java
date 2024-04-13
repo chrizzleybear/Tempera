@@ -5,7 +5,7 @@ import javax.sql.DataSource;
 import at.qe.skeleton.jwt.AuthEntryPointJwt;
 import at.qe.skeleton.jwt.AuthTokenFilter;
 import at.qe.skeleton.model.enums.UserxRole;
-import at.qe.skeleton.services.UserService;
+import at.qe.skeleton.services.UserxService;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -42,7 +42,7 @@ public class WebSecurityConfig {
 
     @Autowired DataSource dataSource;
 
-    @Autowired UserService userService;
+    @Autowired UserxService userxService;
 
     @Autowired private AuthEntryPointJwt unauthorizedHandler;
 
@@ -55,7 +55,7 @@ public class WebSecurityConfig {
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 
-        authProvider.setUserDetailsService(userService);
+        authProvider.setUserDetailsService(userxService);
         authProvider.setPasswordEncoder(passwordEncoder());
 
         return authProvider;

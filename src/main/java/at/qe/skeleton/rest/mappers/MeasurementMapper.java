@@ -17,15 +17,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class MeasurementMapper implements DTOMapper<Measurement, MeasurementDto> {
   private final MeasurementService measurementService;
-  private final TemperaStationService temperaStationService;
   private final SensorService sensorService;
 
   public MeasurementMapper(
       MeasurementService measurementService,
-      TemperaStationService temperaStationService,
       SensorService sensorService) {
     this.measurementService = measurementService;
-    this.temperaStationService = temperaStationService;
     this.sensorService = sensorService;
   }
 
@@ -34,7 +31,7 @@ public class MeasurementMapper implements DTOMapper<Measurement, MeasurementDto>
     if (entity == null) {
       return null;
     }
-    if (entity.getId() != null) {
+    if (entity.getId() == null) {
       throw new IllegalArgumentException("Measurement entity must have an id.");
     }
     if (entity.getTimestamp() == null) {
@@ -55,7 +52,7 @@ public class MeasurementMapper implements DTOMapper<Measurement, MeasurementDto>
       return null;
     }
     Measurement measurement;
-    Sensor sensor = sensorService.findSensorById(dto.id());
+    Sensor sensor = sensorService.findSensorById(dto.sensorId());
     if (dto.id() != null) {
       measurement = measurementService.findMeasurementById(dto.id());
       measurement.setSensor(sensor);

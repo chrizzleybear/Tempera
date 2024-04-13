@@ -1,6 +1,7 @@
 package at.qe.skeleton.model;
 
 import at.qe.skeleton.model.enums.SensorType;
+import at.qe.skeleton.model.enums.Unit;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -16,11 +17,13 @@ public class Sensor {
   @ManyToOne(optional = false)
   private TemperaStation temperaStation;
 
+  @Enumerated(EnumType.STRING) //necessary to store the enum as a string in the database
   private SensorType sensorType;
 
-  private String unit;
+  @Enumerated(EnumType.STRING)  //necessary to store the enum as a string in the database
+  private Unit unit;
 
-  public Sensor(SensorType sensorType, String unit) {
+  public Sensor(SensorType sensorType, Unit unit) {
     this.sensorType = sensorType;
     this.unit = unit;
   }
@@ -43,11 +46,11 @@ public class Sensor {
     this.sensorType = sensorType;
   }
 
-  public String getUnit() {
+  public Unit getUnit() {
     return unit;
   }
 
-  public void setUnit(String unit) {
+  public void setUnit(Unit unit) {
     this.unit = unit;
   }
-  }
+}

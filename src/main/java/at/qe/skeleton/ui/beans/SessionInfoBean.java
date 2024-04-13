@@ -2,8 +2,9 @@ package at.qe.skeleton.ui.beans;
 
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.UserxRole;
-import at.qe.skeleton.services.UserService;
 import java.io.Serializable;
+
+import at.qe.skeleton.services.UserxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.Authentication;
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Component;
 public class SessionInfoBean implements Serializable {
 
     @Autowired
-    private UserService userService;
+    private UserxService userxService;
 
     /**
      * Attribute to cache the current user.
@@ -41,7 +42,7 @@ public class SessionInfoBean implements Serializable {
             if (currentUserName.isEmpty()) {
                 return null;
             }
-            currentUser = userService.loadUser(currentUserName);
+            currentUser = userxService.loadUser(currentUserName);
         }
         return currentUser;
     }
