@@ -50,8 +50,5 @@ export class UsersComponent implements OnInit{
     });
   }
 
-  getSelectedUsers(): void {
-
-  }
 
 }

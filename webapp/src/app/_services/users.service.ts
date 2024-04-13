@@ -15,13 +15,15 @@ export class UsersService {
     return this.http.get<User[]>(this.API_URL + 'all');
   }
 
-  deleteUser(id: string) {
-    console.log('delete user with id: ' + id);
-    return this.http.delete(`${this.API_URL}delete/${id}`);
-  }
-
-  deleteUser1(id: string) {
-    console.log('delete user with id: ' + id);
-    return this.http.delete(this.API_URL + 'delete/user1');
+  deleteUser(userId: string): void {
+    console.log("Delete user with ID: ", userId);
+    this.http.delete(`${this.API_URL}delete/${userId}`).subscribe({
+      next: (response) => {
+        console.log("User deleted successfully:", response);
+      },
+      error: (error) => {
+        console.error("Error deleting user:", error);
+      }
+    });
   }
 }
