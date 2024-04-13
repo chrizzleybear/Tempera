@@ -18,19 +18,29 @@ public class Measurement {
     @Column(name="measurement_value")
     private double value;
 
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime timestamp;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Sensor sensor;
 
     /**
      * When Creating a Measurement, this Constructor should be used.
      * @param value the Value of the Measurement. Together with sensor.unit the meaning can be inferred.
      */
-    public Measurement (double value) {
+    public Measurement (double value, Sensor sensor) {
         this.value = value;
+        this.sensor = sensor;
         this.timestamp = LocalDateTime.now();
+    }
+
+    public void setValue(double value) {
+        this.value = value;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 
     /**

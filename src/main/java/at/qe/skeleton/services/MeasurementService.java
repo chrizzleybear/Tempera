@@ -1,5 +1,6 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.Measurement;
 import at.qe.skeleton.repositories.MeasurementRepository;
 import at.qe.skeleton.repositories.SensorRepository;
@@ -24,8 +25,8 @@ public class MeasurementService {
         this.sensorRepository = sensorRepository;
     }
 
-    public Measurement findMeasurementById(Long id) {
-        return measurementRepository.findById(id).orElse(null);
+    public Measurement findMeasurementById(Long id) throws CouldNotFindEntityException {
+        return measurementRepository.findById(id).orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id));
     }
 
     //todo: find out: what about authorizations?
@@ -38,13 +39,10 @@ public class MeasurementService {
         return measurementRepository.save(measurement);
     }
 
-
     //delete
     public void deleteMeasurement(Measurement measurement) {
         measurementRepository.delete(measurement);
     }
-
-
 
 
 

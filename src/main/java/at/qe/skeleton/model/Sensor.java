@@ -13,7 +13,8 @@ public class Sensor {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne private TemperaStation temperaStation;
+  @ManyToOne(optional = false)
+  private TemperaStation temperaStation;
 
   private SensorType sensorType;
 
