@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Component
 @Scope("application")
-public class UserService implements UserDetailsService {
+public class UserxService implements UserDetailsService {
 
     @Autowired
     private UserxRepository userRepository;
