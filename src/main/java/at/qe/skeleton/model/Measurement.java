@@ -46,7 +46,7 @@ public class Measurement {
         this.sensor = sensor;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

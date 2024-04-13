@@ -24,6 +24,10 @@ public class MeasurementService {
         this.sensorRepository = sensorRepository;
     }
 
+    public Measurement findMeasurementById(Long id) {
+        return measurementRepository.findById(id).orElse(null);
+    }
+
     //todo: find out: what about authorizations?
     public Measurement findMostRecentBySensorId(Long sensorId) {
         return measurementRepository.findFirstBySensorIdOrderByTimestampDesc(sensorId);
