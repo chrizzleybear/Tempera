@@ -4,11 +4,15 @@ import at.qe.skeleton.model.Measurement;
 import at.qe.skeleton.repositories.MeasurementRepository;
 import at.qe.skeleton.repositories.SensorRepository;
 import at.qe.skeleton.repositories.TemperaStationRepository;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  * Service for handling measurements. Since there is a lot of overlap with SensorService,
  * this Service will handle the measurements and the sensors.
  */
+@Component
+@Scope("application")
 public class MeasurementService {
     private final TemperaStationRepository temperaStationRepository;
     private final MeasurementRepository measurementRepository;
