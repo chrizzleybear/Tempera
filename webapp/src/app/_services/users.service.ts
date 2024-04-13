@@ -26,4 +26,16 @@ export class UsersService {
       }
     });
   }
+
+  updateUser(user: User): void {
+    console.log("Update user with ID: ", user.id);
+    this.http.put(`${this.API_URL}update`, {username: user.username, firstName: user.firstName}).subscribe({
+      next: (response) => {
+        console.log("User updated successfully:", response);
+      },
+      error: (error) => {
+        console.error("Error updating user:", error);
+      }
+    });
+  }
 }

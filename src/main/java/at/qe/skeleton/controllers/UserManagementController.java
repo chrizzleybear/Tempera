@@ -5,7 +5,9 @@ import at.qe.skeleton.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -32,9 +34,16 @@ public class UserManagementController{
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable String id) {
-
+    public ResponseEntity<Map<String, String>> deleteUser(@PathVariable String id) {
         userService.deleteUser(id);
-        return ResponseEntity.ok("User deleted");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "User deleted");
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<Userx> updateUser(@RequestBody Userx user) {
+        Userx updatedUser = userService.saveUser(user);
+        return ResponseEntity.ok(updatedUser);
     }
 }

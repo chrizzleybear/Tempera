@@ -4,6 +4,7 @@ import {NgForOf} from "@angular/common";
 import {User} from "../../models/user.model";
 import {TableModule} from 'primeng/table';
 import {InputTextModule} from "primeng/inputtext";
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-users',
@@ -48,7 +49,15 @@ export class UsersComponent implements OnInit{
     this.selectedUsers.forEach(user => {
       this.usersService.deleteUser(user.id);
     });
+    forkJoin([this.usersService.getAllUsers()]).subscribe(([users]) => {
+      this.users = users;
+      this.filteredUsers = users;
+    }
+    );
   }
 
+  updateSelectedUsers(user: User): void {
+    this.usersService.updateUser(user);
+  }
 
 }
