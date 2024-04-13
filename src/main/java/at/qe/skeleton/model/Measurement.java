@@ -21,6 +21,9 @@ public class Measurement {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime timestamp;
 
+    @ManyToOne
+    private Sensor sensor;
+
     /**
      * When Creating a Measurement, this Constructor should be used.
      * @param value the Value of the Measurement. Together with sensor.unit the meaning can be inferred.
@@ -34,6 +37,14 @@ public class Measurement {
      * JPA needs a non-arg Constructor
      */
     protected Measurement () {}
+
+    public Sensor getSensor() {
+        return sensor;
+    }
+
+    public void setSensor(Sensor sensor) {
+        this.sensor = sensor;
+    }
 
     public long getId() {
         return id;
