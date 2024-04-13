@@ -14,7 +14,9 @@ public class Sensor {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Id
   @ManyToOne(optional = false)
+  @JoinColumn(name = "temperaStation_id")
   private TemperaStation temperaStation;
 
   @Enumerated(EnumType.STRING) //necessary to store the enum as a string in the database
