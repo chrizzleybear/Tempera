@@ -36,8 +36,4 @@ export class StorageService {
     return false;
   }
 
-  getUserById(id: string): User {
-    return this.getUser();
-
-  }
 }

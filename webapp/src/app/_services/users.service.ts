@@ -39,7 +39,7 @@ export class UsersService {
     });
   }
 
-  loadUser(userId: string): Observable<any> {
+  getUserById(userId: string): Observable<User> {
     return this.http.get<User>(`${this.API_URL}load/${userId}`);
   }
 }
