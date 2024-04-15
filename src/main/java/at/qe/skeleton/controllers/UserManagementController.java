@@ -41,7 +41,7 @@ public class UserManagementController{
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<Userx> updateUser(@RequestBody Userx user) {
         Userx updatedUser = userService.saveUser(user);
         return ResponseEntity.ok(updatedUser);

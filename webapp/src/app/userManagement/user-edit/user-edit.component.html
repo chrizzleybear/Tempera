@@ -1,4 +1,5 @@
 <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <p>Username: {{ userId }}</p>
   <input formControlName="firstName" placeholder="First Name">
   <br>
   <input formControlName="lastName" placeholder="Last Name">

@@ -14,13 +14,15 @@ import {NgForOf} from "@angular/common";
 export class UserEditComponent implements OnInit {
   userForm: FormGroup;
   private user: any;
-  private userId: any;
+  userId: any;
   roles: string[];
 
 
   constructor(private fb: FormBuilder, private usersService: UsersService, private route: ActivatedRoute) {
     this.roles = ['ADMIN', 'EMPLOYEE', 'MANAGER', "GROUPLEADER"];
     this.userForm = this.fb.group({
+      userId: [''],
+      password: [''],
       firstName: [''],
       lastName: [''],
       email: [''],
@@ -50,8 +52,10 @@ export class UserEditComponent implements OnInit {
   private populateForm() {
     if (this.user) {
       this.userForm.patchValue({
+        userId: this.user.username,
         firstName: this.user.firstName,
         lastName: this.user.lastName,
+        password: this.user.password,
         email: this.user.email,
         enabled: this.user.enabled,
         roles: this.buildRoles()
@@ -75,7 +79,16 @@ export class UserEditComponent implements OnInit {
     });
   }
   onSubmit() {
+    this.userForm.value.roles = Object.keys(this.userForm.value.roles).filter((role) => this.userForm.value.roles[role]);
     console.log(this.userForm.value);
+    this.usersService.updateUser(this.userId, this.userForm.value).subscribe({
+      next: (response) => {
+        console.log('User updated successfully:', response);
+      },
+      error: (error) => {
+        console.error('Error updating user:', error);
+      }
+    });
   }
 
 }

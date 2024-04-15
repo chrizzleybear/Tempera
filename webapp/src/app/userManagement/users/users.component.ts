@@ -57,10 +57,6 @@ export class UsersComponent implements OnInit{
     );
   }
 
-  updateSelectedUsers(user: User): void {
-    this.usersService.updateUser(user);
-  }
-
   viewUserDetails(user: any) {
     this.router.navigate(['/user', user.id]);
     console.log(user);
