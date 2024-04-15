@@ -8,6 +8,7 @@ import { BoardAdminComponent } from './board-admin/board-admin.component';
 import { HomeComponent } from './home/home.component';
 import {UsersComponent} from "./userManagement/users/users.component";
 import {UserDetailsComponent} from "./userManagement/user-details/user-details.component";
+import {UserEditComponent} from "./userManagement/user-edit/user-edit.component";
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -15,6 +16,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'user/:id', component: UserDetailsComponent },
+  { path: 'user/edit/:id', component: UserEditComponent},
   { path: 'user', component: BoardUserComponent },
   { path: 'mod', component: BoardModeratorComponent },
   { path: 'admin', component: BoardAdminComponent, children: [

@@ -1,0 +1,27 @@
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <input formControlName="firstName" placeholder="First Name">
+  <br>
+  <input formControlName="lastName" placeholder="Last Name">
+  <br>
+  <input formControlName="email" placeholder="Email">
+  <div formGroupName="roles">
+    <label>
+      <input type="checkbox" formControlName="ADMIN"> ADMIN
+    </label>
+    <label>
+      <input type="checkbox" formControlName="EMPLOYEE"> EMPLOYEE
+    </label>
+    <label>
+      <input type="checkbox" formControlName="MANAGER"> MANAGER
+    </label>
+    <label>
+      <input type="checkbox" formControlName="GROUPLEADER"> GROUPLEADER
+    </label>
+  </div>
+  <br>
+  <div>
+  <input type="checkbox" formControlName="enabled"> Active
+  </div>
+  <br>
+  <button type="submit">Save Changes</button>
+</form>

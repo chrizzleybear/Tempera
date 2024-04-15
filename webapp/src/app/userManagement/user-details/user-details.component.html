@@ -1,0 +1,11 @@
+<div *ngIf="user">
+  <h2>User Details: {{ user.username }}</h2>
+  <p>Firstname: {{ user.firstName }}</p>
+  <p>Lastname: {{ user.lastName }}</p>
+  <p>Email: {{ user.email }}</p>
+  <p>Roles:</p>
+  <ul>
+    <li *ngFor="let role of user.roles">{{ role }}</li>
+  </ul>
+  <p>Active: {{ user.enabled }}</p>
+</div>
