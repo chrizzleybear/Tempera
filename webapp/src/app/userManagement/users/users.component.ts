@@ -5,6 +5,7 @@ import {User} from "../../models/user.model";
 import {TableModule} from 'primeng/table';
 import {InputTextModule} from "primeng/inputtext";
 import { forkJoin } from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-users',
@@ -23,7 +24,7 @@ export class UsersComponent implements OnInit{
   filteredUsers: User[] = [];
   selectedUsers: User[] = []
 
-  constructor(private usersService: UsersService) {
+  constructor(private usersService: UsersService, private router: Router, private route: ActivatedRoute ) {
 
   }
   ngOnInit(): void {
@@ -58,6 +59,11 @@ export class UsersComponent implements OnInit{
 
   updateSelectedUsers(user: User): void {
     this.usersService.updateUser(user);
+  }
+
+  viewUserDetails(user: any) {
+    this.router.navigate(['/user', user.id]);
+    console.log(user);
   }
 
 }

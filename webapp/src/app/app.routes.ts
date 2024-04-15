@@ -7,16 +7,18 @@ import { BoardUserComponent } from './board-user/board-user.component';
 import { BoardAdminComponent } from './board-admin/board-admin.component';
 import { HomeComponent } from './home/home.component';
 import {UsersComponent} from "./userManagement/users/users.component";
+import {UserDetailsComponent} from "./userManagement/user-details/user-details.component";
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'profile', component: ProfileComponent },
+  { path: 'user/:id', component: UserDetailsComponent },
   { path: 'user', component: BoardUserComponent },
   { path: 'mod', component: BoardModeratorComponent },
   { path: 'admin', component: BoardAdminComponent, children: [
-  { path: 'users', component: UsersComponent },
+  { path: 'users', component: UsersComponent }
 ]},
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];

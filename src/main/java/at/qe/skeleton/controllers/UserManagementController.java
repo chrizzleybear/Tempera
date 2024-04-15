@@ -27,7 +27,7 @@ public class UserManagementController{
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/load/{id}")
     public ResponseEntity<Userx> getUser(@PathVariable String id) {
         Userx user = userService.loadUser(id);
         return ResponseEntity.ok(user);

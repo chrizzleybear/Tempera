@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import {User} from "../models/user.model";
 
 const USER_KEY = 'auth-user';
 
@@ -33,5 +34,10 @@ export class StorageService {
     }
 
     return false;
+  }
+
+  getUserById(id: string): User {
+    return this.getUser();
+
   }
 }
