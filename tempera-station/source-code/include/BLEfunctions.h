@@ -22,8 +22,18 @@ void blePeripheralDisconnectHandler(BLEDevice central);
 void readManufacturerName(BLEDevice central, BLECharacteristic characteristic);
 void readElapsedTime(BLEDevice central, BLECharacteristic characteristic);
 void readSerialNumber(BLEDevice central, BLECharacteristic characteristic);
+void readAnyRoomClimateData(BLEDevice central, BLECharacteristic characteristic);
 
-void writeElapsedTimeCharacteristicStructure(BLECharacteristic characteristic, elapsedTimeCharacteristicStructure structure);
-
+void writeElapsedTimeCharacteristicStructure(\
+    elapsedTimeCharacteristicStructure structure,\
+    BLECharacteristic characteristic\
+);
+void writeRoomClimateAllCharacteristics(\
+    roomClimateStructure roomClimateData,\
+    BLECharacteristic temperatureCharacteristic,\
+    BLECharacteristic irradianceCharacteristic,\
+    BLECharacteristic humidityCharacteristic,\
+    BLECharacteristic nmvocCharacteristic\
+);
 
 #endif

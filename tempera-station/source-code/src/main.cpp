@@ -34,21 +34,24 @@ BLECharacteristic currentElapsedTimeCharacteristic("2BF2", BLERead | BLEIndicate
 
 // Set up the environmental sensing service for room climate measurements
 BLEService environmentalSensingService("181A");
-BLECharacteristic temperatureCharacteristic("2A6E", BLERead, sizeof(temperatureCharacteristicStructure));
-BLECharacteristic irradianceCharacteristic("2A77", BLERead, sizeof(irradianceCharacteristicStructure));
-BLECharacteristic humidityCharacteristic("2A6F", BLERead, sizeof(humidityCharacteristicStructure));
+roomClimateStructure roomClimateData; // explicit initialization is required for sizeof operation below
+BLECharacteristic temperatureCharacteristic("2A6E", BLERead, sizeof(roomClimateData.temperature));
+BLECharacteristic irradianceCharacteristic("2A77", BLERead, sizeof(roomClimateData.irradiance));
+BLECharacteristic humidityCharacteristic("2A6F", BLERead, sizeof(roomClimateData.humidity));
 // nmvocCharacteristic does not adhere to the BLE specifications, see definition of nmvocCharacteristicStructure  
-BLECharacteristic nmvocCharacteristic("2BD3", BLERead, sizeof(nmvocCharacteristicStructure));
+BLECharacteristic nmvocCharacteristic("2BD3", BLERead, sizeof(roomClimateData.nmvoc));
 
 
 
 // ############### SETUP CODE ###############
 
 // Create objects and set variables
-unsigned long lastUpdate = millis();
+unsigned long lastTimeUpdate = millis();
+unsigned long lastRoomClimateUpdate = millis();
 LED led;
 timedSession session;
 elapsedTimeCharacteristicStructure currentElapsedTime = {0, 0, 0, 0, 1, 0};
+roomClimateStructure roomClimateData = {0, 0, 0, 0};
 
 
 
@@ -111,6 +114,29 @@ void setup() {
   elapsedTimeService.addCharacteristic(currentElapsedTimeCharacteristic);
   BLE.addService(elapsedTimeService);
 
+  // BLE: Setup for room climate data
+  BLEDescriptor temperatureCharacteristicDescriptor("2901", "Last measured temperature in deg. C.");
+  temperatureCharacteristic.addDescriptor(temperatureCharacteristicDescriptor);
+  temperatureCharacteristic.setEventHandler(BLERead, readAnyRoomClimateData);
+
+  BLEDescriptor irradianceCharacteristicDescriptor("2901", "Last measured irradiance in W/m^2.");
+  irradianceCharacteristic.addDescriptor(irradianceCharacteristicDescriptor);
+  irradianceCharacteristic.setEventHandler(BLERead, readAnyRoomClimateData);
+
+  BLEDescriptor humidityCharacteristicDescriptor("2901", "Last measured relative humidity in %.");
+  humidityCharacteristic.addDescriptor(humidityCharacteristicDescriptor);
+  humidityCharacteristic.setEventHandler(BLERead, readAnyRoomClimateData);
+
+  BLEDescriptor nmvocCharacteristicDescriptor("2901", "Last measured non-methane-volatile-organic-compound-concentration in g/m^3.");
+  nmvocCharacteristic.addDescriptor(nmvocCharacteristicDescriptor);
+  nmvocCharacteristic.setEventHandler(BLERead, readAnyRoomClimateData);
+  
+  environmentalSensingService.addCharacteristic(temperatureCharacteristic);
+  environmentalSensingService.addCharacteristic(irradianceCharacteristic);
+  environmentalSensingService.addCharacteristic(humidityCharacteristic);
+  environmentalSensingService.addCharacteristic(nmvocCharacteristic);
+  BLE.addService(environmentalSensingService);
+
   // BLE: Advertise services
   BLE.advertise();
 }
@@ -122,33 +148,61 @@ void setup() {
 void loop() {
   //to-do: activate built in led when a device is connected
 
-  // send the current work status after a given time interval
-  if (lastUpdate + UPDATE_INTERVAL < millis()) {
+  /* 
+  * PERIODIC UPDATE OF THE ROOM CLIMATE DATA:
+  * Updates the current room climate data struct.
+  * (This works in a pull configuration.)
+  */  
+  if (lastRoomClimateUpdate + UPDATE_INTERVAL_RC < millis()) {
+    // to-do: update the roomclimatedata with new values from the sensors
+    writeRoomClimateAllCharacteristics(\
+      roomClimateData,\
+      temperatureCharacteristic,\
+      irradianceCharacteristic,\
+      humidityCharacteristic,\
+      nmvocCharacteristic\
+    );
+    lastRoomClimateUpdate = millis();
+    if (INFO) printRoomClimateDataUpdate(roomClimateData);
+  }
+
+  /* 
+  * PERIODIC UPDATE OF THE TIME TRACKING:
+  * Send the current work status after a given time interval.
+  * (This works in a push configuration.)
+  */
+  if (lastTimeUpdate + UPDATE_INTERVAL_TIME < millis()) {
     writeElapsedTimeCharacteristicStructure(\
-      currentElapsedTimeCharacteristic,\
-      {0, UPDATE_INTERVAL, 0, 0, (uint8_t) session.workMode, (uint8_t) 0});
+      {0, UPDATE_INTERVAL_TIME, 0, 0, (uint8_t) session.workMode, (uint8_t) 0},\
+      currentElapsedTimeCharacteristic\
+    );
     session.lastSessionDuration = millis() - session.startTime; // to-do: fix possible overflow error
     session.startTime = millis();
-    lastUpdate = millis();
+    lastTimeUpdate = millis();
     if (INFO) printSessionUpdate(session);
   }
 
-  // If a button has been pressed change the following:
+  /*
+  * MANUAL UPDATE OF THE TIME TRACKING:
+  * If a button has been pressed a manual update is triggered.
+  * (This works in a push configuration.)
+  */
   if (pin_size_t b = whichButtonPressed()) {
     led.turnOff();
     delay(100);
 
     // Update the work session info so the duration and time etc since the last mode change
     writeElapsedTimeCharacteristicStructure(\
-      currentElapsedTimeCharacteristic,\
-      {0, (millis()-lastUpdate), 0, 0, (uint8_t) session.workMode, (uint8_t) 7});
+      {0, (millis()-lastTimeUpdate), 0, 0, (uint8_t) session.workMode, (uint8_t) 7},\
+      currentElapsedTimeCharacteristic\
+    );
     session.workMode = b;
     session.lastSessionDuration = millis() - session.startTime; // to-do: fix possible overflow error
     session.startTime = millis();
-    lastUpdate = millis();
+    lastTimeUpdate = millis();
     if (INFO) printSessionUpdate(session);
     
-    // Update LED status and print
+    // Update LED status and print led state
     led.setColor(findButtonColor(b));
     led.turnOn();
     if (INFO) printLEDUpdate(led);
@@ -156,10 +210,8 @@ void loop() {
     delay(BUTTON_COOLDOWN);
   }
 
-  // Check for changes to characteristics
+  // Poll for changes to any of the registered characteristics.
   BLE.poll();
-
-  // Wait for a bit
   delay(300);
 }
 

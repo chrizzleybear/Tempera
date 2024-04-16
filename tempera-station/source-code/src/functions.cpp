@@ -71,3 +71,15 @@ void printLEDUpdate(LED led) {
   Serial.print(" ");
   Serial.println(led.color.blue);
 };
+
+void printRoomClimateDataUpdate(roomClimateStructure roomClimateData) {
+  Serial.println("Tempera > [INFO] Room Climate Data has been updated:");
+  Serial.print("Tempera > [INFO]    Temperature: ");
+  Serial.print(roomClimateData.temperature);
+  Serial.print("Tempera > [INFO]    Irradiance: ");
+  Serial.print(roomClimateData.irradiance);
+  Serial.print("Tempera > [INFO]    Humidity: ");
+  Serial.print(roomClimateData.humidity);
+  Serial.print("Tempera > [INFO]    NMVOV: ");
+  Serial.print(roomClimateData.nmvoc);
+};

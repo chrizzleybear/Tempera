@@ -18,15 +18,6 @@ struct uint48_t {
     uint64_t x: 48;
 };
 
-// This is a special standard of ISO/IEEE 11073-20601 used by BLE
-// See  Bluetooth Core Specification, Volume 1, Part E, Section 2.9
-struct medfloat16 {
-    uint16_t mantissa : 7;
-    uint16_t exponent : 8;
-    uint16_t sign : 1;
-};
-
-
 struct color {
     unsigned red;
     unsigned green;

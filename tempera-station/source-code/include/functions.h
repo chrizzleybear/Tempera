@@ -11,6 +11,7 @@
 
 // Include custom headers
 #include "classesStructs.h"
+#include "BLEClassesStructs.h"
 
 
 
@@ -21,5 +22,6 @@ struct color findButtonColor(pin_size_t button);
 
 void printSessionUpdate(timedSession session);
 void printLEDUpdate(LED led);
+void printRoomClimateDataUpdate(roomClimateStructure roomClimateData);
 
 #endif

@@ -20,13 +20,13 @@ void blePeripheralConnectHandler(BLEDevice central) {
   Serial.println("Tempera > [INFO] Connected event, central: ");
   Serial.print("Tempera > [INFO]    ");
   Serial.println(central.address());
-}
+};
 
 void blePeripheralDisconnectHandler(BLEDevice central) {
   Serial.println("Tempera > [INFO] Disconnected event, central: ");
   Serial.print("Tempera > [INFO]    ");
   Serial.println(central.address());
-}
+};
 
 void readManufacturerName(BLEDevice central, BLECharacteristic characteristic) {
   Serial.println("Tempera > [INFO] Manufacturer Specifications have been read: ");
@@ -34,7 +34,7 @@ void readManufacturerName(BLEDevice central, BLECharacteristic characteristic) {
   char buffer[64];
   characteristic.readValue(buffer, 64);
   Serial.println(buffer); 
-}
+};
 
 void readElapsedTime(BLEDevice central, BLECharacteristic characteristic) {
   uint8_t buffer[sizeof(elapsedTimeCharacteristicStructure)];
@@ -46,7 +46,7 @@ void readElapsedTime(BLEDevice central, BLECharacteristic characteristic) {
     Serial.print(" ");
   }
   Serial.println();
-}
+};
 
 void readSerialNumber(BLEDevice central, BLECharacteristic characteristic) {
   Serial.println("Tempera > [INFO] Serial number has been read.");
@@ -54,9 +54,14 @@ void readSerialNumber(BLEDevice central, BLECharacteristic characteristic) {
   char buffer[64];
   characteristic.readValue(buffer, 64);
   Serial.println(buffer);
-}
+};
 
-void writeElapsedTimeCharacteristicStructure(BLECharacteristic currentElapsedTimeCharacteristic, elapsedTimeCharacteristicStructure structure) {
+void readAnyRoomClimateData(BLEDevice central, BLECharacteristic characteristic) {
+  Serial.println("Tempera > [INFO] A room climate data field has been read.");
+  Serial.print("Tempera > [INFO]    (Value not specified)");   // to-do: maybe specify which one has been read
+};
+
+void writeElapsedTimeCharacteristicStructure(elapsedTimeCharacteristicStructure structure, BLECharacteristic currentElapsedTimeCharacteristic) {
   uint8_t buffer[sizeof(structure)];
   memcpy(buffer, &structure, sizeof(structure));
   if (!currentElapsedTimeCharacteristic.writeValue(buffer, sizeof(buffer)) && ERROR) {
@@ -72,4 +77,14 @@ void writeElapsedTimeCharacteristicStructure(BLECharacteristic currentElapsedTim
     }
     Serial.println();
   }
-}
+};
+
+void writeRoomClimateAllCharacteristics(\
+      roomClimateStructure roomClimateData,\
+      BLECharacteristic temperatureCharacteristic,\
+      BLECharacteristic irradianceCharacteristic,\
+      BLECharacteristic humidityCharacteristic,\
+      BLECharacteristic nmvocCharacteristic\
+  ) {
+      return;
+};
