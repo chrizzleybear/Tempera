@@ -25,12 +25,14 @@ struct elapsedTimeCharacteristicStructure {
 /* 
 * Data structure for the characteristics of the environmental sensing service.
 *
-* This characteristic uses a medfloat16 value (see ISO/IEEE 11073-20601) according to the specificaions. 
+* This characteristic uses a medfloat16 value (see ISO/IEEE 11073-20601) according to the specifications. 
 * For our purpose we simplify this by using a scaled uint16_t value.
 * To scale the value, we change the units from kg/m^3 to g/m^3.
+* The accuracy translates to a multiplier that has to be used when writing a value to a characteristic.
+* So if we want to transmit a temperature of 4 °C we need to write a value of 4/0.01 = 400 to the characteristic. 
 */
 struct roomClimateStructure {
-  int16_t temperature; // in C
+  int16_t temperature; // in C, accuracy of 0.01
   uint16_t irradiance; // in W/m^2, accuracy of 0.1
   uint16_t humidity;   // in %, range 0 to 100, accuracy of 0.01
   uint16_t nmvoc;      // in g/m^3

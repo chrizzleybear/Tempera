@@ -105,7 +105,8 @@ void writeRoomClimateAllCharacteristics(\
   uint8_t buffer[4*byteCount];
   if (INFO) {    
     Serial.println("Tempera > [INFO] Room climate characteristics have been updated.");
-    Serial.print("Tempera > [INFO]    Written values: "); // to-do: check if values are retrieved correctly, doesn't seem like they do
+    Serial.print("Tempera > [INFO]    Written values: "); 
+    /* to-do: the values are not retrieved correctly
     memcpy(buffer, temperatureCharacteristic.value(), byteCount);
     memcpy(buffer+byteCount, irradianceCharacteristic.value(), byteCount);
     memcpy(buffer+byteCount, humidityCharacteristic.value(), byteCount);
@@ -116,6 +117,7 @@ void writeRoomClimateAllCharacteristics(\
       Serial.print(num);
       Serial.print((cnt % 4 == 0) ? "   " : " ");
     }
+    */
     Serial.println();
   }
 };

@@ -118,15 +118,15 @@ void setup() {
 
   // BLE: Setup for room climate data
   // to-do: maybe set unique functions for the event handlers
-  BLEDescriptor temperatureCharacteristicDescriptor("2901", "Last measured temperature in deg. C.");
+  BLEDescriptor temperatureCharacteristicDescriptor("2901", "Last measured temperature in deg. C, accuracy of 0.01.");
   temperatureCharacteristic.addDescriptor(temperatureCharacteristicDescriptor);
   temperatureCharacteristic.setEventHandler(BLERead, readAnyRoomClimateData);
 
-  BLEDescriptor irradianceCharacteristicDescriptor("2901", "Last measured irradiance in W/m^2.");
+  BLEDescriptor irradianceCharacteristicDescriptor("2901", "Last measured irradiance in W/m^2, accuracy of 0.1");
   irradianceCharacteristic.addDescriptor(irradianceCharacteristicDescriptor);
   irradianceCharacteristic.setEventHandler(BLERead, readAnyRoomClimateData);
 
-  BLEDescriptor humidityCharacteristicDescriptor("2901", "Last measured relative humidity in %.");
+  BLEDescriptor humidityCharacteristicDescriptor("2901", "Last measured relative humidity in %, accuracy of 0.01");
   humidityCharacteristic.addDescriptor(humidityCharacteristicDescriptor);
   humidityCharacteristic.setEventHandler(BLERead, readAnyRoomClimateData);
 
@@ -159,9 +159,9 @@ void loop() {
 
     // to-do: update the roomclimatedata with new values from the sensors
     // some dummy operations for now:
-    roomClimateData.temperature += 5;
-    roomClimateData.irradiance += 5;
-    roomClimateData.humidity += 5;
+    roomClimateData.temperature += 5/0.01;
+    roomClimateData.irradiance += 5/0.1;
+    roomClimateData.humidity += 5/0.01;
     roomClimateData.nmvoc += 5;
 
 
