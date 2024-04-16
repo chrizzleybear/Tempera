@@ -1,38 +1,37 @@
 CREATE TABLE station
 (
-    station_id INTEGER,
-    -- sqlite doesn't have booleans -> 0 = false ; 1 = true
-    -- TRUE & FALSE can still be used
-    enabled    INTEGER,
-    CONSTRAINT station_pk PRIMARY KEY (station_id)
+    address     TEXT,
+    name        TEXT,
+    description TEXT,
+    enabled     INT,
+    CONSTRAINT station_pk PRIMARY KEY (address)
 );
 
 CREATE TABLE sensor
 (
-    sensor_id  INTEGER,
-    type       TEXT,
-    station_id INTEGER,
-    CONSTRAINT station_fk FOREIGN KEY (station_id) REFERENCES station (station_id),
-    CONSTRAINT sensor_pk PRIMARY KEY (sensor_id)
+    type            TEXT,
+    station_address TEXT,
+    CONSTRAINT sensors_station_fk FOREIGN KEY (station_address) REFERENCES station (address),
+    CONSTRAINT sensor_pk PRIMARY KEY (type, station_address)
 );
 
 CREATE TABLE measurement
 (
-    measurement_id INTEGER,
-    sensor_id      INTEGER,
-    value          REAL, -- a.k.a. float
-    -- sqlite doesn't have dedicated date and/or time types
-    -- from docs: TEXT as ISO8601 strings ("YYYY-MM-DD HH:MM:SS.SSS").
-    timestamp      TEXT,
-    CONSTRAINT sensor_fk FOREIGN KEY (sensor_id) REFERENCES sensor (sensor_id) ON DELETE CASCADE,
-    CONSTRAINT measurement_pk PRIMARY KEY (measurement_id)
+    station_address TEXT,
+    sensor_type     TEXT,
+    value           REAL,
+    timestamp       TEXT,
+    CONSTRAINT measurements_station_fk FOREIGN KEY (station_address) REFERENCES station (address) ON DELETE CASCADE,
+    CONSTRAINT measurements_sensor_fk FOREIGN KEY (sensor_type) REFERENCES sensor (type) ON DELETE CASCADE,
+    CONSTRAINT measurement_pk PRIMARY KEY (station_address, sensor_type, timestamp)
 );
 
-CREATE TABLE timerecord
+CREATE TABLE time_record
 (
-    timerecord_id INTEGER,
-    mode          TEXT,
-    start_time    TEXT,
-    end_time      TEXT,
-    CONSTRAINT timerecord_pk PRIMARY KEY (timerecord_id)
+    station_address TEXT,
+    mode            TEXT,
+    start_time      TEXT,
+    end_time        TEXT,
+    CONSTRAINT time_records_station_fk FOREIGN KEY (station_address) REFERENCES station (address) ON DELETE CASCADE,
+    CONSTRAINT time_record_pk PRIMARY KEY (station_address, start_time)
 );
