@@ -19,6 +19,7 @@
 
 pin_size_t whichButtonPressed();
 struct color findButtonColor(pin_size_t button);
+void switchBuiltInLED(unsigned state);
 
 void printSessionUpdate(timedSession session);
 void printLEDUpdate(LED led);

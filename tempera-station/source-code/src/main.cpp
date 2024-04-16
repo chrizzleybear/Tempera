@@ -34,7 +34,7 @@ BLECharacteristic currentElapsedTimeCharacteristic("2BF2", BLERead | BLEIndicate
 
 // Set up the environmental sensing service for room climate measurements
 BLEService environmentalSensingService("181A");
-roomClimateStructure roomClimateData; // explicit initialization is required for sizeof operation below
+roomClimateStructure roomClimateData = {0, 0, 0, 0}; // explicit initialization is required for sizeof operation below
 BLECharacteristic temperatureCharacteristic("2A6E", BLERead, sizeof(roomClimateData.temperature));
 BLECharacteristic irradianceCharacteristic("2A77", BLERead, sizeof(roomClimateData.irradiance));
 BLECharacteristic humidityCharacteristic("2A6F", BLERead, sizeof(roomClimateData.humidity));
@@ -51,11 +51,13 @@ unsigned long lastRoomClimateUpdate = millis();
 LED led;
 timedSession session;
 elapsedTimeCharacteristicStructure currentElapsedTime = {0, 0, 0, 0, 1, 0};
-roomClimateStructure roomClimateData = {0, 0, 0, 0};
 
 
 
 void setup() {
+  // Setup for the built-in LED
+  pinMode(LED_BUILTIN, OUTPUT);
+
   // Setup for the rgb-led pins
   pinMode(LED_R, OUTPUT);
   pinMode(LED_G, OUTPUT);
@@ -115,6 +117,7 @@ void setup() {
   BLE.addService(elapsedTimeService);
 
   // BLE: Setup for room climate data
+  // to-do: maybe set unique functions for the event handlers
   BLEDescriptor temperatureCharacteristicDescriptor("2901", "Last measured temperature in deg. C.");
   temperatureCharacteristic.addDescriptor(temperatureCharacteristicDescriptor);
   temperatureCharacteristic.setEventHandler(BLERead, readAnyRoomClimateData);
@@ -146,15 +149,25 @@ void setup() {
 // ############### RUNTIME CODE ###############
 
 void loop() {
-  //to-do: activate built in led when a device is connected
-
   /* 
   * PERIODIC UPDATE OF THE ROOM CLIMATE DATA:
   * Updates the current room climate data struct.
   * (This works in a pull configuration.)
   */  
   if (lastRoomClimateUpdate + UPDATE_INTERVAL_RC < millis()) {
+
+
     // to-do: update the roomclimatedata with new values from the sensors
+    // some dummy operations for now:
+    roomClimateData.temperature += 5;
+    roomClimateData.irradiance += 5;
+    roomClimateData.humidity += 5;
+    roomClimateData.nmvoc += 5;
+
+
+    lastRoomClimateUpdate = millis();
+    if (INFO) printRoomClimateDataUpdate(roomClimateData);
+
     writeRoomClimateAllCharacteristics(\
       roomClimateData,\
       temperatureCharacteristic,\
@@ -162,8 +175,6 @@ void loop() {
       humidityCharacteristic,\
       nmvocCharacteristic\
     );
-    lastRoomClimateUpdate = millis();
-    if (INFO) printRoomClimateDataUpdate(roomClimateData);
   }
 
   /* 

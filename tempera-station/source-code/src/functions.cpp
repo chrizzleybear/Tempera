@@ -52,6 +52,14 @@ struct color findButtonColor(pin_size_t button) {
   }
 };
 
+void switchBuiltInLED(unsigned state) {
+  if (state) {
+    digitalWrite(LED_BUILTIN, HIGH);
+  } else {
+    digitalWrite(LED_BUILTIN, LOW);
+  }
+};
+
 void printSessionUpdate(timedSession session) {
   Serial.println("Tempera > [INFO] Session Info has been updated:");
   Serial.print("Tempera > [INFO]    Current work mode: ");
@@ -75,11 +83,11 @@ void printLEDUpdate(LED led) {
 void printRoomClimateDataUpdate(roomClimateStructure roomClimateData) {
   Serial.println("Tempera > [INFO] Room Climate Data has been updated:");
   Serial.print("Tempera > [INFO]    Temperature: ");
-  Serial.print(roomClimateData.temperature);
+  Serial.println(roomClimateData.temperature);
   Serial.print("Tempera > [INFO]    Irradiance: ");
-  Serial.print(roomClimateData.irradiance);
+  Serial.println(roomClimateData.irradiance);
   Serial.print("Tempera > [INFO]    Humidity: ");
-  Serial.print(roomClimateData.humidity);
+  Serial.println(roomClimateData.humidity);
   Serial.print("Tempera > [INFO]    NMVOV: ");
-  Serial.print(roomClimateData.nmvoc);
+  Serial.println(roomClimateData.nmvoc);
 };
