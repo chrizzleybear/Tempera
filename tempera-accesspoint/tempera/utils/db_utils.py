@@ -1,9 +1,12 @@
+import logging
 import sqlite3
 from datetime import datetime
 from pathlib import Path
 from typing import List, Literal, Any, Dict
 
 SensorType = Literal["TEMPERATURE", "AIRQUALITY", "LIGHTINTENSITY", "HUMIDITY"]
+logger = logging.getLogger(f"tempera.{__name__}")
+
 WorkMode = Literal["AVAILABLE", "MEETING", "OUT-OF-OFFICE", "DEEPWORK"]
 
 

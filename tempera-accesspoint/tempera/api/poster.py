@@ -1,12 +1,12 @@
-import json
-from typing import NamedTuple
+import logging
+import sys
+from typing import Literal
 
 import requests
 
 from utils.db_utils import get_measurements, delete_measurements
 
-uuids = {"temperature": "00002a6e-0000-1000-8000-00805f9b34fb"}
-
+logger = logging.getLogger(f"tempera.{__name__}")
 
 class UuidInfo(NamedTuple):
     sensor_id: int

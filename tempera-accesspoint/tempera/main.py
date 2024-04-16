@@ -1,19 +1,19 @@
 import asyncio
+import logging.config
 import sys
+from typing import List
 
-from bleak import BleakClient, BleakScanner
+from bleak import BleakClient, BleakScanner, BLEDevice
 
 from api.poster import post
-from bleclient.device_notify import stop_notify, detection_callback, start_notify
+from bleclient.device_notify import (
+    detection_callback,
+    notify,
+)
 from utils.db_utils import delete_measurements
 
-uuids = {
-    # "BATTERY_LEVEL": "00002a19-0000-1000-8000-00805f9b34fb",
-    "TEMPERATURE": "00002a6e-0000-1000-8000-00805f9b34fb",  # in deg C
-    # "AIRQUALITY": "",
-    # "LIGHTINTENSITY": "",
-    # "HUMIDITY": "2A6F",
-}
+logging.config.fileConfig("logging.conf")
+logger = logging.getLogger("tempera")
 
 data_collection_interval = 10
 data_sending_interval = 5

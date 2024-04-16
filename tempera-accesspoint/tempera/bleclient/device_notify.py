@@ -1,9 +1,10 @@
-import datetime
+import logging
 import struct
 
 from bleak import BleakClient
 
 from utils.db_utils import save_measurement
+logger = logging.getLogger(f"tempera.{__name__}")
 
 
 def detection_callback(device, advertisement_data):
