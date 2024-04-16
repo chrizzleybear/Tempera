@@ -23,6 +23,6 @@ void switchBuiltInLED(unsigned state);
 
 void printSessionUpdate(timedSession session);
 void printLEDUpdate(LED led);
-void printRoomClimateDataUpdate(roomClimateStructure roomClimateData);
+void printRoomClimateDataUpdate(roomClimateUnionStructure roomClimateData);
 
 #endif

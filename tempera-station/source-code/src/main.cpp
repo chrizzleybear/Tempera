@@ -34,11 +34,10 @@ BLECharacteristic currentElapsedTimeCharacteristic("2BF2", BLERead | BLEIndicate
 
 // Set up the environmental sensing service for room climate measurements
 BLEService environmentalSensingService("181A");
-roomClimateStructure roomClimateData = {0, 0, 0, 0}; // explicit initialization is required for sizeof operation below
+roomClimateUnionStructure roomClimateData = {0, 0, 0, 0}; // explicit initialization is required for sizeof operations below
 BLECharacteristic temperatureCharacteristic("2A6E", BLERead, sizeof(roomClimateData.temperature));
 BLECharacteristic irradianceCharacteristic("2A77", BLERead, sizeof(roomClimateData.irradiance));
-BLECharacteristic humidityCharacteristic("2A6F", BLERead, sizeof(roomClimateData.humidity));
-// nmvocCharacteristic does not adhere to the BLE specifications, see definition of nmvocCharacteristicStructure  
+BLECharacteristic humidityCharacteristic("2A6F", BLERead, sizeof(roomClimateData.humidity)); 
 BLECharacteristic nmvocCharacteristic("2BD3", BLERead, sizeof(roomClimateData.nmvoc));
 
 
@@ -50,7 +49,7 @@ unsigned long lastTimeUpdate = millis();
 unsigned long lastRoomClimateUpdate = millis();
 LED led;
 timedSession session;
-elapsedTimeCharacteristicStructure currentElapsedTime = {0, 0, 0, 0, 1, 0};
+elapsedTimeCharacteristicUnion currentElapsedTime = {0, 0, 0, 0, 1, 0};
 
 
 
@@ -158,11 +157,11 @@ void loop() {
 
 
     // to-do: update the roomclimatedata with new values from the sensors
-    // some dummy operations for now:
-    roomClimateData.temperature += 5/0.01;
-    roomClimateData.irradiance += 5/0.1;
-    roomClimateData.humidity += 5/0.01;
-    roomClimateData.nmvoc += 5;
+    // some temporary dummy operations for now:
+    roomClimateData.temperature += 1/0.01;
+    roomClimateData.irradiance += 1/0.1;
+    roomClimateData.humidity += 1/0.01;
+    roomClimateData.nmvoc += 1;
 
 
     lastRoomClimateUpdate = millis();

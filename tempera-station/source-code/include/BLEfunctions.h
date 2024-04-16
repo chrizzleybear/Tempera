@@ -25,11 +25,11 @@ void readSerialNumber(BLEDevice central, BLECharacteristic characteristic);
 void readAnyRoomClimateData(BLEDevice central, BLECharacteristic characteristic);
 
 void writeElapsedTimeCharacteristicStructure(\
-    elapsedTimeCharacteristicStructure structure,\
+    elapsedTimeCharacteristicUnion structure,\
     BLECharacteristic characteristic\
 );
 void writeRoomClimateAllCharacteristics(\
-    roomClimateStructure roomClimateData,\
+    roomClimateUnionStructure roomClimateData,\
     BLECharacteristic temperatureCharacteristic,\
     BLECharacteristic irradianceCharacteristic,\
     BLECharacteristic humidityCharacteristic,\
