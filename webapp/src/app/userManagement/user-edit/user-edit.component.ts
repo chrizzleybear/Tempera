@@ -81,7 +81,7 @@ export class UserEditComponent implements OnInit {
   onSubmit() {
     this.userForm.value.roles = Object.keys(this.userForm.value.roles).filter((role) => this.userForm.value.roles[role]);
     console.log(this.userForm.value);
-    this.usersService.updateUser(this.userId, this.userForm.value).subscribe({
+    this.usersService.updateUser(this.userForm.value).subscribe({
       next: (response) => {
         console.log('User updated successfully:', response);
       },

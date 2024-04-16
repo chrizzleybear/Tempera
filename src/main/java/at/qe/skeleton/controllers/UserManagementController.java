@@ -43,7 +43,7 @@ public class UserManagementController{
 
     @PutMapping("/update")
     public ResponseEntity<Userx> updateUser(@RequestBody Userx user) {
-        Userx updatedUser = userService.saveUser(user);
+        Userx updatedUser = userService.updateUser(user);
         return ResponseEntity.ok(updatedUser);
     }
 }

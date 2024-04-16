@@ -27,8 +27,8 @@ export class UsersService {
     });
   }
 
-  updateUser(userId: string, userData: any): Observable<any> {
-    console.log("Update user with ID: ", userId);
+  updateUser(userData: User): Observable<any> {
+    console.log("Update user with ID: ");
     return this.http.put(`${this.API_URL}update`, userData);
   }
   getUserById(userId: string): Observable<User> {

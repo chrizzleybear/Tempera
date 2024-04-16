@@ -107,4 +107,20 @@ public class UserService implements UserDetailsService {
          }
 
     }
+
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Userx updateUser(Userx v2_user) {
+            Userx v1_user = userRepository.findById(v2_user.getId()).orElse(v2_user);
+            v1_user.setId(v2_user.getId());
+            v1_user.setFirstName(v2_user.getFirstName());
+            v1_user.setLastName(v2_user.getLastName());
+            v1_user.setUsername(v2_user.getUsername());
+            v1_user.setEmail(v2_user.getEmail());
+            v1_user.setRoles(v2_user.getRoles());
+            v1_user.setEnabled(v2_user.isEnabled());
+            v1_user.setUpdateDate(LocalDateTime.now());
+            v1_user.setUpdateUser(getAuthenticatedUser());
+        return userRepository.save(v1_user);
+    }
 }
