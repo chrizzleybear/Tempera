@@ -1,27 +1,28 @@
-import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
+import {Component, Input, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import { UsersService } from '../../_services/users.service';
 import {ActivatedRoute} from "@angular/router";
 import {NgForOf} from "@angular/common";
+import {DialogModule} from "primeng/dialog";
 
 @Component({
   selector: 'app-user-edit',
   templateUrl: './user-edit.component.html',
   styleUrls: ['./user-edit.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, NgForOf]
+  imports: [ReactiveFormsModule, NgForOf, DialogModule]
 })
 export class UserEditComponent implements OnInit {
   userForm: FormGroup;
-  private user: any;
-  userId: any;
+  username: any;
   roles: string[];
+  @Input() user: any;
 
 
   constructor(private fb: FormBuilder, private usersService: UsersService, private route: ActivatedRoute) {
-    this.roles = ['ADMIN', 'EMPLOYEE', 'MANAGER', "GROUPLEADER"];
+    this.roles = ['ADMIN', 'EMPLOYEE', 'MANAGER', "GROUPLEAD"];
     this.userForm = this.fb.group({
-      userId: [''],
+      username: [''],
       password: [''],
       firstName: [''],
       lastName: [''],
@@ -31,14 +32,15 @@ export class UserEditComponent implements OnInit {
         ADMIN: false,
         EMPLOYEE: false,
         MANAGER: false,
-        GROUPLEADER: false
+        GROUPLEAD: false
       }),
     });
   }
 
   ngOnInit() {
-    this.userId = this.route.snapshot.paramMap.get('id');
-    this.usersService.getUserById(this.userId).subscribe({
+    //this.username = this.route.snapshot.paramMap.get('id');
+    this.username = this.user.username;
+    this.usersService.getUserById(this.username).subscribe({
       next: (data) => {
         this.user = data;
         this.populateForm();
@@ -52,31 +54,18 @@ export class UserEditComponent implements OnInit {
   private populateForm() {
     if (this.user) {
       this.userForm.patchValue({
-        userId: this.user.username,
+        username: this.user.username,
         firstName: this.user.firstName,
         lastName: this.user.lastName,
         password: this.user.password,
         email: this.user.email,
-        enabled: this.user.enabled,
-        roles: this.buildRoles()
+        enabled: this.user.enabled
+      });
+      const rolesControl = this.userForm.get('roles') as FormGroup;
+      this.roles.forEach(role => {
+        rolesControl.get(role)?.setValue(this.user.roles.includes(role));
       });
     }
-  }
-
-  buildRoles() {
-    const hasroles = [false, false, false, false];
-    if(this.user.roles) this.user.roles.forEach((role: string) => {
-      if (role === 'ADMIN') hasroles[0] = true;
-      if (role === 'EMPLOYEE') hasroles[1] = true;
-      if (role === 'MANAGER') hasroles[2] = true;
-      if (role === 'GROUPLEADER') hasroles[3] = true;
-    });
-    return new FormGroup({
-      ADMIN: new FormControl(hasroles[0]),
-      EMPLOYEE: new FormControl(hasroles[1]),
-      MANAGER: new FormControl(hasroles[2]),
-      GROUPLEADER: new FormControl(hasroles[3])
-    });
   }
   onSubmit() {
     this.userForm.value.roles = Object.keys(this.userForm.value.roles).filter((role) => this.userForm.value.roles[role]);

@@ -1,5 +1,5 @@
 <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-  <p>Username: {{ userId }}</p>
+  <p>Username: {{ username }}</p>
   <input formControlName="firstName" placeholder="First Name">
   <br>
   <input formControlName="lastName" placeholder="Last Name">
@@ -16,7 +16,7 @@
       <input type="checkbox" formControlName="MANAGER"> MANAGER
     </label>
     <label>
-      <input type="checkbox" formControlName="GROUPLEADER"> GROUPLEADER
+      <input type="checkbox" formControlName="GROUPLEAD"> GROUPLEADER
     </label>
   </div>
   <br>
@@ -26,3 +26,4 @@
   <br>
   <button type="submit">Save Changes</button>
 </form>
+

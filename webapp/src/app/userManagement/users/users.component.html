@@ -1,3 +1,6 @@
+<div *ngIf="!displayEditDialog">
+<input type="text" pInputText placeholder="Search by username" (input)="applyFilter($event)">
+<button type="button" (click)="deleteSelectedUsers()" [disabled]="!selectedUsers || selectedUsers.length === 0">Delete Selected Users</button>
 <p-table [value]="filteredUsers" [paginator]="true" [rows]="10" selectionMode="multiple" [(selection)]="selectedUsers" dataKey="id" responsiveLayout="scroll">
   <ng-template pTemplate="header">
     <tr>
@@ -9,7 +12,7 @@
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-user>
-    <tr (click)="viewUserDetails(user)"> <!-- Korrigierte Zeile, Einzelne <tr> Tag -->
+    <tr (click)="viewUserDetails(user)">
       <td>{{ user.username }}</td>
       <td>{{ user.firstName }}</td>
       <td>{{ user.lastName }}</td>
@@ -18,8 +21,16 @@
           <li *ngFor="let role of user.roles">{{ role }}</li>
         </ul>
       </td>
-      <td>{{ user.enabled ? "Ja" : "Nein" }}</td>
+      <td>{{ user.enabled ? "Yes" : "No" }}</td>
+      <td>
+        <p-button label="Edit" (onClick)="editUser(user)" icon="pi pi-pencil"></p-button>
+      </td>
       <td> <p-tableCheckbox [value]="user" (click)="$event.stopPropagation()"></p-tableCheckbox> </td>
     </tr>
   </ng-template>
 </p-table>
+</div>
+<div *ngIf="displayEditDialog">
+  <app-user-edit [user]="selectedUser"></app-user-edit>
+</div>
+

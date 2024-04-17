@@ -1,11 +1,15 @@
 import {Component, OnInit} from '@angular/core';
 import {UsersService} from '../../_services/users.service';
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {User} from "../../models/user.model";
 import {TableModule} from 'primeng/table';
 import {InputTextModule} from "primeng/inputtext";
 import { forkJoin } from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
+import {ButtonModule} from "primeng/button";
+import {UserEditComponent} from "../user-edit/user-edit.component";
+import {DialogModule} from "primeng/dialog";
+
 
 @Component({
   selector: 'app-users',
@@ -13,7 +17,11 @@ import {ActivatedRoute, Router} from '@angular/router';
   imports: [
     NgForOf,
     TableModule,
-    InputTextModule
+    InputTextModule,
+    ButtonModule,
+    NgIf,
+    UserEditComponent,
+    DialogModule
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'
@@ -23,6 +31,8 @@ export class UsersComponent implements OnInit{
   users: User[] = [];
   filteredUsers: User[] = [];
   selectedUsers: User[] = []
+  displayEditDialog: boolean = false;
+  selectedUser: any;
 
   constructor(private usersService: UsersService, private router: Router, private route: ActivatedRoute ) {
 
@@ -31,7 +41,9 @@ export class UsersComponent implements OnInit{
     this.usersService.getAllUsers().subscribe(users => {
       this.users = users;
       this.filteredUsers = users;
+
     });
+    this.selectedUser = {};
   }
 
   applyFilter(event: Event): void {
@@ -62,4 +74,11 @@ export class UsersComponent implements OnInit{
     console.log(user);
   }
 
+  editUser(user: any) {
+    //this.router.navigate(['user/edit', user.id]);
+    this.selectedUser = user;
+    this.displayEditDialog = true;
+    console.log(user);
+
+  }
 }
