@@ -1,8 +1,7 @@
 <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-  <p>Username: {{ username }}</p>
-  <input formControlName="firstName" placeholder="First Name">
+  <input  formControlName="username" placeholder="Username">
   <br>
-  <input formControlName="password" placeholder="Password">
+  <input formControlName="firstName" placeholder="First Name">
   <br>
   <input formControlName="lastName" placeholder="Last Name">
   <br>
@@ -23,7 +22,7 @@
   </div>
   <br>
   <div>
-  <input type="checkbox" formControlName="enabled"> Active
+    <input type="checkbox" formControlName="enabled"> Active
   </div>
   <br>
   <button type="submit">Save Changes</button>

@@ -1,6 +1,7 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.repositories.UserxRepository;
 import java.util.Collection;
 import java.time.LocalDateTime;
@@ -101,26 +102,30 @@ public class UserService implements UserDetailsService {
 
     public void deleteUser(String id) {
        Optional<Userx> userx = userRepository.findById(id);
-         if(userx.isPresent()){
-              userRepository.delete(userx.get());
-             System.out.println("User with id: " + id + " deleted");
-         }
+        userx.ifPresent(value -> userRepository.delete(value));
 
     }
 
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Userx updateUser(Userx v2_user) {
-            Userx v1_user = userRepository.findById(v2_user.getId()).orElse(v2_user);
-            v1_user.setId(v2_user.getId());
-            v1_user.setFirstName(v2_user.getFirstName());
-            v1_user.setLastName(v2_user.getLastName());
-            v1_user.setUsername(v2_user.getUsername());
-            v1_user.setEmail(v2_user.getEmail());
-            v1_user.setRoles(v2_user.getRoles());
-            v1_user.setEnabled(v2_user.isEnabled());
-            v1_user.setUpdateDate(LocalDateTime.now());
-            v1_user.setUpdateUser(getAuthenticatedUser());
-        return userRepository.save(v1_user);
+    public Userx updateUser(Userx userData) {
+            Userx newUser = userRepository.findById(userData.getId()).orElse(userData);
+            newUser.setId(userData.getId());
+            newUser.setFirstName(userData.getFirstName());
+            newUser.setLastName(userData.getLastName());
+            newUser.setUsername(userData.getUsername());
+            newUser.setEmail(userData.getEmail());
+            newUser.setRoles(userData.getRoles());
+            newUser.setEnabled(userData.isEnabled());
+            newUser.setUpdateDate(LocalDateTime.now());
+            newUser.setUpdateUser(getAuthenticatedUser());
+        return userRepository.save(newUser);
+    }
+
+    public Userx createUser(Userx user) {
+        user.setCreateDate(LocalDateTime.now());
+        user.setCreateUser(getAuthenticatedUser());
+        user.setStateVisibility(Visibility.PUBLIC);
+        return userRepository.save(user);
     }
 }

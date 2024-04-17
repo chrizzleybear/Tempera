@@ -46,4 +46,10 @@ public class UserManagementController{
         Userx updatedUser = userService.updateUser(user);
         return ResponseEntity.ok(updatedUser);
     }
+
+    @PutMapping("/create")
+    public ResponseEntity<Userx> createUser(@RequestBody Userx user) {
+        Userx createdUser = userService.createUser(user);
+        return ResponseEntity.ok(createdUser);
+    }
 }

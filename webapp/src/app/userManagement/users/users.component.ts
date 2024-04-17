@@ -5,10 +5,11 @@ import {User} from "../../models/user.model";
 import {TableModule} from 'primeng/table';
 import {InputTextModule} from "primeng/inputtext";
 import { forkJoin } from 'rxjs';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {ButtonModule} from "primeng/button";
 import {UserEditComponent} from "../user-edit/user-edit.component";
 import {DialogModule} from "primeng/dialog";
+import {UserCreateComponent} from "../user-create/user-create.component";
 
 
 @Component({
@@ -21,7 +22,8 @@ import {DialogModule} from "primeng/dialog";
     ButtonModule,
     NgIf,
     UserEditComponent,
-    DialogModule
+    DialogModule,
+    UserCreateComponent
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'
@@ -33,8 +35,9 @@ export class UsersComponent implements OnInit{
   selectedUsers: User[] = []
   displayEditDialog: boolean = false;
   selectedUser: any;
+  displayCreateDialog: boolean = false;
 
-  constructor(private usersService: UsersService, private router: Router, private route: ActivatedRoute ) {
+  constructor(private usersService: UsersService, private router: Router ) {
 
   }
   ngOnInit(): void {
@@ -80,5 +83,14 @@ export class UsersComponent implements OnInit{
     this.displayEditDialog = true;
     console.log(user);
 
+  }
+
+  createUser() {
+    this.displayCreateDialog = true;
+  }
+  returnToUsers() {
+    this.displayEditDialog = false;
+    this.displayCreateDialog = false;
+    this.ngOnInit();
   }
 }

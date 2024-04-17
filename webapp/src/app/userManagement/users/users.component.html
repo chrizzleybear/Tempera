@@ -1,7 +1,12 @@
-<div *ngIf="!displayEditDialog">
-<input type="text" pInputText placeholder="Search by username" (input)="applyFilter($event)">
-<button type="button" (click)="deleteSelectedUsers()" [disabled]="!selectedUsers || selectedUsers.length === 0">Delete Selected Users</button>
-<p-table [value]="filteredUsers" [paginator]="true" [rows]="10" selectionMode="multiple" [(selection)]="selectedUsers" dataKey="id" responsiveLayout="scroll">
+<div *ngIf="!displayEditDialog && !displayCreateDialog">
+  <div class="action-buttons">
+    <input type="text" pInputText placeholder="Search by username" (input)="applyFilter($event)">
+    <button type="button" pButton label="Add New User" icon="pi pi-plus" (click)="createUser()"></button>
+    <button type="button" pButton label="Delete Selected Users" icon="pi pi-trash"
+            (click)="deleteSelectedUsers()" [disabled]="!selectedUsers || selectedUsers.length === 0"></button>
+  </div>
+
+  <p-table [value]="filteredUsers" [paginator]="true" [rows]="10" selectionMode="multiple" [(selection)]="selectedUsers" dataKey="id" responsiveLayout="scroll">
   <ng-template pTemplate="header">
     <tr>
       <th scope="col" pSortableColumn="username">Benutzername<p-sortIcon field="username"></p-sortIcon></th>
@@ -32,5 +37,10 @@
 </div>
 <div *ngIf="displayEditDialog">
   <app-user-edit [user]="selectedUser"></app-user-edit>
+  <button type="button" pButton label="Back" icon="pi pi-arrow-left" (click)="returnToUsers()"></button>
+</div>
+<div *ngIf="displayCreateDialog">
+  <app-user-create></app-user-create>
+  <button type="button" pButton label="Back" icon="pi pi-arrow-left" (click)="returnToUsers()"></button>
 </div>
 

@@ -35,4 +35,8 @@ export class UsersService {
     return this.http.get<User>(`${this.API_URL}load/${userId}`);
   }
 
+  saveUser(userData: User): Observable<any> {
+    console.log("Create user with ID: ");
+    return this.http.put(`${this.API_URL}create`, userData);
+  }
 }
