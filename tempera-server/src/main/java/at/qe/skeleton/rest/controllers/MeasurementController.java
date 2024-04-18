@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("/api/measurement")
+@RequestMapping("/rasp/api/measurement")
 public class MeasurementController {
   private final Logger logger = Logger.getLogger("MeasurementControllerLogger");
   private final MeasurementService measurementService;

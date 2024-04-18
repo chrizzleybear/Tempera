@@ -77,7 +77,7 @@ public class WebSecurityConfig {
                             headers ->
                                     headers.frameOptions(FrameOptionsConfig::sameOrigin)) // needed for H2 console
                     .authorizeHttpRequests(authorize -> authorize
-                            .requestMatchers(new AntPathRequestMatcher("/api/**"))
+                            .requestMatchers(new AntPathRequestMatcher("/rasp/**"))
                             .authenticated()).httpBasic(Customizer.withDefaults())
                     .authorizeHttpRequests(
                             authorize ->
