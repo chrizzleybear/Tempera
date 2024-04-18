@@ -1,9 +1,11 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.repositories.UserxRepository;
 import java.util.Collection;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -97,5 +99,34 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 
         return UserDetailsImpl.build(user);
+    }
+
+    public void deleteUser(String id) {
+       Optional<Userx> userx = userRepository.findById(id);
+        userx.ifPresent(value -> userRepository.delete(value));
+
+    }
+
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Userx updateUser(Userx userData) {
+            Userx newUser = userRepository.findById(userData.getId()).orElse(userData);
+            newUser.setId(userData.getId());
+            newUser.setFirstName(userData.getFirstName());
+            newUser.setLastName(userData.getLastName());
+            newUser.setUsername(userData.getUsername());
+            newUser.setEmail(userData.getEmail());
+            newUser.setRoles(userData.getRoles());
+            newUser.setEnabled(userData.isEnabled());
+            newUser.setUpdateDate(LocalDateTime.now());
+            newUser.setUpdateUser(getAuthenticatedUser());
+        return userRepository.save(newUser);
+    }
+
+    public Userx createUser(Userx user) {
+        user.setCreateDate(LocalDateTime.now());
+        user.setCreateUser(getAuthenticatedUser());
+        user.setStateVisibility(Visibility.PUBLIC);
+        return userRepository.save(user);
     }
 }

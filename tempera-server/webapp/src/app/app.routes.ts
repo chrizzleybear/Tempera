@@ -9,6 +9,9 @@ import { HomeComponent } from './home/home.component';
 import { AppLayoutComponent } from './layout/app.layout.component';
 import { isLoggedInGuard } from './_guards/is-logged-in.guard';
 import { isNotLoggedInGuard } from './_guards/is-not-logged-in.guard';
+import {UsersComponent} from "./userManagement/users/users.component";
+import {UserDetailsComponent} from "./userManagement/user-details/user-details.component";
+import {UserEditComponent} from "./userManagement/user-edit/user-edit.component";
 
 export const routes: Routes = [
   {
@@ -29,5 +32,6 @@ export const routes: Routes = [
   // { path: 'user', component: BoardUserComponent },
   // { path: 'mod', component: BoardModeratorComponent },
   // { path: 'admin', component: BoardAdminComponent },
-  // { path: '', redirectTo: 'home', pathMatch: 'full' }
+  // { path: '', redirectTo: 'home', pathMatch: 'full' },
+  // { path: 'users', component: UsersComponent }
 ];
