@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 import { LayoutService } from './service/app.layout.service';
 import { AppMenuitemComponent } from './app.menuitem.component';
 import { NgFor, NgIf } from '@angular/common';
+import { AuthService } from '../_services/auth.service';
+import { StorageService } from '../_services/storage.service';
 
 @Component({
     selector: 'app-menu',
@@ -14,7 +16,7 @@ export class AppMenuComponent implements OnInit {
 
     model: any[] = [];
 
-    constructor(public layoutService: LayoutService) { }
+    constructor(public layoutService: LayoutService, private authService: AuthService, private storageService: StorageService) { }
 
     ngOnInit() {
         this.model = [
@@ -27,7 +29,17 @@ export class AppMenuComponent implements OnInit {
             {
                 label: 'UI Components',
                 items: [
-                    { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
+                    { label: 'Logout', icon: 'pi pi-fw pi-id-card', command: () =>  this.authService.logout().subscribe({
+                        next: res => {
+                          console.log(res);
+                          this.storageService.clean();
+
+                          window.location.reload();
+                        },
+                        error: err => {
+                          console.log(err);
+                        }
+                      })},
                     { label: 'Input', icon: 'pi pi-fw pi-check-square', routerLink: ['/uikit/input'] },
                     { label: 'Float Label', icon: 'pi pi-fw pi-bookmark', routerLink: ['/uikit/floatlabel'] },
                     { label: 'Invalid State', icon: 'pi pi-fw pi-exclamation-circle', routerLink: ['/uikit/invalidstate'] },
