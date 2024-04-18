@@ -108,7 +108,7 @@ void writeRoomClimateAllCharacteristics(\
   /*
   * Now try to retrieve the written values from the characteristics and print them:
   * All values are read as bytes which are then written to the structure. 
-  * To print the values the same structure can be used since the union field allow for the conversion of the values.  
+  * To print the values the same structure can be used since the unions allow for the conversion of the values.  
   */
   if (INFO) {
     roomClimateUnionStructure rcusTest;
