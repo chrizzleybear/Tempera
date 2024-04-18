@@ -1,0 +1,3 @@
+# Ignores for the platformIO project / arduino code
+/source-code/.vscode/
+/source-code/.pio/
