@@ -2,7 +2,7 @@
 /tempera-accesspoint/tempera.egg-info/
 /tempera-accesspoint/conf.yaml
 /skeleton.iml
-/target/
+/tempera-server/target/
 
 # Ignores for the platformIO project / arduino code
 /tempera-station/source-code/.vscode/
