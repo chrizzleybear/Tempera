@@ -18,7 +18,9 @@ import java.util.Objects;
 @Embeddable
 public class SensorTemperaCompositeId implements Serializable {
 
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long sensorId;
+
   private String temperaStationId;
 
   public SensorTemperaCompositeId() {}
