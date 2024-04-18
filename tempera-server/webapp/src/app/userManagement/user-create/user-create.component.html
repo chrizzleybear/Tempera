@@ -1,11 +1,44 @@
+<div *ngIf="userForm.controls['username'].invalid && userForm.controls['username'].touched">
+  <p-message severity="error" text="Username is required."></p-message>
+</div>
+<div *ngIf="userForm.controls['firstName'].invalid && userForm.controls['firstName'].touched">
+  <p-message severity="error" text="First name is required."></p-message>
+</div>
+<div *ngIf="userForm.controls['lastName'].invalid && userForm.controls['lastName'].touched">
+  <p-message severity="error" text="Last name is required."></p-message>
+</div>
+<div *ngIf="userForm.controls['password'].invalid && userForm.controls['password'].touched">
+  <p-message severity="error" text="Password with 6 symbols required."></p-message>
+</div>
+<div *ngIf="userForm.controls['email'].invalid && userForm.controls['email'].touched">
+  <p-message severity="error" text="Email is required."></p-message>
+</div>
 <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-  <input  formControlName="username" placeholder="Username">
+  <div class="p-field">
+    <label for="username">Username: </label>
+    <input id="username" type="text" pInputText formControlName="username" placeholder="Username">
+  </div>
   <br>
-  <input formControlName="firstName" placeholder="First Name">
+  <div class="p-field">
+    <label for="firstName">First Name: </label>
+    <input id="firstName" type="text" pInputText formControlName="firstName" placeholder="First name">
+  </div>
   <br>
-  <input formControlName="lastName" placeholder="Last Name">
+  <div class="p-field">
+    <label for="lastName">Last Name: </label>
+    <input id="lastName" type="text" pInputText formControlName="lastName" placeholder="Last Name">
+  </div>
   <br>
-  <input formControlName="email" placeholder="Email">
+  <div class="p-field">
+    <label for="password">Password: </label>
+    <input id="password" type="text" pInputText formControlName="password" placeholder="Password">
+  </div>
+  <br>
+  <div class="p-field">
+    <label for="email">Email: </label>
+    <input id="email" type="text" pInputText formControlName="email" placeholder="Email">
+  </div>
+  <br>
   <div formGroupName="roles">
     <label>
       <input type="checkbox" formControlName="ADMIN"> ADMIN
@@ -22,9 +55,13 @@
   </div>
   <br>
   <div>
-    <input type="checkbox" formControlName="enabled"> Active
+    <label>Active
+      <input type="checkbox" formControlName="enabled">
+    </label>
   </div>
   <br>
-  <button type="submit">Save Changes</button>
+  <div>
+    <button pButton type="submit" label="Save Changes" [disabled]="!userForm.valid" class="p-button-rounded p-button-success p-mr-2"></button>
+  </div>
+  <br>
 </form>
-

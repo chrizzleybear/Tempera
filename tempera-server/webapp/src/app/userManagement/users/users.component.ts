@@ -4,7 +4,6 @@ import {NgForOf, NgIf} from "@angular/common";
 import {User} from "../../models/user.model";
 import {TableModule} from 'primeng/table';
 import {InputTextModule} from "primeng/inputtext";
-import { forkJoin } from 'rxjs';
 import {Router} from '@angular/router';
 import {ButtonModule} from "primeng/button";
 import {UserEditComponent} from "../user-edit/user-edit.component";
@@ -43,11 +42,7 @@ export class UsersComponent implements OnInit{
 
   }
   ngOnInit(): void {
-    this.usersService.getAllUsers().subscribe(users => {
-      this.users = users;
-      this.filteredUsers = users;
-    });
-    this.selectedUser = {};
+    this.loadUsers();
   }
 
   applyFilter(event: Event): void {
@@ -65,23 +60,19 @@ export class UsersComponent implements OnInit{
     console.log("delete selected users");
     this.selectedUsers.forEach(user => {
       this.usersService.deleteUser(user.id);
-      this.messages = [{severity:'success', summary:'Success', detail:'User deleted successfully'}];
       this.returnToUsers();
+      this.messages = [{severity:'success', summary:'Success', detail:'User deleted successfully'}];
+
     });
-    forkJoin([this.usersService.getAllUsers()]).subscribe(([users]) => {
+  }
+
+  loadUsers() {
+    this.usersService.getAllUsers().subscribe(users => {
       this.users = users;
       this.filteredUsers = users;
-    }
-    );
+    });
   }
-
-  viewUserDetails(user: any) {
-    this.router.navigate(['/user', user.id]);
-    console.log(user);
-  }
-
   editUser(user: any) {
-    //this.router.navigate(['user/edit', user.id]);
     this.selectedUser = user;
     this.displayEditDialog = true;
     console.log(user);
@@ -92,9 +83,10 @@ export class UsersComponent implements OnInit{
 
   }
   returnToUsers() {
+    this.loadUsers();
     this.displayEditDialog = false;
     this.displayCreateDialog = false;
-    this.ngOnInit();
+
   }
   onEditCompleted(success: boolean) {
     if (success) {
@@ -109,4 +101,9 @@ export class UsersComponent implements OnInit{
       this.returnToUsers();
     }
   }
+  viewUserDetails(user: any) {
+    this.router.navigate(['/user', user.id]);
+    console.log(user);
+  }
+
 }

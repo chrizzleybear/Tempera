@@ -1,12 +1,20 @@
 import {Component, EventEmitter, Output} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {UsersService} from "../../_services/users.service";
+import {ButtonModule} from "primeng/button";
+import {InputTextModule} from "primeng/inputtext";
+import {NgIf} from "@angular/common";
+import {MessageModule} from "primeng/message";
 
 @Component({
   selector: 'app-user-create',
   standalone: true,
   imports: [
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ButtonModule,
+    InputTextModule,
+    NgIf,
+    MessageModule
   ],
   templateUrl: './user-create.component.html',
   styleUrl: './user-create.component.css'
@@ -18,11 +26,11 @@ export class UserCreateComponent {
   constructor(private fb: FormBuilder, private usersService: UsersService) {
     this.roles = ['ADMIN', 'EMPLOYEE', 'MANAGER', "GROUPLEAD"];
     this.userForm = this.fb.group({
-      username: [''],
-      password: [''],
-      firstName: [''],
-      lastName: [''],
-      email: [''],
+      username: ['',Validators.minLength(3)],
+      password:['',Validators.minLength(6)],
+      firstName: ['',Validators.required],
+      lastName: ['',Validators.required],
+      email: ['',Validators.email],
       enabled: false,
       roles: this.fb.group({
         ADMIN: false,
@@ -32,23 +40,22 @@ export class UserCreateComponent {
       }),
     });
   }
-
-  ngOnInit() {
-
-  }
-
   onSubmit() {
-    this.userForm.value.roles = Object.keys(this.userForm.value.roles).filter((role) => this.userForm.value.roles[role]);
-    console.log(this.userForm.value);
-    this.usersService.saveUser(this.userForm.value).subscribe({
-      next: (response) => {
-        console.log('User updated successfully:', response);
-        this.creatComplete.emit(true);
-      },
-      error: (error) => {
-        console.error('Error updating user:', error);
-        this.creatComplete.emit(false);
-      }
-    });
+    if (this.userForm.valid) {
+      this.userForm.value.roles = Object.keys(this.userForm.value.roles).filter((role) => this.userForm.value.roles[role]);
+      console.log(this.userForm.value);
+      this.usersService.saveUser(this.userForm.value).subscribe({
+        next: (response) => {
+          console.log('User updated successfully:', response);
+          this.creatComplete.emit(true);
+        },
+        error: (error) => {
+          console.error('Error updating user:', error);
+          this.creatComplete.emit(false);
+        }
+      });
+    } else {
+      console.error('Invalid form');
+    }
   }
 }

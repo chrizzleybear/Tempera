@@ -1,15 +1,18 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import { UsersService } from '../../_services/users.service';
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {DialogModule} from "primeng/dialog";
+import {InputTextModule} from "primeng/inputtext";
+import {ButtonModule} from "primeng/button";
+import {MessageModule} from "primeng/message";
 
 @Component({
   selector: 'app-user-edit',
   templateUrl: './user-edit.component.html',
   styleUrls: ['./user-edit.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, NgForOf, DialogModule]
+  imports: [ReactiveFormsModule, NgForOf, DialogModule, InputTextModule, ButtonModule, MessageModule, NgIf]
 })
 export class UserEditComponent implements OnInit {
   userForm: FormGroup;
@@ -22,12 +25,12 @@ export class UserEditComponent implements OnInit {
   constructor(private fb: FormBuilder, private usersService: UsersService) {
     this.roles = ['ADMIN', 'EMPLOYEE', 'MANAGER', "GROUPLEAD"];
     this.userForm = this.fb.group({
-      username: [''],
-      password: [''],
-      firstName: [''],
-      lastName: [''],
-      email: [''],
-      enabled: [''],
+      username: '',
+      password:['',Validators.minLength(6)],
+      firstName: ['',Validators.required],
+      lastName: ['',Validators.required],
+      email: ['',Validators.email],
+      enabled: '',
       roles: this.fb.group({
         ADMIN: false,
         EMPLOYEE: false,
