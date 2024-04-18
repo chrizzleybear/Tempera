@@ -49,7 +49,7 @@ public class UserManagementController{
 
     @PutMapping("/create")
     public ResponseEntity<Userx> createUser(@RequestBody Userx user) {
-        Userx createdUser = userService.createUser(user);
+        Userx createdUser = userService.saveUser(user);
         return ResponseEntity.ok(createdUser);
     }
 }
