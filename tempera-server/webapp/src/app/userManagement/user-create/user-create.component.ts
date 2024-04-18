@@ -1,10 +1,10 @@
-import {Component, EventEmitter, Output} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {UsersService} from "../../_services/users.service";
-import {ButtonModule} from "primeng/button";
-import {InputTextModule} from "primeng/inputtext";
-import {NgIf} from "@angular/common";
-import {MessageModule} from "primeng/message";
+import { Component, EventEmitter, Output } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UsersService } from '../../_services/users.service';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { NgIf } from '@angular/common';
+import { MessageModule } from 'primeng/message';
 
 @Component({
   selector: 'app-user-create',
@@ -14,32 +14,34 @@ import {MessageModule} from "primeng/message";
     ButtonModule,
     InputTextModule,
     NgIf,
-    MessageModule
+    MessageModule,
   ],
   templateUrl: './user-create.component.html',
-  styleUrl: './user-create.component.css'
+  styleUrl: './user-create.component.css',
 })
 export class UserCreateComponent {
   userForm: FormGroup;
   roles: string[];
   @Output() creatComplete = new EventEmitter<boolean>();
+
   constructor(private fb: FormBuilder, private usersService: UsersService) {
-    this.roles = ['ADMIN', 'EMPLOYEE', 'MANAGER', "GROUPLEAD"];
+    this.roles = ['ADMIN', 'EMPLOYEE', 'MANAGER', 'GROUPLEAD'];
     this.userForm = this.fb.group({
-      username: ['',Validators.minLength(3)],
-      password:['',Validators.minLength(6)],
-      firstName: ['',Validators.required],
-      lastName: ['',Validators.required],
-      email: ['',Validators.email],
+      username: ['', [Validators.required, Validators.minLength(3)]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       enabled: false,
       roles: this.fb.group({
         ADMIN: false,
         EMPLOYEE: false,
         MANAGER: false,
-        GROUPLEAD: false
+        GROUPLEAD: false,
       }),
     });
   }
+
   onSubmit() {
     if (this.userForm.valid) {
       this.userForm.value.roles = Object.keys(this.userForm.value.roles).filter((role) => this.userForm.value.roles[role]);
@@ -52,7 +54,7 @@ export class UserCreateComponent {
         error: (error) => {
           console.error('Error updating user:', error);
           this.creatComplete.emit(false);
-        }
+        },
       });
     } else {
       console.error('Invalid form');
