@@ -16,14 +16,11 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("application")
 public class MeasurementService {
-    private final TemperaStationRepository temperaStationRepository;
+
     private final MeasurementRepository measurementRepository;
-    private final SensorRepository sensorRepository;
 
     public MeasurementService(TemperaStationRepository temperaStationRepository, MeasurementRepository measurementRepository, SensorRepository sensorRepository) {
-        this.temperaStationRepository = temperaStationRepository;
         this.measurementRepository = measurementRepository;
-        this.sensorRepository = sensorRepository;
     }
 
     public Measurement findMeasurementById(Long id) throws CouldNotFindEntityException {
@@ -31,12 +28,13 @@ public class MeasurementService {
     }
 
     //todo: find out: what about authorizations?
-    public Measurement findMostRecentBySensorIdAndStationId(Long sensorId, String stationId) {
+    public Measurement findMostRecentBySensorIdAndStationId(Long sensorId, String stationId) throws CouldNotFindEntityException{
         SensorTemperaCompositeId sensorTemperaCompositeId = new SensorTemperaCompositeId();
         sensorTemperaCompositeId.setSensorId(sensorId);
         sensorTemperaCompositeId.setTemperaStationId(stationId);
 
-        return measurementRepository.findFirstBySensorIdOrderByTimestampDesc(sensorTemperaCompositeId);
+        return measurementRepository.findFirstBySensorIdOrderByTimestampDesc(sensorTemperaCompositeId)
+                .orElseThrow(() -> new CouldNotFindEntityException("No measurement found for sensorId: " + sensorId + " and stationId: " + stationId));
     }
 
     //save

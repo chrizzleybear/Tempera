@@ -5,6 +5,8 @@ import at.qe.skeleton.repositories.SensorRepository;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 
 @Component
 @Scope("application")
@@ -20,7 +22,7 @@ public class SensorService {
         return sensorRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid Sensor ID: " + id));
     }
 
-    public Sensor findAllSensorsByTemperaStationId(String temperaStationId) {
+    public List<Sensor> findAllSensorsByTemperaStationId(String temperaStationId) {
         return sensorRepository.findAllByTemperaStationId(temperaStationId);
     }
 
