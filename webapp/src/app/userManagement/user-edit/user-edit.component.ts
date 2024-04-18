@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import { UsersService } from '../../_services/users.service';
-import {ActivatedRoute} from "@angular/router";
 import {NgForOf} from "@angular/common";
 import {DialogModule} from "primeng/dialog";
 
