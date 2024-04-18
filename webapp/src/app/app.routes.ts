@@ -7,25 +7,24 @@ import { BoardUserComponent } from './board-user/board-user.component';
 import { BoardAdminComponent } from './board-admin/board-admin.component';
 import { HomeComponent } from './home/home.component';
 import { AppLayoutComponent } from './layout/app.layout.component';
-import { isLoggedInGuard } from './_helpers/isLoggedInGuard';
+import { isLoggedInGuard } from './_guards/is-logged-in.guard';
+import { isNotLoggedInGuard } from './_guards/is-not-logged-in.guard';
 
 export const routes: Routes = [
   {
     path: '', component: AppLayoutComponent, children: [
       { path: '', canActivate: [isLoggedInGuard], children: [
-          { path: 'home', component: HomeComponent },
+          { path: '', component: HomeComponent },
         ] },
     ]
   },
-  { path: 'login', component: LoginComponent },
+  { path: 'login', canActivate: [isNotLoggedInGuard] , component: LoginComponent },
+  { path: 'register', canActivate: [isNotLoggedInGuard] , component: RegisterComponent },
 
   // todo: create notFoundComponent
   // { path: '**', redirectTo: '/notfound' }
 
   // todo: insert other components
-  // { path: 'home', component: HomeComponent },
-  // { path: 'login', component: LoginComponent },
-  // { path: 'register', component: RegisterComponent },
   // { path: 'profile', component: ProfileComponent },
   // { path: 'user', component: BoardUserComponent },
   // { path: 'mod', component: BoardModeratorComponent },
