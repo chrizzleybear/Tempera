@@ -1,3 +1,4 @@
+<p-messages [(value)]="messages" [enableService]="false" [closable]="false"></p-messages>
 <div *ngIf="!displayEditDialog && !displayCreateDialog">
   <div class="action-buttons">
     <input type="text" pInputText placeholder="Search by username" (input)="applyFilter($event)">
@@ -36,7 +37,7 @@
 </p-table>
 </div>
 <div *ngIf="displayEditDialog">
-  <app-user-edit [user]="selectedUser"></app-user-edit>
+  <app-user-edit [user]="selectedUser" (editCompleted)="onEditCompleted($event)"></app-user-edit>
   <button type="button" pButton label="Back" icon="pi pi-arrow-left" (click)="returnToUsers()"></button>
 </div>
 <div *ngIf="displayCreateDialog">

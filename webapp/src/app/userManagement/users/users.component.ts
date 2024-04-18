@@ -10,7 +10,7 @@ import {ButtonModule} from "primeng/button";
 import {UserEditComponent} from "../user-edit/user-edit.component";
 import {DialogModule} from "primeng/dialog";
 import {UserCreateComponent} from "../user-create/user-create.component";
-
+import { MessagesModule } from 'primeng/messages';
 
 @Component({
   selector: 'app-users',
@@ -23,7 +23,8 @@ import {UserCreateComponent} from "../user-create/user-create.component";
     NgIf,
     UserEditComponent,
     DialogModule,
-    UserCreateComponent
+    UserCreateComponent,
+    MessagesModule,
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'
@@ -36,6 +37,7 @@ export class UsersComponent implements OnInit{
   displayEditDialog: boolean = false;
   selectedUser: any;
   displayCreateDialog: boolean = false;
+  messages: any;
 
   constructor(private usersService: UsersService, private router: Router ) {
 
@@ -64,6 +66,8 @@ export class UsersComponent implements OnInit{
     console.log("delete selected users");
     this.selectedUsers.forEach(user => {
       this.usersService.deleteUser(user.id);
+      this.messages = [{severity:'success', summary:'Success', detail:'User deleted successfully'}];
+      this.returnToUsers();
     });
     forkJoin([this.usersService.getAllUsers()]).subscribe(([users]) => {
       this.users = users;
@@ -84,7 +88,6 @@ export class UsersComponent implements OnInit{
     console.log(user);
 
   }
-
   createUser() {
     this.displayCreateDialog = true;
   }
@@ -92,5 +95,12 @@ export class UsersComponent implements OnInit{
     this.displayEditDialog = false;
     this.displayCreateDialog = false;
     this.ngOnInit();
+  }
+  onEditCompleted(success: boolean) {
+    if (success) {
+      this.messages = [{severity:'success', summary:'Success', detail:'User updated successfully'}];
+
+      this.returnToUsers();
+    }
   }
 }

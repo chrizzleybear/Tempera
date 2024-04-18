@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import { UsersService } from '../../_services/users.service';
 import {ActivatedRoute} from "@angular/router";
@@ -17,9 +17,10 @@ export class UserEditComponent implements OnInit {
   username: any;
   roles: string[];
   @Input() user: any;
+  @Output() editCompleted = new EventEmitter<boolean>();
 
 
-  constructor(private fb: FormBuilder, private usersService: UsersService, private route: ActivatedRoute) {
+  constructor(private fb: FormBuilder, private usersService: UsersService) {
     this.roles = ['ADMIN', 'EMPLOYEE', 'MANAGER', "GROUPLEAD"];
     this.userForm = this.fb.group({
       username: [''],
@@ -73,9 +74,11 @@ export class UserEditComponent implements OnInit {
     this.usersService.updateUser(this.userForm.value).subscribe({
       next: (response) => {
         console.log('User updated successfully:', response);
+        this.editCompleted.emit(true);
       },
       error: (error) => {
         console.error('Error updating user:', error);
+        this.editCompleted.emit(false);
       }
     });
   }
