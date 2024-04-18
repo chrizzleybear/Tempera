@@ -8,11 +8,11 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import at.qe.skeleton.model.enums.UserxRole;
-import at.qe.skeleton.services.UserService;
+import at.qe.skeleton.services.UserxService;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
 
 /**
- * Some very basic tests for {@link UserService}.
+ * Some very basic tests for {@link UserxService}.
  *
  * This class is part of the skeleton project provided for students of the
  * course "Software Engineering" offered by the University of Innsbruck.

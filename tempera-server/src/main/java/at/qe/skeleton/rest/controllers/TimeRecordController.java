@@ -15,7 +15,7 @@ import java.util.Optional;
 
 //code was written with workshop 5 code as template
 @RestController
-@RequestMapping("/api/timerecord")
+@RequestMapping("/rasp/api/timerecord")
 public class TimeRecordController {
     private TimeRecordService timeRecordService;
     private SuperiorTimeRecordMapper timeRecordMapper;

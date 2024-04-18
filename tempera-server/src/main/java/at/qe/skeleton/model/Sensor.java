@@ -1,64 +1,67 @@
 package at.qe.skeleton.model;
 
 import at.qe.skeleton.model.enums.SensorType;
+import at.qe.skeleton.model.enums.Unit;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Sensor {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @EmbeddedId private SensorTemperaCompositeId sensorTemperaCompositeId;
 
-    @ManyToOne
-    private TemperaStation temperaStation;
+  @ManyToOne(optional = false)
+  @MapsId("temperaStationId")
+  @JoinColumn(name = "tempera_station_id")
+  private TemperaStation temperaStation;
 
-    private SensorType sensorType;
+  @Enumerated(EnumType.STRING) // necessary to store the enum as a string in the database
+  private SensorType sensorType;
 
-    private String unit;
+  @Enumerated(EnumType.STRING) // necessary to store the enum as a string in the database
+  private Unit unit;
 
-    @OneToMany
-    private List<Measurement> measurementList;
+  public Sensor(SensorType sensorType, Unit unit) {
+    this.sensorType = sensorType;
+    this.unit = unit;
+  }
 
-    public Sensor(SensorType sensorType, String unit) {
-        this.sensorType = sensorType;
-        this.unit = unit;
-        this.measurementList = new ArrayList<>();
-    }
-    protected Sensor() {}
+  protected Sensor() {}
 
-    public TemperaStation getTemperaStation() {
-        return temperaStation;
-    }
+  public TemperaStation getTemperaStation() {
+    return temperaStation;
+  }
 
-    public List<Measurement> getMeasurementList() {
-        return measurementList;
-    }
+  public SensorTemperaCompositeId getId() {
+    return sensorTemperaCompositeId;
+  }
 
-    public long getId() {
-        return id;
-    }
+  public SensorType getSensorType() {
+    return sensorType;
+  }
 
-    public SensorType getSensorType() {
-        return sensorType;
-    }
+  public void setSensorType(SensorType sensorType) {
+    this.sensorType = sensorType;
+  }
 
-    public void setSensorType(SensorType sensorType) {
-        this.sensorType = sensorType;
-    }
+  public Unit getUnit() {
+    return unit;
+  }
 
-    public String getUnit() {
-        return unit;
-    }
+  public void setUnit(Unit unit) {
+    this.unit = unit;
+  }
 
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
+  @Override
+public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Sensor other)) return false;
+    return sensorTemperaCompositeId.equals(other.sensorTemperaCompositeId);
+  }
 
-    public void addMeasurement(Measurement measurement){
-        this.measurementList.add(measurement);
-    }
+@Override
+public int hashCode() {
+    return Objects.hash(sensorTemperaCompositeId);
+}
 }

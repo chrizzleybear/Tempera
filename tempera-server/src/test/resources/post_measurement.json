@@ -1,0 +1,8 @@
+{
+  "id": null,
+  "sensorId": 1,
+  "stationId": "tempera_station_1",
+  "value": 23.0,
+  "unit": "CELSIUS",
+  "timestamp": "2023-03-01T10:15:30"
+}

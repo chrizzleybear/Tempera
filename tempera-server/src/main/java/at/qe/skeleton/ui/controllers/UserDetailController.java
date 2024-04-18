@@ -1,8 +1,9 @@
 package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.Userx;
-import at.qe.skeleton.services.UserService;
 import java.io.Serializable;
+
+import at.qe.skeleton.services.UserxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Component;
 public class UserDetailController implements Serializable {
 
     @Autowired
-    private UserService userService;
+    private UserxService userxService;
 
     /**
      * Attribute to cache the currently displayed user
@@ -51,21 +52,21 @@ public class UserDetailController implements Serializable {
      * Action to force a reload of the currently displayed user.
      */
     public void doReloadUser() {
-        user = userService.loadUser(user.getUsername());
+        user = userxService.loadUser(user.getUsername());
     }
 
     /**
      * Action to save the currently displayed user.
      */
     public void doSaveUser() {
-        user = this.userService.saveUser(user);
+        user = this.userxService.saveUser(user);
     }
 
     /**
      * Action to delete the currently displayed user.
      */
     public void doDeleteUser() {
-        this.userService.deleteUser(user);
+        this.userxService.deleteUser(user);
         user = null;
     }
 
