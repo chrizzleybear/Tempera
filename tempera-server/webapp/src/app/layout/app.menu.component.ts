@@ -29,6 +29,7 @@ export class AppMenuComponent implements OnInit {
             {
                 label: 'UI Components',
                 items: [
+                  // todo: put into seperate function
                     { label: 'Logout', icon: 'pi pi-fw pi-id-card', command: () =>  this.authService.logout().subscribe({
                         next: res => {
                           console.log(res);
@@ -40,7 +41,7 @@ export class AppMenuComponent implements OnInit {
                           console.log(err);
                         }
                       })},
-                    { label: 'Input', icon: 'pi pi-fw pi-check-square', routerLink: ['/uikit/input'] },
+                    { label: 'User-Management', icon: 'pi pi-fw pi-check-square', routerLink: ['/users'], visible: this.storageService.getUser().roles.includes('ADMIN') },
                     { label: 'Float Label', icon: 'pi pi-fw pi-bookmark', routerLink: ['/uikit/floatlabel'] },
                     { label: 'Invalid State', icon: 'pi pi-fw pi-exclamation-circle', routerLink: ['/uikit/invalidstate'] },
                     { label: 'Button', icon: 'pi pi-fw pi-box', routerLink: ['/uikit/button'] },

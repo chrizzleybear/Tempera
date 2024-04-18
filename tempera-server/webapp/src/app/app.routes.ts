@@ -18,6 +18,7 @@ export const routes: Routes = [
     path: '', component: AppLayoutComponent, children: [
       { path: '', canActivate: [isLoggedInGuard], children: [
           { path: '', component: HomeComponent },
+          { path: 'users', component: UsersComponent }
         ] },
     ]
   },
@@ -33,5 +34,4 @@ export const routes: Routes = [
   // { path: 'mod', component: BoardModeratorComponent },
   // { path: 'admin', component: BoardAdminComponent },
   // { path: '', redirectTo: 'home', pathMatch: 'full' },
-  // { path: 'users', component: UsersComponent }
-];
+]

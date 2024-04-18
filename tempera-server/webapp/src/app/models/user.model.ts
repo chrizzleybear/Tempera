@@ -6,7 +6,7 @@ export class User {
   username!: string;
   password!: string;
   email!: string;
-  role!: string[];
+  roles!: string[];
   enabled!: boolean;
   visibility!: string;
 }
