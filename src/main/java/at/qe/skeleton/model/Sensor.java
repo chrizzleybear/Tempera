@@ -4,25 +4,22 @@ import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.Unit;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Sensor {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @EmbeddedId private SensorTemperaCompositeId sensorTemperaCompositeId;
 
-  @Id
   @ManyToOne(optional = false)
-  @JoinColumn(name = "temperaStation_id")
+  @MapsId("temperaStationId")
+  @JoinColumn(name = "tempera_station_id")
   private TemperaStation temperaStation;
 
-  @Enumerated(EnumType.STRING) //necessary to store the enum as a string in the database
+  @Enumerated(EnumType.STRING) // necessary to store the enum as a string in the database
   private SensorType sensorType;
 
-  @Enumerated(EnumType.STRING)  //necessary to store the enum as a string in the database
+  @Enumerated(EnumType.STRING) // necessary to store the enum as a string in the database
   private Unit unit;
 
   public Sensor(SensorType sensorType, Unit unit) {
@@ -36,8 +33,8 @@ public class Sensor {
     return temperaStation;
   }
 
-  public long getId() {
-    return id;
+  public SensorTemperaCompositeId getId() {
+    return sensorTemperaCompositeId;
   }
 
   public SensorType getSensorType() {
@@ -55,4 +52,16 @@ public class Sensor {
   public void setUnit(Unit unit) {
     this.unit = unit;
   }
+
+  @Override
+public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Sensor other)) return false;
+    return sensorTemperaCompositeId.equals(other.sensorTemperaCompositeId);
+  }
+
+@Override
+public int hashCode() {
+    return Objects.hash(sensorTemperaCompositeId);
+}
 }

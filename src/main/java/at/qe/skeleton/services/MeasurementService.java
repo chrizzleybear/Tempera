@@ -2,6 +2,7 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.Measurement;
+import at.qe.skeleton.model.SensorTemperaCompositeId;
 import at.qe.skeleton.repositories.MeasurementRepository;
 import at.qe.skeleton.repositories.SensorRepository;
 import at.qe.skeleton.repositories.TemperaStationRepository;
@@ -30,8 +31,12 @@ public class MeasurementService {
     }
 
     //todo: find out: what about authorizations?
-    public Measurement findMostRecentBySensorId(Long sensorId) {
-        return measurementRepository.findFirstBySensorIdOrderByTimestampDesc(sensorId);
+    public Measurement findMostRecentBySensorIdAndStationId(Long sensorId, String stationId) {
+        SensorTemperaCompositeId sensorTemperaCompositeId = new SensorTemperaCompositeId();
+        sensorTemperaCompositeId.setSensorId(sensorId);
+        sensorTemperaCompositeId.setTemperaStationId(stationId);
+
+        return measurementRepository.findFirstBySensorIdOrderByTimestampDesc(sensorTemperaCompositeId);
     }
 
     //save

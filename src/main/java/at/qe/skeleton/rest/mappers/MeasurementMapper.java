@@ -3,6 +3,7 @@ package at.qe.skeleton.rest.mappers;
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.Measurement;
 import at.qe.skeleton.model.Sensor;
+import at.qe.skeleton.model.SensorTemperaCompositeId;
 import at.qe.skeleton.rest.dtos.MeasurementDto;
 import at.qe.skeleton.services.SensorService;
 import at.qe.skeleton.services.TemperaStationService;
@@ -39,7 +40,7 @@ public class MeasurementMapper implements DTOMapper<Measurement, MeasurementDto>
     }
     return new MeasurementDto(
         entity.getId(),
-        entity.getSensor().getId(),
+        entity.getSensor().getId().getSensorId(),
         entity.getSensor().getTemperaStation().getId(),
         entity.getValue(),
         entity.getSensor().getUnit(),
@@ -52,7 +53,10 @@ public class MeasurementMapper implements DTOMapper<Measurement, MeasurementDto>
       return null;
     }
     Measurement measurement;
-    Sensor sensor = sensorService.findSensorById(dto.sensorId());
+    SensorTemperaCompositeId sensorTemperaCompositeId= new SensorTemperaCompositeId();
+    sensorTemperaCompositeId.setSensorId(dto.sensorId());
+    sensorTemperaCompositeId.setTemperaStationId(dto.stationId());
+    Sensor sensor = sensorService.findSensorById(sensorTemperaCompositeId);
     if (dto.id() != null) {
       measurement = measurementService.findMeasurementById(dto.id());
       measurement.setSensor(sensor);
