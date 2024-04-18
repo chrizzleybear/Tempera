@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {UsersService} from "../../_services/users.service";
 
@@ -14,6 +14,7 @@ import {UsersService} from "../../_services/users.service";
 export class UserCreateComponent {
   userForm: FormGroup;
   roles: string[];
+  @Output() creatComplete = new EventEmitter<boolean>();
   constructor(private fb: FormBuilder, private usersService: UsersService) {
     this.roles = ['ADMIN', 'EMPLOYEE', 'MANAGER', "GROUPLEAD"];
     this.userForm = this.fb.group({
@@ -42,9 +43,11 @@ export class UserCreateComponent {
     this.usersService.saveUser(this.userForm.value).subscribe({
       next: (response) => {
         console.log('User updated successfully:', response);
+        this.creatComplete.emit(true);
       },
       error: (error) => {
         console.error('Error updating user:', error);
+        this.creatComplete.emit(false);
       }
     });
   }

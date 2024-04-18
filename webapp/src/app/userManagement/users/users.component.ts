@@ -46,7 +46,6 @@ export class UsersComponent implements OnInit{
     this.usersService.getAllUsers().subscribe(users => {
       this.users = users;
       this.filteredUsers = users;
-
     });
     this.selectedUser = {};
   }
@@ -90,6 +89,7 @@ export class UsersComponent implements OnInit{
   }
   createUser() {
     this.displayCreateDialog = true;
+
   }
   returnToUsers() {
     this.displayEditDialog = false;
@@ -99,7 +99,13 @@ export class UsersComponent implements OnInit{
   onEditCompleted(success: boolean) {
     if (success) {
       this.messages = [{severity:'success', summary:'Success', detail:'User updated successfully'}];
+      this.returnToUsers();
+    }
+  }
 
+  onCreateCompleted(success: boolean) {
+    if (success) {
+      this.messages = [{severity:'success', summary:'Success', detail:'User created successfully'}];
       this.returnToUsers();
     }
   }

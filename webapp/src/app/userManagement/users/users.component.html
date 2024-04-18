@@ -41,7 +41,7 @@
   <button type="button" pButton label="Back" icon="pi pi-arrow-left" (click)="returnToUsers()"></button>
 </div>
 <div *ngIf="displayCreateDialog">
-  <app-user-create></app-user-create>
+  <app-user-create (creatComplete)="onCreateCompleted($event)"></app-user-create>
   <button type="button" pButton label="Back" icon="pi pi-arrow-left" (click)="returnToUsers()"></button>
 </div>
 
