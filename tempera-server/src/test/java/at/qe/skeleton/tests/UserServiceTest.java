@@ -158,6 +158,25 @@ public class UserServiceTest {
     }
 
     @Test
+    public void testUnauthenticateddLoadUsers() {
+        Assertions.assertThrows(org.springframework.security.authentication.AuthenticationCredentialsNotFoundException.class, () -> {
+            for (Userx user : userService.getAllUsers()) {
+                Assertions.fail("Call to userService.getAllUsers should not work without proper authorization");
+            }
+        });
+    }
+
+    @Test
+    @WithMockUser(username = "user", authorities = {"EMPLOYEE"})
+    public void testUnauthorizedLoadUsers() {
+        Assertions.assertThrows(org.springframework.security.access.AccessDeniedException.class, () -> {
+            for (Userx user : userService.getAllUsers()) {
+                Assertions.fail("Call to userService.getAllUsers should not work without proper authorization");
+            }
+        });
+    }
+
+    @Test
     @WithMockUser(username = "user1", authorities = {"EMPLOYEE"})
     public void testUnauthorizedLoadUser() {
         Assertions.assertThrows(org.springframework.security.access.AccessDeniedException.class, () -> {

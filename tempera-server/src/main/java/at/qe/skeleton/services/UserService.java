@@ -36,6 +36,7 @@ public class UserService implements UserDetailsService {
      *
      * @return
      */
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Collection<Userx> getAllUsers() {
         return userRepository.findAll();
     }
