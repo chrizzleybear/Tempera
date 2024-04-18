@@ -14,9 +14,10 @@
 
 // ############### CLASS AND STRUCT DECLARATIONS ############### 
 
-struct uint48_t {
-    uint64_t x: 48;
-};
+typedef union {
+    uint64_t ui48: 48;
+    uint32_t ui32;
+} uint48_t;
 
 struct color {
     unsigned red;
