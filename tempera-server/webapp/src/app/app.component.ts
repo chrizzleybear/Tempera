@@ -1,8 +1,9 @@
-import {Component} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {StorageService} from './_services/storage.service';
 import {AuthService} from './_services/auth.service';
 import {NgIf} from "@angular/common";
+import { PrimeNGConfig } from 'primeng/api';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ import {NgIf} from "@angular/common";
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   private roles: string[] = [];
   public isLoggedIn = false;
   public showAdminBoard = false;
@@ -29,10 +30,12 @@ export class AppComponent {
     this.showModeratorMenu = !this.showModeratorMenu;
   }
 
-  constructor(private storageService: StorageService, private authService: AuthService) {
+  constructor(private storageService: StorageService, private authService: AuthService, private primengConfig: PrimeNGConfig) {
   }
 
   ngOnInit(): void {
+    this.primengConfig.ripple = true;
+
     this.isLoggedIn = this.storageService.isLoggedIn();
 
     if (this.isLoggedIn) {

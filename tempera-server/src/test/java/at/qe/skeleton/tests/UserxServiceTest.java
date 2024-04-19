@@ -15,7 +15,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.UserxRole;
-import at.qe.skeleton.services.UserxService;
+
+import java.util.HashSet;
 
 /**
  * Some very basic tests for {@link UserxService}.
@@ -25,7 +26,7 @@ import at.qe.skeleton.services.UserxService;
  */
 @SpringBootTest
 @WebAppConfiguration
-public class UserServiceTest {
+public class UserxServiceTest {
 
     @Autowired
     UserxService userxService;
@@ -137,7 +138,9 @@ public class UserServiceTest {
         Userx freshlyCreatedUser = userxService.loadUser(username);
         Assertions.assertNotNull(freshlyCreatedUser, "New user could not be loaded from test data source after being saved");
         Assertions.assertEquals(username, freshlyCreatedUser.getUsername(), "New user could not be loaded from test data source after being saved");
-        Assertions.assertEquals(password, freshlyCreatedUser.getPassword(), "User \"" + username + "\" does not have a the correct password attribute stored being saved");
+        // compare the saved password (encrypted), not the password field (plain text) with the user
+        // service retrieved (also encrypted) password
+        Assertions.assertEquals(toBeCreatedUser.getPassword(), freshlyCreatedUser.getPassword(), "User \"" + username + "\" does not have a the correct password attribute stored being saved");
         Assertions.assertEquals(fName, freshlyCreatedUser.getFirstName(), "User \"" + username + "\" does not have a the correct firstName attribute stored being saved");
         Assertions.assertEquals(lName, freshlyCreatedUser.getLastName(), "User \"" + username + "\" does not have a the correct lastName attribute stored being saved");
         Assertions.assertEquals(email, freshlyCreatedUser.getEmail(), "User \"" + username + "\" does not have a the correct email attribute stored being saved");
@@ -157,6 +160,9 @@ public class UserServiceTest {
             Assertions.assertNotNull(adminUser, "Admin user could not be loaded from test data source");
 
             Userx toBeCreatedUser = new Userx();
+
+            // set roles to avoid another exception being thrown before
+            toBeCreatedUser.setRoles(new HashSet<>(Sets.newSet(UserxRole.ADMIN)));
             userxService.saveUser(toBeCreatedUser);
         });
     }

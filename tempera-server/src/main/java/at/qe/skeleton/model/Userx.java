@@ -8,6 +8,7 @@ import java.util.Set;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.model.enums.Visibility;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -37,13 +38,17 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     private String username;
 
     @ManyToOne(optional = false)
+    @JsonIgnore
     private Userx createUser;
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonIgnore
     private LocalDateTime createDate;
     @ManyToOne(optional = true)
+    @JsonIgnore
     private Userx updateUser;
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonIgnore
     private LocalDateTime updateDate;
 
     private String password;

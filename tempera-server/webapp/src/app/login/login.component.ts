@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { StorageService } from '../_services/storage.service';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { MessageModule } from 'primeng/message';
+import { InputTextModule } from 'primeng/inputtext';
+import { NgIf } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -9,6 +14,10 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
   imports: [
     FormsModule,
     ReactiveFormsModule,
+    ButtonModule,
+    MessageModule,
+    InputTextModule,
+    NgIf,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
@@ -25,7 +34,7 @@ export class LoginComponent implements OnInit {
   public roles: string[] = [];
   public submitted = false;
 
-  constructor(private authService: AuthService, private storageService: StorageService) { }
+  constructor(private authService: AuthService, private storageService: StorageService, private router: Router) { }
 
   ngOnInit(): void {
     if (this.storageService.isLoggedIn()) {
@@ -47,16 +56,13 @@ export class LoginComponent implements OnInit {
         this.isLoginFailed = false;
         this.isLoggedIn = true;
         this.roles = this.storageService.getUser().roles;
-        this.reloadPage();
+
+        void this.router.navigate(['/']);
       },
       error: err => {
         this.errorMessage = err.error.message;
         this.isLoginFailed = true;
       }
     });
-  }
-
-  reloadPage(): void {
-    window.location.reload();
   }
 }
