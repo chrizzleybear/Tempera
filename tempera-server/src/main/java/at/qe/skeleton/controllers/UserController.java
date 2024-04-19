@@ -1,7 +1,7 @@
 package at.qe.skeleton.controllers;
 
 import at.qe.skeleton.jwt.JwtUtils;
-import at.qe.skeleton.services.UserService;
+import at.qe.skeleton.services.UserxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,10 +24,7 @@ public class UserController{
     @Autowired
     JwtUtils jwtUtils;
 
-    private final UserService userService;
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    public UserController() {}
 
 
     @GetMapping("/all")

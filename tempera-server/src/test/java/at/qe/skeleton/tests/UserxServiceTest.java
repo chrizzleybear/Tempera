@@ -15,7 +15,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.UserxRole;
-import at.qe.skeleton.services.UserxService;
+
+import java.util.HashSet;
 
 /**
  * Some very basic tests for {@link UserxService}.
@@ -25,7 +26,7 @@ import at.qe.skeleton.services.UserxService;
  */
 @SpringBootTest
 @WebAppConfiguration
-public class UserServiceTest {
+public class UserxServiceTest {
 
     @Autowired
     UserxService userxService;
@@ -157,6 +158,8 @@ public class UserServiceTest {
         Assertions.assertThrows(JpaSystemException.class, () -> {
             Userx adminUser = userxService.loadUser("admin");
             Assertions.assertNotNull(adminUser, "Admin user could not be loaded from test data source");
+
+            Userx toBeCreatedUser = new Userx();
 
             // set roles to avoid another exception being thrown before
             toBeCreatedUser.setRoles(new HashSet<>(Sets.newSet(UserxRole.ADMIN)));

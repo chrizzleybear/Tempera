@@ -1,7 +1,7 @@
 package at.qe.skeleton.controllers;
 
 import at.qe.skeleton.model.Userx;
-import at.qe.skeleton.services.UserService;
+import at.qe.skeleton.services.UserxService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,27 +15,27 @@ import java.util.Map;
 @RequestMapping("/api/users")
 public class UserManagementController{
 
-    private final UserService userService;
+    private final UserxService userxService;
 
-    public UserManagementController(UserService userService) {
-        this.userService = userService;
+    public UserManagementController(UserxService userxService) {
+        this.userxService = userxService;
     }
 
     @GetMapping("/all")
     public ResponseEntity<List<Userx>> getAllUsers() {
-        List<Userx> users = userService.getAllUsers().stream().toList();
+        List<Userx> users = userxService.getAllUsers().stream().toList();
         return ResponseEntity.ok(users);
     }
 
     @GetMapping("/load/{id}")
     public ResponseEntity<Userx> getUser(@PathVariable String id) {
-        Userx user = userService.loadUser(id);
+        Userx user = userxService.loadUser(id);
         return ResponseEntity.ok(user);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Map<String, String>> deleteUser(@PathVariable String id) {
-        userService.deleteUser(id);
+        userxService.deleteUser(id);
         Map<String, String> response = new HashMap<>();
         response.put("message", "User deleted");
         return ResponseEntity.ok(response);
@@ -43,13 +43,13 @@ public class UserManagementController{
 
     @PutMapping("/update")
     public ResponseEntity<Userx> updateUser(@RequestBody Userx user) {
-        Userx updatedUser = userService.updateUser(user);
+        Userx updatedUser = userxService.updateUser(user);
         return ResponseEntity.ok(updatedUser);
     }
 
     @PutMapping("/create")
     public ResponseEntity<Userx> createUser(@RequestBody Userx user) {
-        Userx createdUser = userService.saveUser(user);
+        Userx createdUser = userxService.saveUser(user);
         return ResponseEntity.ok(createdUser);
     }
 }
