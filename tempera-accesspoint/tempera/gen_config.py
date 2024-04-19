@@ -1,6 +1,9 @@
+import logging
 from pathlib import Path
 
 import yaml
+
+logging.getLogger("configGenerator")
 
 welcome_art = """
 #######################################################

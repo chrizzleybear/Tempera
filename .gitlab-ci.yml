@@ -1,32 +1,36 @@
 image: alpine:3.17
 
-stages: # List of stages for jobs, and their order of execution
+stages:
   - test
   - sonarCheck
   - format
   - build
 
+# shared variables between all sonarCheck jobs
+variables:
+  SONAR_USER_HOME: "${CI_PROJECT_DIR}/code/.sonar"
+  GIT_DEPTH: "0"
+
 .before_script_template:
   before_script:
     - apk add --update maven
 
-unit-test-job: # This job runs in the test stage.
+unit-test-job:
   extends: .before_script_template
   stage: test
   script:
+    - cd tempera-server
     - echo "Running unit tests..."
     - mvn test
   allow_failure: true
 
-sonarqube-check:
+java-sonarqube-check:
   extends: .before_script_template
   stage: sonarCheck
-  variables:
-    SONAR_USER_HOME: "${CI_PROJECT_DIR}/code/.sonar"
-    GIT_DEPTH: "0"
   script:
+    - cd tempera-server
     - echo Running sonar analysis for ${SONAR_PROJECT_KEY}
-    - mvn -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} ${GITLAB_USER_NAME}" --fail-at-end verify sonar:sonar
+    - mvn -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} backend ${GITLAB_USER_NAME}" --fail-at-end verify sonar:sonar
   allow_failure: true
 
 python-format-job:
@@ -52,3 +56,23 @@ python-build-job:
     paths:
       - tempera-accesspoint/dist/*
     expire_in: 2 days
+
+python-sonarqube-check:
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  stage: sonarCheck
+  script:
+    - echo Running sonar analysis of the Raspberry code for ${SONAR_PROJECT_KEY}
+    - sonar-scanner -Dsonar.login=${SONAR_ACCESSPOINT_TOKEN} -Dsonar.sources=tempera-accesspoint/tempera -Dsonar.projectKey=${SONAR_ACCESSPOINT_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} access point ${GITLAB_USER_NAME}" -Dsonar.python.version=3.11.8
+  allow_failure: true
+
+typescript-sonarqube-check:
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  stage: sonarCheck
+  script:
+    - echo Running sonar analysis of the front end code for ${SONAR_PROJECT_KEY}
+    - sonar-scanner -Dsonar.login=${SONAR_FRONTEND_TOKEN} -Dsonar.sources=tempera-server/webapp -Dsonar.projectKey=${SONAR_FRONTEND_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} frontend ${GITLAB_USER_NAME}"
+  allow_failure: true

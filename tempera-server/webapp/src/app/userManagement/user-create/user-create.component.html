@@ -1,0 +1,72 @@
+<!-- Validator messages -->
+<div class="mb-2">
+  <p-message *ngIf="userForm.controls['username'].errors?.['required'] && userForm.controls['username'].touched"
+             severity="error" text="Username is required." styleClass="mr-2"></p-message>
+  <p-message *ngIf="userForm.controls['username'].errors?.['minlength'] && userForm.controls['username'].touched"
+             severity="error" text="Username needs at least 3 symbols." styleClass="mr-2"></p-message>
+  <p-message *ngIf="userForm.controls['firstName'].errors?.['required'] && userForm.controls['firstName'].touched"
+             severity="error" text="First name is required." styleClass="mr-2"></p-message>
+  <p-message *ngIf="userForm.controls['lastName'].invalid && userForm.controls['lastName'].touched" severity="error"
+             text="Last name is required." styleClass="mr-2"></p-message>
+  <p-message *ngIf="userForm.controls['password'].errors?.['required'] && userForm.controls['password'].touched"
+             severity="error" text="Password is required." styleClass="mr-2"></p-message>
+  <p-message *ngIf="userForm.controls['password'].errors?.['minlength'] && userForm.controls['password'].touched"
+             severity="error" text="Password needs at least 6 symbols." styleClass="mr-2"></p-message>
+  <p-message *ngIf="userForm.controls['email'].errors?.['required'] && userForm.controls['email'].touched"
+             severity="error" text="Email is required." styleClass="mr-2"></p-message>
+  <p-message *ngIf="userForm.controls['email'].errors?.['email'] && userForm.controls['email'].touched"
+             severity="error" text="Email not valid." styleClass="mr-2"></p-message>
+</div>
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <div class="p-field">
+    <label for="username">Username: </label>
+    <input id="username" type="text" pInputText formControlName="username" placeholder="Username">
+  </div>
+  <br>
+  <div class="p-field">
+    <label for="firstName">First Name: </label>
+    <input id="firstName" type="text" pInputText formControlName="firstName" placeholder="First name">
+  </div>
+  <br>
+  <div class="p-field">
+    <label for="lastName">Last Name: </label>
+    <input id="lastName" type="text" pInputText formControlName="lastName" placeholder="Last Name">
+  </div>
+  <br>
+  <div class="p-field">
+    <label for="password">Password: </label>
+    <input id="password" type="password" pInputText formControlName="password" placeholder="Password">
+  </div>
+  <br>
+  <div class="p-field">
+    <label for="email">Email: </label>
+    <input id="email" type="text" pInputText formControlName="email" placeholder="Email">
+  </div>
+  <br>
+  <div formGroupName="roles">
+    <label>
+      <input type="checkbox" formControlName="ADMIN"> ADMIN
+    </label>
+    <label>
+      <input type="checkbox" formControlName="EMPLOYEE"> EMPLOYEE
+    </label>
+    <label>
+      <input type="checkbox" formControlName="MANAGER"> MANAGER
+    </label>
+    <label>
+      <input type="checkbox" formControlName="GROUPLEAD"> GROUPLEADER
+    </label>
+  </div>
+  <br>
+  <div>
+    <label>Active
+      <input type="checkbox" formControlName="enabled">
+    </label>
+  </div>
+  <br>
+  <div>
+    <button pButton type="submit" label="Save Changes" [disabled]="!userForm.valid"
+            class="p-button-rounded p-button-success p-mr-2"></button>
+  </div>
+  <br>
+</form>
