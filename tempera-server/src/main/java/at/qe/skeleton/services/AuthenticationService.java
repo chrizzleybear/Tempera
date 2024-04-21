@@ -18,6 +18,7 @@ public class AuthenticationService {
     @Autowired private UserxService userxService;
     @Autowired private EmailService emailService;
     @Autowired private PasswordEncoder encode;
+    final int tokenLength = 6;
 
     @Transactional
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -39,7 +40,7 @@ public class AuthenticationService {
     }
 
     private String generateAndSaveActivationToken(Userx user) {
-        String code = generateActivationCode(6);
+        String code = generateActivationCode(tokenLength);
         user.setPassword(encode.encode(code));
         userxService.saveUser(user);
         return code;
