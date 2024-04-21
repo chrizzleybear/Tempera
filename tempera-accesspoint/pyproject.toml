@@ -17,6 +17,7 @@ dependencies = [
     "bleak",
     "pyyaml",
     "requests",
+    "SQLAlchemy"
 ]
 requires-python = ">=3.11"
 authors = [
