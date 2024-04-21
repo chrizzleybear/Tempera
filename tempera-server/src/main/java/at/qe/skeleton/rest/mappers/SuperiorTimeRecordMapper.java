@@ -1,9 +1,11 @@
 package at.qe.skeleton.rest.mappers;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
+import at.qe.skeleton.model.AccessPoint;
 import at.qe.skeleton.model.SuperiorTimeRecord;
 import at.qe.skeleton.model.TemperaStation;
 import at.qe.skeleton.rest.dtos.SuperiorTimeRecordDto;
+import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.TemperaStationService;
 import at.qe.skeleton.services.TimeRecordService;
 import org.springframework.stereotype.Service;
@@ -15,21 +17,30 @@ public class SuperiorTimeRecordMapper
 
   private final TimeRecordService timeRecordService;
   private final TemperaStationService temperaStationService;
+  private final AccessPointService accessPointService;
 
   public SuperiorTimeRecordMapper(
-      TimeRecordService timeRecordService, TemperaStationService temperaStationService) {
+      TimeRecordService timeRecordService,
+      TemperaStationService temperaStationService,
+      AccessPointService accessPointService) {
+    this.accessPointService = accessPointService;
     this.timeRecordService = timeRecordService;
     this.temperaStationService = temperaStationService;
   }
 
   @Override
-  public SuperiorTimeRecordDto mapToDto(SuperiorTimeRecord entity) {
+  public SuperiorTimeRecordDto mapToDto(SuperiorTimeRecord entity)
+      throws CouldNotFindEntityException {
     if (entity == null) {
       return null;
     }
+    TemperaStation temperaStation = entity.getTemperaStation();
+    AccessPoint accessPoint =
+        accessPointService.getAccessPointByTemperaStationId(temperaStation.getId());
     return new SuperiorTimeRecordDto(
         entity.getId(),
-        entity.getTemperaStation().getId(),
+        temperaStation.getId(),
+        accessPoint.getId(),
         entity.getStart(),
         entity.getEnd(),
         entity.getState());
@@ -54,26 +65,9 @@ public class SuperiorTimeRecordMapper
     }
     SuperiorTimeRecord entity = null;
     if (dto.Id() != null) {
-      entity =
-          timeRecordService
-              .findSuperiorTimeRecordById(dto.Id())
-              .orElseThrow(
-                  () ->
-                      new CouldNotFindEntityException(
-                          "could not find SuperiorTimeRecord with the id %d".formatted(dto.Id())));
-      return entity;
+      return timeRecordService.findSuperiorTimeRecordById(dto.Id());
     }
-
-    // todo: is it better to just store the id in the SuperiorTimeRecord? because now i have to
-    // search for the
-    // tempera station here.. dont know if this is the best place..
-    TemperaStation temperaStation =
-        temperaStationService
-            .findById(dto.stationId())
-            .orElseThrow(
-                () ->
-                    new CouldNotFindEntityException(
-                        "could not find TemperaStation with Id %s".formatted(dto.stationId())));
+    TemperaStation temperaStation = temperaStationService.findById(dto.stationId());
     return new SuperiorTimeRecord(temperaStation, dto.start(), dto.end(), dto.state());
   }
 }
