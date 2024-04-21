@@ -1,5 +1,6 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.model.DTOs.UserDTO;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.repositories.UserxRepository;
@@ -131,4 +132,26 @@ public class UserxService implements UserDetailsService {
     newUser.setUpdateUser(getAuthenticatedUser());
     return userRepository.save(newUser);
   }
+
+  public UserDTO convertToDTO(Userx user) {
+    UserDTO userDTO = new UserDTO();
+    userDTO.setUsername(user.getUsername());
+    userDTO.setFirstName(user.getFirstName());
+    userDTO.setLastName(user.getLastName());
+    userDTO.setEmail(user.getEmail());
+    userDTO.setEnabled(user.isEnabled());
+    userDTO.setRoles(user.getRoles());
+    return userDTO;
+  }
+
+  public Userx convertToEntity(UserDTO userDTO) {
+    Userx user = new Userx();
+    user.setUsername(userDTO.getUsername());
+    user.setFirstName(userDTO.getFirstName());
+    user.setLastName(userDTO.getLastName());
+    user.setEmail(userDTO.getEmail());
+    user.setEnabled(userDTO.isEnabled());
+    user.setRoles(userDTO.getRoles());
+    return user;
+    }
 }
