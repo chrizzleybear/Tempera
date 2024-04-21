@@ -37,4 +37,15 @@ public class TemperaStationService {
     public void delete(TemperaStation temperaStation){
         logger.info("trying to delete temperaStation %s".formatted(temperaStation.toString()));
     }
+
+    /**
+     * Checks whether the tempera Station with the passed on ID is enabled or not.
+     * @param id of the tempera Station in question
+     *
+     * @throws CouldNotFindEntityException if there is no TemperaStation with that id in the DB.
+     */
+    public boolean isEnabled(String id) throws CouldNotFindEntityException{
+        TemperaStation station = findById(id);
+        return station.isEnabled();
+    }
 }

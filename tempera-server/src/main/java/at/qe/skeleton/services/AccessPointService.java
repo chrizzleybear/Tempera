@@ -40,4 +40,9 @@ public class AccessPointService {
                 new CouldNotFindEntityException(
                     "AccessPoint containing TemperaStation %s".formatted(temperaStationId)));
   }
+
+  public boolean isEnabled(UUID id) throws CouldNotFindEntityException {
+   AccessPoint accessPoint = this.getAccessPointById(id);
+    return accessPoint.isEnabled();
+  }
 }

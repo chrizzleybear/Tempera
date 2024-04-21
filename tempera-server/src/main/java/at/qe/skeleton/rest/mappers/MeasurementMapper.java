@@ -3,6 +3,7 @@ package at.qe.skeleton.rest.mappers;
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.rest.dtos.MeasurementDto;
+import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.SensorService;
 import at.qe.skeleton.services.MeasurementService;
 import org.springframework.stereotype.Service;
@@ -14,16 +15,19 @@ import org.springframework.stereotype.Service;
 public class MeasurementMapper implements DTOMapper<Measurement, MeasurementDto> {
   private final MeasurementService measurementService;
   private final SensorService sensorService;
+  private final AccessPointService accessPointService;
 
   public MeasurementMapper(
       MeasurementService measurementService,
-      SensorService sensorService) {
+      SensorService sensorService,
+      AccessPointService accessPointService) {
     this.measurementService = measurementService;
     this.sensorService = sensorService;
+    this.accessPointService = accessPointService;
   }
 
   @Override
-  public MeasurementDto mapToDto(Measurement entity) {
+  public MeasurementDto mapToDto(Measurement entity) throws CouldNotFindEntityException{
     if (entity == null) {
       return null;
     }
@@ -35,12 +39,12 @@ public class MeasurementMapper implements DTOMapper<Measurement, MeasurementDto>
     }
     Sensor sensor = entity.getSensor();
     TemperaStation temperaStation = sensor.getTemperaStation();
-    AccessPoint accesspoint =
+    AccessPoint accesspoint = accessPointService.getAccessPointByTemperaStationId(temperaStation.getId());
     return new MeasurementDto(
         entity.getId(),
         sensor.getId().getSensorId(),
         temperaStation.getId(),
-        entity.getSensor().getTemperaStation().getId(),
+        accesspoint.getId(),
         entity.getValue(),
         entity.getSensor().getUnit(),
         entity.getTimestamp());
@@ -51,7 +55,7 @@ public class MeasurementMapper implements DTOMapper<Measurement, MeasurementDto>
     if (dto == null) {
       throw new IllegalArgumentException("Measurement DTO must not be null.");
     }
-    if ()
+    AccessPoint accessPoint = accessPointService.getAccessPointById(dto.accessPointId());
     Measurement measurement;
     SensorTemperaCompositeId sensorTemperaCompositeId= new SensorTemperaCompositeId();
     sensorTemperaCompositeId.setSensorId(dto.sensorId());
