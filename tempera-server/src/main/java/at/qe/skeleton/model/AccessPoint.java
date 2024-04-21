@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-public class Accesspoint implements Persistable<UUID>, Serializable {
+public class AccessPoint implements Persistable<UUID>, Serializable {
 
     // We need to implement Persistable since we set UUID manually
     // the following strategy for the isNew Method comes from spring documentation:
@@ -36,7 +36,7 @@ public class Accesspoint implements Persistable<UUID>, Serializable {
     private Room room;
     private boolean enabled;
 
-    public Accesspoint() {
+    public AccessPoint() {
         this.id = UUID.randomUUID();
         this.temperaStations = new HashSet<>();
     }
@@ -48,7 +48,7 @@ public class Accesspoint implements Persistable<UUID>, Serializable {
   /**
    * returns true if TemperaStation was not already part of the Set
    *
-   * @param temperaStation to be added to this Accesspoint
+   * @param temperaStation to be added to this AccessPoint
    * @return true if this accesspoint did not already contain the specified temperaStation
    * @throws TemperaStationIsNotEnabledException if this TemperaStation is not enabled, but still adds the accesspoint
    * before
@@ -65,7 +65,7 @@ public class Accesspoint implements Persistable<UUID>, Serializable {
         return enabled;
     }
 
-    //todo think about: what should we do, when Accesspoint gets disabled
+    //todo think about: what should we do, when AccessPoint gets disabled
     // -> do associated TemperaStations get disabled as well?
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -75,7 +75,7 @@ public class Accesspoint implements Persistable<UUID>, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Accesspoint that = (Accesspoint) o;
+        AccessPoint that = (AccessPoint) o;
         return Objects.equals(id, that.id);
     }
 

@@ -1,15 +1,10 @@
 package at.qe.skeleton.rest.mappers;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
-import at.qe.skeleton.model.Measurement;
-import at.qe.skeleton.model.Sensor;
-import at.qe.skeleton.model.SensorTemperaCompositeId;
+import at.qe.skeleton.model.*;
 import at.qe.skeleton.rest.dtos.MeasurementDto;
 import at.qe.skeleton.services.SensorService;
-import at.qe.skeleton.services.TemperaStationService;
 import at.qe.skeleton.services.MeasurementService;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 /**
@@ -38,9 +33,13 @@ public class MeasurementMapper implements DTOMapper<Measurement, MeasurementDto>
     if (entity.getTimestamp() == null) {
       throw new IllegalArgumentException("Measurement entity must have a timestamp.");
     }
+    Sensor sensor = entity.getSensor();
+    TemperaStation temperaStation = sensor.getTemperaStation();
+    AccessPoint accesspoint =
     return new MeasurementDto(
         entity.getId(),
-        entity.getSensor().getId().getSensorId(),
+        sensor.getId().getSensorId(),
+        temperaStation.getId(),
         entity.getSensor().getTemperaStation().getId(),
         entity.getValue(),
         entity.getSensor().getUnit(),
@@ -50,8 +49,9 @@ public class MeasurementMapper implements DTOMapper<Measurement, MeasurementDto>
   @Override
   public Measurement mapFromDto(MeasurementDto dto) throws CouldNotFindEntityException {
     if (dto == null) {
-      return null;
+      throw new IllegalArgumentException("Measurement DTO must not be null.");
     }
+    if ()
     Measurement measurement;
     SensorTemperaCompositeId sensorTemperaCompositeId= new SensorTemperaCompositeId();
     sensorTemperaCompositeId.setSensorId(dto.sensorId());

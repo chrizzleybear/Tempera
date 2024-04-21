@@ -1,5 +1,6 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.TemperaStation;
 import at.qe.skeleton.repositories.TemperaStationRepository;
 import org.springframework.context.annotation.Scope;
@@ -23,9 +24,9 @@ public class TemperaStationService {
         this.temperaStationRepository = temperaStationRepository;
     }
 
-    public Optional<TemperaStation> findById(String id){
+    public TemperaStation findById(String id) throws CouldNotFindEntityException{
         logger.info("trying to find TemperaStation with Id: %s".formatted(id));
-        return temperaStationRepository.findById(id);
+        return temperaStationRepository.findById(id).orElseThrow(() -> new CouldNotFindEntityException("TemperaStation %s".formatted(id)));
     }
 
     public TemperaStation save(TemperaStation temperaStation){
