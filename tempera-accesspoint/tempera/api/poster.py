@@ -22,7 +22,7 @@ def _map_uuid(client: BleakClient, uuid: str, action: Literal["delete", "fetch"]
                     "measurements": get_measurements(client.address, "Temperature"),
                 }
             case "delete":
-                print("Deleting sent Temperature measurements.")
+                logger.info("Deleting sent Temperature measurements.")
                 delete_measurements(client.address, "Temperature")
     elif "2a77" in uuid:
         match action:
@@ -32,7 +32,7 @@ def _map_uuid(client: BleakClient, uuid: str, action: Literal["delete", "fetch"]
                     "measurements": get_measurements(client.address, "Irradiance"),
                 }
             case "delete":
-                print("Deleting sent Irradiance measurements.")
+                logger.info("Deleting sent Irradiance measurements.")
                 delete_measurements(client.address, "Irradiance")
     elif "2a6f" in uuid:
         match action:
@@ -42,7 +42,7 @@ def _map_uuid(client: BleakClient, uuid: str, action: Literal["delete", "fetch"]
                     "measurements": get_measurements(client.address, "Humidity"),
                 }
             case "delete":
-                print("Deleting sent Humidity measurements.")
+                logger.info("Deleting sent Humidity measurements.")
                 delete_measurements(client.address, "Humidity")
     elif "2bd3" in uuid:
         match action:
@@ -52,22 +52,24 @@ def _map_uuid(client: BleakClient, uuid: str, action: Literal["delete", "fetch"]
                     "measurements": get_measurements(client.address, "NMVOC"),
                 }
             case "delete":
-                print("Deleting sent NMVOC measurements.")
+                logger.info("Deleting sent NMVOC measurements.")
                 delete_measurements(client.address, "NMVOC")
     else:
         raise ValueError(f"Unknown UUID: {uuid} received as input.")
 
 
+# TODO: add retry
 async def post(client: BleakClient, uuid: str):
     body = _map_uuid(client, uuid, "fetch")
-    print(body)
+    logger.debug(body)
     try:
         rc = requests.post(MEASUREMENT_END_POINT, json=body)
     except requests.exceptions.ConnectionError:
         sys.exit("Failed to connect to the api.")
     match rc.status_code:
         case 201:
-            print(rc.json())
+            logger.info(rc.json())
             _map_uuid(client, uuid, "delete")
         case _:
-            print(rc.status_code, rc.json())
+            logger.error(rc.status_code, rc.json())
+            raise Exception  # TODO: proper error handling
