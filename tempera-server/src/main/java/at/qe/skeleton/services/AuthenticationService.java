@@ -8,25 +8,32 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.security.SecureRandom;
 
 @Component
 @Scope("application")
 public class AuthenticationService {
 
-    @Autowired private UserxService userxService;
-    @Autowired private EmailService emailService;
-    @Autowired private PasswordEncoder encode;
+    @Autowired
+    private UserxService userxService;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private PasswordEncoder encode;
     static int tokenLength = 6;
 
     @Transactional
     @PreAuthorize("hasAuthority('ADMIN')")
     public UserDTO registerUser(UserDTO userDTO) {
-        Userx newUser=userxService.convertToEntity(userDTO);
+        Userx newUser = userxService.convertToEntity(userDTO);
         userxService.saveUser(newUser);
         sendValidationEmail(newUser);
         return userxService.convertToDTO(newUser);
     }
+
     //Encode username for security
     public void sendValidationEmail(Userx user) {
         String password = generateAndSaveActivationToken(user);
@@ -76,9 +83,9 @@ public class AuthenticationService {
         if (user == null) {
             throw new IllegalArgumentException("User not found");
         }
-       if(!encode.matches(password, user.getPassword())){
-           throw new IllegalArgumentException("Password incorrect");
-       }
+        if (!encode.matches(password, user.getPassword())) {
+            throw new IllegalArgumentException("Password incorrect");
+        }
     }
 
     public void setPassword(String username, String password, String passwordRepeat) {
