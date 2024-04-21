@@ -8,7 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.security.SecureRandom;
 
 @Component
@@ -18,14 +17,15 @@ public class AuthenticationService {
     @Autowired private UserxService userxService;
     @Autowired private EmailService emailService;
     @Autowired private PasswordEncoder encode;
-    final int tokenLength = 6;
+    static int tokenLength = 6;
 
     @Transactional
     @PreAuthorize("hasAuthority('ADMIN')")
-    public void registerUser(UserDTO userDTO) {
+    public UserDTO registerUser(UserDTO userDTO) {
         Userx newUser=userxService.convertToEntity(userDTO);
         userxService.saveUser(newUser);
         sendValidationEmail(newUser);
+        return userxService.convertToDTO(newUser);
     }
     //Encode username for security
     public void sendValidationEmail(Userx user) {

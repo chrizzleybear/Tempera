@@ -2,6 +2,7 @@ package at.qe.skeleton.controllers;
 
 import at.qe.skeleton.model.DTOs.UserDTO;
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.services.AuthenticationService;
 import at.qe.skeleton.services.UserxService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,16 +18,18 @@ import java.util.stream.Collectors;
 public class UserManagementController{
 
     private final UserxService userxService;
+    private final AuthenticationService authenticationService;
 
-    public UserManagementController(UserxService userxService) {
+    public UserManagementController(UserxService userxService, AuthenticationService authenticationService) {
         this.userxService = userxService;
+        this.authenticationService = authenticationService;
     }
 
     @GetMapping("/all")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> users = userxService.getAllUsers().stream()
                 .map(userxService::convertToDTO)
-                .collect(Collectors.toList());
+                .toList();
         return ResponseEntity.ok(users);
     }
 
@@ -53,7 +56,7 @@ public class UserManagementController{
 
     @PostMapping("/create")
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDto) {
-        Userx createdUser = userxService.saveUser(userxService.convertToEntity(userDto));
-        return ResponseEntity.ok(userxService.convertToDTO(createdUser));
+        UserDTO createdUser = authenticationService.registerUser(userDto);
+        return ResponseEntity.ok(createdUser);
     }
 }

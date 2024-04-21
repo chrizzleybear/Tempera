@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserxService implements UserDetailsService {
 
   @Autowired private UserxRepository userRepository;
+  
   @Autowired private PasswordEncoder passwordEncoder;
 
   /**
@@ -138,6 +139,7 @@ public class UserxService implements UserDetailsService {
     userDTO.setUsername(user.getUsername());
     userDTO.setFirstName(user.getFirstName());
     userDTO.setLastName(user.getLastName());
+    userDTO.setPassword(user.getPassword());
     userDTO.setEmail(user.getEmail());
     userDTO.setEnabled(user.isEnabled());
     userDTO.setRoles(user.getRoles());
@@ -149,6 +151,7 @@ public class UserxService implements UserDetailsService {
     user.setUsername(userDTO.getUsername());
     user.setFirstName(userDTO.getFirstName());
     user.setLastName(userDTO.getLastName());
+    user.setPassword(userDTO.getPassword());
     user.setEmail(userDTO.getEmail());
     user.setEnabled(userDTO.isEnabled());
     user.setRoles(userDTO.getRoles());
