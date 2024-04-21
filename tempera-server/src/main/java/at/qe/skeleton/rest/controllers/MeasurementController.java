@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,7 +46,9 @@ public class MeasurementController {
       if (!accessPointService.isEnabled(measurementDto.accessPointId())){
         throw new IllegalArgumentException("accessPoint %s is not enabled".formatted(measurementDto.accessPointId()));
       }
-      if (!temperaStationService.)
+      if (!temperaStationService.isEnabled(measurementDto.stationId())){
+        throw new IllegalArgumentException("temperaStation %s is not enabled".formatted(measurementDto.stationId()));
+      }
       Measurement entity = measurementMapper.mapFromDto(measurementDto);
       entity = measurementService.saveMeasurement(entity);
       return ResponseEntity.ok(measurementMapper.mapToDto(entity));
@@ -56,12 +59,15 @@ public class MeasurementController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<MeasurementDto> getMeasurement(@PathVariable Long id) {
+  public ResponseEntity<MeasurementDto> getMeasurement(@PathVariable Long id, @RequestParam UUID accessPointId) {
     try {
+      if (!accessPointService.isEnabled(accessPointId)) {
+        throw new IllegalArgumentException("accessPoint %s is not enabled".formatted(accessPointId));
+      }
       Measurement entity = measurementService.findMeasurementById(id);
       return ResponseEntity.ok(measurementMapper.mapToDto(entity));
-    } catch (CouldNotFindEntityException e) {
-      logger.log(Level.SEVERE, "Could not find Measurement with id: " + id, e);
+    } catch (Exception e) {
+      logger.log(Level.SEVERE, e.getMessage());
       return ResponseEntity.notFound().build();
     }
   }

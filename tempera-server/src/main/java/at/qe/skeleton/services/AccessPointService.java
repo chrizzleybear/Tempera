@@ -41,6 +41,12 @@ public class AccessPointService {
                     "AccessPoint containing TemperaStation %s".formatted(temperaStationId)));
   }
 
+  /**
+   * Checks whether the access point with the passed on ID is enabled or not.
+   *
+   * @param id of the access point in question
+   * @throws CouldNotFindEntityException if there is no AccessPoint with that id in the DB.
+   */
   public boolean isEnabled(UUID id) throws CouldNotFindEntityException {
    AccessPoint accessPoint = this.getAccessPointById(id);
     return accessPoint.isEnabled();
