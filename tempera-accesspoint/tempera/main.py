@@ -1,8 +1,8 @@
 import asyncio
+import json
 import logging.config
 
 from bleak import BleakClient
-from tenacity import retry
 
 from api.poster import post
 from bleclient.device_connection import (
@@ -14,8 +14,11 @@ from bleclient.device_notification import (
     notify,
 )
 
-logging.config.fileConfig("logging.conf")
+with open("logging_conf.json", "r") as config:
+    logging.config.dictConfig(json.load(config))
+
 logger = logging.getLogger("tempera")
+
 
 DATA_COLLECTION_INTERVAL = 5
 DATA_SENDING_INTERVAL = 2
@@ -44,7 +47,7 @@ async def post_data(client: BleakClient) -> None:
             await post(client, characteristic.uuid)
 
 
-@retry()
+# @retry()
 async def main():
     tempera_station = await discovery_loop(check_characteristics=True)
 
