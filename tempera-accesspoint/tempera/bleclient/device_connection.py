@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from typing import List
 
@@ -43,13 +44,10 @@ async def get_tempera_stations() -> List[BLEDevice]:
     return tempera_stations
 
 
-async def validate_stations(
-    tempera_stations: List[BLEDevice], check_characteristics: bool = False
-) -> BLEDevice | None:
+async def validate_stations(tempera_stations: List[BLEDevice]) -> BLEDevice | None:
     """
     Returns the first valid tempera station. Valid means that its ID corresponds to one stored in the webapp back end.
 
-    :param check_characteristics:
     :param tempera_stations:
     :return:
     """
@@ -71,59 +69,72 @@ async def validate_stations(
     response = response.json()
     allowed_stations = response["stations_allowed"]
 
-    is_valid = True
     for station in tempera_stations:
-        # TODO: is the address or device serial number being set in the webapp?
         # Just return the first valid station (multi-station support not required for this project)
-        if station.address in allowed_stations:
-            if check_characteristics:
-                async with BleakClient(
-                    station.address, services=REQUIRED_SERVICES
-                ) as client:
+        async with BleakClient(station.address, services=REQUIRED_SERVICES) as client:
 
-                    is_valid = _validate_station(station, client)
+            async with asyncio.TaskGroup() as tg:
+                id_ok = tg.create_task(validate_id(client, allowed_stations)).result()
+                missing_characteristics = tg.create_task(
+                    validate_characteristics(client)
+                ).result()
 
-                if is_valid:
-                    logger.info(
-                        f"Station (Station[name: {station.name}; address: {station.address}]) meets all requirements: "
-                    )
+        if id_ok and not missing_characteristics:
+            logger.info(
+                f"Connecting to station (Station[name: {station.name}; address: {station.address}]) "
+                f"as it meets all requirements."
+            )
+            return station
+        elif id_ok and missing_characteristics is not None:
+            logger.info(
+                f"Station (Station[name: {station.name}; address: {station.address}]) meets ID requirement but lacks"
+                f" the following characteristics: {missing_characteristics}"
+            )
+        else:
+            logger.info(
+                f"Station (Station[name: {station.name}; address: {station.address}]) doesn't meet ID requirement! "
+                f"Make sure you have registered this station's ID in the web app server if you want to connect to it."
+            )
 
-                    return station
-            else:
-                return station
-
-    return None
+    raise RuntimeError("No valid tempera stations found.")
 
 
-def _validate_station(station: BLEDevice, client: BleakClient) -> bool:
+async def validate_id(client: BleakClient, valid_ids: List[str]):
+    station_id = "Not Found"
+
+    for service in client.services:
+        if "180a" in service.uuid:
+            for characteristic in service.characteristics:
+                if "2a25" in characteristic.uuid:
+                    station_id = await client.read_gatt_char(characteristic.uuid)
+                    station_id = station_id.decode()
+
+    logger.info(f"Checking station ID '{station_id}' against web app server data.")
+
+    return station_id in valid_ids
+
+
+async def validate_characteristics(client: BleakClient) -> List[str]:
     missing_characteristics = REQUIRED_CHARACTERISTICS
     for service in client.services:
-        for required_characteristic in REQUIRED_CHARACTERISTICS:
-            if required_characteristic in service.uuid:
-                missing_characteristics.remove(required_characteristic)
+        for characteristic in service.characteristics:
+            for required_characteristic in REQUIRED_CHARACTERISTICS:
+                if required_characteristic in characteristic.uuid:
+                    missing_characteristics.remove(required_characteristic)
 
-    if missing_characteristics:
-        logger.warning(
-            f"Otherwise valid station ({station}) is missing "
-            f"the following required characteristic '{missing_characteristics}'"
-        )
-        return False
-
-    return True
+    return missing_characteristics
 
 
 # Keep scanning for stations every 60 seconds until one is found.
 # Usually a stop after n attempts would probably be better, but with headless raspberry pi
 # this strategy might be preferable
 # @retry(wait=wait_fixed(60))
-async def discovery_loop(check_characteristics=False) -> BLEDevice:
+async def discovery_loop() -> BLEDevice:
     tempera_stations = await get_tempera_stations()
     if not tempera_stations:
         raise ValueError("No tempera stations found.")
 
-    tempera_station = await validate_stations(
-        tempera_stations, check_characteristics=check_characteristics
-    )
+    tempera_station = await validate_stations(tempera_stations)
 
     if not tempera_station:
         raise ValueError("No valid tempera station found.")

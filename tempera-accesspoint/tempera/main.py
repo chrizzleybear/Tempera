@@ -27,7 +27,7 @@ DATA_SENDING_INTERVAL = 2
 # TODO: add retry
 async def get_data(client: BleakClient) -> None:
     for service in client.services:
-        if service.uuid == "180a":
+        if "180a" in service.uuid or "1801" in service.uuid:
             continue
         logger.info(
             f"Service[desc:{service.description};handle:{service.handle};uuid:{service.uuid}]"
@@ -49,11 +49,23 @@ async def post_data(client: BleakClient) -> None:
 
 # @retry()
 async def main():
-    tempera_station = await discovery_loop(check_characteristics=True)
+    tempera_station = await discovery_loop()
 
     while True:
-        # Check that the access point and tempera station are still approved by the web app server.
-        await validate_stations([tempera_station], check_characteristics=False)
+        with asyncio.TaskGroup() as tg:
+            # Check that the access point and tempera station are still approved by the web app server.
+            valid_station = tg.create_task(validate_stations([tempera_station]))
+
+            # If the scan order is issued by the web app server, an error is thrown.
+            # This will cause tenacity to execute the main function from the top again,
+            # starting with device discovery. This is sort of a 'goto'.
+            scan_order = tg.create_task(get_scan_order())
+
+            tg.sleep(DATA_COLLECTION_INTERVAL)
+
+        tempera_station = valid_station.result()
+        if scan_order.result():
+            raise RuntimeError("Scan order received. Returning to device discovery.")
 
         async with BleakClient(tempera_station.address) as client:
             logger.debug(f"Connected to device {tempera_station.address}.")
@@ -61,19 +73,6 @@ async def main():
             await get_data(client)
             await post_data(client)
 
-        await asyncio.sleep(DATA_COLLECTION_INTERVAL)
-        await asyncio.sleep(
-            DATA_SENDING_INTERVAL - DATA_COLLECTION_INTERVAL
-            if DATA_SENDING_INTERVAL > DATA_COLLECTION_INTERVAL
-            else 0
-        )
-
-        # If the scan order is issued by the web app server, an error is thrown.
-        # This will cause tenacity to execute the main function from the top again,
-        # starting with device discovery. This is sort of a 'goto'.
-        if get_scan_order():
-            raise RuntimeError("Scan order received. Returning to device discovery.")
-
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(main(), debug=False)
