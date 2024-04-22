@@ -41,7 +41,7 @@ async def get_active_station_ids(device_id: str) -> ValidDevices:
     :param device_id: ID of the access point
     :return:
     """
-    return {"access_point_allowed": True, "stations_allowed": ["add1", "add2"]}
+    return {"access_point_allowed": True, "stations_allowed": ["1234567890", "add2"]}
 
 
 @app.get("/rasp/api/scan_order")
@@ -54,6 +54,7 @@ async def post_connection(connection_info: ConnectionInfo):
     return {"data sent"}
 
 
+# TODO: define custom errors (enums) in device discovery and send them to web server for displaying
 @app.post("/api/measurement/", status_code=201)
 async def post_measurement(payload: Measurement):
     logger.info(f"Measurement: {payload}")
