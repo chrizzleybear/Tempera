@@ -127,6 +127,7 @@ public class UserxService implements UserDetailsService {
     }
     user.setFirstName(userDTO.getFirstName());
     user.setLastName(userDTO.getLastName());
+    user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
     user.setEmail(userDTO.getEmail());
     user.setRoles(userDTO.getRoles());
     user.setEnabled(userDTO.isEnabled());
