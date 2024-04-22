@@ -53,7 +53,7 @@ async def main():
         await validate_stations([tempera_station], check_characteristics=False)
 
         async with BleakClient(tempera_station.address) as client:
-            logger.info(f"Connected to device {tempera_station.address}.")
+            logger.debug(f"Connected to device {tempera_station.address}.")
 
             await get_data(client)
             await post_data(client)
