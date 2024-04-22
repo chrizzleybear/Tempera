@@ -15,11 +15,11 @@
 // Data structure for the elapsed time characteristic in the correct byte sequence.
 typedef struct __attribute__( (packed) ) { // use the attribute packed to correctly align data bytes in memory, this is necessary for the conversion to bytes 
   uint8_t flags = 0;
-  uint48_t timeValue;
+  uint48_t timeValue; // ! to-do: check if value is written correctly, it seems to not quite work
   uint8_t timeSyncSource = 0;
   uint8_t offset = 0;
-  uint8_t workMode;             // for our purpose the clock status bit is used as the workMode
-  uint8_t clockCapabilities;    // 0 is used for periodic updates, 7 is used for updates caused by button presses
+  uint8_t workMode;             // for our purpose the clock status bit is used as the workMode, 2-5 are DW, MT, OO, PT
+  uint8_t manualUpdate;    // 0 is used for periodic updates, 7 is used for updates caused by button presses
 } elapsedTimeCharacteristicStructure;
 
 // Union used to write and retrieve data from the characteristic

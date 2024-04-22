@@ -80,7 +80,7 @@ void writeElapsedTimeCharacteristicStructure(elapsedTimeCharacteristicUnion stru
     }
     Serial.println();
     Serial.print("Tempera > [INFO]    TimeValue: ");
-    Serial.println(structure.structValues.timeValue.ui32); //to-do: adjust print method, this is not properly implement since uint48_t is shortened to uint32_t to print it
+    Serial.println(structure.structValues.timeValue.ui48); //to-do: adjust print method, this is not properly implement since uint48_t is shortened to uint32_t to print it
     Serial.print("Tempera > [INFO]    WorkMode: ");
     Serial.println(structure.structValues.workMode);
   }
