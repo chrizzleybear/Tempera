@@ -52,12 +52,14 @@ struct color findButtonColor(pin_size_t button) {
   }
 };
 
+// Function used to handle a time overflow of the internal arduino clock
+int fixTimeOverflow(timedSession session) {
+  // ULONG_MAX
+  return 4294967295 - session.startTime + millis();
+};
+
 void switchBuiltInLED(unsigned state) {
-  if (state) {
-    digitalWrite(LED_BUILTIN, HIGH);
-  } else {
-    digitalWrite(LED_BUILTIN, LOW);
-  }
+    digitalWrite(LED_BUILTIN, (state ? HIGH : LOW) );
 };
 
 void printSessionUpdate(timedSession session) {
