@@ -30,15 +30,14 @@ def main():
 
     with open(config_file, "w") as cf:
         config["sending_interval"] = prompt(
-            # TODO: add info about interval duration unit to prompt
-            "Please set a data transfer interval\n"
+            "Please set a data transfer interval in seconds\n"
             "between access point and web server >> ",
             parse_float=True,
         )
         config["webserver_address"] = prompt(
             "Please provide the IP-address of the web server >> "
         )
-        config["accesspoint_id"] = prompt("Please set the ID of this access point >> ")
+        config["access_point_id"] = prompt("Please set the ID of this access point >> ")
         yaml.dump(config, cf)
 
     print("\nSetup done! ✨🚀✨\nGood bye. ")
