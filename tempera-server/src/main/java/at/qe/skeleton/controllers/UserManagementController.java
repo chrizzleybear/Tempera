@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -50,7 +49,7 @@ public class UserManagementController{
 
     @PutMapping("/update")
     public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDto) {
-        Userx updatedUser = userxService.updateUser(userxService.convertToEntity(userDto));
+        Userx updatedUser = userxService.updateUser(userDto);
         return ResponseEntity.ok(userxService.convertToDTO(updatedUser));
     }
 

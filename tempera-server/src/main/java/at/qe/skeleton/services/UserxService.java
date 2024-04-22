@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserxService implements UserDetailsService {
 
   @Autowired private UserxRepository userRepository;
-  
+
   @Autowired private PasswordEncoder passwordEncoder;
 
   /**
@@ -120,18 +120,19 @@ public class UserxService implements UserDetailsService {
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
-  public Userx updateUser(Userx userData) {
-    Userx newUser = userRepository.findById(userData.getId()).orElse(userData);
-    newUser.setId(userData.getId());
-    newUser.setFirstName(userData.getFirstName());
-    newUser.setLastName(userData.getLastName());
-    newUser.setUsername(userData.getUsername());
-    newUser.setEmail(userData.getEmail());
-    newUser.setRoles(userData.getRoles());
-    newUser.setEnabled(userData.isEnabled());
-    newUser.setUpdateDate(LocalDateTime.now());
-    newUser.setUpdateUser(getAuthenticatedUser());
-    return userRepository.save(newUser);
+  public Userx updateUser(UserDTO userDTO) {
+    Userx user = userRepository.findFirstByUsername(userDTO.getUsername());
+    if(user == null) {
+      throw new IllegalArgumentException("User not found");
+    }
+    user.setFirstName(userDTO.getFirstName());
+    user.setLastName(userDTO.getLastName());
+    user.setEmail(userDTO.getEmail());
+    user.setRoles(userDTO.getRoles());
+    user.setEnabled(userDTO.isEnabled());
+    user.setUpdateDate(LocalDateTime.now());
+    user.setUpdateUser(getAuthenticatedUser());
+    return userRepository.save(user);
   }
 
   public UserDTO convertToDTO(Userx user) {

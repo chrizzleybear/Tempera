@@ -38,7 +38,7 @@ public class AuthenticationService {
     public void sendValidationEmail(Userx user) {
         String password = generateAndSaveActivationToken(user);
         emailService.sendEmail(user.getEmail(), "Registration successful", "Hello " + user.getFirstName() + " " + user.getLastName() + ",\n\n" +
-                "Your registration was successful. Your username is: " + user.getUsername() + "\n" +
+                "Your registration was successful.\nYour username is: " + user.getUsername() + "\n" +
                 "Your password is: " + password + " \n\n" +
                 "Please follow the link to set your password.\n\n" +
                 "http://localhost:4200/register/" + user.getUsername() + "\n\n" +
