@@ -134,15 +134,15 @@ void writeRoomClimateAllCharacteristics(\
     Serial.print(" ");
     Serial.print(rcusTest.nmvocBytes[1]);
     Serial.println();
-    Serial.print("Tempera > [INFO]    Converted values: ");
+    Serial.print("Tempera > [INFO]    Values without accuracy: ");
     Serial.print(rcusTest.temperature);
-    Serial.print("   ");
+    Serial.print("*   ");
     Serial.print(rcusTest.irradiance);
-    Serial.print("   ");
+    Serial.print("*   ");
     Serial.print(rcusTest.humidity);
-    Serial.print("   ");
+    Serial.print("*   ");
     Serial.print(rcusTest.nmvoc);
-    Serial.print("   ");
+    Serial.print("*   ");
     Serial.println();
   }
 };

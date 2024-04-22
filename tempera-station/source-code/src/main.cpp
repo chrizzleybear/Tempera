@@ -102,7 +102,7 @@ void setup() {
 
   BLEDescriptor serialInfoDescriptor("2901", "Unique serial number");
   serialNumberCharacteristic.addDescriptor(serialInfoDescriptor);
-  serialNumberCharacteristic.writeValue(DEVICE_ID);
+  serialNumberCharacteristic.writeValue(DEVICE_SN);
   serialNumberCharacteristic.setEventHandler(BLERead, readSerialNumber);
   deviceInformationService.addCharacteristic(serialNumberCharacteristic);
 
@@ -159,9 +159,9 @@ void loop() {
     // to-do: update the roomclimatedata with new values from the sensors
     // some temporary dummy operations for now:
     roomClimateData.temperature += 1/0.01;
-    roomClimateData.irradiance += 1/0.1;
-    roomClimateData.humidity += 1/0.01;
-    roomClimateData.nmvoc += 1;
+    roomClimateData.irradiance += 2/0.1;
+    roomClimateData.humidity += 3/0.01;
+    roomClimateData.nmvoc += 4;
 
 
     lastRoomClimateUpdate = millis();
@@ -186,7 +186,11 @@ void loop() {
       {0, UPDATE_INTERVAL_TIME, 0, 0, (uint8_t) session.workMode, (uint8_t) 0},\
       currentElapsedTimeCharacteristic\
     );
-    session.lastSessionDuration = millis() - session.startTime; // to-do: fix possible overflow error
+    session.lastSessionDuration = millis() - session.startTime;
+    // Overflow fix for internal clock
+    if (millis() < session.startTime) {
+      session.lastSessionDuration = fixTimeOverflow(session);
+    }
     session.startTime = millis();
     lastTimeUpdate = millis();
     if (INFO) printSessionUpdate(session);
@@ -207,7 +211,11 @@ void loop() {
       currentElapsedTimeCharacteristic\
     );
     session.workMode = b;
-    session.lastSessionDuration = millis() - session.startTime; // to-do: fix possible overflow error
+    session.lastSessionDuration = millis() - session.startTime;
+    // Overflow fix for internal clock
+    if (millis() < session.startTime) {
+      session.lastSessionDuration = fixTimeOverflow(session);
+    }
     session.startTime = millis();
     lastTimeUpdate = millis();
     if (INFO) printSessionUpdate(session);

@@ -35,7 +35,7 @@
 #define INFO 1
 #define ERROR 1
 
-// Set their colors (r-g-b value):
+// Set LED-color for different work modes (r-g-b value):
 #define DW_COLOR {0, 0, 255}
 #define MT_COLOR {255, 40, 10}
 #define OO_COLOR {255, 0, 0}
@@ -52,6 +52,6 @@
 
 // Device name and custom id
 #define DEVICE_NAME "G4T1-Tempera-Station #1"
-#define DEVICE_ID "1234567890"
+#define DEVICE_SN "1234567890"
 
 #endif
