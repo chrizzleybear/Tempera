@@ -1,4 +1,5 @@
 import logging
+from getpass import getpass
 from pathlib import Path
 
 import yaml
@@ -29,15 +30,23 @@ def main():
     config_file = Path(__file__).parent.parent / "conf.yaml"
 
     with open(config_file, "w") as cf:
+        config["access_point_id"] = prompt("Set the ID of this access point >> ")
+        config["webserver_address"] = prompt(
+            "Set the IP address and port of the web server in the following format: <IP-address>:<port>\n"
+            "e.g., http://127.0.0.1:8000 >> "
+        )
+        config["user_name"] = prompt(
+            "Set the user name for the web server api authentication >> "
+        )
+        config["password"] = ""
+        while config["password"] == "":
+            config["password"] = getpass()
+
         config["sending_interval"] = prompt(
-            "Please set a data transfer interval in seconds\n"
+            "Set a data transfer interval in seconds "
             "between access point and web server >> ",
             parse_float=True,
         )
-        config["webserver_address"] = prompt(
-            "Please provide the IP-address of the web server >> "
-        )
-        config["access_point_id"] = prompt("Please set the ID of this access point >> ")
         yaml.dump(config, cf)
 
     print("\nSetup done! ✨🚀✨\nGood bye. ")
