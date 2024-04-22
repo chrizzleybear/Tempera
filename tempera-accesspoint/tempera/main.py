@@ -46,10 +46,6 @@ async def post_data(client: BleakClient) -> None:
 
 @retry()
 async def main():
-    # TODO: remove for prod
-    # delete_measurements(all=True)
-    ###
-
     tempera_station = await discovery_loop(check_characteristics=True)
 
     while True:
