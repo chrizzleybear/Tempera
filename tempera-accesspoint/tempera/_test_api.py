@@ -32,7 +32,7 @@ class Measurement(BaseModel):
 app = FastAPI()
 
 
-@app.get("/rasp/api/{device_id}")
+@app.get("/rasp/api/valid_devices")
 async def get_active_station_ids(device_id: str) -> ValidDevices:
     """
     'access_point_allowed' is True if the ID of the access point is registered as allowed AND enabled in the back end.
