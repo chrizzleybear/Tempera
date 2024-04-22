@@ -4,9 +4,9 @@ from pathlib import Path
 from typing import List
 
 import requests
+import yaml
 from bleak import BLEDevice, BleakScanner, BleakClient
 from fastapi import requests
-from pydantic_settings.sources import yaml
 from requests import Response
 from tenacity import retry, wait_fixed
 
@@ -25,10 +25,10 @@ async def get_tempera_stations() -> List[BLEDevice]:
     logger.info("Scanning for BLE devices...")
     scanner = BleakScanner(detection_callback)
     devices = await scanner.discover(timeout=SCANNING_TIMEOUT)
+    logger.info(f"Found devices: {devices}")
 
     tempera_stations = []
     for device in devices:
-        logger.debug(f"Device[name:{device.name};address:{device.address}]")
         if "G4T1" in device.name:
             logger.info(
                 f"Found tempera station: Device[name:{device.name};address:{device.address}]"
@@ -53,16 +53,25 @@ async def validate_stations(
     """
     Returns the first valid tempera station. Valid means that its ID corresponds to one stored in the webapp back end.
 
+    :param check_characteristics:
     :param tempera_stations:
     :return:
     """
     logger.info(f"Trying to validate stations: {tempera_stations}")
 
-    with open(Path(__name__).parent.parent / "conf.yaml", "r") as config_file:
+    config_file = Path(__name__).resolve().parent.parent / "conf.yaml"
+    if not config_file.is_file():
+        logger.critical(
+            f"{config_file.absolute()} not found. Couldn't get web app server IP, aborting validation."
+        )
+        raise FileNotFoundError
+    logger.debug(f"Reading config file ({config_file.absolute()})")
+
+    with open(config_file, "r") as config_file:
         config = yaml.safe_load(config_file)
 
     response = requests.get(
-        f"{API_ENDPOINT}/rasp/api/{config['device_id']}",
+        f"{API_ENDPOINT}/rasp/api/{config['accesspoint_id']}",
         hooks={"response": validate_access_point},
     )
 
@@ -116,6 +125,9 @@ def _validate_station(station: BLEDevice, client: BleakClient) -> bool:
 @retry(wait=wait_fixed(60))
 async def discovery_loop(check_characteristics=False) -> BLEDevice:
     tempera_stations = await get_tempera_stations()
+    if not tempera_stations:
+        raise ValueError("No tempera stations found.")
+
     tempera_station = await validate_stations(
         tempera_stations, check_characteristics=check_characteristics
     )
@@ -127,15 +139,17 @@ async def discovery_loop(check_characteristics=False) -> BLEDevice:
 
 
 def validate_access_point(response: Response) -> None:
-    # TODO: check this method
-    response.raise_for_status()
+    code = response.status_code
+    response = response.json()
 
-    response = json.load(response.json())
-
-    if response["access_point_allowed"] != "True":
+    if code != 200:
+        logger.debug(f"{response.status_code}, {response}")
+        raise RuntimeError("An error occurred in calling the API")
+    elif response["access_point_allowed"] != "True":
+        logger.debug(f"{response.status_code}, {response}")
         raise RuntimeError("This access point is not registered in the web app server.")
 
 
 def get_scan_order() -> bool:
     response = requests.get(f"{API_ENDPOINT}/rasp/api/scan_order")
-    return json.loads(response.json())["scan"]
+    return response.json()["scan"]
