@@ -45,9 +45,9 @@
   <app-user-edit [user]="selectedUser" (editCompleted)="onEditCompleted($event)"></app-user-edit>
   <button type="button" pButton label="Back" icon="pi pi-arrow-left" (click)="displayEditDialog = false"></button>
 </p-dialog>
-<div *ngIf="displayCreateDialog">
+<p-dialog header="Create User" [(visible)]="displayCreateDialog" [modal]="true" [style]="{width: '50vw'}" [closable]="true">
   <app-user-create (creatComplete)="onCreateCompleted($event)"></app-user-create>
-  <button type="button" pButton label="Back" icon="pi pi-arrow-left" (click)="returnToUsers()"></button>
-</div>
+  <button type="button" pButton label="Back" icon="pi pi-arrow-left" (click)="displayCreateDialog = false"></button>
+</p-dialog>
 
 
