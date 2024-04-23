@@ -59,14 +59,11 @@ export class UsersComponent implements OnInit{
     }
   }
 
-  deleteSelectedUsers(): void {
-    console.log("delete selected users");
-    this.selectedUsers.forEach(user => {
-      this.usersService.deleteUser(user.id);
-      this.returnToUsers();
+  deleteSelectedUsers(userId: string ): void {
+      console.log("Delete user with ID: ", userId);
+      this.usersService.deleteUser(userId);
       this.messages = [{severity:'success', summary:'Success', detail:'User deleted successfully'}];
-
-    });
+      this.loadUsers();
   }
 
   loadUsers() {

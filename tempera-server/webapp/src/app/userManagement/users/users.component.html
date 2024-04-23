@@ -4,9 +4,6 @@
     <input type="text" pInputText placeholder="Search by username" (input)="applyFilter($event)" class="mr-2">
 
     <button type="button" pButton label="Add New User" icon="pi pi-plus" (click)="createUser()" class="mr-2"></button>
-
-    <button type="button" pButton label="Delete Selected Users" icon="pi pi-trash"
-            (click)="deleteSelectedUsers()" [disabled]="!selectedUsers || selectedUsers.length === 0"></button>
   </div>
 
   <p-table [value]="filteredUsers" [paginator]="true" [rows]="10" selectionMode="multiple" [(selection)]="selectedUsers" dataKey="id" responsiveLayout="scroll">
@@ -34,7 +31,10 @@
         </td>
         <td>{{ user.enabled ? "Yes" : "No" }}</td>
         <td>
-          <p-button label="Edit" (onClick)="editUser(user)" icon="pi pi-pencil"></p-button>
+          <p-button label="Edit" (onClick)="editUser(user); $event.stopPropagation()" icon="pi pi-pencil"></p-button>
+        </td>
+        <td>
+          <p-button label="Delete" (onClick)="deleteSelectedUsers(user.username); $event.stopPropagation()" icon="pi pi-trash"></p-button>
         </td>
         <td> <p-tableCheckbox [value]="user" (click)="$event.stopPropagation()"></p-tableCheckbox> </td>
       </tr>
