@@ -2,23 +2,24 @@ import asyncio
 import logging
 from typing import List
 
-import requests
 from bleak import BLEDevice, BleakScanner, BleakClient
 from requests import Response
 
 from bleclient.device_notification import detection_callback
-from utils.config_utils import init_config
+from utils.config_utils import init_config, init_header
+from utils.request_utils import make_request
 
 logger = logging.getLogger(f"tempera.{__name__}")
 
 
 CONFIG = init_config()
+HEADER = init_header(CONFIG)
 REQUIRED_SERVICES = ["180a", "183f", "181a"]
 REQUIRED_CHARACTERISTICS = ["2a29", "2a25", "2bf2", "2a6e", "2a77", "2a6f", "2bd3"]
 SCANNING_TIMEOUT = 5
 
 
-async def get_tempera_stations() -> List[BLEDevice]:
+async def get_tempera_stations() -> List[BLEDevice] | None:
     logger.info("Scanning for BLE devices...")
     scanner = BleakScanner(detection_callback)
     devices = await scanner.discover(timeout=SCANNING_TIMEOUT)
@@ -38,7 +39,7 @@ async def get_tempera_stations() -> List[BLEDevice]:
             "Make sure 'G4T1' is part of the tempera station's name you are trying to connect."
         )
         # TODO: send log to back end
-        return []
+        return None
 
     # TODO: send log to back end
     return tempera_stations
@@ -60,13 +61,14 @@ async def validate_stations(tempera_stations: List[BLEDevice]) -> BLEDevice | No
         logger.critical(f"Failed to read parameter from the config file: {e}")
         raise KeyError
 
-    response = requests.get(
+    response = await make_request(
+        "get",
         f"{server_address}/rasp/api/valid_devices",
+        headers=HEADER,
         params={"device_id": access_point_id},
         hooks={"response": validate_access_point},
     )
 
-    response = response.json()
     allowed_stations = response["stations_allowed"]
 
     for station in tempera_stations:
@@ -96,7 +98,10 @@ async def validate_stations(tempera_stations: List[BLEDevice]) -> BLEDevice | No
                 f"Make sure you have registered this station's ID in the web app server if you want to connect to it."
             )
 
-    raise RuntimeError("No valid tempera stations found.")
+    logger.warning(
+        "No tempera station found satisfies ID, services and characteristics validation."
+    )
+    raise RuntimeError
 
 
 async def validate_id(client: BleakClient, valid_ids: List[str]):
@@ -125,6 +130,23 @@ async def validate_characteristics(client: BleakClient) -> List[str]:
     return missing_characteristics
 
 
+def validate_access_point(response: Response, *args, **kwargs) -> None:
+    code = response.status_code
+    response = response.json()
+
+    if code != 200 or code != 201:
+        logger.error(f"{code}: {response}")
+        raise RuntimeError
+    elif code == 401:
+        logger.error(f"{code}: Authentication failed. {response}")
+        raise RuntimeError
+    elif not response["access_point_allowed"]:
+        logger.warning(
+            "This access point is not registered in the web app server. It can't transmit any data."
+        )
+        raise RuntimeError
+
+
 # Keep scanning for stations every 60 seconds until one is found.
 # Usually a stop after n attempts would probably be better, but with headless raspberry pi
 # this strategy might be preferable
@@ -132,38 +154,27 @@ async def validate_characteristics(client: BleakClient) -> List[str]:
 async def discovery_loop() -> BLEDevice:
     tempera_stations = await get_tempera_stations()
     if not tempera_stations:
-        raise ValueError("No tempera stations found.")
+        logger.error("No tempera stations found.")
+        raise ValueError
 
     tempera_station = await validate_stations(tempera_stations)
 
-    if not tempera_station:
-        raise ValueError("No valid tempera station found.")
+    if not tempera_stations:
+        logger.error("No tempera station found.")
+        raise ValueError
 
     return tempera_station
 
 
-def validate_access_point(response: Response, *args, **kwargs) -> None:
-    code = response.status_code
-    response = response.json()
-
-    if code != 200:
-        logger.debug(f"{code}, {response}")
-        raise RuntimeError("An error occurred in calling the API")
-    elif not response["access_point_allowed"]:
-        logger.debug(f"{response.status_code}, {response}")
-        raise RuntimeError("This access point is not registered in the web app server.")
-
-
-def get_scan_order() -> bool:
+async def get_scan_order() -> bool:
     try:
         server_address = CONFIG["webserver_address"]
     except KeyError as e:
         logger.critical(f"Failed to read parameter from the config file: {e}")
         raise KeyError
 
-    response = requests.get(f"{server_address}/rasp/api/scan_order")
-    if response.status_code != 200:
-        logger.debug(f"{response.status_code}, {response.json()}")
-        raise RuntimeError("An error occurred in calling the API")
+    response = await make_request(
+        "get", f"{server_address}/rasp/api/scan_order", headers=HEADER
+    )
 
-    return response.json()["scan"]
+    return response["scan"]

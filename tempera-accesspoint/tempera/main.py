@@ -65,7 +65,8 @@ async def main():
 
         tempera_station = valid_station.result()
         if scan_order.result():
-            raise RuntimeError("Scan order received. Returning to device discovery.")
+            logger.info("Scan order received. Returning to device discovery.")
+            raise RuntimeError
 
         async with BleakClient(tempera_station.address) as client:
             logger.debug(f"Connected to device {tempera_station.address}.")
