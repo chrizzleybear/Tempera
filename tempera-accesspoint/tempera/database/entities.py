@@ -1,8 +1,9 @@
 import datetime
 from enum import StrEnum
+from typing import List
 
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped
+from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped, relationship
 
 
 class Mode(StrEnum):
@@ -20,6 +21,10 @@ class TemperaStation(Base):
     __tablename__ = "tempera_station"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    time_record: Mapped[List["TimeRecord"]] = relationship(back_populates="time_record")
+    measurement: Mapped[List["Measurement"]] = relationship(
+        back_populates="measurement"
+    )
 
     def __repr__(self):
         return f"TemperaStation[id={self.id}]"
@@ -28,8 +33,11 @@ class TemperaStation(Base):
 class TimeRecord(Base):
     __tablename__ = "time_record"
 
-    tempera_station: Mapped["TemperaStation"] = mapped_column(
+    tempera_station_id: Mapped[int] = mapped_column(
         ForeignKey("tempera_station.id"), primary_key=True
+    )
+    tempera_station: Mapped["TemperaStation"] = relationship(
+        back_populates="tempera_station"
     )
     start: Mapped[datetime.datetime] = mapped_column(primary_key=True)
     duration: Mapped[int]
@@ -50,8 +58,11 @@ class TimeRecord(Base):
 class Measurement(Base):
     __tablename__ = "measurement"
 
-    tempera_station: Mapped["TemperaStation"] = mapped_column(
+    tempera_station_id: Mapped[int] = mapped_column(
         ForeignKey("tempera_station.id"), primary_key=True
+    )
+    tempera_station: Mapped["TemperaStation"] = relationship(
+        back_populates="tempera_station"
     )
     timestamp: Mapped[datetime.datetime] = mapped_column(primary_key=True)
     temperature: Mapped[float]
