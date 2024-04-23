@@ -3,6 +3,8 @@ from typing import Literal, Dict
 
 import requests
 
+logger = logging.getLogger(f"tempera.{__name__}")
+
 
 async def make_request(kind: Literal["get", "post"], url: str, **kwargs) -> Dict:
     """
@@ -17,31 +19,29 @@ async def make_request(kind: Literal["get", "post"], url: str, **kwargs) -> Dict
         case "post":
             response = requests.post(url, **kwargs)
         case _:
-            logging.warning("REST operation not supported. Use one of 'get' or 'post'.")
+            logger.warning("REST operation not supported. Use one of 'get' or 'post'.")
             raise RuntimeError
 
     match response.status_code:
         case 200:
-            logging.info(
-                f"{response.status_code}: Successful request {response.json()}"
-            )
+            logger.info(f"{response.status_code}: Successful request {response.json()}")
         case 201:
-            logging.info(
+            logger.info(
                 f"{response.status_code}: Successful request. Object created {response.json()}"
             )
         case 401:
-            logging.error(
+            logger.error(
                 f"{response.status_code}: Authentication failed! {response.json()}"
             )
             raise RuntimeError
         case _:
-            logging.error(f"{response.status_code}: {response.json()}")
+            logger.error(f"{response.status_code}: {response.json()}")
             raise RuntimeError
 
     response = response.json()
 
     if not response:
-        logging.error("No response received!")
+        logger.error("No response received!")
         raise RuntimeError
 
     return response
