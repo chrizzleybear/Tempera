@@ -41,7 +41,6 @@ export class UserEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    //this.username = this.route.snapshot.paramMap.get('id');
     this.username = this.user.username;
     this.usersService.getUserById(this.username).subscribe({
       next: (data) => {
