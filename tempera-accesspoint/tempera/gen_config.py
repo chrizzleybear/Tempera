@@ -31,9 +31,9 @@ def main():
 
     with open(config_file, "w") as cf:
         config["access_point_id"] = prompt("Set the ID of this access point >> ")
-        config["webserver_address"] = prompt(
+        config["webserver_address"] = "http://" + prompt(
             "Set the IP address and port of the web server in the following format: <IP-address>:<port>\n"
-            "e.g., http://127.0.0.1:8000 >> "
+            "http://"
         )
         config["user_name"] = prompt(
             "Set the user name for the web server api authentication >> "
