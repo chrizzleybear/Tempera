@@ -1,6 +1,6 @@
 package at.qe.skeleton.services;
 
-import at.qe.skeleton.model.DTOs.UserDTO;
+import at.qe.skeleton.model.DTOs.UserxDTO;
 import at.qe.skeleton.model.Userx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -27,8 +27,8 @@ public class AuthenticationService {
 
     @Transactional
     @PreAuthorize("hasAuthority('ADMIN')")
-    public UserDTO registerUser(UserDTO userDTO) {
-        Userx newUser = userxService.convertToEntity(userDTO);
+    public UserxDTO registerUser(UserxDTO userxDTO) {
+        Userx newUser = userxService.convertToEntity(userxDTO);
         userxService.saveUser(newUser);
         sendValidationEmail(newUser);
         return userxService.convertToDTO(newUser);
@@ -66,8 +66,8 @@ public class AuthenticationService {
 
     @Transactional
     @PreAuthorize("hasAuthority('ADMIN')")
-    public void resendValidation(UserDTO userDTO) {
-        Userx user = userxService.convertToEntity(userDTO);
+    public void resendValidation(UserxDTO userxDTO) {
+        Userx user = userxService.convertToEntity(userxDTO);
         String password = generateAndSaveActivationToken(user);
         emailService.sendEmail(user.getEmail(), "Registration successful", "Hello " + user.getFirstName() + " " + user.getLastName() + ",\n\n" +
                 "Your registration was successful. Your username is: " + user.getUsername() + "\n" +

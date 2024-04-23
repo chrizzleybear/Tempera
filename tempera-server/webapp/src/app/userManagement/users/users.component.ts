@@ -10,6 +10,7 @@ import {UserEditComponent} from "../user-edit/user-edit.component";
 import {DialogModule} from "primeng/dialog";
 import {UserCreateComponent} from "../user-create/user-create.component";
 import { MessagesModule } from 'primeng/messages';
+import {OverlayPanelModule} from "primeng/overlaypanel";
 
 @Component({
   selector: 'app-users',
@@ -53,6 +54,8 @@ export class UsersComponent implements OnInit{
       );
     } else {
       this.filteredUsers = this.users;
+
+      OverlayPanelModule
     }
   }
 
@@ -70,12 +73,13 @@ export class UsersComponent implements OnInit{
     this.usersService.getAllUsers().subscribe(users => {
       this.users = users;
       this.filteredUsers = users;
+      console.log("update");
     });
   }
   editUser(user: any) {
-    this.selectedUser = user;
+    this.selectedUser = { ...user };
     this.displayEditDialog = true;
-    console.log(user);
+    console.log("detail", user);
 
   }
   createUser() {
@@ -101,9 +105,9 @@ export class UsersComponent implements OnInit{
       this.returnToUsers();
     }
   }
-  viewUserDetails(user: any) {
-    this.router.navigate(['/user', user.id]);
-    console.log(user);
+  viewUserDetails(userId: String) {
+    this.router.navigate(['/user', userId]);
+    console.log(userId);
   }
 
 }

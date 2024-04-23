@@ -1,6 +1,6 @@
 package at.qe.skeleton.services;
 
-import at.qe.skeleton.model.DTOs.UserDTO;
+import at.qe.skeleton.model.DTOs.UserxDTO;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.repositories.UserxRepository;
@@ -120,43 +120,43 @@ public class UserxService implements UserDetailsService {
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
-  public Userx updateUser(UserDTO userDTO) {
-    Userx user = userRepository.findFirstByUsername(userDTO.getUsername());
+  public Userx updateUser(UserxDTO userxDTO) {
+    Userx user = userRepository.findFirstByUsername(userxDTO.getUsername());
     if(user == null) {
       throw new IllegalArgumentException("User not found");
     }
-    user.setFirstName(userDTO.getFirstName());
-    user.setLastName(userDTO.getLastName());
-    user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-    user.setEmail(userDTO.getEmail());
-    user.setRoles(userDTO.getRoles());
-    user.setEnabled(userDTO.isEnabled());
+    user.setFirstName(userxDTO.getFirstName());
+    user.setLastName(userxDTO.getLastName());
+    user.setPassword(passwordEncoder.encode(userxDTO.getPassword()));
+    user.setEmail(userxDTO.getEmail());
+    user.setRoles(userxDTO.getRoles());
+    user.setEnabled(userxDTO.isEnabled());
     user.setUpdateDate(LocalDateTime.now());
     user.setUpdateUser(getAuthenticatedUser());
     return userRepository.save(user);
   }
 
-  public UserDTO convertToDTO(Userx user) {
-    UserDTO userDTO = new UserDTO();
-    userDTO.setUsername(user.getUsername());
-    userDTO.setFirstName(user.getFirstName());
-    userDTO.setLastName(user.getLastName());
-    userDTO.setPassword(user.getPassword());
-    userDTO.setEmail(user.getEmail());
-    userDTO.setEnabled(user.isEnabled());
-    userDTO.setRoles(user.getRoles());
-    return userDTO;
+  public UserxDTO convertToDTO(Userx user) {
+    UserxDTO userxDTO = new UserxDTO();
+    userxDTO.setUsername(user.getUsername());
+    userxDTO.setFirstName(user.getFirstName());
+    userxDTO.setLastName(user.getLastName());
+    userxDTO.setPassword(user.getPassword());
+    userxDTO.setEmail(user.getEmail());
+    userxDTO.setEnabled(user.isEnabled());
+    userxDTO.setRoles(user.getRoles());
+    return userxDTO;
   }
 
-  public Userx convertToEntity(UserDTO userDTO) {
+  public Userx convertToEntity(UserxDTO userxDTO) {
     Userx user = new Userx();
-    user.setUsername(userDTO.getUsername());
-    user.setFirstName(userDTO.getFirstName());
-    user.setLastName(userDTO.getLastName());
-    user.setPassword(userDTO.getPassword());
-    user.setEmail(userDTO.getEmail());
-    user.setEnabled(userDTO.isEnabled());
-    user.setRoles(userDTO.getRoles());
+    user.setUsername(userxDTO.getUsername());
+    user.setFirstName(userxDTO.getFirstName());
+    user.setLastName(userxDTO.getLastName());
+    user.setPassword(userxDTO.getPassword());
+    user.setEmail(userxDTO.getEmail());
+    user.setEnabled(userxDTO.isEnabled());
+    user.setRoles(userxDTO.getRoles());
     return user;
     }
 }

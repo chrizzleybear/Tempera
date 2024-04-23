@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.Set;
 
-public class UserDTO {
+public class UserxDTO {
     @NotNull
     @NotEmpty
     private String username;

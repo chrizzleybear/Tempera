@@ -1,8 +1,10 @@
-<p-messages [(value)]="messages" [enableService]="false" [closable]="false"></p-messages>
+<p-messages [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
 <div *ngIf="!displayEditDialog && !displayCreateDialog">
-  <div class="action-buttons">
-    <input type="text" pInputText placeholder="Search by username" (input)="applyFilter($event)">
-    <button type="button" pButton label="Add New User" icon="pi pi-plus" (click)="createUser()"></button>
+  <div class="mb-4">
+    <input type="text" pInputText placeholder="Search by username" (input)="applyFilter($event)" class="mr-2">
+
+    <button type="button" pButton label="Add New User" icon="pi pi-plus" (click)="createUser()" class="mr-2"></button>
+
     <button type="button" pButton label="Delete Selected Users" icon="pi pi-trash"
             (click)="deleteSelectedUsers()" [disabled]="!selectedUsers || selectedUsers.length === 0"></button>
   </div>
@@ -15,10 +17,13 @@
         <th scope="col" pSortableColumn="lastName">Nachname <p-sortIcon field="lastName"></p-sortIcon></th>
         <th scope="col">Rollen</th>
         <th scope="col">Enabled</th>
+        <!--  Empty headers for styling    -->
+        <th></th>
+        <th></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-user>
-      <tr (click)="viewUserDetails(user)">
+      <tr (click)="viewUserDetails(user.username)">
         <td>{{ user.username }}</td>
         <td>{{ user.firstName }}</td>
         <td>{{ user.lastName }}</td>
@@ -36,11 +41,13 @@
     </ng-template>
   </p-table>
 </div>
-<div *ngIf="displayEditDialog">
+<p-dialog header="Edit User" [(visible)]="displayEditDialog" [modal]="true" [style]="{width: '50vw'}" [closable]="true">
   <app-user-edit [user]="selectedUser" (editCompleted)="onEditCompleted($event)"></app-user-edit>
-  <button type="button" pButton label="Back" icon="pi pi-arrow-left" (click)="returnToUsers()"></button>
-</div>
+  <button type="button" pButton label="Back" icon="pi pi-arrow-left" (click)="displayEditDialog = false"></button>
+</p-dialog>
 <div *ngIf="displayCreateDialog">
   <app-user-create (creatComplete)="onCreateCompleted($event)"></app-user-create>
   <button type="button" pButton label="Back" icon="pi pi-arrow-left" (click)="returnToUsers()"></button>
 </div>
+
+

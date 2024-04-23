@@ -1,6 +1,6 @@
 package at.qe.skeleton.controllers;
 
-import at.qe.skeleton.model.DTOs.UserDTO;
+import at.qe.skeleton.model.DTOs.UserxDTO;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.AuthenticationService;
 import at.qe.skeleton.services.UserxService;
@@ -25,15 +25,15 @@ public class UserManagementController{
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<UserDTO> users = userxService.getAllUsers().stream()
+    public ResponseEntity<List<UserxDTO>> getAllUsers() {
+        List<UserxDTO> users = userxService.getAllUsers().stream()
                 .map(userxService::convertToDTO)
                 .toList();
         return ResponseEntity.ok(users);
     }
 
     @GetMapping("/load/{id}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable String id) {
+    public ResponseEntity<UserxDTO> getUser(@PathVariable String id) {
         Userx user = userxService.loadUser(id);
         return ResponseEntity.ok(userxService.convertToDTO(user));
     }
@@ -48,14 +48,14 @@ public class UserManagementController{
     }
 
     @PutMapping("/update")
-    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDto) {
-        Userx updatedUser = userxService.updateUser(userDto);
+    public ResponseEntity<UserxDTO> updateUser(@RequestBody UserxDTO userxDto) {
+        Userx updatedUser = userxService.updateUser(userxDto);
         return ResponseEntity.ok(userxService.convertToDTO(updatedUser));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDto) {
-        UserDTO createdUser = authenticationService.registerUser(userDto);
+    public ResponseEntity<UserxDTO> createUser(@RequestBody UserxDTO userxDto) {
+        UserxDTO createdUser = authenticationService.registerUser(userxDto);
         return ResponseEntity.ok(createdUser);
     }
 }
