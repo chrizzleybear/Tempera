@@ -4,14 +4,10 @@ import logging.config
 
 from bleak import BleakClient
 
-from api.poster import post
 from bleclient.device_connection import (
     discovery_loop,
     validate_stations,
     get_scan_order,
-)
-from bleclient.device_notification import (
-    notify,
 )
 
 with open("logging_conf.json", "r") as config:
@@ -26,25 +22,12 @@ DATA_SENDING_INTERVAL = 2
 
 # TODO: add retry
 async def get_data(client: BleakClient) -> None:
-    for service in client.services:
-        if "180a" in service.uuid or "1801" in service.uuid:
-            continue
-        logger.info(
-            f"Service[desc:{service.description};handle:{service.handle};uuid:{service.uuid}]"
-        )
-        for characteristic in service.characteristics:
-            logger.info(
-                f"Characteristics[desc:{characteristic.description};uuid:{characteristic.uuid}]"
-            )
-
-            await notify(client, characteristic.uuid)
+    pass
 
 
 # TODO: add retry
 async def post_data(client: BleakClient) -> None:
-    for service in client.services:
-        for characteristic in service.characteristics:
-            await post(client, characteristic.uuid)
+    pass
 
 
 # @retry()
