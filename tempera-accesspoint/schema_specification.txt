@@ -1,0 +1,29 @@
+tempera_station {
+    id -> pk
+}
+
+NOTIFY
+# Data sent via notify every n sec.
+# -> set the start timestamp when receiving the first packet.
+# Calculate the start time by timestamp.now() - duration.
+# Don't update start time if auto_update=True packets are received (they belong to the previous session).
+# When auto_update=False calculate a new start time as above.
+# Don't worry about mode changes. auto_update=False for every button press (new session, no matter
+# whether the mode changes or not)
+elapsed_time {
+    tempera_station: fk, pk
+    start_timestamp: pk
+    duration
+    mode
+    auto_update (bool)
+}
+
+READ_GATT_CHAR manually
+measurement {
+    tempera_station: fk, pk
+    received: pk <- set manually when the packet is queried
+    temperature
+    irradiance
+    humidity
+    nmvoc
+}
