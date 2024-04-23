@@ -3,7 +3,6 @@ import logging
 from typing import List
 
 from bleak import BLEDevice, BleakScanner, BleakClient
-from requests import Response
 
 from bleclient.device_notification import detection_callback
 from utils.config_utils import init_config, init_header
@@ -64,10 +63,14 @@ async def validate_stations(tempera_stations: List[BLEDevice]) -> BLEDevice | No
     response = await make_request(
         "get",
         f"{server_address}/rasp/api/valid_devices",
-        headers=HEADER,
+        auth=HEADER,
         params={"device_id": access_point_id},
-        hooks={"response": validate_access_point},
     )
+    if not response["access_point_allowed"]:
+        logger.warning(
+            "This access point is not registered in the web app server. It can't transmit any data."
+        )
+        raise RuntimeError
 
     allowed_stations = response["stations_allowed"]
 
@@ -130,23 +133,6 @@ async def validate_characteristics(client: BleakClient) -> List[str]:
     return missing_characteristics
 
 
-def validate_access_point(response: Response, *args, **kwargs) -> None:
-    code = response.status_code
-    response = response.json()
-
-    if code != 200 or code != 201:
-        logger.error(f"{code}: {response}")
-        raise RuntimeError
-    elif code == 401:
-        logger.error(f"{code}: Authentication failed. {response}")
-        raise RuntimeError
-    elif not response["access_point_allowed"]:
-        logger.warning(
-            "This access point is not registered in the web app server. It can't transmit any data."
-        )
-        raise RuntimeError
-
-
 # Keep scanning for stations every 60 seconds until one is found.
 # Usually a stop after n attempts would probably be better, but with headless raspberry pi
 # this strategy might be preferable
@@ -159,7 +145,7 @@ async def discovery_loop() -> BLEDevice:
 
     tempera_station = await validate_stations(tempera_stations)
 
-    if not tempera_stations:
+    if not tempera_station:
         logger.error("No tempera station found.")
         raise ValueError
 
@@ -174,7 +160,7 @@ async def get_scan_order() -> bool:
         raise KeyError
 
     response = await make_request(
-        "get", f"{server_address}/rasp/api/scan_order", headers=HEADER
+        "get", f"{server_address}/rasp/api/scan_order", auth=HEADER
     )
 
     return response["scan"]
