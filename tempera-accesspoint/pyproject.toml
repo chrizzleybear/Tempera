@@ -27,7 +27,7 @@ authors = [
 maintainers = [
     { name = "Leonardo Pedri", email = "Leonardo.Pedri@uibk.ac.at" },
 ]
-#readme = "README.md"
+readme = "README.md"
 #license = {text = "MIT License"}
 
 
@@ -38,6 +38,7 @@ Issues = "https://git.uibk.ac.at/informatik/qe/swess24/group4/g4t1/-/issues"
 
 [project.scripts]
 configure = "tempera.gen_config:main"
+access_point-run = "tempera.main:main"
 
 
 [project.optional-dependencies]
