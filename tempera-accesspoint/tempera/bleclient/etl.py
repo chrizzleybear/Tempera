@@ -44,6 +44,10 @@ async def elapsed_time_handler(
     offset = data[8]
     work_mode = work_mode_map[data[9]]
     auto_update = record_status_map[data[10]]
+    logger.debug(
+        f"Read -> flag: {flag}, elapsed_time: {elapsed_time}, tss: {tss}, offset: {offset}, work_mode: {work_mode}, "
+        f"auto_update: {auto_update}"
+    )
 
     # The auto_update flag tells if the update is triggered manually (button press) or if it is just a periodic
     # update send via notify. Only when auto_update=False a button press has taken place and a new record must be
