@@ -64,25 +64,25 @@ void readAnyRoomClimateData(BLEDevice central, BLECharacteristic characteristic)
   Serial.println("Tempera > [INFO]    (Value not specified)");   // to-do: specify which one has been read
 };
 
-void writeElapsedTimeCharacteristicStructure(elapsedTimeCharacteristicUnion structure, BLECharacteristic currentElapsedTimeCharacteristic) {
-  if (!currentElapsedTimeCharacteristic.writeValue(structure.bytes, sizeof(structure.bytes)) && ERROR) {
+void writeElapsedTimeCharacteristicStructure(elapsedTimeCharacteristicUnion etcu, BLECharacteristic currentElapsedTimeCharacteristic) {
+  if (!currentElapsedTimeCharacteristic.writeValue(etcu.bytes, sizeof(etcu.bytes)) && ERROR) {
     Serial.println("Tempera > [ERROR] Could not write to elapsed time characteristic.");
     return;
   }
   // Test if the values can be retrieved from the characteristic, overwrite the structure and print them.
   if (INFO) {
-    currentElapsedTimeCharacteristic.readValue(structure.bytes, sizeof(structure.bytes));
+    currentElapsedTimeCharacteristic.readValue(etcu.bytes, sizeof(etcu.bytes));
     Serial.println("Tempera > [INFO] Elapsed time characteristic has been updated.");
     Serial.print("Tempera > [INFO]    Byte String: ");
-    for (uint8_t num : structure.bytes) {
-    Serial.print(num);
-    Serial.print(" ");
+    for (uint8_t num : etcu.bytes) {
+      Serial.print(num);
+      Serial.print(" ");
     }
     Serial.println();
     Serial.print("Tempera > [INFO]    TimeValue: ");
-    Serial.println(structure.structValues.timeValue.ui48); //to-do: adjust print method, this is not properly implement since uint48_t is shortened to uint32_t to print it
+    Serial.println(etcu.structValues.timeValue.ui48);
     Serial.print("Tempera > [INFO]    WorkMode: ");
-    Serial.println(structure.structValues.workMode);
+    Serial.println(etcu.structValues.workMode);
   }
 };
 
@@ -134,15 +134,15 @@ void writeRoomClimateAllCharacteristics(\
     Serial.print(" ");
     Serial.print(rcusTest.nmvocBytes[1]);
     Serial.println();
-    Serial.print("Tempera > [INFO]    Values without accuracy: ");
+    Serial.print("Tempera > [INFO]    Raw Values: ");
     Serial.print(rcusTest.temperature);
-    Serial.print("*   ");
+    Serial.print("   ");
     Serial.print(rcusTest.irradiance);
-    Serial.print("*   ");
+    Serial.print("   ");
     Serial.print(rcusTest.humidity);
-    Serial.print("*   ");
+    Serial.print("   ");
     Serial.print(rcusTest.nmvoc);
-    Serial.print("*   ");
+    Serial.print("   ");
     Serial.println();
   }
 };

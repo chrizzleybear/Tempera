@@ -16,7 +16,6 @@
 
 typedef union {
     uint64_t ui48: 48;
-    uint32_t ui32;
 } uint48_t;
 
 struct color {
@@ -27,7 +26,7 @@ struct color {
 
 class timedSession {
     public:
-        unsigned workMode = 0;
+        uint8_t workMode = 0;
         unsigned long startTime = millis();
         unsigned long lastSessionDuration = 0;
 };
