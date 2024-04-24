@@ -171,9 +171,9 @@ void loop() {
       Serial.println("Tempera > [ERROR] Could not start room climate measurements.");
     } else if (INFO) {
       Serial.println("Tempera > [INFO] Started room climate measurement: ");
-      Serial.print("Tempera > [INFO]    Start time:");
+      Serial.print("Tempera > [INFO]    Start time: ");
       Serial.println(millis());
-      Serial.print("Tempera > [INFO]    Finish time:");
+      Serial.print("Tempera > [INFO]    Finish time: ");
       Serial.println(endTime);
     }
 
@@ -212,7 +212,7 @@ void loop() {
   */
   if (lastTimeUpdate + UPDATE_INTERVAL_TIME < millis()) {
     writeElapsedTimeCharacteristicStructure(\
-      {0, UPDATE_INTERVAL_TIME, 0, 0, session.workMode, (uint8_t) 0},\
+      {0, (millis() - session.startTime), 0, 0, session.workMode, (uint8_t) 0},\
       currentElapsedTimeCharacteristic\
     );
     session.lastSessionDuration = millis() - session.startTime;
