@@ -5,13 +5,6 @@ from bleak import BleakClient
 logger = logging.getLogger(f"tempera.{__name__}")
 
 
-async def detection_callback(device, advertisement_data) -> None:
-    logger.info(
-        f"Device[name:{device.name};address:{device.address};signal_strenght(RSSI):{advertisement_data.rssi};"
-        f"ad_data:{advertisement_data}]"
-    )
-
-
 ###################
 ### DEVICE INFO ###
 ###################

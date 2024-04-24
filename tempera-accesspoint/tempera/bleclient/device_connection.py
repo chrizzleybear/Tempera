@@ -4,7 +4,6 @@ from typing import List
 
 from bleak import BLEDevice, BleakScanner, BleakClient
 
-from bleclient.device_notification import detection_callback
 from utils.config_utils import init_config, init_header
 from utils.request_utils import make_request
 
@@ -16,6 +15,13 @@ HEADER = init_header(CONFIG)
 REQUIRED_SERVICES = ["180a", "183f", "181a"]
 REQUIRED_CHARACTERISTICS = ["2a29", "2a25", "2bf2", "2a6e", "2a77", "2a6f", "2bd3"]
 SCANNING_TIMEOUT = 5
+
+
+async def detection_callback(device, advertisement_data) -> None:
+    logger.info(
+        f"Device[name:{device.name};address:{device.address};signal_strenght(RSSI):{advertisement_data.rssi};"
+        f"ad_data:{advertisement_data}]"
+    )
 
 
 async def get_tempera_stations() -> List[BLEDevice] | None:
