@@ -25,14 +25,14 @@ DATA_SENDING_INTERVAL = 2
 async def start_engine() -> sqlalchemy.Engine:
     from sqlalchemy import create_engine
 
-    database = f"sqlite:///{Path(__name__).parent.resolve()}/database/data.sqlite"
+    database = Path(__name__).resolve().parent / "database" / "data.sqlite"
     if not Path(database).is_file():
         logger.critical(
             f"{database} is not a valid file path. No database engine can be created from it."
         )
         raise FileNotFoundError
     logger.info(f"Creating database engine from db file: {database}")
-    return create_engine(database, echo=True)
+    return create_engine(f"sqlite:///{database}", echo=True)
 
 
 # TODO: add retry

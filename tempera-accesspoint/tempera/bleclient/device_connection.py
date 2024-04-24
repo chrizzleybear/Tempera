@@ -85,10 +85,15 @@ async def validate_stations(tempera_stations: List[BLEDevice]) -> BLEDevice | No
         async with BleakClient(station.address, services=REQUIRED_SERVICES) as client:
 
             async with asyncio.TaskGroup() as tg:
-                id_ok = tg.create_task(validate_id(client, allowed_stations)).result()
+                id_ok = tg.create_task(validate_id(client, allowed_stations))
                 missing_characteristics = tg.create_task(
                     validate_characteristics(client)
-                ).result()
+                )
+
+        id_ok, missing_characteristics = (
+            id_ok.result(),
+            missing_characteristics.result(),
+        )
 
         if id_ok and not missing_characteristics:
             logger.info(
@@ -161,12 +166,16 @@ async def discovery_loop() -> BLEDevice:
 async def get_scan_order() -> bool:
     try:
         server_address = CONFIG["webserver_address"]
+        access_point_id = CONFIG["access_point_id"]
     except KeyError as e:
         logger.critical(f"Failed to read parameter from the config file: {e}")
         raise KeyError
 
     response = await make_request(
-        "get", f"{server_address}/rasp/api/scan_order", auth=HEADER
+        "get",
+        f"{server_address}/rasp/api/scan_order",
+        auth=HEADER,
+        params={"device_id": access_point_id},
     )
 
     return response["scan"]
