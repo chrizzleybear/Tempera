@@ -26,6 +26,11 @@ async def start_engine() -> sqlalchemy.Engine:
     from sqlalchemy import create_engine
 
     database = f"sqlite:///{Path(__name__).parent.resolve()}/database/data.sqlite"
+    if not Path(database).is_file():
+        logger.critical(
+            f"{database} is not a valid file path. No database engine can be created from it."
+        )
+        raise FileNotFoundError
     logger.info(f"Creating database engine from db file: {database}")
     return create_engine(database, echo=True)
 
@@ -57,13 +62,13 @@ async def post_data(client: BleakClient) -> None:
 
 # @retry()
 async def main():
-    with asyncio.TaskGroup() as tg:
+    async with asyncio.TaskGroup() as tg:
         tempera_station = tg.create_task(discovery_loop())
         db_engine = tg.create_task(start_engine())
 
     tempera_station, db_engine = tempera_station.result(), db_engine.result()
     while True:
-        with asyncio.TaskGroup() as tg:
+        async with asyncio.TaskGroup() as tg:
             # Check that the access point and tempera station are still approved by the web app server.
             valid_station = tg.create_task(validate_stations([tempera_station]))
 
