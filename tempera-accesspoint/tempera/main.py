@@ -77,7 +77,7 @@ async def main():
             # starting with device discovery. This is sort of a 'goto'.
             scan_order = tg.create_task(get_scan_order())
 
-            tg.sleep(DATA_COLLECTION_INTERVAL)
+            tg.create_task(asyncio.sleep(DATA_COLLECTION_INTERVAL))
 
         tempera_station = valid_station.result()
         if scan_order.result():
