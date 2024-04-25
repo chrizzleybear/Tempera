@@ -1,11 +1,14 @@
 import logging
 from datetime import datetime, timezone, timedelta
+from typing import List
 
 import sqlalchemy
+from bleak import BleakClient, BleakGATTCharacteristic
+from bleak.backends.service import BleakGATTService
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from database.entities import Mode, TimeRecord, TemperaStation
+from database.entities import Mode, TimeRecord, TemperaStation, Measurement
 
 logger = logging.getLogger(f"tempera.{__name__}")
 
@@ -58,10 +61,10 @@ async def elapsed_time_handler(
     with Session(engine) as session:
         tempera_station = session.scalars(
             select(TemperaStation).where(TemperaStation.id == station_id)
-        ).one()
+        ).first()
         current_record = session.scalars(
             select(TimeRecord).order_by(TimeRecord.start.desc()).limit(1)
-        ).one()
+        ).first()
 
         if not current_record or not auto_update:
             now = datetime.now(tz=timezone.utc)
@@ -81,4 +84,72 @@ async def elapsed_time_handler(
                 f"Updating record: adding {elapsed_time} ms to the duration of {current_record}"
             )
 
+        session.commit()
+
+
+async def filter_uuid(
+    provider: BleakClient | BleakGATTService, uuid: str
+) -> BleakGATTService | BleakGATTCharacteristic:
+    if isinstance(provider, BleakClient):
+        return list(filter(lambda service: uuid in service.uuid, provider.services))[0]
+    elif isinstance(provider, BleakGATTService):
+        return list(
+            filter(
+                lambda characteristic: uuid in characteristic.uuid,
+                provider.characteristics,
+            )
+        )[0]
+
+
+async def measurements_handler(
+    client: BleakClient,
+    characteristics: List[BleakGATTCharacteristic],
+    engine: sqlalchemy.Engine,
+    station_id: str,
+):
+    temperature, irradiance, humidity, nmvoc = None, None, None, None
+    for characteristic in characteristics:
+        if "2a6e" in characteristic.uuid:
+            temperature = float(await client.read_gatt_char(characteristic))
+        elif "2a77" in characteristic.uuid:
+            irradiance = float(await client.read_gatt_char(characteristic))
+        elif "2a6f" in characteristic.uuid:
+            humidity = float(await client.read_gatt_char(characteristic))
+        elif "2bd3" in characteristic.uuid:
+            nmvoc = float(await client.read_gatt_char(characteristic))
+        else:
+            logger.warning(
+                f"UUID {characteristic} doesn't match any supported characteristic in the environmental sensing service"
+            )
+            raise RuntimeError
+
+    if not temperature:
+        logger.warning("Received no value for measurement: temperature.")
+        raise ValueError
+    elif not irradiance:
+        logger.warning("Received no value for measurement: irradiance.")
+        raise ValueError
+    elif not humidity:
+        logger.warning("Received no value for measurement: humidity.")
+        raise ValueError
+    elif not nmvoc:
+        logger.warning("Received no value for measurement: nmvoc.")
+        raise ValueError
+
+    with Session(engine) as session:
+        tempera_station = session.scalars(
+            select(TemperaStation).where(TemperaStation.id == station_id)
+        ).first()
+
+        measurement = Measurement(
+            tempera_station=tempera_station,
+            timestamp=datetime.now(timezone.utc),
+            temperature=temperature,
+            irradiance=irradiance,
+            humidity=humidity,
+            nmvoc=nmvoc,
+        )
+        logger.info(f"Saving {measurement}.")
+
+        session.add(measurement)
         session.commit()
