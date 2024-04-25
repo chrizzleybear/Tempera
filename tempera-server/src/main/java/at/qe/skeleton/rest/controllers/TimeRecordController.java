@@ -58,7 +58,7 @@ public class TimeRecordController {
     }
   }
 
-  @PostMapping("")
+  @PostMapping("/create")
   private ResponseEntity<SuperiorTimeRecordDto> postTimeRecord(
       @RequestBody SuperiorTimeRecordDto timeRecordDto) {
     try {

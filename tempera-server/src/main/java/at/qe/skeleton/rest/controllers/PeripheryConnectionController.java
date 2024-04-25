@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/rasp/api/connection")
+@RequestMapping("/rasp/api/access_point")
 public class PeripheryConnectionController {
   private final AccessPointMapper accessPointMapper;
   private final AccessPointService accessPointService;

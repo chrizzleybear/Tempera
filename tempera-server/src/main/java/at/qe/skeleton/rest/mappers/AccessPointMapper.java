@@ -18,7 +18,8 @@ public class AccessPointMapper implements DTOMapperStateless<AccessPoint, Access
    * Maps an AccessPoint entity to an AccessPointDto.
    *
    * @param entity The AccessPoint entity to be mapped.
-   * @return The resulting AccessPointDto which includes whether the AccessPoint is enabled and a List of enabled TemperaStations.
+   * @return The resulting AccessPointDto which includes whether the AccessPoint is enabled and a
+   *     List of enabled TemperaStations.
    * @throws CouldNotFindEntityException If the entity is null or has no id or TemperaStations.
    */
   @Override
@@ -39,6 +40,9 @@ public class AccessPointMapper implements DTOMapperStateless<AccessPoint, Access
     return new AccessPointDto(
         entity.getId(),
         entity.isEnabled(),
-        entity.getTemperaStations().stream().filter(TemperaStation::isEnabled).toList());
+        entity.getTemperaStations().stream()
+            .filter(TemperaStation::isEnabled)
+            .map(TemperaStation::getId)
+            .toList());
   }
 }

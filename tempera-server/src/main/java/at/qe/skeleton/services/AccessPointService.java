@@ -24,6 +24,9 @@ public class AccessPointService {
   }
 
   public AccessPoint getAccessPointById(UUID id) throws CouldNotFindEntityException {
+    if (id == null) {
+      throw new IllegalArgumentException("AccessPoint id is missing.");
+    }
     return accessPointRepository
         .findById(id)
         .orElseThrow(
