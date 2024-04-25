@@ -50,7 +50,9 @@ export class UsersComponent implements OnInit{
     const filterValue = (event.target as HTMLInputElement).value;
     if (filterValue) {
       this.filteredUsers = this.users.filter(user =>
-        user.username.toLowerCase().includes(filterValue.toLowerCase())
+        user.username.toLowerCase().includes(filterValue.toLowerCase()) ||
+          user.firstName.toLowerCase().includes(filterValue.toLowerCase()) ||
+          user.lastName.toLowerCase().includes(filterValue.toLowerCase())
       );
     } else {
       this.filteredUsers = this.users;

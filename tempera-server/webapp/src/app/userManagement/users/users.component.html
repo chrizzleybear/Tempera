@@ -1,12 +1,12 @@
 <p-messages [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
 <div *ngIf="!displayEditDialog && !displayCreateDialog">
   <div class="mb-4">
-    <input type="text" pInputText placeholder="Search by username" (input)="applyFilter($event)" class="mr-2">
+    <input type="text" pInputText placeholder="Search" (input)="applyFilter($event)" class="mr-2">
 
     <button type="button" pButton label="Add New User" icon="pi pi-plus" (click)="createUser()" class="mr-2"></button>
   </div>
 
-  <p-table [value]="filteredUsers" [paginator]="true" [rows]="10" selectionMode="multiple" [(selection)]="selectedUsers" dataKey="id" responsiveLayout="scroll">
+  <p-table [value]="filteredUsers" [paginator]="true" [rows]="10" responsiveLayout="scroll">
     <ng-template pTemplate="header">
       <tr>
         <th scope="col" pSortableColumn="username">Benutzername<p-sortIcon field="username"></p-sortIcon></th>
@@ -36,7 +36,6 @@
         <td>
           <p-button label="Delete" (onClick)="deleteSelectedUsers(user.username); $event.stopPropagation()" icon="pi pi-trash"></p-button>
         </td>
-        <td> <p-tableCheckbox [value]="user" (click)="$event.stopPropagation()"></p-tableCheckbox> </td>
       </tr>
     </ng-template>
   </p-table>
