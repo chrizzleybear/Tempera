@@ -1,0 +1,35 @@
+package at.qe.skeleton.rest.controllers;
+
+import at.qe.skeleton.rest.dtos.AccessPointDto;
+import at.qe.skeleton.rest.mappers.AccessPointMapper;
+import at.qe.skeleton.services.AccessPointService;
+import at.qe.skeleton.services.TemperaStationService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
+
+@RestController
+        @RequestMapping("/rasp/api/connection")
+public class PeripheryConnectionController {
+    private final AccessPointMapper accessPointMapper;
+    private final AccessPointService accessPointService;
+    private final TemperaStationService temperaStationService;
+
+    public PeripheryConnectionController(AccessPointMapper accessPointMapper, AccessPointService accessPointService, TemperaStationService temperaStationService) {
+        this.accessPointMapper = accessPointMapper;
+        this.accessPointService = accessPointService;
+        this.temperaStationService = temperaStationService;
+    }
+
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AccessPointDto> getAccessPointDto (@PathVariable UUID id) {
+
+        return null;
+    }
+}

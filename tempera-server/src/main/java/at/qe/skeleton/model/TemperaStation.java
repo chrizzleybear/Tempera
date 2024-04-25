@@ -10,8 +10,7 @@ import java.util.UUID;
 @Entity
 public class TemperaStation implements Persistable<String> {
 
-    // wir wählen UUID, weil sie nicht nur innerhalb eines DBS sondern weltweit einmalig sind.
-    // Daher ist eine eindeutige identifikation Problemlos möglich.
+    // we set id manually (has to be configurable from admin)
     @Id
     private String id;
     @OneToOne
