@@ -14,6 +14,13 @@ import java.util.UUID;
 @Service
 public class AccessPointMapper implements DTOMapperStateless<AccessPoint, AccessPointDto> {
 
+  /**
+   * Maps an AccessPoint entity to an AccessPointDto.
+   *
+   * @param entity The AccessPoint entity to be mapped.
+   * @return The resulting AccessPointDto which includes whether the AccessPoint is enabled and a List of enabled TemperaStations.
+   * @throws CouldNotFindEntityException If the entity is null or has no id or TemperaStations.
+   */
   @Override
   public AccessPointDto mapToDto(AccessPoint entity) throws CouldNotFindEntityException {
     if (entity == null) {
@@ -30,7 +37,8 @@ public class AccessPointMapper implements DTOMapperStateless<AccessPoint, Access
     }
 
     return new AccessPointDto(
-        entity.getId(), entity.isEnabled(), entity.getTemperaStations().stream().toList());
+        entity.getId(),
+        entity.isEnabled(),
+        entity.getTemperaStations().stream().filter(TemperaStation::isEnabled).toList());
   }
-
 }

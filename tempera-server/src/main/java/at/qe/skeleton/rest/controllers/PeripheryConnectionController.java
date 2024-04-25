@@ -1,5 +1,6 @@
 package at.qe.skeleton.rest.controllers;
 
+import at.qe.skeleton.model.AccessPoint;
 import at.qe.skeleton.rest.dtos.AccessPointDto;
 import at.qe.skeleton.rest.mappers.AccessPointMapper;
 import at.qe.skeleton.services.AccessPointService;
@@ -13,23 +14,24 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-        @RequestMapping("/rasp/api/connection")
+@RequestMapping("/rasp/api/connection")
 public class PeripheryConnectionController {
-    private final AccessPointMapper accessPointMapper;
-    private final AccessPointService accessPointService;
-    private final TemperaStationService temperaStationService;
+  private final AccessPointMapper accessPointMapper;
+  private final AccessPointService accessPointService;
 
-    public PeripheryConnectionController(AccessPointMapper accessPointMapper, AccessPointService accessPointService, TemperaStationService temperaStationService) {
-        this.accessPointMapper = accessPointMapper;
-        this.accessPointService = accessPointService;
-        this.temperaStationService = temperaStationService;
+  public PeripheryConnectionController(
+      AccessPointMapper accessPointMapper, AccessPointService accessPointService) {
+    this.accessPointMapper = accessPointMapper;
+    this.accessPointService = accessPointService;
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<AccessPointDto> getAccessPointDto(@PathVariable UUID id) {
+    try {
+      AccessPoint entity = accessPointService.getAccessPointById(id);
+      return ResponseEntity.ok(accessPointMapper.mapToDto(entity));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().build();
     }
-
-
-
-    @GetMapping("/{id}")
-    public ResponseEntity<AccessPointDto> getAccessPointDto (@PathVariable UUID id) {
-
-        return null;
-    }
+  }
 }
