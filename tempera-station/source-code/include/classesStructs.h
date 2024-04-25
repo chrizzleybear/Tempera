@@ -14,7 +14,7 @@
 
 // ############### CLASS AND STRUCT DECLARATIONS ############### 
 
-typedef union {
+typedef union __attribute__( (__packed__) ) { // use the attribute packed to correctly align data bytes in memory, this is necessary for the conversion to bytes 
     uint64_t ui48: 48;
 } uint48_t;
 

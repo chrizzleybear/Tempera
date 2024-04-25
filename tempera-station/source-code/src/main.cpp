@@ -234,6 +234,11 @@ void loop() {
     led.turnOff();
     delay(100);
 
+    // to-do: delete
+    Serial.println(sizeof(elapsedTimeCharacteristicStructure));
+    Serial.println(sizeof(elapsedTimeCharacteristicUnion));
+    Serial.println(sizeof(currentElapsedTimeCharacteristic));
+
     // Update the work session info so the duration and time etc since the last mode change
     writeElapsedTimeCharacteristicStructure(\
       {0, (millis()-lastTimeUpdate), 0, 0, session.workMode, (uint8_t) 7},\

@@ -13,9 +13,9 @@
 // ############### BLE CLASS AND STRUCT DECLARATIONS ############### 
 
 // Data structure for the elapsed time characteristic in the correct byte sequence.
-typedef struct __attribute__( (packed) ) { // use the attribute packed to correctly align data bytes in memory, this is necessary for the conversion to bytes 
+typedef struct __attribute__( (__packed__) ) { // use the attribute packed to correctly align data bytes in memory, this is necessary for the conversion to bytes 
   uint8_t flags = 0;
-  uint48_t timeValue; // to-do: the value is not written correctly to the service
+  uint48_t timeValue;
   uint8_t timeSyncSource = 0;
   uint8_t offset = 0;
   uint8_t workMode;             // for our purpose the clock status bit is used as the workMode, 2-5 are DW, MT, OO, PT
@@ -37,7 +37,7 @@ typedef union {
 * The NMVOC characteristic uses a medfloat16 value (see ISO/IEEE 11073-20601) according to the specifications. 
 * For our purpose we simplify this by using a scaled uint16_t value.
 */
-typedef struct __attribute__( (packed) ) { // use the attribute packed to correctly align data bytes in memory
+typedef struct __attribute__( (__packed__) ) { // use the attribute packed to correctly align data bytes in memory
   union {
     int16_t temperature; // in C, accuracy of 0.01
     uint8_t temperatureBytes[ROOM_CLIMATE_STRUCTURE_BYTES/4];
