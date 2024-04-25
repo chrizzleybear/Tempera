@@ -1,11 +1,22 @@
 import { Component } from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {UsersService} from "../_services/users.service";
+import {FormsModule} from "@angular/forms";
+import {NgIf} from "@angular/common";
+import {MessageModule} from "primeng/message";
+import {ChipsModule} from "primeng/chips";
+import {ButtonModule} from "primeng/button";
 
 @Component({
   selector: 'app-validation',
   standalone: true,
-  imports: [],
+  imports: [
+    FormsModule,
+    NgIf,
+    MessageModule,
+    ChipsModule,
+    ButtonModule
+  ],
   templateUrl: './validation.component.html',
   styleUrl: './validation.component.css'
 })
@@ -15,7 +26,7 @@ export class ValidationComponent {
   userId: string | null | undefined;
   validated: boolean = false;
 
-  constructor( private route: ActivatedRoute, private usersService: UsersService) {
+  constructor(private route: ActivatedRoute, private usersService: UsersService) {
   }
   ngOnInit() {
     this.userId = this.route.snapshot.paramMap.get('id');
@@ -37,12 +48,9 @@ export class ValidationComponent {
     }
   }
 
-  validateUser(password: string, username: string) {
-    if (this.user.username === username && this.user.password === password) {
+  validateUser(username: string, password: string) {
+    this.usersService.validateUser(username, password);
       this.validated = true;
-    } else {
-      console.error("User validation failed");
-    }
   }
 
   setPassword(password: string, passwordRepeat: string) {

@@ -39,4 +39,9 @@ export class UsersService {
     console.log("Create user with ID: ");
     return this.http.post(`${this.API_URL}create`, userData);
   }
+
+  validateUser(username: string, password: string) {
+    console.log("Validate user with username: ", username);
+    return this.http.post(`${this.API_URL}validate`, {username, password});
+  }
 }

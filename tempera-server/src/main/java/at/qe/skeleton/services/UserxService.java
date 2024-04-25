@@ -114,6 +114,16 @@ public class UserxService implements UserDetailsService {
     return UserDetailsImpl.build(user);
   }
 
+  @Transactional
+  public UserxDTO loadUserDTOById(String username) {
+    Userx user =
+        userRepository
+            .findById(username)
+            .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+
+    return convertToDTO(user);
+  }
+
   public void deleteUser(String id) {
     Optional<Userx> userx = userRepository.findById(id);
     userx.ifPresent(value -> userRepository.delete(value));
@@ -159,4 +169,12 @@ public class UserxService implements UserDetailsService {
     user.setRoles(userxDTO.getRoles());
     return user;
     }
+
+  public boolean validateUser(String username, String password) {
+    Userx user = userRepository.findFirstByUsername(username);
+    if (user == null) {
+      throw new IllegalArgumentException("User not found");
+    }
+    return passwordEncoder.matches(password, user.getPassword());
+  }
 }
