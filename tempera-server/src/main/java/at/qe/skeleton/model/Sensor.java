@@ -70,4 +70,9 @@ public boolean equals(Object o) {
 public int hashCode() {
     return Objects.hash(sensorTemperaCompositeId);
 }
+
+@Override
+  public String toString(){
+    return "Sensor{compositeId: %s sensorType: %s} \n".formatted(sensorTemperaCompositeId, sensorType);
+}
 }

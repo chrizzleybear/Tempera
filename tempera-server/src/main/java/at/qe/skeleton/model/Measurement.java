@@ -29,11 +29,7 @@ public class Measurement {
      * When Creating a Measurement, this Constructor should be used.
      * @param value the Value of the Measurement. Together with sensor.unit the meaning can be inferred.
      */
-    public Measurement (double value, Sensor sensor) {
-        this.value = value;
-        this.sensor = sensor;
-        this.timestamp = LocalDateTime.now();
-    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -49,7 +45,7 @@ public class Measurement {
     /**
      * JPA needs a non-arg Constructor
      */
-    protected Measurement () {}
+    public Measurement () {}
 
     public Sensor getSensor() {
         return sensor;
@@ -82,5 +78,10 @@ public class Measurement {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString(){
+        return "Measurement{id: %s,sensor: %s,value: %s}\n".formatted(id, sensor, value);
     }
 }
