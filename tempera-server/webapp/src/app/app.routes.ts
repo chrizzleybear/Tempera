@@ -20,7 +20,7 @@ export const routes: Routes = [
     ]
   },
   { path: 'login', canActivate: [isNotLoggedInGuard] , component: LoginComponent },
-  { path: 'validate/:id', canActivate: [isNotLoggedInGuard] , component: ValidationComponent },
+  { path: 'validate', canActivate: [isNotLoggedInGuard] , component: ValidationComponent },
 
   // todo: create notFoundComponent
   // { path: '**', redirectTo: '/notfound' }

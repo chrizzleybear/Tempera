@@ -40,8 +40,13 @@ export class UsersService {
     return this.http.post(`${this.API_URL}create`, userData);
   }
 
-  validateUser(username: string, password: string) {
-    console.log("Validate user with username: ", username);
-    return this.http.post(`${this.API_URL}validate`, {username, password});
+  validateUser(username: string, password: string): Observable<User> {
+    const body = { username, password };
+    return this.http.post<User>(`http://localhost:8080/api/users/validate`, { username, password });
+  }
+
+  enableUser(username: string, password: string): Observable<Object> {
+    console.log("Enable user with ID: ", username);
+    return this.http.post(`http://localhost:8080/api/auth/enable`, {username, password});
   }
 }

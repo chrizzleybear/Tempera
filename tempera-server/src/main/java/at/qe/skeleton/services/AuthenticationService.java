@@ -41,7 +41,7 @@ public class AuthenticationService {
                 "Your registration was successful.\nYour username is: " + user.getUsername() + "\n" +
                 "Your password is: " + password + " \n\n" +
                 "Please follow the link to set your password.\n\n" +
-                "http://localhost:4200/register/" + user.getUsername() + "\n\n" +
+                "http://localhost:4200/validate" + "\n\n" +
                 "Best regards,\n" +
                 "The Tempera Team");
     }

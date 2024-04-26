@@ -170,11 +170,22 @@ public class UserxService implements UserDetailsService {
     return user;
     }
 
-  public boolean validateUser(String username, String password) {
+  public UserxDTO validateUser(String username, String password) {
+    Userx user = userRepository.findFirstByUsername(username);
+    if(passwordEncoder.matches(password, user.getPassword())){
+      return convertToDTO(user);
+    }
+    return null;
+  }
+
+  public void enableUser(String username, String password) {
     Userx user = userRepository.findFirstByUsername(username);
     if (user == null) {
       throw new IllegalArgumentException("User not found");
     }
-    return passwordEncoder.matches(password, user.getPassword());
+    user.setPassword(passwordEncoder.encode(password));
+    user.setEnabled(true);
+    System.out.println("User enabled");
+    userRepository.save(user);
   }
 }

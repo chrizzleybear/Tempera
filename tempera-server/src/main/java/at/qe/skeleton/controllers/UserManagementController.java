@@ -60,17 +60,19 @@ public class UserManagementController{
     }
 
     @PostMapping("/validate")
-    public ResponseEntity<String> validateUser(@RequestBody Map<String, String> credentials) {
+    public ResponseEntity<UserxDTO> validateUser(@RequestBody Map<String, String> credentials) {
         System.out.println("Validating user");
         String username = credentials.get("username");
         String password = credentials.get("password");
-        // Log validation attempt
-        System.out.println("Validate user with username: " + username);
-        boolean isValidUser = userxService.validateUser(username, password);
-        if (isValidUser) {
-            return ResponseEntity.ok().body("User validated successfully");
-        } else {
-            return ResponseEntity.badRequest().body("Invalid username or password");
-        }
+        UserxDTO isValidUser = userxService.validateUser(username, password);
+        return ResponseEntity.ok(isValidUser);
+    }
+
+    @PostMapping("/enable")
+    public ResponseEntity<String> enableUser(@RequestBody Map<String, String> credentials) {
+        String username = credentials.get("username");
+        String password = credentials.get("password");
+        userxService.enableUser(username, password);
+        return ResponseEntity.ok("User enabled");
     }
 }

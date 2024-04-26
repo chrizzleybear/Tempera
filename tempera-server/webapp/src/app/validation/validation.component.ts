@@ -21,42 +21,46 @@ import {ButtonModule} from "primeng/button";
   styleUrl: './validation.component.css'
 })
 export class ValidationComponent {
-
-  user: any;
-  userId: string | null | undefined;
+  userId: string = "";
   validated: boolean = false;
 
   constructor(private route: ActivatedRoute, private usersService: UsersService) {
   }
   ngOnInit() {
-    this.userId = this.route.snapshot.paramMap.get('id');
-    if (this.userId) {
-      this.fetchUserDetails(this.userId);
-    }
+
   }
-  fetchUserDetails(id: string) {
-    if (this.userId) {
-      this.usersService.getUserById(this.userId).subscribe({
+
+  validateUser(username: string, password: string) {
+    if(username === undefined || password === undefined) {
+      console.error("Username or password is undefined");
+      return;
+    }
+    this.userId = username;
+    this.usersService.validateUser(username, password).subscribe({
+      next: (data) => {
+        if(data !== null) {
+          this.validated = true;
+          console.log('User details loaded:', data);
+        }
+      },
+      error: (error) => {
+        console.error('Failed to load user details:', error);
+      }
+    });
+  }
+
+  setPassword(password: string, passwordRepeat: string) {
+    if (password === passwordRepeat) {
+      this.usersService.enableUser(this.userId, password).subscribe({
         next: (data) => {
-          this.user = data;
-          console.log("User details: ", this.user);
+          if(data !== null) {
+            console.log('User details loaded:', data);
+          }
         },
         error: (error) => {
           console.error('Failed to load user details:', error);
         }
       });
-    }
-  }
-
-  validateUser(username: string, password: string) {
-    this.usersService.validateUser(username, password);
-      this.validated = true;
-  }
-
-  setPassword(password: string, passwordRepeat: string) {
-    if (password === passwordRepeat) {
-      this.user.password = password;
-      this.usersService.updateUser(this.user);
     } else {
       console.error("Passwords do not match");
     }
