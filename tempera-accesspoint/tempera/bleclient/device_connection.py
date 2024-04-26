@@ -1,17 +1,23 @@
 import asyncio
 import logging
-from typing import List
+from typing import List, Tuple
 
+import sqlalchemy
 from bleak import BLEDevice, BleakScanner, BleakClient
+from sqlalchemy import select
+from sqlalchemy.orm import Session
 
 from utils import shared
+from bleclient.etl import filter_uuid
+from database.entities import TemperaStation
+from utils.config_utils import init_config, init_header
 from utils.request_utils import make_request
 
 logger = logging.getLogger(f"tempera.{__name__}")
 
 
 REQUIRED_SERVICES = ["180a", "183f", "181a"]
-REQUIRED_CHARACTERISTICS = ["2a29", "2a25", "2bf2", "2a6e", "2a77", "2a6f", "2bd3"]
+REQUIRED_CHARACTERISTICS = ["2a25", "2bf2", "2a6e", "2a77", "2a6f", "2bd3"]
 SCANNING_TIMEOUT = 5
 
 
@@ -41,21 +47,24 @@ async def get_tempera_stations() -> List[BLEDevice] | None:
             "No devices found with 'G4T1' in their name.\n"
             "Make sure 'G4T1' is part of the tempera station's name you are trying to connect."
         )
-        # TODO: send log to back end
+        # TODO: send error log to back end
         return None
 
-    # TODO: send log to back end
     return tempera_stations
 
 
-async def validate_stations(tempera_stations: List[BLEDevice]) -> BLEDevice | None:
+async def validate_stations(
+    tempera_station: BLEDevice, client: BleakClient, engine: sqlalchemy.Engine
+) -> BLEDevice | None:
     """
     Returns the first valid tempera station. Valid means that its ID corresponds to one stored in the webapp back end.
 
-    :param tempera_stations:
+    :param client:
+    :param tempera_station:
+    :param engine:
     :return:
     """
-    logger.info(f"Trying to validate stations: {tempera_stations}")
+    logger.info(f"Trying to validate stations: {tempera_station}")
 
     try:
         server_address = shared.config["webserver_address"]
@@ -78,57 +87,49 @@ async def validate_stations(tempera_stations: List[BLEDevice]) -> BLEDevice | No
 
     allowed_stations = response["stations_allowed"]
 
-    for station in tempera_stations:
-        # Just return the first valid station (multi-station support not required for this project)
-        async with BleakClient(station.address, services=REQUIRED_SERVICES) as client:
+    async with asyncio.TaskGroup() as tg:
+        id_ok = tg.create_task(validate_id(client, allowed_stations))
+        missing_characteristics = tg.create_task(validate_characteristics(client))
 
-            async with asyncio.TaskGroup() as tg:
-                id_ok = tg.create_task(validate_id(client, allowed_stations))
-                missing_characteristics = tg.create_task(
-                    validate_characteristics(client)
-                )
+    id_ok, station_id = id_ok.result()
+    missing_characteristics = missing_characteristics.result()
 
-        id_ok, missing_characteristics = (
-            id_ok.result(),
-            missing_characteristics.result(),
+    if id_ok and not missing_characteristics:
+        await save_station(station_id, engine)
+        logger.info(
+            f"Connecting to Station[name: {tempera_station.name}; address: {tempera_station.address}]"
         )
-
-        if id_ok and not missing_characteristics:
-            logger.info(
-                f"Connecting to station (Station[name: {station.name}; address: {station.address}]) "
-                f"as it meets all requirements."
-            )
-            return station
-        elif id_ok and missing_characteristics is not None:
-            logger.info(
-                f"Station (Station[name: {station.name}; address: {station.address}]) meets ID requirement but lacks"
-                f" the following characteristics: {missing_characteristics}"
-            )
-        else:
-            logger.info(
-                f"Station (Station[name: {station.name}; address: {station.address}]) doesn't meet ID requirement! "
-                f"Make sure you have registered this station's ID in the web app server if you want to connect to it."
-            )
-
-    logger.warning(
-        "No tempera station found satisfies ID, services and characteristics validation."
-    )
-    raise RuntimeError
+        return tempera_station
+    elif id_ok and missing_characteristics is not None:
+        logger.info(
+            f"Station (Station[name: {tempera_station.name}; address: {tempera_station.address}]) meets ID requirement but lacks"
+            f" the following characteristics: {missing_characteristics}"
+        )
+        return None
+    else:
+        logger.info(
+            f"Station (Station[name: {tempera_station.name}; address: {tempera_station.address}]) doesn't meet ID requirement! "
+            f"Make sure you have registered this station's ID in the web app server if you want to connect to it."
+        )
+        return None
 
 
-async def validate_id(client: BleakClient, valid_ids: List[str]):
-    station_id = "Not Found"
+async def get_station_id(client: BleakClient) -> str:
+    device_info_service = await filter_uuid(client, "180a")
+    serial_number_characteristic = await filter_uuid(device_info_service, "2a25")
+    station_id = await client.read_gatt_char(serial_number_characteristic.uuid)
+    return station_id.decode()
 
-    for service in client.services:
-        if "180a" in service.uuid:
-            for characteristic in service.characteristics:
-                if "2a25" in characteristic.uuid:
-                    station_id = await client.read_gatt_char(characteristic.uuid)
-                    station_id = station_id.decode()
+
+async def validate_id(client: BleakClient, valid_ids: List[str]) -> Tuple[bool, str]:
+    station_id = await get_station_id(client)
+    if station_id == "":
+        logger.error(f"No station ID found for station {client.address}")
+        raise ValueError
 
     logger.info(f"Checking station ID '{station_id}' against web app server data.")
 
-    return station_id in valid_ids
+    return station_id in valid_ids, station_id
 
 
 async def validate_characteristics(client: BleakClient) -> List[str]:
@@ -142,17 +143,38 @@ async def validate_characteristics(client: BleakClient) -> List[str]:
     return missing_characteristics
 
 
+async def save_station(station_id: str, db_engin: sqlalchemy.Engine) -> None:
+    with Session(db_engin) as session:
+        station = session.scalars(
+            select(TemperaStation).where(TemperaStation.id == station_id)
+        ).first()
+
+        if station:
+            logger.info(f"Station {station} already known. Skipping save to database.")
+        else:
+            logger.info(f"Saving {station} as it meets all requirements.")
+            station = TemperaStation(id=station_id)
+
+            session.add(station)
+            session.commit()
+
+
 # Keep scanning for stations every 60 seconds until one is found.
 # Usually a stop after n attempts would probably be better, but with headless raspberry pi
 # this strategy might be preferable
 # @retry(wait=wait_fixed(60))
-async def discovery_loop() -> BLEDevice:
+async def discovery_loop(engine: sqlalchemy.Engine) -> BLEDevice:
     tempera_stations = await get_tempera_stations()
     if not tempera_stations:
         logger.error("No tempera stations found.")
         raise ValueError
 
-    tempera_station = await validate_stations(tempera_stations)
+    for station in tempera_stations:
+        async with BleakClient(station) as client:
+            tempera_station = await validate_stations(station, client, engine)
+
+        if tempera_station:
+            break
 
     if not tempera_station:
         logger.error("No tempera station found.")

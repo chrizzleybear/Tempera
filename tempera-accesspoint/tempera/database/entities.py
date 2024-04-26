@@ -20,10 +20,12 @@ class Base(DeclarativeBase):
 class TemperaStation(Base):
     __tablename__ = "tempera_station"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    time_record: Mapped[List["TimeRecord"]] = relationship(back_populates="time_record")
+    id: Mapped[str] = mapped_column(primary_key=True)
+    time_record: Mapped[List["TimeRecord"]] = relationship(
+        back_populates="tempera_station"
+    )
     measurement: Mapped[List["Measurement"]] = relationship(
-        back_populates="measurement"
+        back_populates="tempera_station"
     )
 
     def __repr__(self):
@@ -37,7 +39,7 @@ class TimeRecord(Base):
         ForeignKey("tempera_station.id"), primary_key=True
     )
     tempera_station: Mapped["TemperaStation"] = relationship(
-        back_populates="tempera_station"
+        back_populates="time_record"
     )
     start: Mapped[datetime.datetime] = mapped_column(primary_key=True)
     duration: Mapped[int]
@@ -62,7 +64,7 @@ class Measurement(Base):
         ForeignKey("tempera_station.id"), primary_key=True
     )
     tempera_station: Mapped["TemperaStation"] = relationship(
-        back_populates="tempera_station"
+        back_populates="measurement"
     )
     timestamp: Mapped[datetime.datetime] = mapped_column(primary_key=True)
     temperature: Mapped[float]
