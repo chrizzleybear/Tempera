@@ -42,17 +42,12 @@ public class Measurement {
         this.timestamp = timestamp;
     }
 
-    /**
-     * JPA needs a non-arg Constructor
-     */
-    public Measurement () {}
+    public void setSensor(Sensor sensor) {
+        this.sensor = sensor;
+    }
 
     public Sensor getSensor() {
         return sensor;
-    }
-
-    public void setSensor(Sensor sensor) {
-        this.sensor = sensor;
     }
 
     public Long getId() {

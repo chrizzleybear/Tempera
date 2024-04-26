@@ -23,25 +23,22 @@ import java.util.logging.Logger;
 public class MeasurementController {
   private final Logger logger = Logger.getLogger("MeasurementControllerLogger");
   private final MeasurementService measurementService;
-  private final SensorService sensorService;
   private final MeasurementMapper measurementMapper;
   private final AccessPointService accessPointService;
   private final TemperaStationService temperaStationService;
 
   public MeasurementController(
       MeasurementService measurementService,
-      SensorService sensorService,
       MeasurementMapper measurementMapper,
       AccessPointService accessPointService,
       TemperaStationService temperaStationService) {
     this.accessPointService = accessPointService;
     this.measurementService = measurementService;
-    this.sensorService = sensorService;
     this.measurementMapper = measurementMapper;
     this.temperaStationService = temperaStationService;
   }
 
-  @PostMapping("/create")
+  @PostMapping("")
   public ResponseEntity<MeasurementDto> createMeasurement(@RequestBody MeasurementDto measurementDto) {
     try {
       if (!accessPointService.isEnabled(measurementDto.access_point_id())){
@@ -59,17 +56,5 @@ public class MeasurementController {
     }
   }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<MeasurementDto> getMeasurement(@PathVariable Long id, @RequestParam UUID accessPointId) {
-    try {
-      if (!accessPointService.isEnabled(accessPointId)) {
-        throw new IllegalArgumentException("accessPoint %s is not enabled".formatted(accessPointId));
-      }
-      Measurement entity = measurementService.findMeasurementById(id);
-      return ResponseEntity.ok(measurementMapper.mapToDto(entity));
-    } catch (Exception e) {
-      logger.log(Level.SEVERE, e.getMessage());
-      return ResponseEntity.notFound().build();
-    }
-  }
+  //todo: seems like we dont need put, get or delete methods for this controller - is that a problem?
 }

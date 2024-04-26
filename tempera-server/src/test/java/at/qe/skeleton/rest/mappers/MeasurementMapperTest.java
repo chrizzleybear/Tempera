@@ -28,65 +28,96 @@ class MeasurementMapperTest {
   @Mock private SensorService sensorService;
   private AccessPoint accessPoint;
   private TemperaStation temperaStation;
-  private Measurement measurement;
+  private Measurement measurementHumidity;
   private Measurement measurementNullId;
   private Measurement measurementNullTimestamp;
   private Measurement measurementNullSensor;
   private Measurement measurementNullTemperaStation;
   private Measurement measurementInvalidTemperaId;
+  private Measurement measurementNoValue;
+  private Measurement measurementIrradiance;
+  private Measurement measurementTemperature;
+  private Measurement measurementNmvoc;
 
   @BeforeEach
   void setUp() throws TemperaStationIsNotEnabledException {
     measurementMapper = new MeasurementMapper(measurementService, null, accessPointService);
 
-    TemperaStation invalidTemperaStation = new TemperaStation("id_not_in_db");
+    TemperaStation invalidTemperaStation = new TemperaStation("id_not_in_db", true);
 
-    temperaStation = new TemperaStation("temperaStationId");
+    temperaStation = new TemperaStation("temperaStationId", true);
     temperaStation.setEnabled(true);
 
     accessPoint = new AccessPoint();
     accessPoint.setEnabled(true);
     accessPoint.addTemperaStation(temperaStation);
 
-    SensorTemperaCompositeId sensorTemperaCompositeId = new SensorTemperaCompositeId();
-    sensorTemperaCompositeId.setTemperaStationId(temperaStation.getId());
-
-    SensorTemperaCompositeId sensorTemperaCompositeIdNull = new SensorTemperaCompositeId();
-    sensorTemperaCompositeIdNull.setTemperaStationId(null);
-
-    SensorTemperaCompositeId sensorTemperaCompositeIdInvalid = new SensorTemperaCompositeId();
-    sensorTemperaCompositeIdInvalid.setTemperaStationId(invalidTemperaStation.getId());
-
-    Sensor sensor =
-        new Sensor(SensorType.HUMIDITY, Unit.PERCENT, temperaStation, sensorTemperaCompositeId);
-
-    Sensor sensorNullTemperaStation =
-        new Sensor(SensorType.HUMIDITY, Unit.PERCENT, null, sensorTemperaCompositeIdNull);
-
+    Sensor sensorHumidity = new Sensor(SensorType.HUMIDITY, Unit.PERCENT, temperaStation);
+    Sensor sensorNullTemperaStation = new Sensor(SensorType.HUMIDITY, Unit.PERCENT, null);
+    Sensor sensorTemperature = new Sensor(SensorType.TEMPERATURE, Unit.CELSIUS, temperaStation);
+    Sensor sensorIrradiance = new Sensor(SensorType.IRRADIANCE, Unit.LUX, temperaStation);
+    Sensor sensorNmvoc = new Sensor(SensorType.NMVOC, Unit.OHM, temperaStation);
     Sensor sensorInvalidTemperaId =
-        new Sensor(
-            SensorType.HUMIDITY,
-            Unit.PERCENT,
-            invalidTemperaStation,
-            sensorTemperaCompositeIdInvalid);
+        new Sensor(SensorType.HUMIDITY, Unit.PERCENT, invalidTemperaStation);
 
-    measurement = new Measurement(50.0, sensor);
-    measurement.setId(1L); // need to set Id, since @GeneratedValue only works when persisting
+    measurementHumidity = new Measurement();
+    measurementHumidity.setId(1L);
+    measurementHumidity.setValue(50.0);
+    measurementHumidity.setSensor(sensorHumidity);
+    measurementHumidity.setTimestamp(java.time.LocalDateTime.now());
 
-    measurementNullId = new Measurement(50.0, sensor);
+    measurementIrradiance = new Measurement();
+    measurementIrradiance.setId(2L);
+    measurementIrradiance.setValue(500.0);
+    measurementIrradiance.setSensor(sensorIrradiance);
+    measurementIrradiance.setTimestamp(java.time.LocalDateTime.now());
+
+    measurementNmvoc = new Measurement();
+    measurementNmvoc.setId(3L);
+    measurementNmvoc.setValue(23.0);
+    measurementNmvoc.setSensor(sensorNmvoc);
+    measurementNmvoc.setTimestamp(java.time.LocalDateTime.now());
+
+    measurementTemperature = new Measurement();
+    measurementTemperature.setId(3L);
+    measurementTemperature.setValue(23.0);
+    measurementTemperature.setSensor(sensorTemperature);
+    measurementTemperature.setTimestamp(java.time.LocalDateTime.now());
+
+    measurementNullId = new Measurement();
     measurementNullId.setId(null);
+    measurementNullId.setValue(50.0);
+    measurementNullId.setSensor(sensorHumidity);
+    measurementNullId.setTimestamp(java.time.LocalDateTime.now());
 
-    measurementNullTimestamp = new Measurement(50.0, sensor);
+    measurementNullTimestamp = new Measurement();
+    measurementNullTimestamp.setId(1L);
+    measurementNullTimestamp.setValue(50.0);
+    measurementNullTimestamp.setSensor(sensorHumidity);
     measurementNullTimestamp.setTimestamp(null);
 
-    measurementNullSensor = new Measurement(50.0, null);
+    measurementNullSensor = new Measurement();
+    measurementNullSensor.setValue(50.0);
+    measurementNullSensor.setSensor(null);
+    measurementNullSensor.setTimestamp(java.time.LocalDateTime.now());
     measurementNullSensor.setId(2L);
 
-    measurementNullTemperaStation = new Measurement(50.0, sensorNullTemperaStation);
+    measurementNullTemperaStation = new Measurement();
+    measurementNullTemperaStation.setId(1L);
+    measurementNullTemperaStation.setValue(50.0);
+    measurementNullTemperaStation.setSensor(sensorNullTemperaStation);
+    measurementNullTemperaStation.setTimestamp(java.time.LocalDateTime.now());
 
-    measurementInvalidTemperaId = new Measurement(50.0, sensor);
+    measurementInvalidTemperaId = new Measurement();
     measurementInvalidTemperaId.setId(1L);
     measurementInvalidTemperaId.setSensor(sensorInvalidTemperaId);
+    measurementInvalidTemperaId.setTimestamp(java.time.LocalDateTime.now());
+    measurementInvalidTemperaId.setValue(50.0);
+
+    measurementNoValue = new Measurement();
+    measurementNoValue.setId(1L);
+    measurementNoValue.setSensor(sensorHumidity);
+    measurementNoValue.setTimestamp(java.time.LocalDateTime.now());
   }
 
   @AfterEach
@@ -97,25 +128,29 @@ class MeasurementMapperTest {
     when(accessPointService.getAccessPointByTemperaStationId(temperaStation.getId()))
         .thenReturn(accessPoint);
 
-    MeasurementDto mappedMeasurementDto = measurementMapper.mapToDto(measurement);
+    MeasurementDto mappedMeasurementDto = measurementMapper.mapToDto(measurementHumidity);
 
-    Assertions.assertNotNull(mappedMeasurementDto, "mapped measurement dto is null");
+    Assertions.assertNotNull(mappedMeasurementDto, "mapped measurementHumidity dto is null");
     Assertions.assertEquals(
-        measurement.getId(),
+        measurementHumidity.getId(),
         mappedMeasurementDto.id(),
-        "measurement does not have id %s as entity".formatted(measurement.getId()));
+        "measurementHumidity does not have id %s as entity".formatted(measurementHumidity.getId()));
     Assertions.assertEquals(
-        measurement.getSensor().getId().getSensorId(),
+        measurementHumidity.getSensor().getId().getSensorId(),
         mappedMeasurementDto.sensorId(),
         "sensor id does not match");
     Assertions.assertEquals(
-        measurement.getTimestamp(), mappedMeasurementDto.timestamp(), "timestamp does not match");
+        measurementHumidity.getTimestamp(),
+        mappedMeasurementDto.timestamp(),
+        "timestamp does not match");
     Assertions.assertEquals(
-        measurement.getValue(), mappedMeasurementDto.value(), "value does not match");
+        measurementHumidity.getValue(), mappedMeasurementDto.value(), "value does not match");
     Assertions.assertEquals(
-        measurement.getSensor().getUnit(), mappedMeasurementDto.unit(), "unit does not match");
+        measurementHumidity.getSensor().getUnit(),
+        mappedMeasurementDto.unit(),
+        "unit does not match");
     Assertions.assertEquals(
-        measurement.getSensor().getTemperaStation().getId(),
+        measurementHumidity.getSensor().getTemperaStation().getId(),
         mappedMeasurementDto.stationId(),
         "Tempera Station Id does not match");
   }
@@ -152,10 +187,16 @@ class MeasurementMapperTest {
         CouldNotFindEntityException.class,
         () -> measurementMapper.mapToDto(measurementInvalidTemperaId),
         "Mapping an entity with an invalid TemperaStation should throw a CouldNotFindEntityException");
+
+    // wir brauchen noch 3 valide measurements für den test
+    // teste den fall, dass ein measurementHumidity keine value hat
+    // teste den fall, dass eine Liste mit weniger als 4 measurements übergeben wird
+    // teste den fall, dass zweimal ein gleicher sensor übergeben wird
+
   }
 
   @Test
   void mapFromDto() {
-    //todo: siehe leos doku zu dtos und was er schickt.
+    // todo: siehe leos doku zu dtos und was er schickt.
   }
 }
