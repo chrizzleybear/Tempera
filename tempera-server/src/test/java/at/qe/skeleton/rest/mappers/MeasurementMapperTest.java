@@ -158,5 +158,7 @@ class MeasurementMapperTest {
   }
 
   @Test
-  void mapFromDto() {}
+  void mapFromDto() {
+    //todo: siehe leos doku zu dtos und was er schickt.
+  }
 }
