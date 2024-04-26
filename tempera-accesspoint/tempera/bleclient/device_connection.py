@@ -4,14 +4,12 @@ from typing import List
 
 from bleak import BLEDevice, BleakScanner, BleakClient
 
-from utils.config_utils import init_config, init_header
+from utils import shared
 from utils.request_utils import make_request
 
 logger = logging.getLogger(f"tempera.{__name__}")
 
 
-CONFIG = init_config()
-HEADER = init_header(CONFIG)
 REQUIRED_SERVICES = ["180a", "183f", "181a"]
 REQUIRED_CHARACTERISTICS = ["2a29", "2a25", "2bf2", "2a6e", "2a77", "2a6f", "2bd3"]
 SCANNING_TIMEOUT = 5
@@ -60,8 +58,8 @@ async def validate_stations(tempera_stations: List[BLEDevice]) -> BLEDevice | No
     logger.info(f"Trying to validate stations: {tempera_stations}")
 
     try:
-        server_address = CONFIG["webserver_address"]
-        access_point_id = CONFIG["access_point_id"]
+        server_address = shared.config["webserver_address"]
+        access_point_id = shared.config["access_point_id"]
     except KeyError as e:
         logger.critical(f"Failed to read parameter from the config file: {e}")
         raise KeyError
@@ -69,7 +67,7 @@ async def validate_stations(tempera_stations: List[BLEDevice]) -> BLEDevice | No
     response = await make_request(
         "get",
         f"{server_address}/rasp/api/valid_devices",
-        auth=HEADER,
+        auth=shared.header,
         params={"device_id": access_point_id},
     )
     if not response["access_point_allowed"]:
@@ -165,8 +163,8 @@ async def discovery_loop() -> BLEDevice:
 
 async def get_scan_order() -> bool:
     try:
-        server_address = CONFIG["webserver_address"]
-        access_point_id = CONFIG["access_point_id"]
+        server_address = shared.config["webserver_address"]
+        access_point_id = shared.config["access_point_id"]
     except KeyError as e:
         logger.critical(f"Failed to read parameter from the config file: {e}")
         raise KeyError
@@ -174,7 +172,7 @@ async def get_scan_order() -> bool:
     response = await make_request(
         "get",
         f"{server_address}/rasp/api/scan_order",
-        auth=HEADER,
+        auth=shared.header,
         params={"device_id": access_point_id},
     )
 

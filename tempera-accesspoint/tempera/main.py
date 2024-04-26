@@ -1,17 +1,18 @@
 import asyncio
 import json
 import logging.config
-from pathlib import Path
 
 import sqlalchemy
 from bleak import BleakClient
 
+import utils.shared as shared
 from bleclient.device_connection import (
     discovery_loop,
     validate_stations,
     get_scan_order,
 )
 from bleclient.etl import elapsed_time_handler
+from utils.shared import init_globals
 
 with open("logging_conf.json", "r") as config:
     logging.config.dictConfig(json.load(config))
@@ -19,20 +20,6 @@ with open("logging_conf.json", "r") as config:
 logger = logging.getLogger("tempera")
 
 DATA_COLLECTION_INTERVAL = 5
-DATA_SENDING_INTERVAL = 2
-
-
-async def start_engine() -> sqlalchemy.Engine:
-    from sqlalchemy import create_engine
-
-    database = Path(__name__).resolve().parent / "database" / "data.sqlite"
-    if not Path(database).is_file():
-        logger.critical(
-            f"{database} is not a valid file path. No database engine can be created from it."
-        )
-        raise FileNotFoundError
-    logger.info(f"Creating database engine from db file: {database}")
-    return create_engine(f"sqlite:///{database}", echo=True)
 
 
 # TODO: add retry
@@ -63,10 +50,10 @@ async def post_data(client: BleakClient) -> None:
 # @retry()
 async def main():
     async with asyncio.TaskGroup() as tg:
+        _ = tg.create_task(init_globals())
         tempera_station = tg.create_task(discovery_loop())
-        db_engine = tg.create_task(start_engine())
 
-    tempera_station, db_engine = tempera_station.result(), db_engine.result()
+    tempera_station = tempera_station.result()
     while True:
         async with asyncio.TaskGroup() as tg:
             # Check that the access point and tempera station are still approved by the web app server.
@@ -87,7 +74,7 @@ async def main():
         async with BleakClient(tempera_station.address) as client:
             logger.debug(f"Connected to device {tempera_station.address}.")
 
-            await get_data(client, db_engine)
+            await get_data(client, shared.db_engine)
             await post_data(client)
 
 
