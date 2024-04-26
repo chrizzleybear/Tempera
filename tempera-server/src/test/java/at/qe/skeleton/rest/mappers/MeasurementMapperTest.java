@@ -49,15 +49,12 @@ class MeasurementMapperTest {
     accessPoint.addTemperaStation(temperaStation);
 
     SensorTemperaCompositeId sensorTemperaCompositeId = new SensorTemperaCompositeId();
-    sensorTemperaCompositeId.setSensorId(1L);
     sensorTemperaCompositeId.setTemperaStationId(temperaStation.getId());
 
     SensorTemperaCompositeId sensorTemperaCompositeIdNull = new SensorTemperaCompositeId();
-    sensorTemperaCompositeIdNull.setSensorId(null);
     sensorTemperaCompositeIdNull.setTemperaStationId(null);
 
     SensorTemperaCompositeId sensorTemperaCompositeIdInvalid = new SensorTemperaCompositeId();
-    sensorTemperaCompositeIdInvalid.setSensorId(1L);
     sensorTemperaCompositeIdInvalid.setTemperaStationId(invalidTemperaStation.getId());
 
     Sensor sensor =

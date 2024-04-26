@@ -91,7 +91,28 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
     if (dto == null) {
       throw new IllegalArgumentException("Measurement DTO must not be null.");
     }
-    List<Sensor> sensors = (sensorService.findAllSensorsByTemperaStationId(dto.tempera_station_id()));
+
+    if (dto.timestamp() == null) {
+      throw new IllegalArgumentException("Measurement DTO must have a timestamp.");
+    }
+    if (dto.temperature() == null) {
+      throw new IllegalArgumentException("Measurement DTO must have a temperature.");
+    }
+    if (dto.humidity() == null) {
+      throw new IllegalArgumentException("Measurement DTO must have a humidity.");
+    }
+    if (dto.irradiance() == null) {
+      throw new IllegalArgumentException("Measurement DTO must have an irradiance.");
+    }
+    if (dto.nmvoc() == null) {
+      throw new IllegalArgumentException("Measurement DTO must have an nmvoc.");
+    }
+    if (dto.tempera_station_id() == null) {
+      throw new IllegalArgumentException("Measurement DTO must have a TemperaStation id.");
+    }
+
+    List<Sensor> sensors =
+        (sensorService.findAllSensorsByTemperaStationId(dto.tempera_station_id()));
     if (sensors.size() != 4) {
       throw new IllegalArgumentException(
           "TemperaStation %s must have exactly 4 sensors.".formatted(dto.tempera_station_id()));
@@ -100,32 +121,40 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
     Measurement irradiance = new Measurement();
     Measurement humidity = new Measurement();
     Measurement nmvoc = new Measurement();
+
     for (Sensor sensor : sensors) {
-      if (sensor == null) {
-        throw new IllegalArgumentException("Sensor must not be null.");
-      }
-      if (sensor.getUnit() == null) {
-        throw new IllegalArgumentException("Sensor must have a unit.");
-      }
       switch (sensor.getSensorType()) {
         case TEMPERATURE:
-          //todo: continue...
-          temperature.
+          temperature.setSensor(sensor);
+          temperature.setValue(dto.temperature());
+          temperature.setTimestamp(dto.timestamp());
           break;
         case IRRADIANCE:
-          sensor.setValue(dto.irradiance());
+          irradiance.setSensor(sensor);
+          irradiance.setValue(dto.irradiance());
+          irradiance.setTimestamp(dto.timestamp());
           break;
         case HUMIDITY:
-          sensor.setValue(dto.humidity());
+          humidity.setSensor(sensor);
+          humidity.setValue(dto.humidity());
+          humidity.setTimestamp(dto.timestamp());
           break;
         case NMVOC:
-          sensor.setValue(dto.nmvoc());
+          nmvoc.setSensor(sensor);
+          nmvoc.setValue(dto.nmvoc());
+          nmvoc.setTimestamp(dto.timestamp());
           break;
         default:
           throw new IllegalArgumentException("Sensor must have a valid unit.");
       }
     }
-    Measurement measurement = new Measurement();
-    measurement.setTimestamp(dto.timestamp());
+    List<Measurement> measurements = List.of(temperature, irradiance, humidity, nmvoc);
+    for (Measurement entity : measurements) {
+      if (entity.getSensor() == null) {
+        throw new IllegalArgumentException(
+            "Measurement entity %s must have a sensor.".formatted(entity));
+      }
+    }
+    return measurements;
   }
 }

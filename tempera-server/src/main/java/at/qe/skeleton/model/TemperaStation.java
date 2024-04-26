@@ -42,8 +42,10 @@ public class TemperaStation implements Persistable<String> {
         this.isNew = false;
     }
 
-    public TemperaStation (String id) {
+    /** direct creation of TemperaStations should be avoided, use {@link at.qe.skeleton.services.TemperaStationService#createTemperaStation} instead */
+    public TemperaStation (String id, boolean enabled) {
         this.id = id;
+        this.enabled = enabled;
     }
     protected TemperaStation(){};
 

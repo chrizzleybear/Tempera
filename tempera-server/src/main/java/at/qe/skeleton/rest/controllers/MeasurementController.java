@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,7 +50,7 @@ public class MeasurementController {
       if (!temperaStationService.isEnabled(measurementDto.stationId())){
         throw new IllegalArgumentException("temperaStation %s is not enabled".formatted(measurementDto.stationId()));
       }
-      Measurement entity = measurementMapper.mapFromDto(measurementDto);
+      List<Measurement> entity = measurementMapper.mapFromDto(measurementDto);
       entity = measurementService.saveMeasurement(entity);
       return ResponseEntity.ok(measurementMapper.mapToDto(entity));
     } catch (Exception e) {
