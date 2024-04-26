@@ -61,7 +61,6 @@ public class UserManagementController{
 
     @PostMapping("/validate")
     public ResponseEntity<UserxDTO> validateUser(@RequestBody Map<String, String> credentials) {
-        System.out.println("Validating user");
         String username = credentials.get("username");
         String password = credentials.get("password");
         UserxDTO isValidUser = userxService.validateUser(username, password);
@@ -73,6 +72,6 @@ public class UserManagementController{
         String username = credentials.get("username");
         String password = credentials.get("password");
         userxService.enableUser(username, password);
-        return ResponseEntity.ok("User enabled");
+        return ResponseEntity.ok("You have been enabled!");
     }
 }

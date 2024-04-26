@@ -6,6 +6,8 @@ import {NgIf} from "@angular/common";
 import {MessageModule} from "primeng/message";
 import {ChipsModule} from "primeng/chips";
 import {ButtonModule} from "primeng/button";
+import {MessagesModule} from "primeng/messages";
+import {Message} from "primeng/api";
 
 @Component({
   selector: 'app-validation',
@@ -15,7 +17,8 @@ import {ButtonModule} from "primeng/button";
     NgIf,
     MessageModule,
     ChipsModule,
-    ButtonModule
+    ButtonModule,
+    MessagesModule
   ],
   templateUrl: './validation.component.html',
   styleUrl: './validation.component.css'
@@ -23,6 +26,7 @@ import {ButtonModule} from "primeng/button";
 export class ValidationComponent {
   userId: string = "";
   validated: boolean = false;
+  messages: | undefined;
 
   constructor(private route: ActivatedRoute, private usersService: UsersService) {
   }
@@ -40,7 +44,6 @@ export class ValidationComponent {
       next: (data) => {
         if(data !== null) {
           this.validated = true;
-          console.log('User details loaded:', data);
         }
       },
       error: (error) => {
@@ -54,7 +57,6 @@ export class ValidationComponent {
       this.usersService.enableUser(this.userId, password).subscribe({
         next: (data) => {
           if(data !== null) {
-            console.log('User details loaded:', data);
           }
         },
         error: (error) => {

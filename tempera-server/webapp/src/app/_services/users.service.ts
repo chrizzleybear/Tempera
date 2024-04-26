@@ -41,8 +41,8 @@ export class UsersService {
   }
 
   validateUser(username: string, password: string): Observable<User> {
-    const body = { username, password };
-    return this.http.post<User>(`http://localhost:8080/api/users/validate`, { username, password });
+    console.log("Validate user with ID: ", username);
+    return this.http.post<User>(`http://localhost:8080/api/users/validate`, {username, password});
   }
 
   enableUser(username: string, password: string): Observable<Object> {

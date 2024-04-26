@@ -112,7 +112,6 @@ public class AuthController {
 
     @PostMapping("/validate")
     public ResponseEntity<UserxDTO> validateUser(@RequestBody Map<String, String> credentials) {
-        System.out.println("Validating user");
         String username = credentials.get("username");
         String password = credentials.get("password");
         UserxDTO isValidUser = userxService.validateUser(username, password);

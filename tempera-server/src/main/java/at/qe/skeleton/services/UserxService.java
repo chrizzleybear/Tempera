@@ -185,7 +185,7 @@ public class UserxService implements UserDetailsService {
     }
     user.setPassword(passwordEncoder.encode(password));
     user.setEnabled(true);
-    System.out.println("User enabled");
+    //log "Enable user with username: " + username
     userRepository.save(user);
   }
 }
