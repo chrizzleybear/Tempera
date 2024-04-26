@@ -2,15 +2,13 @@ import asyncio
 import logging
 from typing import List, Tuple
 
-import sqlalchemy
 from bleak import BLEDevice, BleakScanner, BleakClient
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from utils import shared
 from bleclient.etl import filter_uuid
 from database.entities import TemperaStation
-from utils.config_utils import init_config, init_header
+from utils import shared
 from utils.request_utils import make_request
 
 logger = logging.getLogger(f"tempera.{__name__}")
@@ -23,7 +21,7 @@ SCANNING_TIMEOUT = 5
 
 async def detection_callback(device, advertisement_data) -> None:
     logger.info(
-        f"Device[name:{device.name};address:{device.address};signal_strenght(RSSI):{advertisement_data.rssi};"
+        f"Device[name:{device.name};address:{device.address};signal_strength(RSSI):{advertisement_data.rssi};"
         f"ad_data:{advertisement_data}]"
     )
 
@@ -54,24 +52,20 @@ async def get_tempera_stations() -> List[BLEDevice] | None:
 
 
 async def validate_stations(
-    tempera_station: BLEDevice, client: BleakClient, engine: sqlalchemy.Engine
+    tempera_station: BLEDevice, client: BleakClient
 ) -> BLEDevice | None:
     """
     Returns the first valid tempera station. Valid means that its ID corresponds to one stored in the webapp back end.
 
     :param client:
     :param tempera_station:
-    :param engine:
     :return:
     """
     logger.info(f"Trying to validate stations: {tempera_station}")
 
-    try:
-        server_address = shared.config["webserver_address"]
-        access_point_id = shared.config["access_point_id"]
-    except KeyError as e:
-        logger.critical(f"Failed to read parameter from the config file: {e}")
-        raise KeyError
+    # Keys are checked to be present in utils.shared so don't worry about that here
+    server_address = shared.config["webserver_address"]
+    access_point_id = shared.config["access_point_id"]
 
     response = await make_request(
         "get",
@@ -95,20 +89,20 @@ async def validate_stations(
     missing_characteristics = missing_characteristics.result()
 
     if id_ok and not missing_characteristics:
-        await save_station(station_id, engine)
+        await save_station(station_id)
         logger.info(
             f"Connecting to Station[name: {tempera_station.name}; address: {tempera_station.address}]"
         )
         return tempera_station
     elif id_ok and missing_characteristics is not None:
         logger.info(
-            f"Station (Station[name: {tempera_station.name}; address: {tempera_station.address}]) meets ID requirement but lacks"
+            f"Station[name: {tempera_station.name}; address: {tempera_station.address}] meets ID requirement but lacks"
             f" the following characteristics: {missing_characteristics}"
         )
         return None
     else:
         logger.info(
-            f"Station (Station[name: {tempera_station.name}; address: {tempera_station.address}]) doesn't meet ID requirement! "
+            f"Station[name: {tempera_station.name}; address: {tempera_station.address}] doesn't meet ID requirement! "
             f"Make sure you have registered this station's ID in the web app server if you want to connect to it."
         )
         return None
@@ -143,8 +137,8 @@ async def validate_characteristics(client: BleakClient) -> List[str]:
     return missing_characteristics
 
 
-async def save_station(station_id: str, db_engin: sqlalchemy.Engine) -> None:
-    with Session(db_engin) as session:
+async def save_station(station_id: str) -> None:
+    with Session(shared.config.db_engine) as session:
         station = session.scalars(
             select(TemperaStation).where(TemperaStation.id == station_id)
         ).first()
@@ -163,7 +157,7 @@ async def save_station(station_id: str, db_engin: sqlalchemy.Engine) -> None:
 # Usually a stop after n attempts would probably be better, but with headless raspberry pi
 # this strategy might be preferable
 # @retry(wait=wait_fixed(60))
-async def discovery_loop(engine: sqlalchemy.Engine) -> BLEDevice:
+async def discovery_loop() -> BLEDevice:
     tempera_stations = await get_tempera_stations()
     if not tempera_stations:
         logger.error("No tempera stations found.")
@@ -171,7 +165,7 @@ async def discovery_loop(engine: sqlalchemy.Engine) -> BLEDevice:
 
     for station in tempera_stations:
         async with BleakClient(station) as client:
-            tempera_station = await validate_stations(station, client, engine)
+            tempera_station = await validate_stations(station, client)
 
         if tempera_station:
             break

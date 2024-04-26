@@ -2,7 +2,6 @@ import asyncio
 import json
 import logging.config
 
-import sqlalchemy
 from bleak import BleakClient
 
 import utils.shared as shared
@@ -12,8 +11,8 @@ from bleclient.device_connection import (
     get_scan_order,
     get_station_id,
 )
-from utils.shared import init_globals
 from bleclient.etl import elapsed_time_handler, filter_uuid, measurements_handler
+from utils.shared import init_globals
 
 with open("logging_conf.json", "r") as config:
     logging.config.dictConfig(json.load(config))
@@ -23,7 +22,7 @@ logger = logging.getLogger("tempera")
 DATA_COLLECTION_INTERVAL = 5
 
 
-async def get_notifications(client: BleakClient, db_engine: sqlalchemy.Engine) -> None:
+async def get_notifications(client: BleakClient) -> None:
     elapsed_time_service = await filter_uuid(client, "183f")
     elapsed_time_uuid = await filter_uuid(elapsed_time_service, "2bf2")
 
@@ -31,13 +30,13 @@ async def get_notifications(client: BleakClient, db_engine: sqlalchemy.Engine) -
     await client.start_notify(
         elapsed_time_uuid,
         elapsed_time_handler,
-        engine=db_engine,
+        engine=shared.db_engine,
         station_id=station_id,
     )
     logger.info("Subscribed to time record notifications.")
 
 
-async def get_measurements(client: BleakClient, db_engine: sqlalchemy.Engine) -> None:
+async def get_measurements(client: BleakClient) -> None:
     measurement_service = await filter_uuid(client, "181a")
     characteristics = ["2a6e", "2a77", "2a6f", "2bd3"]
     logger.info(
@@ -48,7 +47,7 @@ async def get_measurements(client: BleakClient, db_engine: sqlalchemy.Engine) ->
         uuids.append(await filter_uuid(measurement_service, uuid))
 
     station_id = await get_station_id(client)
-    await measurements_handler(client, uuids, db_engine, station_id)
+    await measurements_handler(client, uuids, shared.db_engine, station_id)
 
 
 # TODO: add retry
@@ -66,13 +65,13 @@ async def main():
     async with BleakClient(tempera_station) as client:
         logger.debug(f"Connected to device {tempera_station.address}.")
 
-        await get_notifications(client, db_engine)
+        await get_notifications(client)
 
         while True:
             async with asyncio.TaskGroup() as tg:
                 # Check that the access point and tempera station are still approved by the web app server.
                 valid_station = tg.create_task(
-                    validate_stations(tempera_station, client, db_engine)
+                    validate_stations(tempera_station, client)
                 )
 
                 # If the scan order is issued by the web app server, an error is thrown.
@@ -80,7 +79,7 @@ async def main():
                 # starting with device discovery. This is sort of a 'goto'.
                 scan_order = tg.create_task(get_scan_order())
 
-                measurements = tg.create_task(get_measurements(client, db_engine))
+                measurements = tg.create_task(get_measurements(client))
 
                 _ = tg.create_task(asyncio.sleep(DATA_COLLECTION_INTERVAL))
 

@@ -43,6 +43,17 @@ async def init_config() -> Dict[str, Any]:
     with open(config_file, "r") as config_file:
         conf = yaml.safe_load(config_file)
 
+    for key in (
+        "access_point_id",
+        "password",
+        "sending_interval",
+        "user_name",
+        "webserver_address",
+    ):
+        if key not in conf.keys():
+            logger.critical(f"Missing parameter {key} in the configuration file.")
+            raise KeyError
+
     return conf
 
 
