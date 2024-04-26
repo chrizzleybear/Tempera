@@ -22,9 +22,15 @@ public class Sensor {
   @Enumerated(EnumType.STRING) // necessary to store the enum as a string in the database
   private Unit unit;
 
-  public Sensor(SensorType sensorType, Unit unit) {
+  public Sensor(SensorType sensorType, Unit unit, TemperaStation temperaStation, SensorTemperaCompositeId sensorTemperaCompositeId) {
     this.sensorType = sensorType;
     this.unit = unit;
+    this.temperaStation = temperaStation;
+    this.sensorTemperaCompositeId = sensorTemperaCompositeId;
+  }
+
+  public void setTemperaStation(TemperaStation temperaStation) {
+    this.temperaStation = temperaStation;
   }
 
   protected Sensor() {}

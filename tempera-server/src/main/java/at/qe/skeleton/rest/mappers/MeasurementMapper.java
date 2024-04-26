@@ -29,13 +29,19 @@ public class MeasurementMapper implements DTOMapper<Measurement, MeasurementDto>
   @Override
   public MeasurementDto mapToDto(Measurement entity) throws CouldNotFindEntityException{
     if (entity == null) {
-      return null;
+      throw new IllegalArgumentException("Measurement entity must not be null.");
     }
     if (entity.getId() == null) {
       throw new IllegalArgumentException("Measurement entity must have an id.");
     }
     if (entity.getTimestamp() == null) {
       throw new IllegalArgumentException("Measurement entity must have a timestamp.");
+    }
+    if (entity.getSensor() == null) {
+      throw new IllegalArgumentException("Measurement entity must have a sensor.");
+    }
+    if (entity.getSensor().getTemperaStation() == null) {
+      throw new IllegalArgumentException("Measurement entity's sensor must have a TemperaStation.");
     }
     Sensor sensor = entity.getSensor();
     TemperaStation temperaStation = sensor.getTemperaStation();
@@ -55,7 +61,6 @@ public class MeasurementMapper implements DTOMapper<Measurement, MeasurementDto>
     if (dto == null) {
       throw new IllegalArgumentException("Measurement DTO must not be null.");
     }
-    AccessPoint accessPoint = accessPointService.getAccessPointById(dto.accessPointId());
     Measurement measurement;
     SensorTemperaCompositeId sensorTemperaCompositeId= new SensorTemperaCompositeId();
     sensorTemperaCompositeId.setSensorId(dto.sensorId());

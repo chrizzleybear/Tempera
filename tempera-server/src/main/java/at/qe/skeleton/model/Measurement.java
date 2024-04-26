@@ -34,6 +34,9 @@ public class Measurement {
         this.sensor = sensor;
         this.timestamp = LocalDateTime.now();
     }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public void setValue(double value) {
         this.value = value;
