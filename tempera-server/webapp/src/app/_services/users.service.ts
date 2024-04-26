@@ -47,6 +47,6 @@ export class UsersService {
 
   enableUser(username: string, password: string): Observable<Object> {
     console.log("Enable user with ID: ", username);
-    return this.http.post(`http://localhost:8080/api/auth/enable`, {username, password});
+    return this.http.post(`http://localhost:8080/api/users/enable`, {username, password});
   }
 }

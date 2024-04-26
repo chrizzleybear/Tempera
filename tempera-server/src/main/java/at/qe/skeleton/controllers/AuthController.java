@@ -118,12 +118,4 @@ public class AuthController {
         UserxDTO isValidUser = userxService.validateUser(username, password);
         return ResponseEntity.ok(isValidUser);
     }
-
-    @PostMapping("/enable")
-    public ResponseEntity<String> enableUser(@RequestBody Map<String, String> credentials) {
-        String username = credentials.get("username");
-        String password = credentials.get("password");
-        userxService.enableUser(username, password);
-        return ResponseEntity.ok("User enabled");
-    }
 }
