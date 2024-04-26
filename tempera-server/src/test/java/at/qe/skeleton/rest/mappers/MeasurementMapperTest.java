@@ -16,6 +16,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 
+import java.util.List;
+
 import static org.mockito.Mockito.when;
 
 @ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
@@ -128,31 +130,39 @@ class MeasurementMapperTest {
     when(accessPointService.getAccessPointByTemperaStationId(temperaStation.getId()))
         .thenReturn(accessPoint);
 
-    MeasurementDto mappedMeasurementDto = measurementMapper.mapToDto(measurementHumidity);
+    List<Measurement> measurements =
+        List.of(
+            measurementHumidity, measurementIrradiance, measurementNmvoc, measurementTemperature);
+
+    MeasurementDto mappedMeasurementDto = measurementMapper.mapToDto(measurements);
 
     Assertions.assertNotNull(mappedMeasurementDto, "mapped measurementHumidity dto is null");
     Assertions.assertEquals(
-        measurementHumidity.getId(),
-        mappedMeasurementDto.id(),
-        "measurementHumidity does not have id %s as entity".formatted(measurementHumidity.getId()));
+        accessPoint.getId(),
+        mappedMeasurementDto.access_point_id(),
+        "access point id does not match");
     Assertions.assertEquals(
-        measurementHumidity.getSensor().getId().getSensorId(),
-        mappedMeasurementDto.sensorId(),
+        measurementHumidity.getSensor().getTemperaStation().getId(),
+        mappedMeasurementDto.tempera_station_id(),
         "sensor id does not match");
     Assertions.assertEquals(
         measurementHumidity.getTimestamp(),
         mappedMeasurementDto.timestamp(),
         "timestamp does not match");
     Assertions.assertEquals(
-        measurementHumidity.getValue(), mappedMeasurementDto.value(), "value does not match");
+        measurementHumidity.getValue(),
+        mappedMeasurementDto.humidity(),
+        "humidity value does not match");
     Assertions.assertEquals(
-        measurementHumidity.getSensor().getUnit(),
-        mappedMeasurementDto.unit(),
-        "unit does not match");
+        measurementIrradiance.getValue(),
+        mappedMeasurementDto.irradiance(),
+        "irradiance value does not match");
     Assertions.assertEquals(
-        measurementHumidity.getSensor().getTemperaStation().getId(),
-        mappedMeasurementDto.stationId(),
-        "Tempera Station Id does not match");
+        measurementNmvoc.getValue(), mappedMeasurementDto.nmvoc(), "nmvoc value does not match");
+    Assertions.assertEquals(
+        measurementTemperature.getValue(),
+        mappedMeasurementDto.temperature(),
+        "temperature value does not match");
   }
 
   @Test
