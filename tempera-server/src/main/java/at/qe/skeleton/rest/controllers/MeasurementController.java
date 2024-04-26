@@ -44,15 +44,15 @@ public class MeasurementController {
   @PostMapping("/create")
   public ResponseEntity<MeasurementDto> createMeasurement(@RequestBody MeasurementDto measurementDto) {
     try {
-      if (!accessPointService.isEnabled(measurementDto.accessPointId())){
-        throw new IllegalArgumentException("accessPoint %s is not enabled".formatted(measurementDto.accessPointId()));
+      if (!accessPointService.isEnabled(measurementDto.access_point_id())){
+        throw new IllegalArgumentException("accessPoint %s is not enabled".formatted(measurementDto.access_point_id()));
       }
-      if (!temperaStationService.isEnabled(measurementDto.stationId())){
-        throw new IllegalArgumentException("temperaStation %s is not enabled".formatted(measurementDto.stationId()));
+      if (!temperaStationService.isEnabled(measurementDto.tempera_station_id())){
+        throw new IllegalArgumentException("temperaStation %s is not enabled".formatted(measurementDto.tempera_station_id()));
       }
-      List<Measurement> entity = measurementMapper.mapFromDto(measurementDto);
-      entity = measurementService.saveMeasurement(entity);
-      return ResponseEntity.ok(measurementMapper.mapToDto(entity));
+      List<Measurement> entities = measurementMapper.mapFromDto(measurementDto);
+      entities.forEach(measurementService::saveMeasurement);
+      return ResponseEntity.ok(measurementMapper.mapToDto(entities));
     } catch (Exception e) {
       logger.log(Level.SEVERE, "Could not map MeasurementDto to Measurement entity", e);
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

@@ -30,13 +30,23 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
   }
 
   @Override
-  public MeasurementDto mapToDto(
-      Measurement temperature, Measurement irradiance, Measurement humidity, Measurement nmvoc)
+  public MeasurementDto mapToDto(List<Measurement> measurements)
       throws CouldNotFindEntityException {
-    List<Measurement> measurements = List.of(temperature, irradiance, humidity, nmvoc);
+    if (measurements == null) {
+      throw new IllegalArgumentException("Measurements must not be null.");
+    }
+    if (measurements.size() != 4) {
+      throw new IllegalArgumentException("Measurements must have exactly 4 entities.");
+    }
     TemperaStation temperaStation = null;
     LocalDateTime timestamp = null;
     AccessPoint accessPoint = null;
+
+    Measurement temperature = null;
+    Measurement irradiance = null;
+    Measurement humidity = null;
+    Measurement nmvoc = null;
+
     for (Measurement entity : measurements) {
       if (entity == null) {
         throw new IllegalArgumentException(
@@ -75,16 +85,39 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
       if (!timestamp.equals(entity.getTimestamp())) {
         throw new IllegalArgumentException("All measurements must have the same timestamp.");
       }
+
+      switch (entity.getSensor().getSensorType()) {
+        case TEMPERATURE:
+          temperature = entity;
+          break;
+        case IRRADIANCE:
+          irradiance = entity;
+          break;
+        case HUMIDITY:
+          humidity = entity;
+          break;
+        case NMVOC:
+          nmvoc = entity;
+          break;
+        default:
+          throw new IllegalArgumentException(
+              "Sensor %s must have a valid sensorType.".formatted(entity.getSensor()));
+      }
     }
+    assert temperature != null;
+    assert irradiance != null;
+    assert humidity != null;
+    assert nmvoc != null;
+
     return new MeasurementDto(
-        accessPoint.getId(),
-        temperaStation.getId(),
-        timestamp,
-        temperature.getValue(),
-        irradiance.getValue(),
-        humidity.getValue(),
-        nmvoc.getValue());
-  }
+            accessPoint.getId(),
+            temperaStation.getId(),
+            timestamp,
+            temperature.getValue(),
+            irradiance.getValue(),
+            humidity.getValue(),
+            nmvoc.getValue());
+    }
 
   @Override
   public List<Measurement> mapFromDto(MeasurementDto dto) throws CouldNotFindEntityException {
