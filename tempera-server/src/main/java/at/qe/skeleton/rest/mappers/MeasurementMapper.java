@@ -32,7 +32,7 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
 
   @Override
   public MeasurementDto mapToDto(List<Measurement> measurements)
-      throws CouldNotFindEntityException {
+      throws CouldNotFindEntityException, InconsistentObjectRelationException {
     if (measurements == null) {
       throw new IllegalArgumentException("Measurements must not be null.");
     }
@@ -50,8 +50,7 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
 
     for (Measurement entity : measurements) {
       if (entity == null) {
-        throw new IllegalArgumentException(
-            "Measurement entity %s must not be null.".formatted(entity));
+        throw new NullPointerException("Measurement entity must not be null.");
       }
       if (entity.getId() == null) {
         throw new IllegalArgumentException(
@@ -61,7 +60,7 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
         temperaStation = entity.getSensor().getTemperaStation();
       }
       if (!temperaStation.equals(entity.getSensor().getTemperaStation())) {
-        throw new IllegalArgumentException(
+        throw new InconsistentObjectRelationException(
             "All measurements must belong to the same TemperaStation.");
       }
       if (accessPoint == null) {
@@ -71,7 +70,8 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
         timestamp = entity.getTimestamp();
       }
       if (!timestamp.equals(entity.getTimestamp())) {
-        throw new IllegalArgumentException("All measurements must have the same timestamp.");
+        throw new InconsistentObjectRelationException(
+            "All measurements must have the same timestamp.");
       }
 
       switch (entity.getSensor().getSensorType()) {
@@ -87,9 +87,6 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
         case NMVOC:
           nmvoc = entity;
           break;
-        default:
-          throw new IllegalArgumentException(
-              "Sensor %s must have a valid sensorType.".formatted(entity.getSensor()));
       }
     }
     if (temperature == null || irradiance == null || humidity == null || nmvoc == null) {
@@ -177,8 +174,6 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
         case NMVOC:
           nmvoc = new Measurement(dto.nmvoc(), dto.timestamp(), sensor);
           break;
-        default:
-          throw new IllegalArgumentException("Sensor must have a valid unit.");
       }
     }
 
