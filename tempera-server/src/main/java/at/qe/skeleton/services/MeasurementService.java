@@ -28,16 +28,9 @@ public class MeasurementService {
     }
 
     //todo: find out: what about authorizations?
-    public Measurement findMostRecentBySensorIdAndStationId(Long sensorId, String stationId) throws CouldNotFindEntityException{
-        SensorTemperaCompositeId sensorTemperaCompositeId = new SensorTemperaCompositeId();
-        sensorTemperaCompositeId.setSensorId(sensorId);
-        sensorTemperaCompositeId.setTemperaStationId(stationId);
 
-        return measurementRepository.findFirstBySensorIdOrderByTimestampDesc(sensorTemperaCompositeId)
-                .orElseThrow(() -> new CouldNotFindEntityException("No measurement found for sensorId: " + sensorId + " and stationId: " + stationId));
-    }
 
-    //save
+    //todo: sanity check that there is no duplicate measurement
     public Measurement saveMeasurement(Measurement measurement) {
         return measurementRepository.save(measurement);
     }

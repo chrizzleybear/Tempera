@@ -1,6 +1,7 @@
 package at.qe.skeleton.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -25,10 +26,20 @@ public class Measurement {
     @ManyToOne(optional = false)
     private Sensor sensor;
 
-    /**
-     * When Creating a Measurement, this Constructor should be used.
-     * @param value the Value of the Measurement. Together with sensor.unit the meaning can be inferred.
-     */
+    protected Measurement() {
+    }
+
+    //todo: sanity checks for the value of the measurement?? temperature can't be 1000 degrees
+
+    public Measurement(@NotNull double value, @NotNull LocalDateTime timestamp, @NotNull Sensor sensor) {
+        this.value = value;
+        this.timestamp = timestamp;
+        this.sensor = sensor;
+    }
+
+
+
+    // können wir ein Measurement ohne sensor bauen? wo bauren wir measurements?
 
     public void setId(Long id) {
         this.id = id;

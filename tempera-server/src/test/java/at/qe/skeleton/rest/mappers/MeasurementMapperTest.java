@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
@@ -34,9 +35,7 @@ class MeasurementMapperTest {
   private Measurement measurementNullId;
   private Measurement measurementNullTimestamp;
   private Measurement measurementNullSensor;
-  private Measurement measurementNullTemperaStation;
   private Measurement measurementInvalidTemperaId;
-  private Measurement measurementNoValue;
   private Measurement measurementIrradiance;
   private Measurement measurementTemperature;
   private Measurement measurementNmvoc;
@@ -55,71 +54,42 @@ class MeasurementMapperTest {
     accessPoint.addTemperaStation(temperaStation);
 
     Sensor sensorHumidity = new Sensor(SensorType.HUMIDITY, Unit.PERCENT, temperaStation);
-    Sensor sensorNullTemperaStation = new Sensor(SensorType.HUMIDITY, Unit.PERCENT, null);
     Sensor sensorTemperature = new Sensor(SensorType.TEMPERATURE, Unit.CELSIUS, temperaStation);
     Sensor sensorIrradiance = new Sensor(SensorType.IRRADIANCE, Unit.LUX, temperaStation);
     Sensor sensorNmvoc = new Sensor(SensorType.NMVOC, Unit.OHM, temperaStation);
     Sensor sensorInvalidTemperaId =
         new Sensor(SensorType.HUMIDITY, Unit.PERCENT, invalidTemperaStation);
 
-    measurementHumidity = new Measurement();
-    measurementHumidity.setId(1L);
-    measurementHumidity.setValue(50.0);
-    measurementHumidity.setSensor(sensorHumidity);
-    measurementHumidity.setTimestamp(java.time.LocalDateTime.now());
+    measurementHumidity = new Measurement(50.0, LocalDateTime.now(), sensorHumidity);
+    measurementHumidity.setId(
+        1L); // must set id bc we dont save to db, normally gets auto generated
 
-    measurementIrradiance = new Measurement();
+    measurementIrradiance = new Measurement(500.0, LocalDateTime.now(), sensorIrradiance);
     measurementIrradiance.setId(2L);
-    measurementIrradiance.setValue(500.0);
-    measurementIrradiance.setSensor(sensorIrradiance);
-    measurementIrradiance.setTimestamp(java.time.LocalDateTime.now());
 
-    measurementNmvoc = new Measurement();
+    measurementNmvoc = new Measurement(23.0, LocalDateTime.now(), sensorNmvoc);
     measurementNmvoc.setId(3L);
-    measurementNmvoc.setValue(23.0);
-    measurementNmvoc.setSensor(sensorNmvoc);
-    measurementNmvoc.setTimestamp(java.time.LocalDateTime.now());
 
-    measurementTemperature = new Measurement();
-    measurementTemperature.setId(3L);
-    measurementTemperature.setValue(23.0);
-    measurementTemperature.setSensor(sensorTemperature);
-    measurementTemperature.setTimestamp(java.time.LocalDateTime.now());
+    measurementTemperature = new Measurement(19.9, LocalDateTime.now(), sensorTemperature);
+    measurementTemperature.setId(4L);
 
-    measurementNullId = new Measurement();
+    measurementNullId = new Measurement(50.0, LocalDateTime.now(), sensorHumidity);
     measurementNullId.setId(null);
-    measurementNullId.setValue(50.0);
-    measurementNullId.setSensor(sensorHumidity);
-    measurementNullId.setTimestamp(java.time.LocalDateTime.now());
 
-    measurementNullTimestamp = new Measurement();
+    // probably wont work...
+    measurementNullTimestamp = new Measurement(30.0, null, sensorHumidity);
     measurementNullTimestamp.setId(1L);
-    measurementNullTimestamp.setValue(50.0);
-    measurementNullTimestamp.setSensor(sensorHumidity);
-    measurementNullTimestamp.setTimestamp(null);
 
-    measurementNullSensor = new Measurement();
-    measurementNullSensor.setValue(50.0);
-    measurementNullSensor.setSensor(null);
-    measurementNullSensor.setTimestamp(java.time.LocalDateTime.now());
+    //probably wont work...
+    measurementNullSensor = new Measurement(50.0, LocalDateTime.now(), null);
     measurementNullSensor.setId(2L);
 
-    measurementNullTemperaStation = new Measurement();
-    measurementNullTemperaStation.setId(1L);
-    measurementNullTemperaStation.setValue(50.0);
-    measurementNullTemperaStation.setSensor(sensorNullTemperaStation);
-    measurementNullTemperaStation.setTimestamp(java.time.LocalDateTime.now());
-
-    measurementInvalidTemperaId = new Measurement();
+    measurementInvalidTemperaId = new Measurement(50.0, LocalDateTime.now(), sensorInvalidTemperaId);
     measurementInvalidTemperaId.setId(1L);
     measurementInvalidTemperaId.setSensor(sensorInvalidTemperaId);
     measurementInvalidTemperaId.setTimestamp(java.time.LocalDateTime.now());
     measurementInvalidTemperaId.setValue(50.0);
 
-    measurementNoValue = new Measurement();
-    measurementNoValue.setId(1L);
-    measurementNoValue.setSensor(sensorHumidity);
-    measurementNoValue.setTimestamp(java.time.LocalDateTime.now());
   }
 
   @AfterEach
@@ -177,32 +147,67 @@ class MeasurementMapperTest {
         IllegalArgumentException.class,
         () -> measurementMapper.mapToDto(null),
         "Mapping a null entity should throw an IllegalArgumentException");
+
     Assertions.assertThrows(
         IllegalArgumentException.class,
-        () -> measurementMapper.mapToDto(measurementNullId),
+        () ->
+            measurementMapper.mapToDto(
+                List.of(
+                    measurementNullId,
+                    measurementTemperature,
+                    measurementIrradiance,
+                    measurementNmvoc)),
         "Mapping an entity without an id should throw an IllegalArgumentException");
+
     Assertions.assertThrows(
         IllegalArgumentException.class,
-        () -> measurementMapper.mapToDto(measurementNullTimestamp),
+        () ->
+            measurementMapper.mapToDto(
+                List.of(
+                    measurementNullTimestamp,
+                    measurementTemperature,
+                    measurementIrradiance,
+                    measurementNmvoc)),
         "Mapping an entity without a timestamp should throw an IllegalArgumentException");
+
     Assertions.assertThrows(
         IllegalArgumentException.class,
-        () -> measurementMapper.mapToDto(measurementNullSensor),
+        () ->
+            measurementMapper.mapToDto(
+                List.of(
+                    measurementNullSensor,
+                    measurementTemperature,
+                    measurementIrradiance,
+                    measurementNmvoc)),
         "Mapping an entity without a sensor should throw an IllegalArgumentException");
-    Assertions.assertThrows(
-        IllegalArgumentException.class,
-        () -> measurementMapper.mapToDto(measurementNullTemperaStation),
-        "Mapping an entity without a TemperaStation should throw an IllegalArgumentException");
+
     Assertions.assertThrows(
         CouldNotFindEntityException.class,
-        () -> measurementMapper.mapToDto(measurementInvalidTemperaId),
+        () ->
+            measurementMapper.mapToDto(
+                List.of(
+                    measurementInvalidTemperaId,
+                    measurementTemperature,
+                    measurementIrradiance,
+                    measurementNmvoc)),
         "Mapping an entity with an invalid TemperaStation should throw a CouldNotFindEntityException");
 
-    // wir brauchen noch 3 valide measurements für den test
-    // teste den fall, dass ein measurementHumidity keine value hat
     // teste den fall, dass eine Liste mit weniger als 4 measurements übergeben wird
+    Assertions.assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            measurementMapper.mapToDto(
+                List.of(measurementHumidity, measurementTemperature, measurementIrradiance)));
     // teste den fall, dass zweimal ein gleicher sensor übergeben wird
-
+    Assertions.assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            measurementMapper.mapToDto(
+                List.of(
+                    measurementHumidity,
+                    measurementHumidity,
+                    measurementIrradiance,
+                    measurementTemperature)));
   }
 
   @Test

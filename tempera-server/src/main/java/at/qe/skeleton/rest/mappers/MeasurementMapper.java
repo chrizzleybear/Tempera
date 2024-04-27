@@ -104,10 +104,10 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
               "Sensor %s must have a valid sensorType.".formatted(entity.getSensor()));
       }
     }
-    assert temperature != null;
-    assert irradiance != null;
-    assert humidity != null;
-    assert nmvoc != null;
+    if (temperature == null || irradiance == null || humidity == null || nmvoc == null) {
+      throw new IllegalArgumentException("Measurements must have a temperature.");
+    }
+
 
     return new MeasurementDto(
             accessPoint.getId(),
