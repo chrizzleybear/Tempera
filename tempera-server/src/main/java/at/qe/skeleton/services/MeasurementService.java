@@ -9,10 +9,9 @@ import at.qe.skeleton.repositories.TemperaStationRepository;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-/**
- * Service for handling measurements. Since there is a lot of overlap with SensorService,
- * this Service will handle the measurements and the sensors.
- */
+import java.util.Optional;
+
+
 @Component
 @Scope("application")
 public class MeasurementService {
@@ -23,14 +22,10 @@ public class MeasurementService {
         this.measurementRepository = measurementRepository;
     }
 
-    public Measurement findMeasurementById(Long id) throws CouldNotFindEntityException {
+    public Measurement loadMeasurement(Long id) throws CouldNotFindEntityException {
         return measurementRepository.findById(id).orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id));
     }
 
-    //todo: find out: what about authorizations?
-
-
-    //todo: sanity check that there is no duplicate measurement
     public Measurement saveMeasurement(Measurement measurement) {
         return measurementRepository.save(measurement);
     }

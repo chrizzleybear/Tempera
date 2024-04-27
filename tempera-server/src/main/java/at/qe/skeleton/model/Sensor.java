@@ -45,6 +45,10 @@ public class Sensor {
     this.temperaStation = Objects.requireNonNull(temperaStation, "temperaStation must not be null");
   }
 
+  public void setId(@NotNull Long sensorId) {
+    sensorTemperaCompositeId.setSensorId(sensorId);
+  }
+
   protected Sensor() {}
 
   public TemperaStation getTemperaStation() {

@@ -3,6 +3,7 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.Sensor;
 import at.qe.skeleton.model.TemperaStation;
+import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.Unit;
 import at.qe.skeleton.repositories.TemperaStationRepository;
@@ -34,11 +35,12 @@ public class TemperaStationService {
    *
    * @param id of the new TemperaStation, has to be unique
    * @param enabled whether the TemperaStation is enabled or not
+   * @param user the user that is the owner of the TemperaStation (may be null if not yet assigned)
    * @return the newly created TemperaStation
    */
-  public TemperaStation createTemperaStation(String id, boolean enabled) {
+  public TemperaStation createTemperaStation(String id, boolean enabled, Userx user) {
     logger.info("trying to create new TemperaStation");
-    TemperaStation temperaStation = new TemperaStation(id, enabled);
+    TemperaStation temperaStation = new TemperaStation(id, enabled, user);
     save(temperaStation);
 
     Sensor temperatureSensor = new Sensor(SensorType.HUMIDITY, Unit.PERCENT, temperaStation);

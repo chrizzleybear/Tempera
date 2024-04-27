@@ -37,6 +37,9 @@ public class SensorTemperaCompositeId implements Serializable {
     this.temperaStationId = temperaStationId;
   }
 
+  public void setSensorId(Long sensorId) {
+    this.sensorId = sensorId;
+  }
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;

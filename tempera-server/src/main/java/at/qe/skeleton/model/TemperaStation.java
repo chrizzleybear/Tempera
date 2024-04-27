@@ -1,6 +1,7 @@
 package at.qe.skeleton.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Persistable;
 
 import java.util.List;
@@ -43,8 +44,9 @@ public class TemperaStation implements Persistable<String> {
     }
 
     /** direct creation of TemperaStations should be avoided, use {@link at.qe.skeleton.services.TemperaStationService#createTemperaStation} instead */
-    public TemperaStation (String id, boolean enabled) {
-        this.id = id;
+    public TemperaStation (@NotNull String id, boolean enabled, Userx user) {
+        this.user = user;
+        this.id = Objects.requireNonNull(id);
         this.enabled = enabled;
     }
     protected TemperaStation(){};

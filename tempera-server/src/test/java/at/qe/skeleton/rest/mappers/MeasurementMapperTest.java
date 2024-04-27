@@ -53,7 +53,7 @@ class MeasurementMapperTest {
     measurementMapper =
         new MeasurementMapper(measurementService, sensorService, accessPointService);
 
-    temperaStation = new TemperaStation("temperaStationId", true);
+    temperaStation = new TemperaStation("temperaStationId", true, null);
     temperaStation.setEnabled(true);
 
     accessPoint = new AccessPoint();
@@ -85,13 +85,13 @@ class MeasurementMapperTest {
     // because we dont persist to db, the id should be null:
     measurementNullId = new Measurement(50.0, timestamp, sensorHumidity);
 
-    invalidTemperaStation = new TemperaStation("id_not_in_db", true);
+    invalidTemperaStation = new TemperaStation("id_not_in_db", true, null);
     Sensor sensorInvalidTemperaId =
             new Sensor(SensorType.HUMIDITY, Unit.PERCENT, invalidTemperaStation);
     measurementInvalidTemperaId = new Measurement(50.0, timestamp, sensorInvalidTemperaId);
     measurementInvalidTemperaId.setId(1L);
 
-    differentTemperaStation = new TemperaStation("differentTemperaStation", true);
+    differentTemperaStation = new TemperaStation("differentTemperaStation", true, null);
     sensorDifferentTemperaStation =
         new Sensor(SensorType.HUMIDITY, Unit.PERCENT, differentTemperaStation);
 
