@@ -14,11 +14,11 @@ name = "tempera"
 dynamic = ["version"]
 description = "Accesspoint functionality to connect sensor stations to the backend."
 dependencies = [
-    "bleak",
-    "pyyaml",
-    "requests",
-    "tenacity",
-    "SQLAlchemy"
+    "bleak==0.21.1",
+    "PyYAML==6.0.1",
+    "requests==2.31.0",
+    "tenacity==8.2.3",
+    "SQLAlchemy==2.0.29"
 ]
 requires-python = ">=3.11"
 authors = [
@@ -43,9 +43,9 @@ access_point-run = "tempera.main:main"
 
 [project.optional-dependencies]
 format = ["black>=24.3.0"]
-api_testing = ['fastapi[all]']
+api_testing = ["fastapi[all]==0.110.0"]
 all = [
-    "black>=24.3.0", 'fastapi[all]'
+    "black>=24.3.0", "fastapi[all]==0.110.0"
 ]
 
 
