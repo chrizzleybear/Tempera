@@ -2,13 +2,13 @@ import logging
 from datetime import datetime, timezone, timedelta
 from typing import List
 
-import sqlalchemy
 from bleak import BleakClient, BleakGATTCharacteristic
 from bleak.backends.service import BleakGATTService
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from database.entities import Mode, TimeRecord, TemperaStation, Measurement
+from tempera.database.entities import Mode, TimeRecord, TemperaStation, Measurement
+from tempera.utils import shared
 
 logger = logging.getLogger(f"tempera.{__name__}")
 
@@ -17,8 +17,6 @@ logger = logging.getLogger(f"tempera.{__name__}")
 async def elapsed_time_handler(
     _characteristic,
     data: bytearray,
-    engine: sqlalchemy.Engine = None,
-    station_id: str = None,
 ):
     work_mode_map = {
         2: Mode.DEEP_WORK,
@@ -27,17 +25,6 @@ async def elapsed_time_handler(
         5: Mode.AVAILABLE,
     }
     record_status_map = {0: True, 7: False}
-
-    if not engine:
-        logger.critical(
-            "No database engine provided. No database operations will be possible."
-        )
-        raise RuntimeError
-    elif not station_id:
-        logger.error(
-            "No station ID provided. Impossible to tell from which station the time records are coming from."
-        )
-        raise RuntimeError
 
     # TODO: check that we don't need unused flags
     logger.debug(f"Received bytes: {data}")
@@ -58,9 +45,9 @@ async def elapsed_time_handler(
     # Records are always handled retroactively, meaning that when a button is pressed the previous record is
     # concluded and a new one started. The data of the previous one is sent to the access point.
 
-    with Session(engine) as session:
+    with Session(shared.db_engine) as session:
         tempera_station = session.scalars(
-            select(TemperaStation).where(TemperaStation.id == station_id)
+            select(TemperaStation).where(TemperaStation.id == shared.current_station_id)
         ).first()
         current_record = session.scalars(
             select(TimeRecord).order_by(TimeRecord.start.desc()).limit(1)
@@ -87,25 +74,9 @@ async def elapsed_time_handler(
         session.commit()
 
 
-async def filter_uuid(
-    provider: BleakClient | BleakGATTService, uuid: str
-) -> BleakGATTService | BleakGATTCharacteristic:
-    if isinstance(provider, BleakClient):
-        return list(filter(lambda service: uuid in service.uuid, provider.services))[0]
-    elif isinstance(provider, BleakGATTService):
-        return list(
-            filter(
-                lambda characteristic: uuid in characteristic.uuid,
-                provider.characteristics,
-            )
-        )[0]
-
-
 async def measurements_handler(
     client: BleakClient,
     characteristics: List[BleakGATTCharacteristic],
-    engine: sqlalchemy.Engine,
-    station_id: str,
 ):
     temperature, irradiance, humidity, nmvoc = None, None, None, None
     for characteristic in characteristics:
@@ -119,10 +90,12 @@ async def measurements_handler(
             nmvoc = float(await client.read_gatt_char(characteristic))
         else:
             logger.warning(
-                f"UUID {characteristic} doesn't match any supported characteristic in the environmental sensing service"
+                f"UUID {characteristic} doesn't match any supported "
+                "characteristic in the environmental sensing service."
             )
             raise RuntimeError
 
+    # TODO: think if a value error is appropriate or if it is better to send the measurement even if one filed is None.
     if not temperature:
         logger.warning("Received no value for measurement: temperature.")
         raise ValueError
@@ -136,9 +109,9 @@ async def measurements_handler(
         logger.warning("Received no value for measurement: nmvoc.")
         raise ValueError
 
-    with Session(engine) as session:
+    with Session(shared.db_engine) as session:
         tempera_station = session.scalars(
-            select(TemperaStation).where(TemperaStation.id == station_id)
+            select(TemperaStation).where(TemperaStation.id == shared.current_station_id)
         ).first()
 
         measurement = Measurement(
@@ -153,3 +126,17 @@ async def measurements_handler(
 
         session.add(measurement)
         session.commit()
+
+
+async def filter_uuid(
+    provider: BleakClient | BleakGATTService, uuid: str
+) -> BleakGATTService | BleakGATTCharacteristic:
+    if isinstance(provider, BleakClient):
+        return list(filter(lambda service: uuid in service.uuid, provider.services))[0]
+    elif isinstance(provider, BleakGATTService):
+        return list(
+            filter(
+                lambda characteristic: uuid in characteristic.uuid,
+                provider.characteristics,
+            )
+        )[0]

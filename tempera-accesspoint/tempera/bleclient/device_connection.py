@@ -6,10 +6,10 @@ from bleak import BLEDevice, BleakScanner, BleakClient
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from bleclient.etl import filter_uuid
-from database.entities import TemperaStation
-from utils import shared
-from utils.request_utils import make_request
+from tempera.bleclient.etl import filter_uuid
+from tempera.database.entities import TemperaStation
+from tempera.utils import shared
+from tempera.utils.request_utils import make_request
 
 logger = logging.getLogger(f"tempera.{__name__}")
 
@@ -51,7 +51,7 @@ async def get_tempera_stations() -> List[BLEDevice] | None:
     return tempera_stations
 
 
-async def validate_stations(
+async def validate_station(
     tempera_station: BLEDevice, client: BleakClient
 ) -> BLEDevice | None:
     """
@@ -91,8 +91,9 @@ async def validate_stations(
     if id_ok and not missing_characteristics:
         await save_station(station_id)
         logger.info(
-            f"Connecting to Station[name: {tempera_station.name}; address: {tempera_station.address}]"
+            f"Station[name: {tempera_station.name}; address: {tempera_station.address}] is valid."
         )
+        shared.current_station_id = await get_station_id(client)
         return tempera_station
     elif id_ok and missing_characteristics is not None:
         logger.info(
@@ -138,7 +139,7 @@ async def validate_characteristics(client: BleakClient) -> List[str]:
 
 
 async def save_station(station_id: str) -> None:
-    with Session(shared.config.db_engine) as session:
+    with Session(shared.db_engine) as session:
         station = session.scalars(
             select(TemperaStation).where(TemperaStation.id == station_id)
         ).first()
@@ -165,7 +166,7 @@ async def discovery_loop() -> BLEDevice:
 
     for station in tempera_stations:
         async with BleakClient(station) as client:
-            tempera_station = await validate_stations(station, client)
+            tempera_station = await validate_station(station, client)
 
         if tempera_station:
             break
