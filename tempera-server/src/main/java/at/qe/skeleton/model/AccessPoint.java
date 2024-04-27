@@ -2,6 +2,7 @@ package at.qe.skeleton.model;
 
 import at.qe.skeleton.exceptions.TemperaStationIsNotEnabledException;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
@@ -36,8 +37,14 @@ public class AccessPoint implements Persistable<UUID>, Serializable {
     private Room room;
     private boolean enabled;
 
-    public AccessPoint() {
-        this.id = UUID.randomUUID();
+    public AccessPoint(@NotNull UUID id, @NotNull Room room, boolean enabled) {
+        this.id = Objects.requireNonNull(id, "id must not be null");
+        this.room = Objects.requireNonNull(room, "room must not be null");
+        this.temperaStations = new HashSet<>();
+        this.enabled = enabled;
+    }
+
+    public AccessPoint(){
         this.temperaStations = new HashSet<>();
     }
 
@@ -53,7 +60,8 @@ public class AccessPoint implements Persistable<UUID>, Serializable {
    * @throws TemperaStationIsNotEnabledException if this TemperaStation is not enabled, but still adds the accesspoint
    * before
    */
-  public boolean addTemperaStation(TemperaStation temperaStation) throws  TemperaStationIsNotEnabledException {
+  public boolean addTemperaStation(@NotNull TemperaStation temperaStation) throws  TemperaStationIsNotEnabledException {
+      if (temperaStation == null) throw new IllegalArgumentException("temperaStation must not be null");
       if (!this.enabled){
           this.temperaStations.add(temperaStation);
           throw new TemperaStationIsNotEnabledException();

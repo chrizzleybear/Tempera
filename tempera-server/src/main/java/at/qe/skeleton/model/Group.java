@@ -1,9 +1,11 @@
 package at.qe.skeleton.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Groupx")
@@ -27,20 +29,31 @@ public class Group {
      * @param description a short description of the purpose of the group
      * @param groupLead the Grouplead in Charge of that group
      */
-    public Group(String name, String description, Userx groupLead) {
+    public Group(@NotNull String name, @NotNull String description, @NotNull Userx groupLead) {
+        if(name == null || name.isBlank()){
+            throw new IllegalArgumentException("Name must not be null or empty");
+        }
+        if(description == null || description.isBlank()){
+            throw new IllegalArgumentException("Description must not be null or empty");
+        }
         this.name = name;
         this.description = description;
-        this.groupLead = groupLead;
+        this.groupLead = Objects.requireNonNull(groupLead, "GroupLead must not be null");
         this.members = new ArrayList<>();
     }
 
-    protected Group() {}
+    protected Group() {
+        this.members = new ArrayList<>();
+    }
 
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
+        if(name == null || name.isBlank()){
+            throw new IllegalArgumentException("Name must not be null or empty");
+        }
         this.name = name;
     }
 
@@ -49,6 +62,9 @@ public class Group {
     }
 
     public void setDescription(String description) {
+        if(description == null || description.isBlank()){
+            throw new IllegalArgumentException("Description must not be null or empty");
+        }
         this.description = description;
     }
 
@@ -65,7 +81,24 @@ public class Group {
     }
 
     public void setMembers(List<Userx> members) {
-        this.members = members;
+        this.members = Objects.requireNonNull(members);
+    }
+
+    /**
+     * Adds a Member to the Group, if the Member is already in the Group, the Member will be updated.
+     * @param member the Member to be added to the Group
+     * @return true if member was not already in the group and false if member was updated.
+     */
+    public boolean addMember(@NotNull Userx member){
+        if(member == null){
+            throw new IllegalArgumentException("Member must not be null");
+        }
+        if(!members.contains(member)){
+            return members.add(member);
+        }
+        members.remove(member);
+        members.add(member);
+        return false;
     }
 
     @Override

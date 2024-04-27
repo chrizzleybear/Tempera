@@ -44,8 +44,8 @@ public class Measurement {
         this.sensor = Objects.requireNonNull(sensor, "sensor must not be null");
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(@NotNull Long id) {
+        this.id = Objects.requireNonNull(id, "id must not be null");
     }
 
     public void setValue(double value) {
