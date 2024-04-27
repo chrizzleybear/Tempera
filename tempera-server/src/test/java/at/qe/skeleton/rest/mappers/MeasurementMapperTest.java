@@ -16,7 +16,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -45,7 +47,8 @@ class MeasurementMapperTest {
 
   @BeforeEach
   void setUp() throws TemperaStationIsNotEnabledException {
-    measurementMapper = new MeasurementMapper(measurementService, sensorService, accessPointService);
+    measurementMapper =
+        new MeasurementMapper(measurementService, sensorService, accessPointService);
 
     TemperaStation invalidTemperaStation = new TemperaStation("id_not_in_db", true);
 
@@ -87,17 +90,21 @@ class MeasurementMapperTest {
 
     measurementDifferentTimestamp = new Measurement(50.0, differentTimestamp, sensorHumidity);
 
-    measurementDto = new MeasurementDto(
-        accessPoint.getId(), temperaStation.getId(), timestamp, 50.0, 500.0, 23.0, 19.9);
+    measurementDto =
+        new MeasurementDto(
+            accessPoint.getId(), temperaStation.getId(), timestamp, 50.0, 500.0, 23.0, 19.9);
 
-    //since we randomly create the accessPoint id this time, it should be inconsistent with the temperaStation id
+    // since we randomly create the accessPoint id this time, it should be inconsistent with the
+    // temperaStation id
     measurementDtoInconsistent =
         new MeasurementDto(
             UUID.randomUUID(), temperaStation.getId(), timestamp, 50.0, 500.0, 23.0, 19.9);
   }
 
   @AfterEach
-  void tearDown() {}
+  void tearDown() {
+    Mockito.reset(measurementService, accessPointService, sensorService);
+  }
 
   @Test
   void testMapToValidDto() throws CouldNotFindEntityException {
@@ -288,9 +295,146 @@ class MeasurementMapperTest {
 
   @Test
   void mapFromInvalidDto() {
+    // null dto
+    Assertions.assertThrows(
+        IllegalArgumentException.class,
+        () -> measurementMapper.mapFromDto(null),
+        "Mapping a null dto should throw an IllegalArgumentException");
 
+    Assertions.assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            measurementMapper.mapFromDto(
+                new MeasurementDto(
+                    null, temperaStation.getId(), LocalDateTime.now(), 1.0, 1.0, 1.0, 1.0)),
+        "Mapping a dto with null accessPoint ID should throw an IllegalArgumentException");
 
+    // dto missing timestamp
+    Assertions.assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            measurementMapper.mapFromDto(
+                new MeasurementDto(
+                    UUID.randomUUID(), temperaStation.getId(), null, 1.0, 1.0, 1.0, 1.0)),
+        "Mapping a dto with null timestamp should throw an IllegalArgumentException");
 
-    // inconsistent dto
+    // dto missing humidity
+    Assertions.assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            measurementMapper.mapFromDto(
+                new MeasurementDto(
+                    UUID.randomUUID(),
+                    temperaStation.getId(),
+                    LocalDateTime.now(),
+                    null,
+                    1.0,
+                    1.0,
+                    1.0)),
+        "Mapping a dto with null humidity should throw an IllegalArgumentException");
+
+    // dto missing irradiance
+    Assertions.assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            measurementMapper.mapFromDto(
+                new MeasurementDto(
+                    UUID.randomUUID(),
+                    temperaStation.getId(),
+                    LocalDateTime.now(),
+                    1.0,
+                    null,
+                    1.0,
+                    1.0)),
+        "Mapping a dto with null irradiance should throw an IllegalArgumentException");
+
+    Assertions.assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            measurementMapper.mapFromDto(
+                new MeasurementDto(
+                    UUID.randomUUID(),
+                    temperaStation.getId(),
+                    LocalDateTime.now(),
+                    1.0,
+                    1.0,
+                    null,
+                    1.0)),
+        "Mapping a dto with null nmvoc should throw an IllegalArgumentException");
+
+    Assertions.assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            measurementMapper.mapFromDto(
+                new MeasurementDto(
+                    UUID.randomUUID(),
+                    temperaStation.getId(),
+                    LocalDateTime.now(),
+                    1.0,
+                    1.0,
+                    1.0,
+                    null)),
+        "Mapping a dto with null temperature should throw an IllegalArgumentException");
+  }
+
+  @Test
+  void mapFromDtoInsufficientAmountOfSensors() throws CouldNotFindEntityException {
+    // sensorService delivers only 3 sensors
+    when(sensorService.findAllSensorsByTemperaStationId(temperaStation.getId()))
+        .thenReturn(
+            List.of(
+                measurementHumidity.getSensor(),
+                measurementIrradiance.getSensor(),
+                measurementNmvoc.getSensor()));
+    when(accessPointService.getAccessPointByTemperaStationId(temperaStation.getId()))
+        .thenReturn(accessPoint);
+
+    Assertions.assertThrows(
+        IllegalArgumentException.class,
+        () -> measurementMapper.mapFromDto(measurementDto),
+        "IllegalArgumentException should be thrown since the temperaStation has only 3 sensors");
+  }
+
+  @Test
+  void mapFromDtoDuplicateSensors() throws CouldNotFindEntityException {
+    // sensorService delivers 4 sensors, but two of them are the same
+    when(sensorService.findAllSensorsByTemperaStationId(temperaStation.getId()))
+        .thenReturn(
+            List.of(
+                measurementHumidity.getSensor(),
+                measurementHumidity.getSensor(),
+                measurementIrradiance.getSensor(),
+                measurementTemperature.getSensor()));
+
+    when(accessPointService.getAccessPointByTemperaStationId(temperaStation.getId()))
+        .thenReturn(accessPoint);
+
+    Assertions.assertThrows(
+        IllegalArgumentException.class,
+        () -> measurementMapper.mapFromDto(measurementDto),
+        "IllegalArgumentException should be thrown since two sensors are the same");
+  }
+
+  @Test
+  void mapFromDtoInconsistentTemperaStationId() throws CouldNotFindEntityException {
+    when(sensorService.findAllSensorsByTemperaStationId(temperaStation.getId()))
+        .thenReturn(
+            List.of(
+                measurementHumidity.getSensor(),
+                measurementIrradiance.getSensor(),
+                measurementNmvoc.getSensor(),
+                measurementTemperature.getSensor()));
+
+    when(accessPointService.getAccessPointByTemperaStationId(temperaStation.getId()))
+        .thenReturn(accessPoint);
+
+    // measurementDtoInconsistent has a random id for accessPoint, so it should be inconsistent with
+    // the accessPointId
+    // that is returned by the mocked accessPointService
+    Assertions.assertThrows(
+        InconsistentObjectRelationException.class,
+        () -> measurementMapper.mapFromDto(measurementDtoInconsistent),
+        "InconsistentObjectRelationException should be thrown since"
+            + "the accessPointId in the dto is inconsistent with the accessPointId of the temperaStation in db");
   }
 }
