@@ -11,11 +11,6 @@ from sqlalchemy import create_engine
 logger = logging.getLogger(f"tempera.{__name__}")
 
 
-global db_engine
-global config
-global header
-
-
 async def init_globals() -> None:
     """
     Initializes the global variables.
@@ -23,18 +18,27 @@ async def init_globals() -> None:
 
     :return:
     """
+    global project_root
+    global db_engine
+    global config
+    global header
+    global current_station_id
+
+    project_root = Path(__file__).parent.parent.parent.resolve()
     config = await init_config()
 
     async with asyncio.TaskGroup() as tg:
         header = tg.create_task(init_header(config))
         engine = tg.create_task(init_engine())
 
+    db_engine, header = engine.result(), header.result()
+
 
 async def init_config() -> Dict[str, Any]:
-    config_file = Path(__name__).resolve().parent.parent / "conf.yaml"
+    config_file = project_root / "conf.yaml"
 
     if not config_file.is_file():
-        logger.warning(
+        logger.critical(
             f"{config_file.absolute()} not found. Couldn't load configuration. "
         )
         raise FileNotFoundError
@@ -42,6 +46,10 @@ async def init_config() -> Dict[str, Any]:
     logger.info(f"Loading config from file ({config_file.absolute()})")
     with open(config_file, "r") as config_file:
         conf = yaml.safe_load(config_file)
+
+    if not conf:
+        logger.critical(f"Config file is empty.")
+        raise RuntimeError
 
     for key in (
         "access_point_id",
@@ -76,7 +84,7 @@ async def init_header(conf: Dict[str, Any]) -> HTTPBasicAuth:
 
 
 async def init_engine() -> sqlalchemy.Engine:
-    database = Path(__name__).resolve().parent / "database" / "data.sqlite"
+    database = project_root / "tempera" / "database" / "data.sqlite"
 
     if not Path(database).is_file():
         logger.critical(
@@ -85,4 +93,4 @@ async def init_engine() -> sqlalchemy.Engine:
         raise FileNotFoundError
 
     logger.info(f"Creating database engine from db file: {database}")
-    return create_engine(f"sqlite:///{database}", echo=True)
+    return create_engine(f"sqlite:///{database}", echo=False)
