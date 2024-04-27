@@ -1,6 +1,7 @@
 package at.qe.skeleton.rest.mappers;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
+import at.qe.skeleton.exceptions.InconsistentObjectRelationException;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.rest.dtos.MeasurementDto;
 import at.qe.skeleton.services.AccessPointService;
@@ -106,11 +107,11 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
   }
 
   @Override
-  public List<Measurement> mapFromDto(MeasurementDto dto) throws CouldNotFindEntityException {
+  public List<Measurement> mapFromDto(MeasurementDto dto)
+      throws CouldNotFindEntityException, InconsistentObjectRelationException {
     if (dto == null) {
       throw new IllegalArgumentException("Measurement DTO must not be null.");
     }
-
     if (dto.timestamp() == null) {
       throw new IllegalArgumentException("Measurement DTO must have a timestamp.");
     }
@@ -143,7 +144,8 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
    * @param sensors
    * @return
    */
-  private static List<Measurement> getMeasurementList(MeasurementDto dto, List<Sensor> sensors) {
+  private List<Measurement> getMeasurementList(MeasurementDto dto, List<Sensor> sensors)
+      throws CouldNotFindEntityException, InconsistentObjectRelationException {
     if (sensors.size() != 4) {
       throw new IllegalArgumentException(
           "TemperaStation %s must have exactly 4 sensors.".formatted(dto.tempera_station_id()));
@@ -153,6 +155,13 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
     Measurement irradiance = null;
     Measurement humidity = null;
     Measurement nmvoc = null;
+
+    if (dto.access_point_id()
+        != accessPointService.getAccessPointByTemperaStationId(dto.tempera_station_id()).getId()) {
+      throw new InconsistentObjectRelationException(
+          "dto Accesspoint %s does not belong to TemperaStation %s."
+              .formatted(dto.access_point_id(), dto.tempera_station_id()));
+    }
 
     for (Sensor sensor : sensors) {
       switch (sensor.getSensorType()) {
@@ -173,10 +182,10 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
       }
     }
 
-    if(temperature == null || irradiance == null || humidity == null || nmvoc == null){
+    if (temperature == null || irradiance == null || humidity == null || nmvoc == null) {
       throw new IllegalArgumentException("All Measurements must be present.");
     }
 
-      return List.of(temperature, irradiance, humidity, nmvoc);
+    return List.of(temperature, irradiance, humidity, nmvoc);
   }
 }

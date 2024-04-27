@@ -1,6 +1,7 @@
 package at.qe.skeleton.rest.mappers;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
+import at.qe.skeleton.exceptions.InconsistentObjectRelationException;
 import at.qe.skeleton.exceptions.TemperaStationIsNotEnabledException;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.SensorType;
@@ -18,6 +19,7 @@ import org.mockito.Mock;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.Mockito.when;
 
@@ -37,12 +39,13 @@ class MeasurementMapperTest {
   private Measurement measurementIrradiance;
   private Measurement measurementTemperature;
   private Measurement measurementNmvoc;
-
   private Measurement measurementDifferentTimestamp;
+  private MeasurementDto measurementDto;
+  private MeasurementDto measurementDtoInconsistent;
 
   @BeforeEach
   void setUp() throws TemperaStationIsNotEnabledException {
-    measurementMapper = new MeasurementMapper(measurementService, null, accessPointService);
+    measurementMapper = new MeasurementMapper(measurementService, sensorService, accessPointService);
 
     TemperaStation invalidTemperaStation = new TemperaStation("id_not_in_db", true);
 
@@ -76,16 +79,21 @@ class MeasurementMapperTest {
     measurementTemperature = new Measurement(19.9, timestamp, sensorTemperature);
     measurementTemperature.setId(4L);
 
+    // because we dont persist to db, the id should be null:
     measurementNullId = new Measurement(50.0, timestamp, sensorHumidity);
-    measurementNullId.setId(null);
 
     measurementInvalidTemperaId = new Measurement(50.0, timestamp, sensorInvalidTemperaId);
     measurementInvalidTemperaId.setId(1L);
 
     measurementDifferentTimestamp = new Measurement(50.0, differentTimestamp, sensorHumidity);
 
+    measurementDto = new MeasurementDto(
+        accessPoint.getId(), temperaStation.getId(), timestamp, 50.0, 500.0, 23.0, 19.9);
 
-
+    //since we randomly create the accessPoint id this time, it should be inconsistent with the temperaStation id
+    measurementDtoInconsistent =
+        new MeasurementDto(
+            UUID.randomUUID(), temperaStation.getId(), timestamp, 50.0, 500.0, 23.0, 19.9);
   }
 
   @AfterEach
@@ -153,13 +161,16 @@ class MeasurementMapperTest {
                     measurementNmvoc)),
         "Mapping an entity without an id should throw an IllegalArgumentException");
 
-    Assertions.assertThrows(IllegalArgumentException.class,
-            () -> measurementMapper.mapToDto(
+    Assertions.assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            measurementMapper.mapToDto(
                 List.of(
                     measurementDifferentTimestamp,
                     measurementTemperature,
                     measurementIrradiance,
-                    measurementNmvoc)), "Mapping an entity with a different timestamp should throw an IllegalArgumentException");
+                    measurementNmvoc)),
+        "Mapping an entity with a different timestamp should throw an IllegalArgumentException");
 
     Assertions.assertThrows(
         CouldNotFindEntityException.class,
@@ -191,8 +202,95 @@ class MeasurementMapperTest {
   }
 
   @Test
-  void mapFromDto() {
+  void mapFromValidDto() throws CouldNotFindEntityException, InconsistentObjectRelationException {
     // todo: siehe leos doku zu dtos und was er schickt.
+    when(sensorService.findAllSensorsByTemperaStationId(temperaStation.getId()))
+        .thenReturn(
+            List.of(
+                measurementHumidity.getSensor(),
+                measurementIrradiance.getSensor(),
+                measurementNmvoc.getSensor(),
+                measurementTemperature.getSensor()));
 
+    when(accessPointService.getAccessPointByTemperaStationId(temperaStation.getId()))
+        .thenReturn(accessPoint);
+
+    List<Measurement> mappedMeasurements = measurementMapper.mapFromDto(measurementDto);
+
+    // Make sure the list is not null and has the correct size
+    Assertions.assertNotNull(mappedMeasurements, "mapped measurements are null");
+    Assertions.assertEquals(4, mappedMeasurements.size(), "mapped measurements have wrong size");
+
+    // Make sure all measurements are present
+    Measurement mappedHumidity;
+    Measurement mappedIrradiance;
+    Measurement mappedNmvoc;
+    Measurement mappedTemperature;
+
+    Assertions.assertNotNull(
+        mappedHumidity =
+            mappedMeasurements.stream()
+                .filter(m -> m.getSensor().getSensorType() == SensorType.HUMIDITY)
+                .findFirst()
+                .orElse(null),
+        "humidity measurement not found");
+
+    Assertions.assertNotNull(
+        mappedIrradiance =
+            mappedMeasurements.stream()
+                .filter(m -> m.getSensor().getSensorType() == SensorType.IRRADIANCE)
+                .findFirst()
+                .orElse(null),
+        "irradiance measurement not found");
+
+    Assertions.assertNotNull(
+        mappedNmvoc =
+            mappedMeasurements.stream()
+                .filter(m -> m.getSensor().getSensorType() == SensorType.NMVOC)
+                .findFirst()
+                .orElse(null),
+        "nmvoc measurement not found");
+
+    Assertions.assertNotNull(
+        mappedTemperature =
+            mappedMeasurements.stream()
+                .filter(m -> m.getSensor().getSensorType() == SensorType.TEMPERATURE)
+                .findFirst()
+                .orElse(null),
+        "temperature measurement not found");
+
+    // Make sure the measurements have the correct values
+    Assertions.assertEquals(
+        measurementDto.timestamp(),
+        mappedHumidity.getTimestamp(),
+        "Timestamp of Humidity does not match the dto");
+    Assertions.assertEquals(
+        measurementDto.tempera_station_id(),
+        mappedHumidity.getSensor().getTemperaStation().getId(),
+        "TemperaStation of Humidity does not match the dto");
+    Assertions.assertEquals(measurementDto.access_point_id(), accessPoint.getId());
+
+    Assertions.assertEquals(
+        measurementDto.humidity(),
+        mappedHumidity.getValue(),
+        "Value of Humidity does not match the dto");
+    Assertions.assertEquals(
+        measurementDto.irradiance(),
+        mappedIrradiance.getValue(),
+        "Value of Irradiance does not match the dto");
+    Assertions.assertEquals(
+        measurementDto.nmvoc(), mappedNmvoc.getValue(), "Value of Nmvoc does not match the dto");
+    Assertions.assertEquals(
+        measurementDto.temperature(),
+        mappedTemperature.getValue(),
+        "Value of Temperature does not match the dto");
+  }
+
+  @Test
+  void mapFromInvalidDto() {
+
+
+
+    // inconsistent dto
   }
 }
