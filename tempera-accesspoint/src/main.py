@@ -5,47 +5,36 @@ from pathlib import Path
 
 from bleak import BleakClient
 
-from tempera.bleclient.device_connection import (
-    discovery_loop,
-    validate_station,
-    get_scan_order,
-)
-from tempera.bleclient.etl import (
-    elapsed_time_handler,
-    filter_uuid,
-    measurements_handler,
-)
-from tempera.utils import shared
-from tempera.utils.shared import init_globals
+from tempera import bleclient, utils
 
-with open(Path(__file__).parent / "logging_conf.json", "r") as config:
+with open(Path(__file__).parent.parent / "logging_conf.json", "r") as config:
     logging.config.dictConfig(json.load(config))
 
 logger = logging.getLogger("tempera")
 
 
 async def get_notifications(client: BleakClient) -> None:
-    elapsed_time_service = await filter_uuid(client, "183f")
-    elapsed_time_uuid = await filter_uuid(elapsed_time_service, "2bf2")
+    elapsed_time_service = await bleclient.filter_uuid(client, "183f")
+    elapsed_time_uuid = await bleclient.filter_uuid(elapsed_time_service, "2bf2")
 
     await client.start_notify(
         elapsed_time_uuid,
-        elapsed_time_handler,
+        bleclient.elapsed_time_handler,
     )
     logger.info("Subscribed to time record notifications.")
 
 
 async def get_measurements(client: BleakClient) -> None:
-    measurement_service = await filter_uuid(client, "181a")
+    measurement_service = await bleclient.filter_uuid(client, "181a")
     characteristics = ["2a6e", "2a77", "2a6f", "2bd3"]
     logger.info(
         f"Getting measurements for the following characteristics: {characteristics}."
     )
     uuids = []
     for uuid in characteristics:
-        uuids.append(await filter_uuid(measurement_service, uuid))
+        uuids.append(await bleclient.filter_uuid(measurement_service, uuid))
 
-    await measurements_handler(client, uuids)
+    await bleclient.measurements_handler(client, uuids)
 
 
 # TODO: add retry
@@ -56,8 +45,8 @@ async def post_data(client: BleakClient) -> None:
 # @retry()
 async def run():
     async with asyncio.TaskGroup() as tg:
-        _ = tg.create_task(init_globals())
-        tempera_station = tg.create_task(discovery_loop())
+        _ = tg.create_task(utils.init_globals())
+        tempera_station = tg.create_task(bleclient.discovery_loop())
 
     tempera_station = tempera_station.result()
     async with BleakClient(tempera_station) as client:
@@ -65,7 +54,7 @@ async def run():
         logger.info(
             "Time records are received as notifications from the tempera station. "
             "Sensor measurements are polled and sent to the web server every "
-            f"{shared.config['sending_interval']} seconds, as configured."
+            f"{utils.shared.config['sending_interval']} seconds, as configured."
         )
 
         await get_notifications(client)
@@ -74,19 +63,21 @@ async def run():
             async with asyncio.TaskGroup() as tg:
                 # Check that the access point and tempera station are still approved by the web app server.
                 valid_station = tg.create_task(
-                    validate_station(tempera_station, client)
+                    bleclient.validate_station(tempera_station, client)
                 )
 
                 # If the scan order is issued by the web app server, an error is thrown.
                 # This will cause tenacity to execute the main function from the top again,
                 # starting with device discovery. This is sort of a 'goto'.
-                scan_order = tg.create_task(get_scan_order())
+                scan_order = tg.create_task(bleclient.get_scan_order())
 
                 measurements = tg.create_task(get_measurements(client))
 
                 # Sending interval is the timeout of data sending from the raspberry to the web server.
                 # Here it is also used as the data collection interval for simplicity and convenience.
-                _ = tg.create_task(asyncio.sleep(shared.config["sending_interval"]))
+                _ = tg.create_task(
+                    asyncio.sleep(utils.shared.config["sending_interval"])
+                )
 
             valid_station = valid_station.result()
             if valid_station != tempera_station:

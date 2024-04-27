@@ -24,7 +24,7 @@ async def init_globals() -> None:
     global header
     global current_station_id
 
-    project_root = Path(__file__).parent.parent.parent.resolve()
+    project_root = Path(__file__).parent.parent.parent.parent.resolve()
     config = await init_config()
 
     async with asyncio.TaskGroup() as tg:
@@ -84,7 +84,7 @@ async def init_header(conf: Dict[str, Any]) -> HTTPBasicAuth:
 
 
 async def init_engine() -> sqlalchemy.Engine:
-    database = project_root / "tempera" / "database" / "data.sqlite"
+    database = project_root / "src" / "tempera" / "database" / "data.sqlite"
 
     if not Path(database).is_file():
         logger.critical(

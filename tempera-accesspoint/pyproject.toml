@@ -6,7 +6,10 @@ build-backend = "setuptools.build_meta"
 
 
 [tool.setuptools]
-packages = ["tempera"]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 
 [project]
@@ -37,8 +40,8 @@ Issues = "https://git.uibk.ac.at/informatik/qe/swess24/group4/g4t1/-/issues"
 
 
 [project.scripts]
-configure = "tempera.gen_config:main"
-access_point-run = "tempera.main:main"
+configure = "gen_config:main"
+tempera_run = "main:main"
 
 
 [project.optional-dependencies]
