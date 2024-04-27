@@ -35,7 +35,7 @@ async def init_globals() -> None:
 
 
 async def init_config() -> Dict[str, Any]:
-    config_file = project_root / "conf.yaml"
+    config_file = project_root / "src" / "conf.yaml"
 
     if not config_file.is_file():
         logger.critical(
@@ -48,7 +48,7 @@ async def init_config() -> Dict[str, Any]:
         conf = yaml.safe_load(config_file)
 
     if not conf:
-        logger.critical(f"Config file is empty.")
+        logger.critical("Config file is empty.")
         raise RuntimeError
 
     for key in (

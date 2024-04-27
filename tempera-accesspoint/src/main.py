@@ -1,15 +1,12 @@
 import asyncio
-import json
 import logging.config
-from pathlib import Path
 
 from bleak import BleakClient
 
+from logging_conf import config
 from tempera import bleclient, utils
 
-with open(Path(__file__).parent.parent / "logging_conf.json", "r") as config:
-    logging.config.dictConfig(json.load(config))
-
+logging.config.dictConfig(config)
 logger = logging.getLogger("tempera")
 
 

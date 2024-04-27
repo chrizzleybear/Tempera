@@ -44,7 +44,7 @@ def main():
     print(welcome_art)
 
     config = {}
-    config_file = Path(__file__).parent.parent.resolve() / "conf.yaml"
+    config_file = Path(__file__).parent.resolve() / "conf.yaml"
 
     with open(config_file, "w") as cf:
         config["access_point_id"] = prompt("Set the ID of this access point >> ")
