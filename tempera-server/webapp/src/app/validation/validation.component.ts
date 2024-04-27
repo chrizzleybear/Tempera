@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, RouterLink} from "@angular/router";
 import {UsersService} from "../_services/users.service";
 import {FormsModule} from "@angular/forms";
 import {NgIf} from "@angular/common";
@@ -18,7 +18,8 @@ import {Message} from "primeng/api";
     MessageModule,
     ChipsModule,
     ButtonModule,
-    MessagesModule
+    MessagesModule,
+    RouterLink
   ],
   templateUrl: './validation.component.html',
   styleUrl: './validation.component.css'
@@ -26,7 +27,8 @@ import {Message} from "primeng/api";
 export class ValidationComponent {
   userId: string = "";
   validated: boolean = false;
-  messages: | undefined;
+  enabled: boolean = false;
+  messages: Message[] = [];
 
   constructor(private route: ActivatedRoute, private usersService: UsersService) {
   }
@@ -44,6 +46,10 @@ export class ValidationComponent {
       next: (data) => {
         if(data !== null) {
           this.validated = true;
+          this.messages = [{severity:'success', summary:'Success', detail:'You have been validated'}];
+        }
+        else {
+          this.messages = [{severity:'error', summary:'Error', detail:'Wrong username or token'}];
         }
       },
       error: (error) => {
@@ -57,13 +63,16 @@ export class ValidationComponent {
       this.usersService.enableUser(this.userId, password).subscribe({
         next: (data) => {
           if(data !== null) {
+            this.enabled = true;
+            this.messages = [{severity:'success', summary:'Success', detail:'User enabled'}];
           }
-        },
-        error: (error) => {
-          console.error('Failed to load user details:', error);
+          else {
+            this.messages = [{severity:'error', summary:'Error', detail:'Failed to enable user'}];
+          }
         }
       });
     } else {
+      this.messages = [{severity:'error', summary:'Error', detail:'Passwords do not match'}];
       console.error("Passwords do not match");
     }
   }

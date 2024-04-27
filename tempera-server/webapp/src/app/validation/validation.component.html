@@ -1,3 +1,4 @@
+<p-messages [value]="messages"></p-messages>
 <div class="bg-[#eff3f8] flex items-center justify-center min-h-screen min-w-screen overflow-hidden">
   <div style="border-radius:56px; padding:0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%);">
     <div class="w-full bg-white py-20 px-8 sm:px-20 flex flex-col items-center justify-center" style="border-radius:53px">
@@ -15,7 +16,7 @@
         </form>
       </div>
 
-      <div *ngIf="validated">
+      <div *ngIf="validated && !enabled">
         <form #passwordForm="ngForm" (ngSubmit)="setPassword(passwordForm.value.password, passwordForm.value.passwordRepeat)" class="w-full flex flex-col items-center">
           <label for="password" class="text-2xl inline-block">New Password</label>
           <input pInputText placeholder="New Password" type="password" id="password" name="password" ngModel required minlength="6" class="block w-full md:w-96 p-inputtext-sm" />
@@ -26,6 +27,11 @@
           <p-button type="submit" label="Set Password" [disabled]="!passwordForm.valid" styleClass="w-full mt-8"></p-button>
         </form>
       </div>
+
+      <div *ngIf="enabled">
+        <h2 class="text-2xl">Password set successfully!</h2>
+        <p-button label="Login" routerLink="/login" styleClass="mt-8"></p-button>
     </div>
   </div>
+</div>
 </div>

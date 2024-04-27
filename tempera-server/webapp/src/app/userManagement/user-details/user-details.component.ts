@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import {UsersService} from "../../_services/users.service";
 import {NgForOf, NgIf} from "@angular/common";
 import { ReactiveFormsModule } from "@angular/forms";
+import {User} from "../../models/user.model";
 @Component({
   selector: 'app-user-details',
   standalone: true,
@@ -15,7 +16,7 @@ import { ReactiveFormsModule } from "@angular/forms";
   styleUrls: ['./user-details.component.css']
 })
 export class UserDetailsComponent implements OnInit {
-  user: any;
+  user: User | undefined;
   userId: string | null | undefined;
 
   constructor(

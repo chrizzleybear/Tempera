@@ -68,10 +68,10 @@ public class UserManagementController{
     }
 
     @PostMapping("/enable")
-    public ResponseEntity<String> enableUser(@RequestBody Map<String, String> credentials) {
+    public ResponseEntity<Map<String, String>> enableUser(@RequestBody Map<String, String> credentials) {
         String username = credentials.get("username");
         String password = credentials.get("password");
         userxService.enableUser(username, password);
-        return ResponseEntity.ok("You have been enabled!");
+        return ResponseEntity.ok(Map.of("message", "User enabled"));
     }
 }
