@@ -9,6 +9,7 @@ import at.qe.skeleton.repositories.TemperaStationRepository;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -35,6 +36,12 @@ public class MeasurementService {
         measurementRepository.delete(measurement);
     }
 
+
+    //todo: testen und informieren: wie setz ich das jetzt mit lazy loading um? will ja eine zusammenfassung der daten anzeigen aber vllt dauert es ewig alle zu laden?
+    // brauchen wir auch ne umsetzung für all from sensor? und wo gehören diese Methoden hin? hier oder in den tempera bzw. sensor service?
+    public List<Measurement> loadAllMeasurementsFromTempera() {
+        return null;
+    }
 
 
 
