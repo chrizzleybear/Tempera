@@ -1,5 +1,5 @@
 /.idea/
-/tempera.egg-info/
+/src/tempera.egg-info/
 /dist/
 /access_point.log
-/conf.yaml
+/src/conf.yaml
