@@ -33,12 +33,12 @@ class MeasurementMapperTest {
   private TemperaStation temperaStation;
   private Measurement measurementHumidity;
   private Measurement measurementNullId;
-  private Measurement measurementNullTimestamp;
-  private Measurement measurementNullSensor;
   private Measurement measurementInvalidTemperaId;
   private Measurement measurementIrradiance;
   private Measurement measurementTemperature;
   private Measurement measurementNmvoc;
+
+  private Measurement measurementDifferentTimestamp;
 
   @BeforeEach
   void setUp() throws TemperaStationIsNotEnabledException {
@@ -60,35 +60,31 @@ class MeasurementMapperTest {
     Sensor sensorInvalidTemperaId =
         new Sensor(SensorType.HUMIDITY, Unit.PERCENT, invalidTemperaStation);
 
-    measurementHumidity = new Measurement(50.0, LocalDateTime.now(), sensorHumidity);
+    LocalDateTime timestamp = LocalDateTime.now();
+    LocalDateTime differentTimestamp = timestamp.minusMinutes(3);
+
+    measurementHumidity = new Measurement(50.0, timestamp, sensorHumidity);
     measurementHumidity.setId(
         1L); // must set id bc we dont save to db, normally gets auto generated
 
-    measurementIrradiance = new Measurement(500.0, LocalDateTime.now(), sensorIrradiance);
+    measurementIrradiance = new Measurement(500.0, timestamp, sensorIrradiance);
     measurementIrradiance.setId(2L);
 
-    measurementNmvoc = new Measurement(23.0, LocalDateTime.now(), sensorNmvoc);
+    measurementNmvoc = new Measurement(23.0, timestamp, sensorNmvoc);
     measurementNmvoc.setId(3L);
 
-    measurementTemperature = new Measurement(19.9, LocalDateTime.now(), sensorTemperature);
+    measurementTemperature = new Measurement(19.9, timestamp, sensorTemperature);
     measurementTemperature.setId(4L);
 
-    measurementNullId = new Measurement(50.0, LocalDateTime.now(), sensorHumidity);
+    measurementNullId = new Measurement(50.0, timestamp, sensorHumidity);
     measurementNullId.setId(null);
 
-    // probably wont work...
-    measurementNullTimestamp = new Measurement(30.0, null, sensorHumidity);
-    measurementNullTimestamp.setId(1L);
-
-    //probably wont work...
-    measurementNullSensor = new Measurement(50.0, LocalDateTime.now(), null);
-    measurementNullSensor.setId(2L);
-
-    measurementInvalidTemperaId = new Measurement(50.0, LocalDateTime.now(), sensorInvalidTemperaId);
+    measurementInvalidTemperaId = new Measurement(50.0, timestamp, sensorInvalidTemperaId);
     measurementInvalidTemperaId.setId(1L);
-    measurementInvalidTemperaId.setSensor(sensorInvalidTemperaId);
-    measurementInvalidTemperaId.setTimestamp(java.time.LocalDateTime.now());
-    measurementInvalidTemperaId.setValue(50.0);
+
+    measurementDifferentTimestamp = new Measurement(50.0, differentTimestamp, sensorHumidity);
+
+
 
   }
 
@@ -141,8 +137,6 @@ class MeasurementMapperTest {
             measurementInvalidTemperaId.getSensor().getTemperaStation().getId()))
         .thenThrow(new CouldNotFindEntityException("invalid Id"));
 
-    // todo: an den code reviewer: ist es praktikabel und sinnvoll im Mapper all diese Sanity Checks
-    // abzufragen? Wohlgemerkt nicht im Test sondern im mapper
     Assertions.assertThrows(
         IllegalArgumentException.class,
         () -> measurementMapper.mapToDto(null),
@@ -159,27 +153,13 @@ class MeasurementMapperTest {
                     measurementNmvoc)),
         "Mapping an entity without an id should throw an IllegalArgumentException");
 
-    Assertions.assertThrows(
-        IllegalArgumentException.class,
-        () ->
-            measurementMapper.mapToDto(
+    Assertions.assertThrows(IllegalArgumentException.class,
+            () -> measurementMapper.mapToDto(
                 List.of(
-                    measurementNullTimestamp,
+                    measurementDifferentTimestamp,
                     measurementTemperature,
                     measurementIrradiance,
-                    measurementNmvoc)),
-        "Mapping an entity without a timestamp should throw an IllegalArgumentException");
-
-    Assertions.assertThrows(
-        IllegalArgumentException.class,
-        () ->
-            measurementMapper.mapToDto(
-                List.of(
-                    measurementNullSensor,
-                    measurementTemperature,
-                    measurementIrradiance,
-                    measurementNmvoc)),
-        "Mapping an entity without a sensor should throw an IllegalArgumentException");
+                    measurementNmvoc)), "Mapping an entity with a different timestamp should throw an IllegalArgumentException");
 
     Assertions.assertThrows(
         CouldNotFindEntityException.class,

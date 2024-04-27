@@ -108,16 +108,15 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
       throw new IllegalArgumentException("Measurements must have a temperature.");
     }
 
-
     return new MeasurementDto(
-            accessPoint.getId(),
-            temperaStation.getId(),
-            timestamp,
-            temperature.getValue(),
-            irradiance.getValue(),
-            humidity.getValue(),
-            nmvoc.getValue());
-    }
+        accessPoint.getId(),
+        temperaStation.getId(),
+        timestamp,
+        temperature.getValue(),
+        irradiance.getValue(),
+        humidity.getValue(),
+        nmvoc.getValue());
+  }
 
   @Override
   public List<Measurement> mapFromDto(MeasurementDto dto) throws CouldNotFindEntityException {
@@ -150,32 +149,24 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
       throw new IllegalArgumentException(
           "TemperaStation %s must have exactly 4 sensors.".formatted(dto.tempera_station_id()));
     }
-    Measurement temperature = new Measurement();
-    Measurement irradiance = new Measurement();
-    Measurement humidity = new Measurement();
-    Measurement nmvoc = new Measurement();
+    Measurement temperature = null;
+    Measurement irradiance = null;
+    Measurement humidity = null;
+    Measurement nmvoc = null;
 
     for (Sensor sensor : sensors) {
       switch (sensor.getSensorType()) {
         case TEMPERATURE:
-          temperature.setSensor(sensor);
-          temperature.setValue(dto.temperature());
-          temperature.setTimestamp(dto.timestamp());
+          temperature = new Measurement(dto.temperature(), dto.timestamp(), sensor);
           break;
         case IRRADIANCE:
-          irradiance.setSensor(sensor);
-          irradiance.setValue(dto.irradiance());
-          irradiance.setTimestamp(dto.timestamp());
+          irradiance = new Measurement(dto.irradiance(), dto.timestamp(), sensor);
           break;
         case HUMIDITY:
-          humidity.setSensor(sensor);
-          humidity.setValue(dto.humidity());
-          humidity.setTimestamp(dto.timestamp());
+          humidity = new Measurement(dto.humidity(), dto.timestamp(), sensor);
           break;
         case NMVOC:
-          nmvoc.setSensor(sensor);
-          nmvoc.setValue(dto.nmvoc());
-          nmvoc.setTimestamp(dto.timestamp());
+          nmvoc = new Measurement(dto.nmvoc(), dto.timestamp(), sensor);
           break;
         default:
           throw new IllegalArgumentException("Sensor must have a valid unit.");
