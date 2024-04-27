@@ -30,20 +30,21 @@ class MeasurementServiceTest {
   @Autowired private MeasurementService measurementService;
   @Autowired private SensorService sensorService;
 
-  @BeforeEach
-  void setUp() {}
-
-  @AfterEach
-  void tearDown() {}
+  private Sensor getSensor() {
+    SensorTemperaCompositeId sensorId = new SensorTemperaCompositeId();
+    sensorId.setSensorId(-1L);
+    sensorId.setTemperaStationId("tempera_station_1");
+    return sensorService.findSensorById(sensorId);
+  }
 
   @DirtiesContext
   @Test
   void loadMeasurement() throws CouldNotFindEntityException {
     // loads a measurement Entity from the database (testdata in data.sql)
-    Measurement measurement = measurementService.loadMeasurement(1L);
+    Measurement measurement = measurementService.loadMeasurement(-1L);
 
-    assertEquals(1L, measurement.getId(), "Measurement ID should be 1");
-    assertEquals(1L, measurement.getSensor().getId().getSensorId(), "Sensor Id should be 1");
+    assertEquals(-1L, measurement.getId(), "Measurement ID should be 1");
+    assertEquals(-1L, measurement.getSensor().getId().getSensorId(), "Sensor Id should be 1");
     assertEquals(20.0, measurement.getValue(), "Measurement value should be 20.0");
     assertEquals(
         LocalDateTime.of(2016, 1, 1, 0, 0, 0),
@@ -58,17 +59,19 @@ class MeasurementServiceTest {
   @DirtiesContext
   @Test
   // found this SQL annotation with the help of Copilot.
-  // it is described in the documentation: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/context/jdbc/Sql.html
-  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:beforeMeasurementTest.sql")
+  // it is described in the documentation:
+  // https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/context/jdbc/Sql.html
+  @Sql(
+      executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+      scripts = "classpath:beforeMeasurementTest.sql")
   void saveMeasurement() throws CouldNotFindEntityException {
 
+    // is redundant but good display of different ways to manipulate the database for testing.
+    measurementRepository.findAll().forEach(measurementRepository::delete);
     LocalDateTime timestamp = LocalDateTime.now();
 
-    //this sensor should fit the sensor in the data.sql
-    SensorTemperaCompositeId sensorId = new SensorTemperaCompositeId();
-    sensorId.setSensorId(1L);
-    sensorId.setTemperaStationId("tempera_station_1");
-    Sensor sensor = sensorService.findSensorById(sensorId);
+    // this sensor should fit the sensor in the data.sql
+    Sensor sensor = getSensor();
 
     Measurement measurement = new Measurement(50.0, timestamp, sensor);
 
@@ -77,14 +80,50 @@ class MeasurementServiceTest {
     assertEquals(
         measurement.getTimestamp(), savedMeasurement.getTimestamp(), "timestamp should be equal");
     assertEquals(measurement.getValue(), savedMeasurement.getValue(), "value should be equal");
+
+    assertEquals(
+        1,
+        measurementRepository.findAll().size(),
+        "after saving 1 Measurement, the db should " + "hold exactly 1 measurement");
   }
 
   @Test
-  void deleteMeasurement() {}
+  @DirtiesContext
+  void deleteMeasurement() {
+    assertEquals(
+        1,
+        measurementRepository.findAll().size(),
+        "before deleting, the db should hold exactly 1 measurement");
+    Measurement measurement = measurementRepository.findAll().get(0);
+    measurementService.deleteMeasurement(measurement);
+    assertEquals(
+        0,
+        measurementRepository.findAll().size(),
+        "after deleting, the db should hold exactly 0 measurements");
+  }
 
   @Test
-  void saveAndLoadMeasurement() {}
+  @DirtiesContext
+  void saveLoadDeleteMeasurement() throws CouldNotFindEntityException {
+    measurementRepository.findAll().forEach(measurementRepository::delete);
 
-  @Test
-  void saveAndDeleteMeasurement() {}
+    LocalDateTime timestamp = LocalDateTime.now();
+
+    Sensor sensor = getSensor();
+
+    Measurement measurement = new Measurement(50.0, timestamp, sensor);
+    measurement = measurementService.saveMeasurement(measurement);
+    assertEquals(
+        1,
+        measurementRepository.findAll().size(),
+        "after saving 1 Measurement, the db should " + "hold exactly 1 measurement");
+
+    Measurement loadedMeasurement = measurementService.loadMeasurement(measurement.getId());
+
+    measurementService.deleteMeasurement(loadedMeasurement);
+    assertEquals(
+        0,
+        measurementRepository.findAll().size(),
+        "after deleting, the db should hold exactly 0 measurements");
+  }
 }
