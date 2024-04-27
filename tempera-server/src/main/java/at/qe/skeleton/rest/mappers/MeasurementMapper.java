@@ -56,19 +56,6 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
         throw new IllegalArgumentException(
             "Measurement entity %s must have an id.".formatted(entity));
       }
-      if (entity.getTimestamp() == null) {
-        throw new IllegalArgumentException(
-            "Measurement entity %s must have a timestamp.".formatted(entity));
-      }
-      if (entity.getSensor() == null) {
-        throw new IllegalArgumentException(
-            "Measurement entity %s must have a sensor.".formatted(entity));
-      }
-      if (entity.getSensor().getTemperaStation() == null) {
-        throw new IllegalArgumentException(
-            "Measurement entity's %s sensor must have a TemperaStation."
-                .formatted(entity.getSensor().getTemperaStation()));
-      }
       if (temperaStation == null) {
         temperaStation = entity.getSensor().getTemperaStation();
       }
@@ -145,10 +132,23 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
 
     List<Sensor> sensors =
         (sensorService.findAllSensorsByTemperaStationId(dto.tempera_station_id()));
+
+    return getMeasurementList(dto, sensors);
+  }
+
+  /**
+   * Helper method to create a list of measurements from a DTO and a list of sensors.
+   *
+   * @param dto
+   * @param sensors
+   * @return
+   */
+  private static List<Measurement> getMeasurementList(MeasurementDto dto, List<Sensor> sensors) {
     if (sensors.size() != 4) {
       throw new IllegalArgumentException(
           "TemperaStation %s must have exactly 4 sensors.".formatted(dto.tempera_station_id()));
     }
+
     Measurement temperature = null;
     Measurement irradiance = null;
     Measurement humidity = null;
@@ -172,13 +172,11 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
           throw new IllegalArgumentException("Sensor must have a valid unit.");
       }
     }
-    List<Measurement> measurements = List.of(temperature, irradiance, humidity, nmvoc);
-    for (Measurement entity : measurements) {
-      if (entity.getSensor() == null) {
-        throw new IllegalArgumentException(
-            "Measurement entity %s must have a sensor.".formatted(entity));
-      }
+
+    if(temperature == null || irradiance == null || humidity == null || nmvoc == null){
+      throw new IllegalArgumentException("All Measurements must be present.");
     }
-    return measurements;
+
+      return List.of(temperature, irradiance, humidity, nmvoc);
   }
 }
