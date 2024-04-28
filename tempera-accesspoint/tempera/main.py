@@ -1,86 +1,62 @@
 import asyncio
+import json
 import logging.config
-import sys
-from typing import List
 
-from bleak import BleakClient, BleakScanner, BLEDevice
+from bleak import BleakClient
 
-from api.poster import post
-from bleclient.device_notify import (
-    detection_callback,
-    notify,
+from bleclient.device_connection import (
+    discovery_loop,
+    validate_stations,
+    get_scan_order,
 )
-from utils.db_utils import delete_measurements
 
-logging.config.fileConfig("logging.conf")
+with open("logging_conf.json", "r") as config:
+    logging.config.dictConfig(json.load(config))
+
 logger = logging.getLogger("tempera")
 
 
-data_collection_interval = 5
-data_sending_interval = 2
+DATA_COLLECTION_INTERVAL = 5
+DATA_SENDING_INTERVAL = 2
 
 
-async def get_tempera_stations() -> List[BLEDevice]:
-    logger.info("Scanning for BLE devices...")
-    scanner = BleakScanner(detection_callback)
-    devices = await scanner.discover(timeout=5)
-
-    tempera_stations = []
-    for device in devices:
-        logger.info(f"Device[name:{device.name};address:{device.address}]")
-        if "G4T1" in device.name:
-            tempera_stations.append(device)
-
-    logger.info(f"Tempera stations found {tempera_stations}")
-    if not tempera_stations:
-        sys.exit(
-            "No devices found with 'G4T1' in their name.\n"
-            "Make sure 'G4T1' is part of the tempera station's name you are trying to connect."
-        )
-
-    return tempera_stations
-
-
+# TODO: add retry
 async def get_data(client: BleakClient) -> None:
-    for service in client.services:
-        logger.info(
-            f"Service[desc:{service.description};handle:{service.handle};uuid:{service.uuid}]"
-        )
-        for characteristic in service.characteristics:
-            logger.info(
-                f"Characteristics[desc:{characteristic.description};uuid:{characteristic.uuid}]"
-            )
-
-            await notify(client, characteristic.uuid)
+    pass
 
 
+# TODO: add retry
 async def post_data(client: BleakClient) -> None:
-    for service in client.services:
-        for characteristic in service.characteristics:
-            await post(client, characteristic.uuid)
+    pass
 
 
+# @retry()
 async def main():
-    delete_measurements(all=True)
+    tempera_station = await discovery_loop()
 
-    tempera_stations = await get_tempera_stations()
-
-    # Project requirements postulate only one station be connected at one time to reduce complexity
-    tempera_station = tempera_stations[0]
     while True:
-        async with BleakClient(tempera_station.address, services=["181a"]) as client:
-            print(f"Connected to device {tempera_station.address}.")
+        with asyncio.TaskGroup() as tg:
+            # Check that the access point and tempera station are still approved by the web app server.
+            valid_station = tg.create_task(validate_stations([tempera_station]))
+
+            # If the scan order is issued by the web app server, an error is thrown.
+            # This will cause tenacity to execute the main function from the top again,
+            # starting with device discovery. This is sort of a 'goto'.
+            scan_order = tg.create_task(get_scan_order())
+
+            tg.sleep(DATA_COLLECTION_INTERVAL)
+
+        tempera_station = valid_station.result()
+        if scan_order.result():
+            logger.info("Scan order received. Returning to device discovery.")
+            raise RuntimeError
+
+        async with BleakClient(tempera_station.address) as client:
+            logger.debug(f"Connected to device {tempera_station.address}.")
 
             await get_data(client)
             await post_data(client)
 
-        await asyncio.sleep(data_collection_interval)
-        await asyncio.sleep(
-            data_sending_interval - data_collection_interval
-            if data_sending_interval > data_collection_interval
-            else 0
-        )
-
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(main(), debug=False)
