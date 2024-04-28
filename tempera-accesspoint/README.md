@@ -11,6 +11,10 @@ $ docker compose run app
 $ docker compose run api
 ```
 
+> [!IMPORTANT]
+> Set the *hostname* to *api* in the configure script if running the app via *docker compose*.
+> This is the only way that the two containers can communicate the http requests with each other.
+
 You can connect to the testing api in your browser by clicking the link that appears in the terminal
 when you run the command above or navigate to `http://0.0.0.0:80`.
 The host and port are set in the api `Dockerfile` *CMD* command if you want to change them (you also
