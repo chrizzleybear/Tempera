@@ -11,7 +11,7 @@ $ docker compose run app
 $ docker compose run api
 ```
 
-> [!IMPORTANT]
+> :warning:
 > Set the *hostname* to *api* in the configure script if running the app via *docker compose*.
 > This is the only way that the two containers can communicate the http requests with each other.
 
