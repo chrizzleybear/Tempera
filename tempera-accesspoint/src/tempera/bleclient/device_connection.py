@@ -2,6 +2,7 @@ import asyncio
 import logging
 from typing import List, Tuple
 
+import requests
 from bleak import BLEDevice, BleakScanner, BleakClient
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -67,12 +68,20 @@ async def validate_station(
     server_address = shared.config["webserver_address"]
     access_point_id = shared.config["access_point_id"]
 
-    response = await make_request(
-        "get",
-        f"{server_address}/rasp/api/valid_devices",
-        auth=shared.header,
-        params={"device_id": access_point_id},
-    )
+    try:
+        response = await make_request(
+            "get",
+            f"{server_address}/rasp/api/valid_devices",
+            auth=shared.header,
+            params={"device_id": access_point_id},
+            json={"access_point_id": shared.config["access_point_id"]},
+        )
+    except requests.ConnectionError:
+        logger.error(
+            "Request failed. Couldn't establish a connection to the web server."
+        )
+        raise ConnectionError
+
     if not response["access_point_allowed"]:
         logger.warning(
             "This access point is not registered in the web app server. It can't transmit any data."
@@ -179,18 +188,22 @@ async def discovery_loop() -> BLEDevice:
 
 
 async def get_scan_order() -> bool:
-    try:
-        server_address = shared.config["webserver_address"]
-        access_point_id = shared.config["access_point_id"]
-    except KeyError as e:
-        logger.critical(f"Failed to read parameter from the config file: {e}")
-        raise KeyError
+    # Keys are checked in shared.py
+    server_address = shared.config["webserver_address"]
+    access_point_id = shared.config["access_point_id"]
 
-    response = await make_request(
-        "get",
-        f"{server_address}/rasp/api/scan_order",
-        auth=shared.header,
-        params={"device_id": access_point_id},
-    )
+    try:
+        response = await make_request(
+            "get",
+            f"{server_address}/rasp/api/scan_order",
+            auth=shared.header,
+            params={"device_id": access_point_id},
+            json={"access_point_id": shared.config["access_point_id"]},
+        )
+    except requests.ConnectionError:
+        logger.error(
+            "Request failed. Couldn't establish a connection to the web server."
+        )
+        raise ConnectionError
 
     return response["scan"]
