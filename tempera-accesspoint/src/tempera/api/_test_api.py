@@ -1,4 +1,3 @@
-import logging
 import secrets
 from typing import List, Annotated
 
@@ -6,8 +5,6 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from pydantic import BaseModel
 from starlette import status
-
-logger = logging.getLogger(f"tempera.{__name__}")
 
 
 class ConnectionInfo(BaseModel):
@@ -64,7 +61,6 @@ async def get_active_station_ids(
     :param device_id: ID of the access point
     :return:
     """
-    logger.info(f"API request satisfied for {check_credentials(credentials)}")
     return {"access_point_allowed": True, "stations_allowed": ["1234567890", "add2"]}
 
 
@@ -72,7 +68,6 @@ async def get_active_station_ids(
 async def get_scan_order(
     credentials: Annotated[HTTPBasicCredentials, Depends(security)], device_id: str
 ) -> ScanOrder:
-    logger.info(f"API request satisfied for {check_credentials(credentials)}")
     return {"scan": False}
 
 

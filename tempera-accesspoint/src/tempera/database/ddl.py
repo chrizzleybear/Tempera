@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 
-from database.entities import Base
+from tempera.database.entities import Base
 
 
 def main():

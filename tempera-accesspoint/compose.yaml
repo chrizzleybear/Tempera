@@ -1,0 +1,12 @@
+services:
+  app:
+    build: .
+    volumes:
+      - /var/run/dbus:/var/run/dbus
+    depends_on:
+      - api
+
+  api:
+    build: src/tempera/api
+    ports:
+      - "80:80"

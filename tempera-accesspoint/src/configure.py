@@ -23,11 +23,28 @@ welcome_art = """
 """
 
 
+def prompt(message: str, parse_float: bool = False) -> str | float:
+    param = None
+    while not param:
+        param = input(message)
+        if not param:
+            print("---\n❌ No input provided ❌\n➡️  Please provide an input.\n---")
+        elif parse_float:
+            try:
+                return float(param)
+            except ValueError:
+                print(
+                    "---\n❌ The sending interval must be a number (int or float) ❌\n➡️  Please try again.\n---"
+                )
+                param = None  # or the loop wouldn't continue
+    return param
+
+
 def main():
     print(welcome_art)
 
     config = {}
-    config_file = Path(__file__).parent.parent / "conf.yaml"
+    config_file = Path(__file__).parent.resolve() / "conf.yaml"
 
     with open(config_file, "w") as cf:
         config["access_point_id"] = prompt("Set the ID of this access point >> ")
@@ -53,23 +70,6 @@ def main():
     import time
 
     time.sleep(0.5)
-
-
-def prompt(message: str, parse_float: bool = False) -> str | float:
-    param = None
-    while not param:
-        param = input(message)
-        if not param:
-            print("---\n❌ No input provided ❌\n➡️  Please provide an input.\n---")
-        elif parse_float:
-            try:
-                return float(param)
-            except ValueError:
-                print(
-                    "---\n❌ The sending interval must be a number (int or float) ❌\n➡️  Please try again.\n---"
-                )
-                param = None  # or the loop wouldn't continue
-    return param
 
 
 if __name__ == "__main__":

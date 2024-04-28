@@ -6,7 +6,10 @@ build-backend = "setuptools.build_meta"
 
 
 [tool.setuptools]
-packages = ["tempera"]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 
 [project]
@@ -14,11 +17,11 @@ name = "tempera"
 dynamic = ["version"]
 description = "Accesspoint functionality to connect sensor stations to the backend."
 dependencies = [
-    "bleak",
-    "pyyaml",
-    "requests",
-    "tenacity",
-    "SQLAlchemy"
+    "bleak==0.21.1",
+    "PyYAML==6.0.1",
+    "requests==2.31.0",
+    "tenacity==8.2.3",
+    "SQLAlchemy==2.0.29"
 ]
 requires-python = ">=3.11"
 authors = [
@@ -27,7 +30,7 @@ authors = [
 maintainers = [
     { name = "Leonardo Pedri", email = "Leonardo.Pedri@uibk.ac.at" },
 ]
-#readme = "README.md"
+readme = "README.md"
 #license = {text = "MIT License"}
 
 
@@ -36,15 +39,11 @@ Repository = "https://git.uibk.ac.at/informatik/qe/swess24/group4/g4t1"
 Issues = "https://git.uibk.ac.at/informatik/qe/swess24/group4/g4t1/-/issues"
 
 
-[project.scripts]
-configure = "tempera.gen_config:main"
-
-
 [project.optional-dependencies]
 format = ["black>=24.3.0"]
-api_testing = ['fastapi[all]']
+api_testing = ["fastapi[all]==0.110.0"]
 all = [
-    "black>=24.3.0", 'fastapi[all]'
+    "black>=24.3.0", "fastapi[all]==0.110.0"
 ]
 
 
