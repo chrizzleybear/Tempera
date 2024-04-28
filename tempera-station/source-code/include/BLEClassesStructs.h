@@ -56,6 +56,13 @@ typedef struct __attribute__( (__packed__) ) { // use the attribute packed to co
   };
 } roomClimateUnionStructure;
 
+// Structure to print any room climate data field
+typedef struct __attribute__( (__packed__) ) {
+  union {
+    uint16_t value;
+    uint8_t valueBytes[2];
+  };
+} universalRCValueStructure;
 
 
 #endif

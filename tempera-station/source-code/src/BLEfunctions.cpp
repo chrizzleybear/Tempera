@@ -14,7 +14,6 @@
 #include "../include/functions.h"
 
 
-
 // ############### BLE FUNCTIONS ###############
 
 void blePeripheralConnectHandler(BLEDevice central) {
@@ -60,8 +59,14 @@ void readSerialNumber(BLEDevice central, BLECharacteristic characteristic) {
 };
 
 void readAnyRoomClimateData(BLEDevice central, BLECharacteristic characteristic) {
-  Serial.println("Tempera > [INFO] A room climate characteristic has been read.");
-  Serial.println("Tempera > [INFO]    (Value not specified)");   // to-do: specify which one has been read
+    universalRCValueStructure buffer;
+    characteristic.readValue(buffer.valueBytes, sizeof(buffer.valueBytes));
+    String characteristicUUID = characteristic.uuid();
+    Serial.println("Tempera > [INFO] Room climate data has been read.");
+    Serial.print("Tempera > [INFO]    Type: ");
+    Serial.println(characteristicUUID);
+    Serial.print("Tempera > [INFO]    Value: ");
+    Serial.println(buffer.value);
 };
 
 void writeElapsedTimeCharacteristicStructure(elapsedTimeCharacteristicUnion etcu, BLECharacteristic currentElapsedTimeCharacteristic) {
@@ -116,6 +121,7 @@ void writeRoomClimateAllCharacteristics(\
     irradianceCharacteristic.readValue(rcusTest.irradianceBytes, sizeof(rcusTest.irradianceBytes));
     humidityCharacteristic.readValue(rcusTest.humidityBytes, sizeof(rcusTest.humidityBytes));
     nmvocCharacteristic.readValue(rcusTest.nmvocBytes, sizeof(rcusTest.nmvocBytes));
+
     Serial.println("Tempera > [INFO] Room climate characteristics have been updated.");
     Serial.print("Tempera > [INFO]    Byte String: ");
     Serial.print(rcusTest.temperatureBytes[0]);
@@ -134,6 +140,7 @@ void writeRoomClimateAllCharacteristics(\
     Serial.print(" ");
     Serial.print(rcusTest.nmvocBytes[1]);
     Serial.println();
+
     Serial.print("Tempera > [INFO]    Raw Values: ");
     Serial.print(rcusTest.temperature);
     Serial.print("   ");

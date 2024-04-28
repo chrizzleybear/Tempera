@@ -127,27 +127,20 @@ void setup() {
   BLE.addService(elapsedTimeService);
 
   // BLE: Setup for room climate data
-  // to-do: add unique functions for the event handlers
-  BLEDescriptor temperatureCharacteristicDescriptor("2901", "Last measured temperature in deg. C, accuracy of 0.01.");
-  temperatureCharacteristic.addDescriptor(temperatureCharacteristicDescriptor);
-  temperatureCharacteristic.setEventHandler(BLERead, readAnyRoomClimateData);
+  BLECharacteristic characteristics[] = {temperatureCharacteristic, irradianceCharacteristic, humidityCharacteristic, nmvocCharacteristic};
+  BLEDescriptor descriptors[] = {
+    BLEDescriptor("2901", "Last measured temperature in deg. C, accuracy of 0.01."),
+    BLEDescriptor("2901", "Last measured irradiance in W/m^2, accuracy of 0.1"),
+    BLEDescriptor("2901", "Last measured relative humidity in %, accuracy of 0.01"),
+    BLEDescriptor("2901", "Last measured non-methane-volatile-organic-compound-concentration in 10^(-2)*Ohm, accuracy of 1")
+  };
+  String names[] = {"Temperature", "Irradiance", "Humidity", "NMVOC"};
+  for (int i = 0; i < 4; i++) {
+    characteristics[i].setEventHandler(BLERead, readAnyRoomClimateData);
+    characteristics[i].addDescriptor(descriptors[i]);
+    environmentalSensingService.addCharacteristic(characteristics[i]);
+  }
 
-  BLEDescriptor irradianceCharacteristicDescriptor("2901", "Last measured irradiance in W/m^2, accuracy of 0.1");
-  irradianceCharacteristic.addDescriptor(irradianceCharacteristicDescriptor);
-  irradianceCharacteristic.setEventHandler(BLERead, readAnyRoomClimateData);
-
-  BLEDescriptor humidityCharacteristicDescriptor("2901", "Last measured relative humidity in %, accuracy of 0.01");
-  humidityCharacteristic.addDescriptor(humidityCharacteristicDescriptor);
-  humidityCharacteristic.setEventHandler(BLERead, readAnyRoomClimateData);
-
-  BLEDescriptor nmvocCharacteristicDescriptor("2901", "Last measured non-methane-volatile-organic-compound-concentration in g/m^3.");
-  nmvocCharacteristic.addDescriptor(nmvocCharacteristicDescriptor);
-  nmvocCharacteristic.setEventHandler(BLERead, readAnyRoomClimateData);
-  
-  environmentalSensingService.addCharacteristic(temperatureCharacteristic);
-  environmentalSensingService.addCharacteristic(irradianceCharacteristic);
-  environmentalSensingService.addCharacteristic(humidityCharacteristic);
-  environmentalSensingService.addCharacteristic(nmvocCharacteristic);
   BLE.addService(environmentalSensingService);
 
   // BLE: Advertise services
@@ -233,11 +226,6 @@ void loop() {
   if (pin_size_t b = whichButtonPressed()) {
     led.turnOff();
     delay(100);
-
-    // to-do: delete
-    Serial.println(sizeof(elapsedTimeCharacteristicStructure));
-    Serial.println(sizeof(elapsedTimeCharacteristicUnion));
-    Serial.println(sizeof(currentElapsedTimeCharacteristic));
 
     // Update the work session info so the duration and time etc since the last mode change
     writeElapsedTimeCharacteristicStructure(\
