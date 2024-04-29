@@ -6,19 +6,34 @@ It is as simple as typing
 # Since the app container depends on the api one, this
 # command will start both in the correct order and launch the app.
 $ docker compose run app
+# Or if you want to rebuild the images before starting the app
+# (like after making changes to the code)
+$ docker compose run --build app
 
 # If you just want to run the api container.
 $ docker compose run api
 ```
 
 > :warning:
-> Set the *hostname* to *api* in the configure script if running the app via *docker compose*.
+> Set the *hostname* to *api* and the *port* to *80* in the configure script if running the app via *docker compose*.
 > This is the only way that the two containers can communicate the http requests with each other.
 
-You can connect to the testing api in your browser by clicking the link that appears in the terminal
-when you run the command above or navigate to `http://0.0.0.0:80`.
+If you run just the api container, you can connect to the testing api in your browser
+by clicking the link that appears in the terminal
+when you run the container or navigate to `http://0.0.0.0:80` directly.
 The host and port are set in the api `Dockerfile` *CMD* command if you want to change them (you also
 have to change the mapping in the `compose.yaml` -> api service -> ports, to match the new one!).
+
+## Running in dev-mode
+
+The app can also be run in *dev-mode* meaning that all code changes will immediately and automatically
+be reflected in the containers with the following command, although beware that the interactive mode
+is not available in this scenario (i.e., you can't provide the input to the configure script).
+This mode is most useful for the api.
+
+```bash
+$ docker compose watch <service>
+```
 
 ### Details
 
