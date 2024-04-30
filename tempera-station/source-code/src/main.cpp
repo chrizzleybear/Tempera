@@ -120,7 +120,7 @@ void setup() {
   BLE.addService(deviceInformationService);
 
   // BLE: Setup for elapsed time characteristic
-  BLEDescriptor elapsedTimeDescriptor("2901", "Elapsed Time service used for time tracking.");
+  BLEDescriptor elapsedTimeDescriptor("2901", "Elapsed Time service used for time tracking, time in ms.");
   currentElapsedTimeCharacteristic.addDescriptor(elapsedTimeDescriptor);
   currentElapsedTimeCharacteristic.setEventHandler(BLERead, readElapsedTime);
   elapsedTimeService.addCharacteristic(currentElapsedTimeCharacteristic);
@@ -156,9 +156,10 @@ void loop() {
   /* 
   * PERIODIC UPDATE OF THE ROOM CLIMATE DATA:
   * Updates the current room climate data struct.
-  * (This works in a pull configuration.)
+  * (The transmission via BLE works in a pull configuration.)
   */  
   if (lastRoomClimateUpdate + UPDATE_INTERVAL_RC < millis()) {
+    bme.setGasHeater(0, 0); // turn off the gas heater to not manipulate other measurements
     unsigned long endTime = bme.beginReading();
     if (endTime == 0 && ERROR) {
       Serial.println("Tempera > [ERROR] Could not start room climate measurements.");
@@ -177,9 +178,20 @@ void loop() {
       Serial.println("Tempera > [ERROR] Could not complete room climate measurements.");
       Serial.println("Tempera > [ERROR]    Previously set values will be used.");
     } else {
-      // Write BME688 measurements with respective accuracies to roomClimateStructure
-      roomClimateData.temperature = bme.temperature / 0.01; // to-do: make sure measurement are only taken when the board is not heated
+      // Write temperature and humidity measurements with respective accuracies to roomClimateStructure
+      roomClimateData.temperature = bme.temperature / 0.01;
       roomClimateData.humidity = bme.humidity / 0.01;
+      // start a new measurement to only measure NMVOC
+      bme.setGasHeater(320, 150); // 320*C for 150 ms
+      endTime = bme.beginReading();
+      if (endTime == 0 && ERROR) {
+        Serial.println("Tempera > [ERROR] Could not perform air quality measurement.");
+      }
+      delay(200);
+      if (!bme.endReading() && ERROR) {
+        Serial.println("Tempera > [ERROR] Could not complete air quality measurement.");
+      }
+      // now write only the NMVOC to roomClimateData since the other measurements are skewed due to the heating
       roomClimateData.nmvoc = bme.gas_resistance /  100.0;
       roomClimateData.irradiance = analogRead(PT_PIN) / 0.01; // to-do: measure over longer time spans, use exponential smoothing, possibly moving average
     }
@@ -201,7 +213,7 @@ void loop() {
   /* 
   * PERIODIC UPDATE OF THE TIME TRACKING:
   * Send the current work status after a given time interval.
-  * (This works in a push configuration.)
+  * (The transmission via BLE works in a push configuration.)
   */
   if (lastTimeUpdate + UPDATE_INTERVAL_TIME < millis()) {
     writeElapsedTimeCharacteristicStructure(\
@@ -221,7 +233,7 @@ void loop() {
   /*
   * MANUAL UPDATE OF THE TIME TRACKING:
   * If a button has been pressed a manual update is triggered.
-  * (This works in a push configuration.)
+  * (The transmission via BLE works in a push configuration.)
   */
   if (pin_size_t b = whichButtonPressed()) {
     led.turnOff();
