@@ -1,7 +1,8 @@
 package at.qe.skeleton.controllers;
 
 import at.qe.skeleton.jwt.JwtUtils;
-import at.qe.skeleton.payload.response.HomeDataDTO;
+import at.qe.skeleton.payload.ColleagueStateDto;
+import at.qe.skeleton.payload.response.HomeDataResponse;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.Visibility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.List;
 
 
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials="true")
@@ -52,9 +55,15 @@ public class UserController{
 
     @GetMapping("/homeData")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
-    public ResponseEntity<HomeDataDTO> homeData() {
+    public ResponseEntity<HomeDataResponse> homeData() {
+        var colleagueStates = List.of(
+                new ColleagueStateDto("Max Mustermann", "Raum 1", State.AVAILABLE),
+                new ColleagueStateDto("Jane Doe", "Raum 3", State.AVAILABLE),
+                new ColleagueStateDto("Cooler Typ", "Raum 1", State.AVAILABLE)
+        );
+
         return ResponseEntity.ok(
-                new HomeDataDTO(25, 50, 100, 500, Visibility.PUBLIC, State.AVAILABLE)
+                new HomeDataResponse(25, 50, 100, 500, Visibility.PUBLIC, State.AVAILABLE, LocalDateTime.now(), null, colleagueStates)
         );
 
     }

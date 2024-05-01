@@ -1,3 +1,5 @@
+import { State, Visibility } from './user.model';
+
 export interface HomeData {
   temperature: number;
   humidity: number;
@@ -5,17 +7,18 @@ export interface HomeData {
   co2: number;
   visibility: Visibility;
   state: State;
+  stateTimeStamp: Date;
+  project?: Project;
+  colleagueStates: ColleagueState[];
 }
 
-export enum Visibility {
-  PUBLIC = "PUBLIC",
-  PRIVATE = "PRIVATE",
-  HIDDEN = "HIDDEN",
+export interface Project {
+  id: number;
+  name: string;
 }
 
-export enum State {
-  AVAILABLE = "AVAILABLE",
-  MEETING = "MEETING",
-  OUT_OF_OFFICE = "OUT_OF_OFFICE",
-  DEEPWORK = "DEEPWORK",
+export interface ColleagueState {
+  name: string;
+  workplace: string;
+  state: State;
 }
