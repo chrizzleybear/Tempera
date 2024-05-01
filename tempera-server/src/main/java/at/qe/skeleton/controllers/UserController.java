@@ -1,8 +1,11 @@
 package at.qe.skeleton.controllers;
 
 import at.qe.skeleton.jwt.JwtUtils;
-import at.qe.skeleton.services.UserxService;
+import at.qe.skeleton.payload.response.HomeDataDTO;
+import at.qe.skeleton.model.enums.State;
+import at.qe.skeleton.model.enums.Visibility;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,9 +26,6 @@ public class UserController{
 
     @Autowired
     JwtUtils jwtUtils;
-
-    public UserController() {}
-
 
     @GetMapping("/all")
     public String allAccess() {
@@ -50,6 +50,14 @@ public class UserController{
         return "Admin Board.";
     }
 
+    @GetMapping("/homeData")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
+    public ResponseEntity<HomeDataDTO> homeData() {
+        return ResponseEntity.ok(
+                new HomeDataDTO(25, 50, 100, 500, Visibility.PUBLIC, State.AVAILABLE)
+        );
+
+    }
 
 }
 
