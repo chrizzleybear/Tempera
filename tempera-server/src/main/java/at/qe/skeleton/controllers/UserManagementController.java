@@ -1,10 +1,11 @@
 package at.qe.skeleton.controllers;
 
+import at.qe.skeleton.model.DTOs.UserxDTO;
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.services.AuthenticationService;
 import at.qe.skeleton.services.UserxService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,22 +17,27 @@ import java.util.Map;
 public class UserManagementController{
 
     private final UserxService userxService;
+    private final AuthenticationService authenticationService;
 
-    public UserManagementController(UserxService userxService) {
+    public UserManagementController(UserxService userxService, AuthenticationService authenticationService) {
         this.userxService = userxService;
+        this.authenticationService = authenticationService;
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Userx>> getAllUsers() {
-        List<Userx> users = userxService.getAllUsers().stream().toList();
+    public ResponseEntity<List<UserxDTO>> getAllUsers() {
+        List<UserxDTO> users = userxService.getAllUsers().stream()
+                .map(userxService::convertToDTO)
+                .toList();
         return ResponseEntity.ok(users);
     }
 
     @GetMapping("/load/{id}")
-    public ResponseEntity<Userx> getUser(@PathVariable String id) {
+    public ResponseEntity<UserxDTO> getUser(@PathVariable String id) {
         Userx user = userxService.loadUser(id);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(userxService.convertToDTO(user));
     }
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Map<String, String>> deleteUser(@PathVariable String id) {
@@ -42,14 +48,14 @@ public class UserManagementController{
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Userx> updateUser(@RequestBody Userx user) {
-        Userx updatedUser = userxService.updateUser(user);
-        return ResponseEntity.ok(updatedUser);
+    public ResponseEntity<UserxDTO> updateUser(@RequestBody UserxDTO userxDto) {
+        Userx updatedUser = userxService.updateUser(userxDto);
+        return ResponseEntity.ok(userxService.convertToDTO(updatedUser));
     }
 
-    @PutMapping("/create")
-    public ResponseEntity<Userx> createUser(@RequestBody Userx user) {
-        Userx createdUser = userxService.saveUser(user);
+    @PostMapping("/create")
+    public ResponseEntity<UserxDTO> createUser(@RequestBody UserxDTO userxDto) {
+        UserxDTO createdUser = authenticationService.registerUser(userxDto);
         return ResponseEntity.ok(createdUser);
     }
 }

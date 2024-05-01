@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import { UsersService } from '../../_services/users.service';
 import {NgForOf, NgIf} from "@angular/common";
@@ -41,7 +41,6 @@ export class UserEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    //this.username = this.route.snapshot.paramMap.get('id');
     this.username = this.user.username;
     this.usersService.getUserById(this.username).subscribe({
       next: (data) => {
@@ -52,6 +51,14 @@ export class UserEditComponent implements OnInit {
         console.error('Failed to load user details:', error);
       }
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    // Check if 'user' input has changed
+    if (changes['user'] && changes['user'].currentValue) {
+      this.username = this.user.username;
+      this.populateForm();
+    }
   }
 
   private populateForm() {

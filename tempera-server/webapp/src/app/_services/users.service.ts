@@ -37,6 +37,6 @@ export class UsersService {
 
   saveUser(userData: User): Observable<any> {
     console.log("Create user with ID: ");
-    return this.http.put(`${this.API_URL}create`, userData);
+    return this.http.post(`${this.API_URL}create`, userData);
   }
 }
