@@ -4,6 +4,13 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+/**
+ * Basic unit to measure time serverside. We want to preserve the original timerecords measured by the TemperaStation
+ * and at the same time allow Users to assign these subordinate timerecords to projects and divide them in smaller subunits.
+ * As soon as a SuperiorTimeRecord is completed in the sense that a new one has started and a definitive end is certain,
+ * a Subordinate TimeRecord with exactly the same characteristics as the SuperiorTimeRecord is initialized. A SubordinateTimeRecord
+ * does not necessarily have a Project assigned.
+ */
 @Entity
 public class SubordinateTimeRecord {
     @Id
