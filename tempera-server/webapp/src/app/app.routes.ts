@@ -7,6 +7,7 @@ import { isLoggedInGuard } from './_guards/is-logged-in.guard';
 import { isNotLoggedInGuard } from './_guards/is-not-logged-in.guard';
 import {UsersComponent} from "./userManagement/users/users.component";
 import {UserDetailsComponent} from "./userManagement/user-details/user-details.component";
+import {ProjectsComponent} from "./projectManagement/projects/projects.component";
 
 export const routes: Routes = [
   {
@@ -14,13 +15,13 @@ export const routes: Routes = [
       { path: '', canActivate: [isLoggedInGuard], children: [
           { path: '', component: HomeComponent },
           { path: 'users', component: UsersComponent },
-          { path: 'user/:id', component: UserDetailsComponent }
+          { path: 'user/:id', component: UserDetailsComponent },
+          { path: 'projects', component: ProjectsComponent},
         ] },
     ]
   },
   { path: 'login', canActivate: [isNotLoggedInGuard] , component: LoginComponent },
-  { path: 'register', canActivate: [isNotLoggedInGuard] , component: RegisterComponent },
-
+  { path: 'register', canActivate: [isNotLoggedInGuard] , component: RegisterComponent }
   // todo: create notFoundComponent
   // { path: '**', redirectTo: '/notfound' }
 
