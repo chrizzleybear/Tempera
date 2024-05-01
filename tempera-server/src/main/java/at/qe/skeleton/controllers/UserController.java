@@ -63,7 +63,7 @@ public class UserController{
         );
 
         return ResponseEntity.ok(
-                new HomeDataResponse(25, 50, 100, 500, Visibility.PUBLIC, State.AVAILABLE, LocalDateTime.now(), null, colleagueStates)
+                new HomeDataResponse(25, 50, 100, 500, Visibility.PUBLIC, State.AVAILABLE, LocalDateTime.now().toString(), null, colleagueStates)
         );
 
     }

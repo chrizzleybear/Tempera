@@ -7,7 +7,7 @@ export interface HomeData {
   co2: number;
   visibility: Visibility;
   state: State;
-  stateTimeStamp: Date;
+  stateTimestamp: string;
   project?: Project;
   colleagueStates: ColleagueState[];
 }
