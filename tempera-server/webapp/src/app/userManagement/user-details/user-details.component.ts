@@ -4,13 +4,15 @@ import {UsersService} from "../../_services/users.service";
 import {NgForOf, NgIf} from "@angular/common";
 import { ReactiveFormsModule } from "@angular/forms";
 import {User} from "../../models/user.model";
+import {CardModule} from "primeng/card";
 @Component({
   selector: 'app-user-details',
   standalone: true,
   imports: [
     NgIf,
     NgForOf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CardModule
   ],
   templateUrl: './user-details.component.html',
   styleUrls: ['./user-details.component.css']
