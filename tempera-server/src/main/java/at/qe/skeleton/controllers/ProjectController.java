@@ -37,7 +37,7 @@ public class ProjectController {
 
     @PostMapping("/test")
     public ResponseEntity<Project> createProject(@RequestBody Map<String, String> projectData) {
-        Project createdProject = projectService.createProject1(projectData.get("name"), projectData.get("description"), projectData.get("owner"));
+        Project createdProject = projectService.createProject1(projectData.get("name"), projectData.get("description"), projectData.get("manager"));
         return ResponseEntity.ok(createdProject);
     }
 

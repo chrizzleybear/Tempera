@@ -68,9 +68,11 @@ export class ProjectCreateComponent {
     this.projectService.test1(this.projectForm.value.name, this.projectForm.value.description, this.projectForm.value.manager.value.username ).subscribe({
       next: (response) => {
         console.log("Test response:", this.projectForm.value);
+        this.creatComplete.emit(true);
       },
       error: (error) => {
         console.error("Error adding project:", error);
+        this.creatComplete.emit(false);
       }
     });
   }
