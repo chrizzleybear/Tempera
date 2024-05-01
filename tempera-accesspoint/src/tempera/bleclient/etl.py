@@ -2,6 +2,7 @@ import logging
 from datetime import datetime, timezone, timedelta
 from typing import List
 
+import sqlalchemy.orm
 from bleak import BleakClient, BleakGATTCharacteristic
 from bleak.backends.service import BleakGATTService
 from sqlalchemy import select
@@ -11,6 +12,27 @@ from tempera.database.entities import Mode, TimeRecord, TemperaStation, Measurem
 from tempera.utils import shared
 
 logger = logging.getLogger(f"tempera.{__name__}")
+
+
+def _create_time_record(
+    session: sqlalchemy.orm.Session,
+    tempera_station: TemperaStation,
+    elapsed_time: int,
+    work_mode: Mode,
+    auto_update: bool,
+) -> TimeRecord:
+    now = datetime.now(tz=timezone.utc)
+    start_time = now - timedelta(milliseconds=elapsed_time)
+    record = TimeRecord(
+        tempera_station=tempera_station,
+        start=start_time,
+        duration=elapsed_time,
+        mode=work_mode,
+        auto_update=auto_update,
+    )
+    session.add(record)
+
+    return record
 
 
 # Elapsed time is the only service which implements `notify` on the Arduino side and thus needs a handler.
@@ -52,25 +74,39 @@ async def elapsed_time_handler(
             select(TimeRecord).order_by(TimeRecord.start.desc()).limit(1)
         ).first()
 
-        if not current_record or not auto_update:
-            now = datetime.now(tz=timezone.utc)
-            start_time = now - timedelta(milliseconds=elapsed_time)
-            record = TimeRecord(
-                tempera_station=tempera_station,
-                start=start_time,
-                duration=elapsed_time,
-                mode=work_mode,
-                auto_update=auto_update,
+        if not current_record:
+            # Create the new time record
+            record = _create_time_record(
+                session, tempera_station, elapsed_time, work_mode, auto_update
             )
-            session.add(record)
-            logger.info(f"Creating time record: {record}")
-        elif auto_update:
-            current_record.duration += elapsed_time
-            # set auto_update to True, that way the initial auto_update = False is overwritten with the automatic update
-            current_record.auto_update = True
-            logger.info(
-                f"Updating record: adding {elapsed_time} ms to the duration of {current_record}"
-            )
+            logger.info(f"Creating time record: {record}.")
+        else:
+            if not auto_update:
+                # Conclude the last time record
+                current_record.auto_update = False
+                logger.info(f"Concluding the previous time record: {current_record}.")
+
+                # Create the new time record
+                # auto_update is False forces the conclusion of the old measurement and the creation of a new one.
+                # The new one should not be deleted after being sent, as the next auto update must add on to it.
+                # Thus, auto update is set to True when it is created, even if it was not an automatic update.
+                # (auto update is both determining the creation of a new time record, and whether existing ones
+                # are deleted after being sent. From a software design perspective, it would be better to separate
+                # the functionality into 2 variables to split the responsibility. It would make things a little
+                # easier to understand but here a corner is being cut a little for convenience.)
+                record = _create_time_record(
+                    session, tempera_station, elapsed_time, work_mode, True
+                )
+                logger.info(f"Creating time record: {record}")
+
+            elif auto_update:
+                current_record.duration += elapsed_time
+                # set auto_update to True, that way the initial auto_update = False is overwritten with the automatic
+                # update
+                current_record.auto_update = True
+                logger.info(
+                    f"Updating record: adding {elapsed_time} ms to the duration of {current_record}"
+                )
 
         session.commit()
 
