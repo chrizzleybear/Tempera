@@ -9,7 +9,9 @@ import java.time.LocalDateTime;
  * the TemperaStation and at the same time allow Users to assign these subordinate timerecords to
  * projects and divide them in smaller subunits. As soon as a SuperiorTimeRecord has been initiated,
  * a Subordinate TimeRecord with exactly the same characteristics as the SuperiorTimeRecord is
- * initialized.
+ * initialized. The End will be set to null and updated as soon as the new SuperiorTimeRecord is received from TemperaStation.
+ * While End equals null, SubordinateTimeRecord may not be further divided, meaning start and end stay as they are.
+ *
  * A SubordinateTimeRecord stores the Project and Group it is assigned to. But it does not have to be assigned to
  * a Project or a Group. Once a Group or Project gets deleted, all the TR that were assigned to that Group or Project
  * reference null as assigned Group/Project.
@@ -47,8 +49,12 @@ public class SubordinateTimeRecord {
     return end;
   }
 
-  public SubordinateTimeRecord(LocalDateTime start, LocalDateTime end) {
+  public SubordinateTimeRecord(LocalDateTime start) {
     this.start = start;
+    this.end = null;
+  }
+
+  public void setEnd(LocalDateTime end) {
     this.end = end;
   }
 

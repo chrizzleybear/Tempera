@@ -1,6 +1,7 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
+import at.qe.skeleton.exceptions.SubordinateTimeRecordOutOfBoundsException;
 import at.qe.skeleton.model.SubordinateTimeRecord;
 import at.qe.skeleton.model.SuperiorTimeRecord;
 import at.qe.skeleton.model.TemperaStation;
@@ -8,6 +9,7 @@ import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.SubordinateTimeRecordRepository;
 import at.qe.skeleton.repositories.SuperiorTimeRecordRepository;
 import jakarta.transaction.Transactional;
+import org.jboss.weld.exceptions.IllegalArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -43,7 +45,6 @@ public class TimeRecordService {
     return superiorTimeRecordRepository.findFirstByOrderByStartDesc();
   }
 
-  // todo: subordinate bereits parallel zum neuen Superior TR anlegen, da user bereits im aktuellen TR ein Projekt zuordnen kann
   /**
    * this method saves a new SuperiorTimeRecord and adds the start-Time of the new TimeRecord minus
    * 1sec as the End-Time to the SuperiorTimeRecord entity with the latest start datetime before the
@@ -55,33 +56,52 @@ public class TimeRecordService {
    * @return the SuperiorTimeRecord that was newly created.
    */
   @Transactional
-  public SuperiorTimeRecord addRecord(SuperiorTimeRecord newSuperiorTimeRecord) {
+  public SuperiorTimeRecord addRecord(SuperiorTimeRecord newSuperiorTimeRecord)
+      throws CouldNotFindEntityException {
     if (newSuperiorTimeRecord.getStart() == null) {
       throw new NullPointerException(
           "SuperiorTimeRecord must have a Start Time when being added to db.");
     }
 
     TemperaStation temperaStation = newSuperiorTimeRecord.getTemperaStation();
-    Optional<SuperiorTimeRecord> lastTimeRecordOptional =
+    Optional<SuperiorTimeRecord> oldSuperiorTimeRecordOptional =
         findLastTimeRecordByUser(temperaStation.getUser());
-    if (lastTimeRecordOptional.isPresent()) {
-      SuperiorTimeRecord lastTimeRecord = lastTimeRecordOptional.get();
-
-      LocalDateTime oldStart = lastTimeRecord.getStart();
-      LocalDateTime oldEnd = newSuperiorTimeRecord.getStart().minusSeconds(1);
-
-      SubordinateTimeRecord subordinateTimeRecord = new SubordinateTimeRecord(oldStart, oldEnd);
-      saveSubordinateTimeRecord(subordinateTimeRecord);
-      logger.info("saved SubordinateTimeRecord %s".formatted(subordinateTimeRecord));
-
-      lastTimeRecord.setEnd(oldEnd);
-      lastTimeRecord.addSubordinateTimeRecord(subordinateTimeRecord);
-      logger.info("added SubordinateTimeRecord %s to SuperiorTimeRecord %s".formatted(subordinateTimeRecord, lastTimeRecord));
-      superiorTimeRecordRepository.save(lastTimeRecord);
-      logger.info("saved last SuperiorTimeRecord %s".formatted(lastTimeRecord.toString()));
+    if (oldSuperiorTimeRecordOptional.isEmpty()) {
+      throw new CouldNotFindEntityException("old Superior Time Record could not be found in DB");
+    }
+    SuperiorTimeRecord oldSuperiorTimeRecord = oldSuperiorTimeRecordOptional.get();
+    if (oldSuperiorTimeRecord.getSubordinateRecords().size() != 1) {
+      throw new IllegalArgumentException(
+          "There seem to be %d number of SubordinateTimeRecords stored in SuperiorTimeRecord %s while we expect only one"
+              .formatted(
+                  oldSuperiorTimeRecord.getSubordinateRecords().size(), oldSuperiorTimeRecord));
+    }
+    SubordinateTimeRecord oldSubordinateTimeRecord =
+        oldSuperiorTimeRecord.getSubordinateRecords().get(0);
+    if (oldSubordinateTimeRecord.getStart() != oldSuperiorTimeRecord.getStart()) {
+      throw new SubordinateTimeRecordOutOfBoundsException(
+          "Start of %s does not match start of %s"
+              .formatted(oldSubordinateTimeRecord.getStart(), oldSuperiorTimeRecord.getStart()));
     }
 
-    newSuperiorTimeRecord =  superiorTimeRecordRepository.save(newSuperiorTimeRecord);
+    LocalDateTime oldStart = oldSuperiorTimeRecord.getStart();
+    LocalDateTime oldEnd = newSuperiorTimeRecord.getStart().minusSeconds(1);
+    LocalDateTime newStart = newSuperiorTimeRecord.getStart();
+    oldSuperiorTimeRecord.setEnd(oldEnd);
+    oldSubordinateTimeRecord.setEnd(oldEnd);
+    logger.info(
+            "set End TimeStamp for %s and %s".formatted(oldSuperiorTimeRecord, oldSubordinateTimeRecord));
+
+    subordinateTimeRecordRepository.save(oldSubordinateTimeRecord);
+    logger.info("saved %s".formatted(oldSubordinateTimeRecord.toString()));
+    superiorTimeRecordRepository.save(oldSuperiorTimeRecord);
+    logger.info("saved %s".formatted(oldSuperiorTimeRecord.toString()));
+
+    SubordinateTimeRecord newSubordinateTimeRecord = new SubordinateTimeRecord(newStart);
+    newSubordinateTimeRecord = subordinateTimeRecordRepository.save(newSubordinateTimeRecord);
+    newSuperiorTimeRecord.addSubordinateTimeRecord(newSubordinateTimeRecord);
+    logger.info("Added subordinate %s to superior %s".formatted(newSubordinateTimeRecord, newSuperiorTimeRecord));
+    newSuperiorTimeRecord = superiorTimeRecordRepository.save(newSuperiorTimeRecord);
     logger.info("Saved new SuperiorTimeRecord %s".formatted(newSuperiorTimeRecord));
 
     return newSuperiorTimeRecord;
