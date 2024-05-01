@@ -1,0 +1,31 @@
+<p-messages [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
+<div class="mb-4">
+  <input type="text" pInputText placeholder="Search" (input)="applyFilter($event)" class="mr-2">
+  <button type="button" pButton label="Add New Project" icon="pi pi-plus" (click)="createProject()" class="mr-2"></button>
+  <p-table [value]="filteredProjects" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+      <tr>
+        <th scope="col" pSortableColumn="name">Project Name <p-sortIcon field="name"></p-sortIcon></th>
+        <th scope="col" pSortableColumn="description">Description <p-sortIcon field="description"></p-sortIcon></th>
+        <th scope="col" pSortableColumn="managerId">Manager ID <p-sortIcon field="managerId"></p-sortIcon></th>
+        <th></th> <!-- Empty header for button -->
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-project>
+      <tr>
+        <td>{{ project.name }}</td>
+        <td>{{ project.description }}</td>
+        <td>{{ project.manager.username }}</td>
+        <td>
+          <p-button label="Delete" icon="pi pi-trash" (onClick)="deleteProject(project.name)"></p-button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <button pButton type="button" label="Add Project" (click)="addProject()"></button>
+</div>
+<p-dialog header="Create Project" [(visible)]="displayCreateDialog" [modal]="true" [style]="{width: '50vw'}" [closable]="true">
+  <app-project-create (creatComplete)="onCreateCompleted($event)"></app-project-create>
+</p-dialog>
+
+

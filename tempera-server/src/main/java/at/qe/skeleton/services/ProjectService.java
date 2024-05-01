@@ -71,11 +71,11 @@ public class ProjectService {
         projectRepository.delete(project);
     }
 
-    public Project createProject1(String name) {
+    public Project createProject1(String name, String description, String manager) {
         Project project = new Project();
         project.setName(name);
-        project.setDescription("description");
-        project.setManager(userxService.loadUser("admin"));
+        project.setDescription(description);
+        project.setManager(userxService.loadUser(manager));
         return projectRepository.save(project);
     }
     public Project createProject2(Project project) {

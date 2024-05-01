@@ -20,8 +20,13 @@ export class ProjectService {
 
   }
 
-  test1(name: string): Observable<any> {
-    return this.http.post(`${this.API_URL}test`, name);
+  test1(name: string, description: string, manager: string): Observable<any> {
+    const projectData = {
+      name: name,
+      description: description,
+      manager: manager
+    };
+    return this.http.post(`${this.API_URL}test`, projectData);
 
   }
 

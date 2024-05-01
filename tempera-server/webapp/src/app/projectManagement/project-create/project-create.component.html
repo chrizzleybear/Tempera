@@ -1,0 +1,20 @@
+<form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+  <div class="p-field">
+    <label for="name">Project Name:</label>
+    <input id="name" type="text" pInputText formControlName="name">
+  </div>
+  <div class="p-field">
+    <label for="description">Description:</label>
+    <input id="description" type="text" pInputText formControlName="description">
+  </div>
+  <div class="p-field">
+    <label for="manager">Manager:</label>
+    <p-dropdown [options]="userDropdownOptions"
+                optionLabel="label"
+                formControlName="manager"
+                placeholder="Select a Manager"
+                id="manager"></p-dropdown>
+  </div>
+  <button pButton type="submit" label="Create Project"></button>
+  <button pButton type="button" label="Add test" (click)="addProject1()"></button>
+</form>

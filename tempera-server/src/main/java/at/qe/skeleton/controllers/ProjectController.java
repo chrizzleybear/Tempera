@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials="true")
 @RestController
@@ -35,8 +36,8 @@ public class ProjectController {
    // }
 
     @PostMapping("/test")
-    public ResponseEntity<Project> createProject(@RequestBody String name) {
-        Project createdProject = projectService.createProject1(name);
+    public ResponseEntity<Project> createProject(@RequestBody Map<String, String> projectData) {
+        Project createdProject = projectService.createProject1(projectData.get("name"), projectData.get("description"), projectData.get("owner"));
         return ResponseEntity.ok(createdProject);
     }
 
