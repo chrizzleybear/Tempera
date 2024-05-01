@@ -55,22 +55,35 @@ def get_tempera_station(session: sqlalchemy.orm.Session) -> TemperaStation:
 
 def build_measurements_payload(
     measurements: Sequence[Measurement],
+def _build_payload(
     tempera_station: TemperaStation,
+    data: Measurement | TimeRecord,
+    *,
+    kind: DataType,
 ) -> Dict[str, Any]:
-    return {
-        "access_point_id": shared.config["access_point_id"],
-        "measurements": [
-            {
+    match kind:
+        case "Measurement":
+            return {
+                "access_point_id": shared.config["access_point_id"],
                 "tempera_station_id": tempera_station.id,
-                "timestamp": f"{measurement.timestamp}",  # datetime is not serializable -> to string
-                "temperature": measurement.temperature,
-                "irradiance": measurement.irradiance,
-                "humidity": measurement.humidity,
-                "nmvoc": measurement.nmvoc,
+                "timestamp": f"{data.timestamp}",  # datetime is not serializable -> to string
+                "temperature": data.temperature,
+                "irradiance": data.irradiance,
+                "humidity": data.humidity,
+                "nmvoc": data.nmvoc,
             }
-            for measurement in measurements
-        ],
-    }
+        case "TimeRecord":
+            return {
+                "access_point_id": shared.config["access_point_id"],
+                "tempera_station_id": tempera_station.id,
+                "start": f"{data.start}",
+                # ms / 1_000 = seconds (cast back to int because division turns the value automatically to
+                # float)
+                "duration": int(data.duration / 1_000),
+                "mode": data.mode,
+                "auto_update": data.auto_update,
+            }
+
 
 
 def delete_measurements(session, measurements: Sequence[Measurement]) -> None:
