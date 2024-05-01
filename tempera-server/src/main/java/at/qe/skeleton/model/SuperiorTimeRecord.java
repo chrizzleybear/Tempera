@@ -36,7 +36,6 @@ public class SuperiorTimeRecord {
   public SuperiorTimeRecord() {
     subordinateRecords = new ArrayList<>();
   }
-  ;
 
   public SuperiorTimeRecord(
       TemperaStation temperaStation, LocalDateTime start, LocalDateTime end, State state) {
@@ -46,7 +45,6 @@ public class SuperiorTimeRecord {
     this.state = state;
     subordinateRecords = new ArrayList<>();
   }
-  ;
 
   public LocalDateTime getStart() {
     return start;

@@ -29,6 +29,10 @@ public class SubordinateTimeRecord {
     @JoinColumn(name = "project_id")
     private Project assignedProject;
 
+    //todo: hier auch noch die entsprechende Gruppe, unter der dieser Time-Record eingeloggt wurde abspeichern,
+    // dass wir in den management und Teamlead ansichten unabhängig von Usern sind (die theoretisch inzwischen gelöscht wurden)
+
+
     public LocalDateTime getStart() {
         return start;
     }
