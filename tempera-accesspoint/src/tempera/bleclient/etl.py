@@ -65,8 +65,9 @@ async def elapsed_time_handler(
             session.add(record)
             logger.info(f"Creating time record: {record}")
         elif auto_update:
-            # TODO: set auto_update to True, that way the initial auto_update = False is overwritten with the automatic update
             current_record.duration += elapsed_time
+            # set auto_update to True, that way the initial auto_update = False is overwritten with the automatic update
+            current_record.auto_update = True
             logger.info(
                 f"Updating record: adding {elapsed_time} ms to the duration of {current_record}"
             )
