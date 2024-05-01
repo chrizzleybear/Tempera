@@ -70,8 +70,7 @@ class MeasurementMapperTest {
     LocalDateTime differentTimestamp = timestamp.minusMinutes(3);
 
     measurementHumidity = new Measurement(50.0, timestamp, sensorHumidity);
-    measurementHumidity.setId(
-        1L); // must set id bc we dont save to db, normally gets auto generated
+    measurementHumidity.setId(1L); // must set id bc we dont save to db, normally gets auto generated
 
     measurementIrradiance = new Measurement(500.0, timestamp, sensorIrradiance);
     measurementIrradiance.setId(2L);

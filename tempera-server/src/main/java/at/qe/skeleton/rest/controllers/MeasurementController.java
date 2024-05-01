@@ -38,14 +38,19 @@ public class MeasurementController {
     this.temperaStationService = temperaStationService;
   }
 
+  // todo: return StatusCodes according to Exceptions
   @PostMapping("")
   public ResponseEntity<MeasurementDto> createMeasurement(@RequestBody MeasurementDto measurementDto) {
     try {
       if (!accessPointService.isEnabled(measurementDto.access_point_id())){
-        throw new IllegalArgumentException("accessPoint %s is not enabled".formatted(measurementDto.access_point_id()));
+        logger.info(
+            "accessPoint %s is not enabled".formatted(measurementDto.access_point_id()));
+        return ResponseEntity.status(403).build();
       }
       if (!temperaStationService.isEnabled(measurementDto.tempera_station_id())){
-        throw new IllegalArgumentException("temperaStation %s is not enabled".formatted(measurementDto.tempera_station_id()));
+        logger.info("temperaStation %s is not enabled".formatted(measurementDto.tempera_station_id()));
+        return ResponseEntity.status(403).build();
+
       }
       List<Measurement> entities = measurementMapper.mapFromDto(measurementDto);
       entities.forEach(measurementService::saveMeasurement);
