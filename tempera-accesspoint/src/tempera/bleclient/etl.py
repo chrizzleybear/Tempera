@@ -65,6 +65,7 @@ async def elapsed_time_handler(
             session.add(record)
             logger.info(f"Creating time record: {record}")
         elif auto_update:
+            # TODO: set auto_update to True, that way the initial auto_update = False is overwritten with the automatic update
             current_record.duration += elapsed_time
             logger.info(
                 f"Updating record: adding {elapsed_time} ms to the duration of {current_record}"
@@ -80,13 +81,33 @@ async def measurements_handler(
     temperature, irradiance, humidity, nmvoc = None, None, None, None
     for characteristic in characteristics:
         if "2a6e" in characteristic.uuid:
-            temperature = float(await client.read_gatt_char(characteristic))
+            temperature = (
+                int.from_bytes(
+                    await client.read_gatt_char(characteristic), byteorder="little"
+                )
+                / 100
+            )
         elif "2a77" in characteristic.uuid:
-            irradiance = float(await client.read_gatt_char(characteristic))
+            irradiance = (
+                int.from_bytes(
+                    await client.read_gatt_char(characteristic), byteorder="little"
+                )
+                / 10
+            )
         elif "2a6f" in characteristic.uuid:
-            humidity = float(await client.read_gatt_char(characteristic))
+            humidity = (
+                int.from_bytes(
+                    await client.read_gatt_char(characteristic), byteorder="little"
+                )
+                / 100
+            )
         elif "2bd3" in characteristic.uuid:
-            nmvoc = float(await client.read_gatt_char(characteristic))
+            nmvoc = float(
+                int.from_bytes(
+                    await client.read_gatt_char(characteristic), byteorder="little"
+                )
+                * 100
+            )
         else:
             logger.warning(
                 f"UUID {characteristic} doesn't match any supported "
@@ -94,7 +115,6 @@ async def measurements_handler(
             )
             raise RuntimeError
 
-    # TODO: think if a value error is appropriate or if it is better to send the measurement even if one filed is None.
     if not temperature:
         logger.warning("Received no value for measurement: temperature.")
         raise ValueError
