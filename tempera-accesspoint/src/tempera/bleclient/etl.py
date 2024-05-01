@@ -26,16 +26,15 @@ async def elapsed_time_handler(
     }
     record_status_map = {0: True, 7: False}
 
-    # TODO: check that we don't need unused flags
     logger.debug(f"Received bytes: {data}")
-    flag = data[0]
+    _flag = data[0]
     elapsed_time = int.from_bytes(data[1:7], byteorder="little")
-    tss = data[7]
-    offset = data[8]
+    _tss = data[7]
+    _offset = data[8]
     work_mode = work_mode_map[data[9]]
     auto_update = record_status_map[data[10]]
     logger.debug(
-        f"Read -> flag: {flag}, elapsed_time: {elapsed_time}, tss: {tss}, offset: {offset}, work_mode: {work_mode}, "
+        f"Read -> flag: {_flag}, elapsed_time: {elapsed_time}, tss: {_tss}, offset: {_offset}, work_mode: {work_mode}, "
         f"auto_update: {auto_update}"
     )
 
