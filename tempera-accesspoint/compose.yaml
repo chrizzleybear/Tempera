@@ -1,0 +1,26 @@
+services:
+  app:
+    build: .
+    volumes:
+      - /var/run/dbus:/var/run/dbus
+    depends_on:
+      - api
+    develop:
+      watch:
+        - action: sync+restart
+          path: src/
+          target: /home/src
+        - action: rebuild
+          path: requirements.txt
+
+  api:
+    build: src/tempera/api
+    ports:
+      - "80:80"
+    develop:
+      watch:
+        - action: sync+restart
+          path: src/tempera/api
+          target: /src
+        - action: rebuild
+          path: requirements.txt

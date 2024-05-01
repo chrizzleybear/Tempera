@@ -2,6 +2,7 @@ package at.qe.skeleton.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -9,17 +10,7 @@ import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.model.enums.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
 import org.springframework.data.domain.Persistable;
 
 /**
@@ -51,6 +42,11 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     @JsonIgnore
     private LocalDateTime updateDate;
 
+    // todo: what if user gets deleted? we should keep the timerecords in the aggregated
+    // team and project time calculation?
+    @OneToMany
+    private List<SuperiorTimeRecord> superiorTimeRecords;
+
     private String password;
 
     private String firstName;
@@ -73,6 +69,17 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
         this.email = email;
         this.password = password;
         this.createDate = createDate;
+    }
+
+    public List<SuperiorTimeRecord> getSuperiorTimeRecords() {
+        return superiorTimeRecords;
+    }
+
+    public void addSuperiorTimeRecord(SuperiorTimeRecord superiorTimeRecord) {
+        if (superiorTimeRecord == null) {
+            throw new NullPointerException("superiorTimeRecord should not be null");
+        }
+        this.superiorTimeRecords.add(superiorTimeRecord);
     }
 
     public String getUsername() {
