@@ -20,6 +20,12 @@ export class ProjectService {
 
   }
 
+  test1(name: string): Observable<any> {
+    return this.http.post(`${this.API_URL}test`, name);
+
+  }
+
+
   deleteProject(projectName: string): Observable<string> {
     console.log("Delete project with Name: ", projectName);
     return this.http.delete(`${this.API_URL}delete/${projectName}`, { responseType: 'text' })

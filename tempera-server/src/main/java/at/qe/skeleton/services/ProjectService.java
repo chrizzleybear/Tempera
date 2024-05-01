@@ -88,6 +88,4 @@ public class ProjectService {
         newpro.setManager(project.getManager());
         return projectRepository.save(project);
     }
-
-
 }

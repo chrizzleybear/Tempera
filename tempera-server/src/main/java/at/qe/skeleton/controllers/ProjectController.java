@@ -27,11 +27,12 @@ public class ProjectController {
         Project updatedProject = projectService.updateProject(project);
         return ResponseEntity.ok(updatedProject);
     }
-    @PostMapping("/create")
-    public ResponseEntity<Project> createProject(@RequestBody Project project) {
-        Project createdProject = projectService.createProject(project);
-        return ResponseEntity.ok(createdProject);
-    }
+
+    //@PostMapping("/create")
+   // public ResponseEntity<Project> createProject(@RequestBody Project project) {
+   //     Project createdProject = projectService.createProject(project);
+   //     return ResponseEntity.ok(createdProject);
+   // }
 
     @PostMapping("/test")
     public ResponseEntity<Project> createProject(@RequestBody String name) {
