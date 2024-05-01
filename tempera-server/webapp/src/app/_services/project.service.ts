@@ -20,9 +20,9 @@ export class ProjectService {
 
   }
 
-  deleteProject(projectId: string): void {
-    console.log("Delete project with ID: ", projectId);
-    this.http.delete(`${this.API_URL}delete/${projectId}`).subscribe({
+  deleteProject(projectName: string): void {
+    console.log("Delete project with Name: ", projectName);
+    this.http.delete(`${this.API_URL}delete/${projectName}`, { responseType: 'text' }).subscribe({
       next: (response) => {
         console.log("Project deleted successfully:", response);
       },

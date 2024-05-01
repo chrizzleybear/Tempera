@@ -66,8 +66,8 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
-    public void deleteProject(String id) {
-        Project project = projectRepository.findFirstByName(id);
+    public void deleteProject(String name) {
+        Project project = projectRepository.findFirstByName(name);
         projectRepository.delete(project);
     }
 
