@@ -40,9 +40,7 @@ public class TimeRecordService {
     return superiorTimeRecordRepository.findFirstByOrderByStartDesc();
   }
 
-  // todo: jetzt wird IMMER der letzte Time-Record-Endzeitpunkt verändert -> ist potentiell ein
-  // Risiko, sollte man vllt
-  // einen Check einführen (nur ändern wenn Endzeitpunkt leer ist oder so)
+  // todo: subordinate bereits parallel zum neuen Superior TR anlegen, da user bereits im aktuellen TR ein Projekt zuordnen kann
   /**
    * this method saves a new SuperiorTimeRecord and adds the start-Time of the new TimeRecord minus
    * 1sec as the End-Time to the SuperiorTimeRecord entity with the latest start datetime before the
