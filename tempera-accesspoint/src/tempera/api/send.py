@@ -99,9 +99,9 @@ async def send_data(*, kind: DataType):
 
         match kind:
             case "Measurement":
-                endpoint = "measurements"
+                endpoint = "measurement"
             case "TimeRecord":
-                endpoint = "time_records"
+                endpoint = "time_record"
 
         async with asyncio.TaskGroup() as tg:
             logger.info(f"Sending {len(data)} {kind}(s).")
