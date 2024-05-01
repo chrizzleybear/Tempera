@@ -10,6 +10,8 @@ import java.util.Objects;
  * seems like this is a Value Object (in DDD lingo)
  */
 
+//todo: Hier noch die embeddedId einbauen!
+
 @Entity
 public class Measurement {
     @Id
