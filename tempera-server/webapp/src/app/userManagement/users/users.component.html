@@ -41,8 +41,10 @@
   </p-table>
 </div>
 <p-dialog header="Edit User" [(visible)]="displayEditDialog" [modal]="true" [style]="{width: '50vw'}" [closable]="true">
+  <div *ngIf="selectedUser">
   <app-user-edit [user]="selectedUser" (editCompleted)="onEditCompleted($event)"></app-user-edit>
   <button type="button" pButton label="Back" icon="pi pi-arrow-left" (click)="displayEditDialog = false"></button>
+  </div>
 </p-dialog>
 <p-dialog header="Create User" [(visible)]="displayCreateDialog" [modal]="true" [style]="{width: '50vw'}" [closable]="true">
   <app-user-create (creatComplete)="onCreateCompleted($event)"></app-user-create>
