@@ -57,9 +57,9 @@ public class UserController{
     @PreAuthorize("hasAuthority('USER') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
     public ResponseEntity<HomeDataResponse> homeData() {
         var colleagueStates = List.of(
-                new ColleagueStateDto("Max Mustermann", "Raum 1", State.AVAILABLE),
+                new ColleagueStateDto("Max Mustermann", "Raum 1", State.DEEPWORK),
                 new ColleagueStateDto("Jane Doe", "Raum 3", State.AVAILABLE),
-                new ColleagueStateDto("Cooler Typ", "Raum 1", State.AVAILABLE)
+                new ColleagueStateDto("Cooler Typ", "Raum 1", State.MEETING)
         );
 
         return ResponseEntity.ok(

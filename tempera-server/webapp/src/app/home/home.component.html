@@ -35,7 +35,7 @@
     </div>
     <div class="w-full lg:w-1/3 p-4">
       <div class="card h-full">
-        <p-table [value]="homeData.colleagueStates">
+        <p-table [value]="this.homeData.colleagueStates">
           <ng-template pTemplate="header">
             <tr>
               <th>Name</th>
@@ -47,7 +47,9 @@
             <tr>
               <td>{{ colleague.name }}</td>
               <td>{{ colleague.workplace }}</td>
-              <td>{{ colleague.workplace }}</td>
+              <td>
+                <p-tag [value]="showState(colleague.state)" [severity]="getSeverity(colleague.state)"></p-tag>
+              </td>
             </tr>
           </ng-template>
         </p-table>
