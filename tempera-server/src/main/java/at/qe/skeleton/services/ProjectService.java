@@ -16,6 +16,9 @@ public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
 
+    @Autowired
+    private UserxService userxService;
+
     @Transactional
     public Project createProject(Project project) {
         if(projectRepository.findFirstByName(project.getName()) != null) {
@@ -66,5 +69,13 @@ public class ProjectService {
     public void deleteProject(String id) {
         Project project = projectRepository.findFirstByName(id);
         projectRepository.delete(project);
+    }
+
+    public Project createProject1() {
+        Project project = new Project();
+        project.setName("name");
+        project.setDescription("description");
+        project.setManager(userxService.loadUser("admin"));
+        return projectRepository.save(project);
     }
 }

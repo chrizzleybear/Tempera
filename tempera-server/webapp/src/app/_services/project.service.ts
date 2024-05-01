@@ -6,13 +6,18 @@ import {Project} from "../models/project.model";
 @Injectable({
   providedIn: 'root'
 })
-export class UsersService {
+export class ProjectService {
   private API_URL = 'http://localhost:8080/api/project/';
 
   constructor(private http: HttpClient) { }
 
   getAllProject(): Observable<any> {
     return this.http.get<Project[]>(this.API_URL + 'all');
+  }
+
+  test(): Observable<any> {
+    return this.http.post(`${this.API_URL}test`, null)
+
   }
 
   deleteProject(projectId: string): void {
@@ -40,6 +45,5 @@ export class UsersService {
     console.log("Create project with ID: ");
     return this.http.put(`${this.API_URL}create`, projectData);
   }
-
 
 }

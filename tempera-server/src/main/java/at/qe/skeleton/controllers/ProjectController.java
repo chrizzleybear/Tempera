@@ -33,6 +33,12 @@ public class ProjectController {
         return ResponseEntity.ok(createdProject);
     }
 
+    @PostMapping("/test")
+    public ResponseEntity<Project> createProject() {
+        Project createdProject = projectService.createProject1();
+        return ResponseEntity.ok(createdProject);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteProject(@PathVariable String id) {
         projectService.deleteProject(id);
