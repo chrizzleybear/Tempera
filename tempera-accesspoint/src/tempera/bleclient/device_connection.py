@@ -70,7 +70,7 @@ async def validate_station(
             auth=shared.header,
             params={"access_point_id": shared.config["access_point_id"]},
         )
-    except requests.ConnectionError:
+    except requests.exceptions.ConnectionError:
         logger.error(
             "Request failed. Couldn't establish a connection to the web server."
         )
@@ -189,7 +189,7 @@ async def get_scan_order() -> bool:
             auth=shared.header,
             params={"access_point_id": shared.config["access_point_id"]},
         )
-    except requests.ConnectionError:
+    except requests.exceptions.ConnectionError:
         logger.error(
             "Request failed. Couldn't establish a connection to the web server."
         )

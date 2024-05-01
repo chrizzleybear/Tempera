@@ -99,7 +99,7 @@ def main():
 
         yaml.dump(config, cf)
 
-    print("\nSetup done! ✨🚀✨\nGood bye. ")
+    print("\nSetup done! ✨🚀✨\nGood bye.\n\n")
 
     time.sleep(0.5)
 
