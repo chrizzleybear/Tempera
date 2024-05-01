@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {catchError, map, Observable, throwError} from 'rxjs';
 import {Project} from "../models/project.model";
 
 @Injectable({
@@ -16,20 +16,23 @@ export class ProjectService {
   }
 
   test(): Observable<any> {
-    return this.http.post(`${this.API_URL}test`, null)
+    return this.http.post(`${this.API_URL}test`, "test");
 
   }
 
-  deleteProject(projectName: string): void {
+  deleteProject(projectName: string): Observable<string> {
     console.log("Delete project with Name: ", projectName);
-    this.http.delete(`${this.API_URL}delete/${projectName}`, { responseType: 'text' }).subscribe({
-      next: (response) => {
-        console.log("Project deleted successfully:", response);
-      },
-      error: (error) => {
-        console.error("Error deleting project:", error);
-      }
-    });
+    return this.http.delete(`${this.API_URL}delete/${projectName}`, { responseType: 'text' })
+      .pipe(
+        map(response => {
+          console.log("Project deleted successfully:", response);
+          return response;
+        }),
+        catchError(error => {
+          console.error("Error deleting project:", error);
+          return throwError(() => new Error('Error deleting project: ' + error.message));  // properly handle and throw an error
+        })
+      );
   }
 
   updateProject(projectData: Project): Observable<any> {
@@ -42,7 +45,7 @@ export class ProjectService {
   }
 
   createProject(projectData: Project): Observable<any> {
-    console.log("Create project with ID: ");
+    console.log("Create project with ID: ", projectData.name);
     return this.http.put(`${this.API_URL}create`, projectData);
   }
 
