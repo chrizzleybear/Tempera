@@ -63,18 +63,12 @@ async def validate_station(
     :return:
     """
     logger.info(f"Trying to validate stations: {tempera_station}")
-
-    # Keys are checked to be present in utils.shared so don't worry about that here
-    server_address = shared.config["webserver_address"]
-    access_point_id = shared.config["access_point_id"]
-
     try:
         response = await make_request(
             "get",
-            f"{server_address}/rasp/api/valid_devices",
+            f"{shared.config['webserver_address']}/rasp/api/valid_devices",
             auth=shared.header,
-            params={"device_id": access_point_id},
-            json={"access_point_id": shared.config["access_point_id"]},
+            params={"access_point_id": shared.config["access_point_id"]},
         )
     except requests.ConnectionError:
         logger.error(
@@ -188,17 +182,12 @@ async def discovery_loop() -> BLEDevice:
 
 
 async def get_scan_order() -> bool:
-    # Keys are checked in shared.py
-    server_address = shared.config["webserver_address"]
-    access_point_id = shared.config["access_point_id"]
-
     try:
         response = await make_request(
             "get",
-            f"{server_address}/rasp/api/scan_order",
+            f"{shared.config['webserver_address']}/rasp/api/scan_order",
             auth=shared.header,
-            params={"device_id": access_point_id},
-            json={"access_point_id": shared.config["access_point_id"]},
+            params={"access_point_id": shared.config["access_point_id"]},
         )
     except requests.ConnectionError:
         logger.error(
