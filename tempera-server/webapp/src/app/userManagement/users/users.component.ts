@@ -10,7 +10,6 @@ import {UserEditComponent} from "../user-edit/user-edit.component";
 import {DialogModule} from "primeng/dialog";
 import {UserCreateComponent} from "../user-create/user-create.component";
 import { MessagesModule } from 'primeng/messages';
-import {OverlayPanelModule} from "primeng/overlaypanel";
 
 @Component({
   selector: 'app-users',
@@ -56,8 +55,6 @@ export class UsersComponent implements OnInit{
       );
     } else {
       this.filteredUsers = this.users;
-
-      OverlayPanelModule
     }
   }
 
@@ -104,7 +101,7 @@ export class UsersComponent implements OnInit{
       this.returnToUsers();
     }
   }
-  viewUserDetails(userId: String) {
+  viewUserDetails(userId: string) {
     this.router.navigate(['/user', userId]);
     console.log(userId);
   }

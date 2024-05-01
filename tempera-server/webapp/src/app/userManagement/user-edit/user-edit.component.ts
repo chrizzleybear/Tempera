@@ -55,7 +55,7 @@ export class UserEditComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     // Check if 'user' input has changed
-    if (changes['user'] && changes['user'].currentValue) {
+    if (changes['user']?.currentValue) {
       this.username = this.user.username;
       this.populateForm();
     }
