@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     if (this.storageService.isLoggedIn()) {
       this.isLoggedIn = true;
-      this.roles = this.storageService.getUser().roles;
+      this.roles = this.storageService.getUser()?.roles ?? [];
     }
   }
 
@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
 
         this.isLoginFailed = false;
         this.isLoggedIn = true;
-        this.roles = this.storageService.getUser().roles;
+        this.roles = this.storageService.getUser()?.roles ?? [];
 
         void this.router.navigate(['/']);
       },

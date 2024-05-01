@@ -1,30 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../_services/user.service';
+import { User } from '../models/user.model';
+import { StorageService } from '../_services/storage.service';
+import { NgIf } from '@angular/common';
+import { MessageModule } from 'primeng/message';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [],
+  imports: [
+    NgIf,
+    MessageModule,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
   content?: string;
 
-  constructor(private userService: UserService) { }
+  user?: User;
+
+  constructor(private userService: UserService, private storageService: StorageService) { }
 
   ngOnInit(): void {
-    this.userService.getPublicContent().subscribe({
-      next: data => {
-        this.content = data;
-      },
-      error: err => {console.log(err)
-        if (err.error) {
-          this.content = JSON.parse(err.error).message;
-        } else {
-          this.content = "Error with status: " + err.status;
-        }
-      }
-    });
+    this.user = this.storageService.getUser();
+
   }
 }
