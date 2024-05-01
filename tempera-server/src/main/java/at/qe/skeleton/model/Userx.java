@@ -71,6 +71,17 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
         this.createDate = createDate;
     }
 
+    public List<SuperiorTimeRecord> getSuperiorTimeRecords() {
+        return superiorTimeRecords;
+    }
+
+    public void addSuperiorTimeRecord(SuperiorTimeRecord superiorTimeRecord) {
+        if (superiorTimeRecord == null) {
+            throw new NullPointerException("superiorTimeRecord should not be null");
+        }
+        this.superiorTimeRecords.add(superiorTimeRecord);
+    }
+
     public String getUsername() {
         return username;
     }

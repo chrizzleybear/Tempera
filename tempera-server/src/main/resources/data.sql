@@ -12,15 +12,3 @@ INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('elvis', 'EMPLOYEE'
 INSERT INTO TEMPERA_STATION (ENABLED, USER_USERNAME, ID) VALUES (TRUE, 'admin', 'tempera_station_1');
 INSERT INTO TEMPERA_STATION (ENABLED, USER_USERNAME, ID) VALUES (FALSE, 'user2', 'tempera_station_disabled_2');
 INSERT INTO TEMPERA_STATION (ENABLED, USER_USERNAME, ID) VALUES (FALSE, 'user1', 'tempera_station_disabled');
-INSERT INTO room (room_id) VALUES ('room_1');
-INSERT INTO room (room_id) VALUES ('room_2');
-INSERT INTO access_point (enabled, id, room_room_id) VALUES (TRUE, '123e4567-e89b-12d3-a456-426614174001', 'room_1');
-INSERT INTO access_point (enabled, id, room_room_id) VALUES (FALSE, '456e4567-e89b-12d3-a456-426614174001', 'room_2');
-INSERT INTO access_point_tempera_stations (access_point_id, tempera_stations_id)  VALUES ('123e4567-e89b-12d3-a456-426614174001', 'tempera_station_1');
-INSERT INTO access_point_tempera_stations (access_point_id, tempera_stations_id)  VALUES ('123e4567-e89b-12d3-a456-426614174001', 'tempera_station_disabled');
-INSERT INTO access_point_tempera_stations (access_point_id, tempera_stations_id)  VALUES ('456e4567-e89b-12d3-a456-426614174001', 'tempera_station_disabled_2');
-INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_STATION_ID, UNIT) VALUES ('TEMPERATURE', -1, 'tempera_station_1', 'CELSIUS');
-INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_STATION_ID, UNIT) VALUES ('IRRADIANCE', -2, 'tempera_station_1', 'LUX');
-INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_STATION_ID, UNIT) VALUES ('HUMIDITY', -3, 'tempera_station_1', 'PERCENT');
-INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_STATION_ID, UNIT) VALUES ('NMVOC', -4, 'tempera_station_1', 'OHM');
-INSERT INTO measurement (measurement_value, id, sensor_sensor_id, timestamp, sensor_tempera_station_id)  VALUES (20.0, -1, -1, '2016-01-01 00:00:00', 'tempera_station_1');
