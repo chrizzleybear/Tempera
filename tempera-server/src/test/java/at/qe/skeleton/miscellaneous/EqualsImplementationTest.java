@@ -1,4 +1,4 @@
-package at.qe.skeleton.tests;
+package at.qe.skeleton.miscellaneous;
 
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.SubordinateTimeRecord;

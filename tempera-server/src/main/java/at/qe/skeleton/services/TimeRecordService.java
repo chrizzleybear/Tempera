@@ -1,5 +1,6 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.SubordinateTimeRecord;
 import at.qe.skeleton.model.SuperiorTimeRecord;
 import at.qe.skeleton.model.TemperaStation;
@@ -32,8 +33,10 @@ public class TimeRecordService {
     this.subordinateTimeRecordRepository = subordinateTimeRecordRepository;
   }
 
-  public Optional<SuperiorTimeRecord> findSuperiorTimeRecordById(Long id) {
-    return superiorTimeRecordRepository.findById(id);
+  public SuperiorTimeRecord findSuperiorTimeRecordById(Long id) throws CouldNotFindEntityException {
+    return superiorTimeRecordRepository
+        .findById(id)
+        .orElseThrow(() -> new CouldNotFindEntityException("SuperiorTimeRecord %s".formatted(id)));
   }
 
   public Optional<SuperiorTimeRecord> findLastSavedTimeRecord() {

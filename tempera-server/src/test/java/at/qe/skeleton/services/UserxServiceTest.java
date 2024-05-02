@@ -1,4 +1,4 @@
-package at.qe.skeleton.tests;
+package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.services.UserxService;

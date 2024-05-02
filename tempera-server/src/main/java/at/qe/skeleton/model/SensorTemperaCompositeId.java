@@ -18,7 +18,7 @@ import java.util.Objects;
 @Embeddable
 public class SensorTemperaCompositeId implements Serializable {
 
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Long sensorId;
 
   private String temperaStationId;
@@ -29,10 +29,6 @@ public class SensorTemperaCompositeId implements Serializable {
     return sensorId;
   }
 
-  public void setSensorId(Long id) {
-    this.sensorId = id;
-  }
-
   public String getTemperaStationId() {
     return temperaStationId;
   }
@@ -41,6 +37,9 @@ public class SensorTemperaCompositeId implements Serializable {
     this.temperaStationId = temperaStationId;
   }
 
+  public void setSensorId(Long sensorId) {
+    this.sensorId = sensorId;
+  }
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;

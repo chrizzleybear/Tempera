@@ -9,10 +9,10 @@ import at.qe.skeleton.repositories.TemperaStationRepository;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-/**
- * Service for handling measurements. Since there is a lot of overlap with SensorService,
- * this Service will handle the measurements and the sensors.
- */
+import java.util.List;
+import java.util.Optional;
+
+
 @Component
 @Scope("application")
 public class MeasurementService {
@@ -23,21 +23,10 @@ public class MeasurementService {
         this.measurementRepository = measurementRepository;
     }
 
-    public Measurement findMeasurementById(Long id) throws CouldNotFindEntityException {
+    public Measurement loadMeasurement(Long id) throws CouldNotFindEntityException {
         return measurementRepository.findById(id).orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id));
     }
 
-    //todo: find out: what about authorizations?
-    public Measurement findMostRecentBySensorIdAndStationId(Long sensorId, String stationId) throws CouldNotFindEntityException{
-        SensorTemperaCompositeId sensorTemperaCompositeId = new SensorTemperaCompositeId();
-        sensorTemperaCompositeId.setSensorId(sensorId);
-        sensorTemperaCompositeId.setTemperaStationId(stationId);
-
-        return measurementRepository.findFirstBySensorIdOrderByTimestampDesc(sensorTemperaCompositeId)
-                .orElseThrow(() -> new CouldNotFindEntityException("No measurement found for sensorId: " + sensorId + " and stationId: " + stationId));
-    }
-
-    //save
     public Measurement saveMeasurement(Measurement measurement) {
         return measurementRepository.save(measurement);
     }
@@ -47,6 +36,12 @@ public class MeasurementService {
         measurementRepository.delete(measurement);
     }
 
+
+    //todo: testen und informieren: wie setz ich das jetzt mit lazy loading um? will ja eine zusammenfassung der daten anzeigen aber vllt dauert es ewig alle zu laden?
+    // brauchen wir auch ne umsetzung für all from sensor? und wo gehören diese Methoden hin? hier oder in den tempera bzw. sensor service?
+    public List<Measurement> loadAllMeasurementsFromTempera() {
+        return null;
+    }
 
 
 
