@@ -8,11 +8,13 @@ import at.qe.skeleton.model.TemperaStation;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.SubordinateTimeRecordRepository;
 import at.qe.skeleton.repositories.SuperiorTimeRecordRepository;
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import jakarta.transaction.Transactional;
 import org.jboss.weld.exceptions.IllegalArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +22,7 @@ import java.util.logging.Logger;
 
 @Component
 @Scope("application")
+
 public class TimeRecordService {
 
   private final Logger logger = Logger.getLogger("logger");
@@ -75,7 +78,8 @@ public class TimeRecordService {
     return saveNewTimeRecord(newSuperiorTimeRecord);
   }
 
-  private SuperiorTimeRecord saveNewTimeRecord(SuperiorTimeRecord superiorTimeRecord) {
+@Transactional(value = Transactional.TxType.MANDATORY)
+  public SuperiorTimeRecord saveNewTimeRecord(SuperiorTimeRecord superiorTimeRecord) {
     SubordinateTimeRecord subordinateTimeRecord =
             new SubordinateTimeRecord(superiorTimeRecord.getStart());
     subordinateTimeRecord = saveSubordinateTimeRecord(subordinateTimeRecord);
@@ -96,7 +100,8 @@ public class TimeRecordService {
    * @param oldSuperiorTimeRecordOptional
    * @return
    */
-  private SuperiorTimeRecord finalizeOldTimeRecord(SuperiorTimeRecord newSuperiorTimeRecord, Optional<SuperiorTimeRecord> oldSuperiorTimeRecordOptional){
+
+  protected SuperiorTimeRecord finalizeOldTimeRecord(SuperiorTimeRecord newSuperiorTimeRecord, Optional<SuperiorTimeRecord> oldSuperiorTimeRecordOptional){
 
     SuperiorTimeRecord oldSuperiorTimeRecord = oldSuperiorTimeRecordOptional.orElseThrow(() -> new RuntimeException("Could not find old SuperiorTimeRecord"));
     if (oldSuperiorTimeRecord.getSubordinateRecords().size() != 1) {

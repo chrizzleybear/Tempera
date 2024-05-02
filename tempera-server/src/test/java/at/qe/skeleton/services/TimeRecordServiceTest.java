@@ -6,8 +6,11 @@ import at.qe.skeleton.model.SuperiorTimeRecord;
 import at.qe.skeleton.model.TemperaStation;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.State;
+import at.qe.skeleton.repositories.SensorRepository;
 import at.qe.skeleton.repositories.SubordinateTimeRecordRepository;
 import at.qe.skeleton.repositories.SuperiorTimeRecordRepository;
+import at.qe.skeleton.repositories.TemperaStationRepository;
+import org.hibernate.annotations.processing.SQL;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +19,7 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.LocalDateTime;
@@ -29,19 +33,29 @@ import static org.mockito.Mockito.*;
 @WebAppConfiguration
 @ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
 class TimeRecordServiceTest {
-  private TimeRecordService timeRecordService;
+  private TimeRecordService timeRecordServiceMockedDependencies;
+  private TimeRecordService timeRecordServiceReal;
+  private TemperaStationService temperaStationService;
+  private SensorService sensorService;
   @Autowired private UserxService userxService;
   @Autowired private SuperiorTimeRecordRepository superiorTimeRecordRepository;
   @Autowired private SubordinateTimeRecordRepository subordinateTimeRecordRepository;
+    @Autowired private TemperaStationRepository temperaStationRepository;
+@Autowired private SensorRepository sensorRepository;
 
   @Mock private SuperiorTimeRecordRepository superiorTimeRecordRepositoryMock;
   @Mock private SubordinateTimeRecordRepository subordinateTimeRecordRepositoryMock;
 
+
   @BeforeEach
   void setUp() {
-    timeRecordService =
+    timeRecordServiceMockedDependencies =
         new TimeRecordService(
             superiorTimeRecordRepositoryMock, subordinateTimeRecordRepositoryMock);
+    sensorService = new SensorService(sensorRepository);
+    timeRecordServiceReal = new TimeRecordService(superiorTimeRecordRepository, subordinateTimeRecordRepository);
+    temperaStationService = new TemperaStationService(temperaStationRepository, sensorService);
+
   }
 
   @AfterEach
@@ -92,7 +106,7 @@ class TimeRecordServiceTest {
         .thenReturn(newSubordinateTimeRecord);
 
     // call the method
-    SuperiorTimeRecord result = timeRecordService.addRecord(newSuperiorTimeRecord);
+    SuperiorTimeRecord result = timeRecordServiceMockedDependencies.addRecord(newSuperiorTimeRecord);
 
     // check if the result is the new SuperiorTimeRecord
     assertEquals(newSuperiorTimeRecord, result);
@@ -107,9 +121,13 @@ class TimeRecordServiceTest {
   @WithMockUser(
       username = "user1",
       roles = {"EMPLOYEE"})
+  @Sql(
+          executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+          scripts = "classpath:addRecordWithOlderRecordsRealRepositoryTest.sql")
   public void addRecordWithOlderRecordsRealRepository() throws CouldNotFindEntityException {
     superiorTimeRecordRepository.findAll().forEach(superiorTimeRecordRepository::delete);
     subordinateTimeRecordRepository.findAll().forEach(subordinateTimeRecordRepository::delete);
+    temperaStationRepository.findAll().forEach(temperaStationRepository::delete);
     assertEquals(0, superiorTimeRecordRepository.findAll().size());
     assertEquals(0, subordinateTimeRecordRepository.findAll().size());
 
@@ -117,6 +135,7 @@ class TimeRecordServiceTest {
     LocalDateTime startNew = LocalDateTime.now();
     Userx user1 = userxService.loadUser("user1");
     TemperaStation temperaStation = new TemperaStation("temperaStation", true, user1);
+    temperaStationService.save(temperaStation);
 
     // create and save older SuperiorTimeRecord
     SuperiorTimeRecord oldSuperiorTimeRecord =
@@ -133,7 +152,7 @@ class TimeRecordServiceTest {
         new SuperiorTimeRecord(temperaStation, startNew, null, State.DEEPWORK);
 
     // call the method
-    SuperiorTimeRecord result = timeRecordService.addRecord(newSuperiorTimeRecord);
+    SuperiorTimeRecord result = timeRecordServiceReal.addRecord(newSuperiorTimeRecord);
 
     assertEquals(newSuperiorTimeRecord, result);
     assertEquals(2, superiorTimeRecordRepository.findAll().size());
