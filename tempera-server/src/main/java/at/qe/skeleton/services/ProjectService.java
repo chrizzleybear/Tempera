@@ -1,7 +1,9 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.model.Group;
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.ProjectRepository;
 import at.qe.skeleton.repositories.UserxRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,10 @@ public class ProjectService {
 
     @Autowired
     private UserxRepository userxRepository;
+
+    @Autowired
+    private GroupRepository groupRepository;
+
 
     @Transactional
     public Project createProject(String name, String description, String manager) {
@@ -49,12 +55,13 @@ public class ProjectService {
     }
 
     @Transactional
-    public void addContributorToProject(Long id, Userx contributor) {
-        if (contributor == null) {
+    public void addContributorToProject(Long groupId, Long id) {
+        if (groupId == null) {
             throw new NullPointerException("Contributor can not be null");
         }
-        Project project = projectRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Project with ID " + id + " not found"));
-        project.addContributor(contributor);
+        Project project = projectRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Project not found"));
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException("Group not found"));
+        project.addContributor(group);
         projectRepository.save(project);
     }
 

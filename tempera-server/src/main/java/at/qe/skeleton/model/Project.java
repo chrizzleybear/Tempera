@@ -19,7 +19,7 @@ public class Project {
     @ManyToOne
     private Userx manager;
     @ManyToMany
-    private List<Userx> contributors;
+    private List<Group> contributors;
 
     public Project(String name, String description, Userx manager) {
         this.name = name;
@@ -39,7 +39,7 @@ public class Project {
         return manager;
     }
 
-    public List<Userx> getContributors() {
+    public List<Group> getContributors() {
         return contributors;
     }
 
@@ -58,7 +58,7 @@ public class Project {
         this.manager = manager;
     }
 
-    public void addContributor(Userx contributor) {
+    public void addContributor(Group contributor) {
         if(contributor == null){
             throw new NullPointerException("Contributor should not be null when added to Project");
         }
