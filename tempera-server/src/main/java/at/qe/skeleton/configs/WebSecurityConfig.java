@@ -37,8 +37,6 @@ public class WebSecurityConfig {
   private static final String ADMIN = UserxRole.ADMIN.name();
   private static final String MANAGER = UserxRole.MANAGER.name();
   private static final String EMPLOYEE = UserxRole.EMPLOYEE.name();
-  private static final String LOGIN = "/login.xhtml";
-  private static final String ACCESSDENIED = "/error/access_denied.xhtml";
 
   @Autowired DataSource dataSource;
 
@@ -91,11 +89,7 @@ public class WebSecurityConfig {
                       .permitAll()
                       .requestMatchers(new AntPathRequestMatcher("/"))
                       .permitAll()
-                      .requestMatchers(new AntPathRequestMatcher("/**.jsf"))
-                      .permitAll()
                       .requestMatchers(new AntPathRequestMatcher("/h2-console/**"))
-                      .permitAll()
-                      .requestMatchers(new AntPathRequestMatcher("/jakarta.faces.resource/**"))
                       .permitAll()
                       .requestMatchers(new AntPathRequestMatcher("/error/**"))
                       .permitAll()
