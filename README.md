@@ -34,7 +34,7 @@ $ docker compose down
 > integrity violations at the next start-up with *docker compose up*.
 
 > :information_source:
-> Here we use *docker compose run* instead of *up* because the BLE app requires user input and is thus interactive.
+> Here we use *docker compose run* because the BLE app requires user input and is thus interactive.
 > The BLE app depends on the back-end, which depends on the postgresql database. Therefore, each time
 > the ble-app is run, it automatically spins up all other containers beforehand.
 > Spin up means that docker builds the images defined for each component in the respective Dockerfiles across the
@@ -55,7 +55,19 @@ $ docker run -iv -v /var/run/dbus:/var/run/dbus tempera-ble-app
 
 ```bash
 # In the project root directory (where the compose.yaml file is found)
-$ docker compose run back-end
+
+# Create the containers for the service
+$ docker compose create back-end
+
+# Start the containers
+$ docker compose start back-end
+
+# Stop and remove all containers
+$ docker compose down
+
+# Pro tip: if you are stuck
+$ docker compose
+# wqill print all the commands at your disposal including descriptions 
 ```
 
 > :information_source:
