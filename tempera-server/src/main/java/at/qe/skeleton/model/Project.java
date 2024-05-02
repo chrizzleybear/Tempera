@@ -19,7 +19,9 @@ public class Project {
     @ManyToOne
     private Userx manager;
     @ManyToMany
-    private List<Group> contributors;
+    private List<Userx> contributors;
+    @ManyToMany
+    private List<Group> groups;
 
     public Project(String name, String description, Userx manager) {
         this.name = name;
@@ -39,9 +41,11 @@ public class Project {
         return manager;
     }
 
-    public List<Group> getContributors() {
+    public List<Userx> getContributors() {
         return contributors;
     }
+
+    public List<Group> getGroups() { return groups; }
 
     public void setName(String name) {
         this.name = name;
@@ -58,11 +62,32 @@ public class Project {
         this.manager = manager;
     }
 
-    public void addContributor(Group contributor) {
+    public void addGroup(Group contributor) {
+        if(contributor == null){
+            throw new NullPointerException("Contributor should not be null when added to Project");
+        }
+        this.groups.add(contributor);
+    }
+
+    public void removeGroup(Group contributor) {
+        if(contributor == null){
+            throw new NullPointerException("Contributor should not be null when removed from Project");
+        }
+        this.groups.remove(contributor);
+    }
+
+    public void addContributor(Userx contributor) {
         if(contributor == null){
             throw new NullPointerException("Contributor should not be null when added to Project");
         }
         this.contributors.add(contributor);
+    }
+
+    public void removeContributor(Userx contributor) {
+        if(contributor == null){
+            throw new NullPointerException("Contributor should not be null when removed from Project");
+        }
+        this.contributors.remove(contributor);
     }
 
     public String getName() {

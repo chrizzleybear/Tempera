@@ -55,13 +55,13 @@ public class ProjectService {
     }
 
     @Transactional
-    public void addContributorToProject(Long groupId, Long id) {
+    public void addGroupToProject(Long groupId, Long id) {
         if (groupId == null) {
             throw new NullPointerException("Contributor can not be null");
         }
         Project project = projectRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Project not found"));
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException("Group not found"));
-        project.addContributor(group);
+        project.addGroup(group);
         projectRepository.save(project);
     }
 
