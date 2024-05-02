@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -27,7 +26,7 @@ public class TimeRecordService {
   private final SubordinateTimeRecordRepository subordinateTimeRecordRepository;
   private final SuperiorTimeRecordRepository superiorTimeRecordRepository;
 
-  @Autowired
+
   public TimeRecordService(
       SuperiorTimeRecordRepository superiorTimeRecordRepository,
       SubordinateTimeRecordRepository subordinateTimeRecordRepository) {
@@ -51,6 +50,8 @@ public class TimeRecordService {
    * current one. Furthermore the method instantiates a SubordinateTimeRecord with the identical
    * properties and adds this to the list of Subordinate TimeRecords stored in the
    * SuperiorTimeRecords.
+   * In case this is the first SuperiorTimeRecord that was saved for User of the stored TemperaStation, the method
+   * just saves the new SuperiorTimeRecord and its SubordinateTimeRecord to the database.
    *
    * @param newSuperiorTimeRecord
    * @return the SuperiorTimeRecord that was newly created.
@@ -62,49 +63,69 @@ public class TimeRecordService {
       throw new NullPointerException(
           "SuperiorTimeRecord must have a Start Time when being added to db.");
     }
-
     TemperaStation temperaStation = newSuperiorTimeRecord.getTemperaStation();
     Optional<SuperiorTimeRecord> oldSuperiorTimeRecordOptional =
         findLastTimeRecordByUser(temperaStation.getUser());
     if (oldSuperiorTimeRecordOptional.isEmpty()) {
-      throw new CouldNotFindEntityException("old Superior Time Record could not be found in DB");
+      logger.info("did not find an old SuperiorTimeRecord");
+    } else {
+      logger.info("found old SuperiorTimeRecord %s".formatted(oldSuperiorTimeRecordOptional.get()));
+      finalizeOldTimeRecord(newSuperiorTimeRecord, oldSuperiorTimeRecordOptional);
     }
-    SuperiorTimeRecord oldSuperiorTimeRecord = oldSuperiorTimeRecordOptional.get();
+    return saveNewTimeRecord(newSuperiorTimeRecord);
+  }
+
+  private SuperiorTimeRecord saveNewTimeRecord(SuperiorTimeRecord superiorTimeRecord) {
+    SubordinateTimeRecord subordinateTimeRecord =
+            new SubordinateTimeRecord(superiorTimeRecord.getStart());
+    subordinateTimeRecord = saveSubordinateTimeRecord(subordinateTimeRecord);
+    logger.info("saved %s".formatted(subordinateTimeRecord.toString()));
+    superiorTimeRecord.addSubordinateTimeRecord(subordinateTimeRecord);
+    logger.info(
+            "Added subordinate %s to superior %s"
+                    .formatted(subordinateTimeRecord, superiorTimeRecord));
+    superiorTimeRecord =  superiorTimeRecordRepository.save(superiorTimeRecord);
+    logger.info("saved %s".formatted(superiorTimeRecord.toString()));
+    return superiorTimeRecord;
+  }
+
+  /**
+   * internal Method, that retrieves the SubordinateTimeRecord form the oldSuperiorTimeRecord and sets the End for both of them
+   * to one second before the start of the newSuperiorTimeRecord. After that it saves both old TimeRecord entities to the database.
+   * @param newSuperiorTimeRecord
+   * @param oldSuperiorTimeRecordOptional
+   * @return
+   */
+  private SuperiorTimeRecord finalizeOldTimeRecord(SuperiorTimeRecord newSuperiorTimeRecord, Optional<SuperiorTimeRecord> oldSuperiorTimeRecordOptional){
+
+    SuperiorTimeRecord oldSuperiorTimeRecord = oldSuperiorTimeRecordOptional.orElseThrow(() -> new RuntimeException("Could not find old SuperiorTimeRecord"));
     if (oldSuperiorTimeRecord.getSubordinateRecords().size() != 1) {
       throw new IllegalArgumentException(
-          "There seem to be %d number of SubordinateTimeRecords stored in SuperiorTimeRecord %s while we expect only one"
-              .formatted(
-                  oldSuperiorTimeRecord.getSubordinateRecords().size(), oldSuperiorTimeRecord));
-    }
-    SubordinateTimeRecord oldSubordinateTimeRecord =
-        oldSuperiorTimeRecord.getSubordinateRecords().get(0);
-    if (oldSubordinateTimeRecord.getStart() != oldSuperiorTimeRecord.getStart()) {
-      throw new SubordinateTimeRecordOutOfBoundsException(
-          "Start of %s does not match start of %s"
-              .formatted(oldSubordinateTimeRecord.getStart(), oldSuperiorTimeRecord.getStart()));
+              "There seem to be %d SubordinateTimeRecords stored in SuperiorTimeRecord %s while we expect only one"
+                      .formatted(
+                              oldSuperiorTimeRecord.getSubordinateRecords().size(), oldSuperiorTimeRecord));
     }
 
-    LocalDateTime oldStart = oldSuperiorTimeRecord.getStart();
-    LocalDateTime oldEnd = newSuperiorTimeRecord.getStart().minusSeconds(1);
-    LocalDateTime newStart = newSuperiorTimeRecord.getStart();
-    oldSuperiorTimeRecord.setEnd(oldEnd);
-    oldSubordinateTimeRecord.setEnd(oldEnd);
+    SubordinateTimeRecord oldSubordinateTimeRecord =
+            oldSuperiorTimeRecord.getSubordinateRecords().get(0);
+
+    if (oldSubordinateTimeRecord.getStart() != oldSuperiorTimeRecord.getStart()) {
+      throw new SubordinateTimeRecordOutOfBoundsException(
+              "Start of %s does not match start of %s"
+                      .formatted(oldSubordinateTimeRecord.getStart(), oldSuperiorTimeRecord.getStart()));
+      }
+
+    oldSuperiorTimeRecord.setEnd(newSuperiorTimeRecord.getStart().minusSeconds(1));
+    oldSubordinateTimeRecord.setEnd(newSuperiorTimeRecord.getStart().minusSeconds(1));
     logger.info(
-            "set End TimeStamp for %s and %s".formatted(oldSuperiorTimeRecord, oldSubordinateTimeRecord));
+            "set End TimeStamp for %s and %s"
+                    .formatted(oldSuperiorTimeRecord, oldSubordinateTimeRecord));
 
     subordinateTimeRecordRepository.save(oldSubordinateTimeRecord);
     logger.info("saved %s".formatted(oldSubordinateTimeRecord.toString()));
     superiorTimeRecordRepository.save(oldSuperiorTimeRecord);
     logger.info("saved %s".formatted(oldSuperiorTimeRecord.toString()));
-
-    SubordinateTimeRecord newSubordinateTimeRecord = new SubordinateTimeRecord(newStart);
-    newSubordinateTimeRecord = subordinateTimeRecordRepository.save(newSubordinateTimeRecord);
-    newSuperiorTimeRecord.addSubordinateTimeRecord(newSubordinateTimeRecord);
-    logger.info("Added subordinate %s to superior %s".formatted(newSubordinateTimeRecord, newSuperiorTimeRecord));
-    newSuperiorTimeRecord = superiorTimeRecordRepository.save(newSuperiorTimeRecord);
-    logger.info("Saved new SuperiorTimeRecord %s".formatted(newSuperiorTimeRecord));
-
-    return newSuperiorTimeRecord;
+     return oldSuperiorTimeRecord;
   }
 
   public void delete(SuperiorTimeRecord superiorTimeRecord) {

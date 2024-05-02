@@ -96,6 +96,6 @@ public class SubordinateTimeRecord {
   @Override
   public String toString() {
     return "[SubordinateTimeRecord start: %s, end: %s, project: %s]"
-        .formatted(start.toString(), end.toString(), assignedProject.toString());
+        .formatted(start.toString(), end == null ? "null" : end, assignedProject == null ? "null" : assignedProject);
   }
 }

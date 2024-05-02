@@ -21,5 +21,4 @@ public interface SuperiorTimeRecordRepository extends AbstractRepository<Superio
             "ORDER BY s.start DESC " +
             "Limit 1")
     List<SuperiorTimeRecord> findLastSavedByUser(@Param("username") String username);
-
 }

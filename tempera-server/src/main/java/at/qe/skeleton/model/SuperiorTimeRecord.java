@@ -3,10 +3,12 @@ package at.qe.skeleton.model;
 import at.qe.skeleton.exceptions.SubordinateTimeRecordOutOfBoundsException;
 import at.qe.skeleton.model.enums.State;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The basic unit to measure Time Blocks in the TemperaStation. The End field remains null until
@@ -38,11 +40,11 @@ public class SuperiorTimeRecord {
   }
 
   public SuperiorTimeRecord(
-      TemperaStation temperaStation, LocalDateTime start, LocalDateTime end, State state) {
-    this.temperaStation = temperaStation;
-    this.start = start;
+          @NotNull TemperaStation temperaStation, @NotNull LocalDateTime start, LocalDateTime end, @NotNull State state) {
+    this.temperaStation = Objects.requireNonNull(temperaStation);
+    this.start = Objects.requireNonNull(start);
     this.end = end;
-    this.state = state;
+    this.state = Objects.requireNonNull(state);
     subordinateRecords = new ArrayList<>();
   }
 
@@ -70,8 +72,8 @@ public class SuperiorTimeRecord {
       throw new SubordinateTimeRecordOutOfBoundsException(
           "subordinateTimeRecord should not start before its superiorTimeRecord.");
     }
-    if (subordinateTimeRecord.getEnd().isAfter(this.end)
-        && subordinateTimeRecord.getEnd().isAfter(LocalDateTime.now())) {
+    if (subordinateTimeRecord.getEnd() != null && (subordinateTimeRecord.getEnd().isAfter(this.end)
+        || subordinateTimeRecord.getEnd().isAfter(LocalDateTime.now()))) {
       throw new SubordinateTimeRecordOutOfBoundsException(
           "subordinateTimeRecord should not end after its superiorTimeRecord. If SuperiorTimeRecord has not yet"
               + "ended, SubordinateTimeRecord should not extend beyond now.");
@@ -114,6 +116,6 @@ public class SuperiorTimeRecord {
   @Override
   public String toString() {
     return "[SuperiorTimeRecord start: %s, end: %s, state: %s]"
-        .formatted(start.toString(), end.toString(), state.toString());
+        .formatted(start.toString(), end == null ? "null" : end, state.toString());
   }
 }
