@@ -1,4 +1,4 @@
-import {Component, OnInit, signal} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Project} from "../../models/project.model";
 import {ProjectService} from '../../_services/project.service';
 import {MessagesModule} from "primeng/messages";
@@ -69,12 +69,10 @@ export class ProjectsComponent implements OnInit{
     deleteProject(projectName: string) {
       this.projectService.deleteProject(projectName).subscribe({
         next: (response) => {
-          console.log("Project deleted successfully:", response);
           this.loadProjects();
           this.messages = [{severity:'success', summary:'Success', detail:'Project deleted successfully'}];
         },
         error: (error) => {
-          console.error("Error deleting project:", error);
           this.messages = [{severity:'error', summary:'Error', detail:'Error deleting project'}];
         }
       })
