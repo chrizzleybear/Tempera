@@ -52,12 +52,14 @@ struct color findButtonColor(pin_size_t button) {
   }
 };
 
+// Function used to handle a time overflow of the internal Arduino clock
+int fixTimeOverflow(timedSession session) {
+  // ULONG_MAX
+  return 4294967295 - session.startTime + millis();
+};
+
 void switchBuiltInLED(unsigned state) {
-  if (state) {
-    digitalWrite(LED_BUILTIN, HIGH);
-  } else {
-    digitalWrite(LED_BUILTIN, LOW);
-  }
+    digitalWrite(LED_BUILTIN, (state ? HIGH : LOW) );
 };
 
 void printSessionUpdate(timedSession session) {
@@ -82,13 +84,12 @@ void printLEDUpdate(LED led) {
 
 void printRoomClimateDataUpdate(roomClimateUnionStructure roomClimateData) {
   Serial.println("Tempera > [INFO] Room climate data has been updated:");
-  Serial.print("Tempera > [INFO]    Values: ");
-  Serial.print(roomClimateData.temperature);
-  Serial.print("   ");
-  Serial.print(roomClimateData.irradiance);
-  Serial.print("   ");
-  Serial.print(roomClimateData.humidity);
-  Serial.print("   ");
-  Serial.print(roomClimateData.nmvoc);
-  Serial.println();
+  Serial.print("Tempera > [INFO]    Temperature: ");
+  Serial.println(roomClimateData.temperature);
+  Serial.print("Tempera > [INFO]    Irradiance: ");
+  Serial.println(roomClimateData.irradiance);
+  Serial.print("Tempera > [INFO]    Humidity: ");
+  Serial.println(roomClimateData.humidity);
+  Serial.print("Tempera > [INFO]    Gas resistance: ");
+  Serial.println(roomClimateData.nmvoc);
 };
