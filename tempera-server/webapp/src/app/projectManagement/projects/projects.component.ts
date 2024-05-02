@@ -9,6 +9,7 @@ import {NgIf} from "@angular/common";
 import {UserCreateComponent} from "../../userManagement/user-create/user-create.component";
 import {ProjectCreateComponent} from "../project-create/project-create.component";
 import {DialogModule} from "primeng/dialog";
+import {Router} from "@angular/router";
 @Component({
   selector: 'app-projects',
   standalone: true,
@@ -32,7 +33,7 @@ export class ProjectsComponent implements OnInit{
   messages: any;
   displayCreateDialog: boolean = false;
 
-  constructor(private projectService: ProjectService) {
+  constructor(private projectService: ProjectService, private router: Router) {
 
   }
   ngOnInit(): void {
@@ -87,5 +88,15 @@ export class ProjectsComponent implements OnInit{
   returnToProjects() {
     this.loadProjects();
     this.displayCreateDialog = false;
+  }
+
+  viewProjectDetails(project: Project) {
+    console.log("View project details:", project);
+    console.log("Project ID:", project.id);
+    if (!project.id) {
+      console.error('Project ID is undefined');
+      return; // Stop the function if there's no ID
+    }
+    this.router.navigate(['/project', project.id]);
   }
 }

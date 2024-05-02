@@ -8,5 +8,5 @@ public interface ProjectRepository extends AbstractRepository<Project, Long>{
     Project findFirstByName(String name);
     Project findFirstByManager(Userx manager);
     void delete(Project project);
-
+    Project findFirstById(Long id);
 }

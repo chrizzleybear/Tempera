@@ -73,6 +73,8 @@ public class Project {
         return description;
     }
 
+    public Long getId() { return id; }
+
     @Override
     public int hashCode() {
         return name.hashCode();

@@ -41,7 +41,7 @@ public class ProjectController {
         return ResponseEntity.ok("Project deleted");
     }
     @GetMapping("/load/{id}")
-    public ResponseEntity<Project> getProject(@PathVariable String id) {
+    public ResponseEntity<Project> getProject(@PathVariable Long id) {
         Project project = projectService.loadProject(id);
         return ResponseEntity.ok(project);
     }

@@ -8,6 +8,7 @@ import { isNotLoggedInGuard } from './_guards/is-not-logged-in.guard';
 import {UsersComponent} from "./userManagement/users/users.component";
 import {UserDetailsComponent} from "./userManagement/user-details/user-details.component";
 import {ProjectsComponent} from "./projectManagement/projects/projects.component";
+import {ProjectDetailsComponent} from "./projectManagement/project-details/project-details.component";
 
 export const routes: Routes = [
   {
@@ -17,6 +18,7 @@ export const routes: Routes = [
           { path: 'users', component: UsersComponent },
           { path: 'user/:id', component: UserDetailsComponent },
           { path: 'projects', component: ProjectsComponent},
+          { path: 'project/:id', component: ProjectDetailsComponent},
         ] },
     ]
   },

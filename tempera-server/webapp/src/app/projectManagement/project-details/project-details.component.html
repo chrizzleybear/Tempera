@@ -1,0 +1,22 @@
+<div *ngIf="project">
+  <h2>Project Details</h2>
+  <br>
+  <p>Name: {{ project.name }}</p>
+  <p>Description: {{ project.description }}</p>
+  <br>
+  <h3>Manager Details</h3>
+  <p>Username: {{ project.manager.username }}</p>
+  <p>First Name: {{ project.manager.firstName }}</p>
+  <p>Last Name: {{ project.manager.lastName }}</p>
+  <p>Email: {{ project.manager.email }}</p>
+  <br>
+  <h3>Team Members</h3>
+  <ul>
+    <li *ngFor="let member of project.contributors">
+      <p>Username: {{ member.username }}</p>
+      <p>First Name: {{ member.firstName }}</p>
+      <p>Last Name: {{ member.lastName }}</p>
+      <p>Email: {{ member.email }}</p>
+    </li>
+  </ul>
+</div>
