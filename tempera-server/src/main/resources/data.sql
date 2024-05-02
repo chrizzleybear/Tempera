@@ -24,4 +24,5 @@ INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_STATION_ID, UNIT) VALUES ('I
 INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_STATION_ID, UNIT) VALUES ('HUMIDITY', -3, 'tempera_station_1', 'PERCENT');
 INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_STATION_ID, UNIT) VALUES ('NMVOC', -4, 'tempera_station_1', 'OHM');
 INSERT INTO measurement (measurement_value, id, sensor_sensor_id, timestamp, sensor_tempera_station_id)  VALUES (20.0, -1, -1, '2016-01-01 00:00:00', 'tempera_station_1');
+INSERT INTO tempera_station
 

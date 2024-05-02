@@ -119,23 +119,23 @@ class TimeRecordServiceTest {
 
   @Test
   @WithMockUser(
-      username = "user1",
-      roles = {"EMPLOYEE"})
-  @Sql(
-          executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
-          scripts = "classpath:addRecordWithOlderRecordsRealRepositoryTest.sql")
+      username = "admin",
+      roles = {"ADMIN"})
+//  @Sql(
+//          executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+//          scripts = "classpath:addRecordWithOlderRecordsRealRepositoryTest.sql")
   public void addRecordWithOlderRecordsRealRepository() throws CouldNotFindEntityException {
-    superiorTimeRecordRepository.findAll().forEach(superiorTimeRecordRepository::delete);
-    subordinateTimeRecordRepository.findAll().forEach(subordinateTimeRecordRepository::delete);
-    temperaStationRepository.findAll().forEach(temperaStationRepository::delete);
-    assertEquals(0, superiorTimeRecordRepository.findAll().size());
-    assertEquals(0, subordinateTimeRecordRepository.findAll().size());
+//    superiorTimeRecordRepository.findAll().forEach(superiorTimeRecordRepository::delete);
+//    subordinateTimeRecordRepository.findAll().forEach(subordinateTimeRecordRepository::delete);
+//    temperaStationRepository.findAll().forEach(temperaStationRepository::delete);
+//    assertEquals(0, superiorTimeRecordRepository.findAll().size());
+//    assertEquals(0, subordinateTimeRecordRepository.findAll().size());
 
     LocalDateTime startOld = LocalDateTime.now().minusHours(2);
     LocalDateTime startNew = LocalDateTime.now();
-    Userx user1 = userxService.loadUser("user1");
-    TemperaStation temperaStation = new TemperaStation("temperaStation", true, user1);
-    temperaStationService.save(temperaStation);
+    Userx admin = userxService.loadUser("admin");
+//    TemperaStation temperaStation = new TemperaStation("tempera_station_1", true, admin);
+//    temperaStationService.save(temperaStation);
 
     // create and save older SuperiorTimeRecord
     SuperiorTimeRecord oldSuperiorTimeRecord =

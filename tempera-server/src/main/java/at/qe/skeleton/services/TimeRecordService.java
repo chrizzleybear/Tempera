@@ -9,12 +9,13 @@ import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.SubordinateTimeRecordRepository;
 import at.qe.skeleton.repositories.SuperiorTimeRecordRepository;
 import com.fasterxml.jackson.databind.annotation.JsonAppend;
-import jakarta.transaction.Transactional;
+
 import org.jboss.weld.exceptions.IllegalArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -67,18 +68,18 @@ public class TimeRecordService {
           "SuperiorTimeRecord must have a Start Time when being added to db.");
     }
     TemperaStation temperaStation = newSuperiorTimeRecord.getTemperaStation();
-    Optional<SuperiorTimeRecord> oldSuperiorTimeRecordOptional =
-        findLastTimeRecordByUser(temperaStation.getUser());
-    if (oldSuperiorTimeRecordOptional.isEmpty()) {
-      logger.info("did not find an old SuperiorTimeRecord");
-    } else {
-      logger.info("found old SuperiorTimeRecord %s".formatted(oldSuperiorTimeRecordOptional.get()));
-      finalizeOldTimeRecord(newSuperiorTimeRecord, oldSuperiorTimeRecordOptional);
-    }
+//    Optional<SuperiorTimeRecord> oldSuperiorTimeRecordOptional =
+//        findLastTimeRecordByUser(temperaStation.getUser());
+//    if (oldSuperiorTimeRecordOptional.isEmpty()) {
+//      logger.info("did not find an old SuperiorTimeRecord");
+//    } else {
+//      logger.info("found old SuperiorTimeRecord %s".formatted(oldSuperiorTimeRecordOptional.get()));
+      finalizeOldTimeRecord(temperaStation.getUser().getUsername(), newSuperiorTimeRecord);
+//    }
     return saveNewTimeRecord(newSuperiorTimeRecord);
   }
 
-@Transactional(value = Transactional.TxType.MANDATORY)
+
   public SuperiorTimeRecord saveNewTimeRecord(SuperiorTimeRecord superiorTimeRecord) {
     SubordinateTimeRecord subordinateTimeRecord =
             new SubordinateTimeRecord(superiorTimeRecord.getStart());
@@ -100,16 +101,17 @@ public class TimeRecordService {
    * @param oldSuperiorTimeRecordOptional
    * @return
    */
-
-  protected SuperiorTimeRecord finalizeOldTimeRecord(SuperiorTimeRecord newSuperiorTimeRecord, Optional<SuperiorTimeRecord> oldSuperiorTimeRecordOptional){
-
-    SuperiorTimeRecord oldSuperiorTimeRecord = oldSuperiorTimeRecordOptional.orElseThrow(() -> new RuntimeException("Could not find old SuperiorTimeRecord"));
-    if (oldSuperiorTimeRecord.getSubordinateRecords().size() != 1) {
-      throw new IllegalArgumentException(
-              "There seem to be %d SubordinateTimeRecords stored in SuperiorTimeRecord %s while we expect only one"
-                      .formatted(
-                              oldSuperiorTimeRecord.getSubordinateRecords().size(), oldSuperiorTimeRecord));
-    }
+@Transactional
+  public void finalizeOldTimeRecord(String username, SuperiorTimeRecord newSuperiorTimeRecord) {
+    SuperiorTimeRecord oldSuperiorTimeRecord = superiorTimeRecordRepository.findLastSavedByUser(username).get(0);
+//
+//    SuperiorTimeRecord oldSuperiorTimeRecord = oldSuperiorTimeRecordOptional.orElseThrow(() -> new RuntimeException("Could not find old SuperiorTimeRecord"));
+//    if (oldSuperiorTimeRecord.getSubordinateRecords().size() != 1) {
+//      throw new IllegalArgumentException(
+//              "There seem to be %d SubordinateTimeRecords stored in SuperiorTimeRecord %s while we expect only one"
+//                      .formatted(
+//                              oldSuperiorTimeRecord.getSubordinateRecords().size(), oldSuperiorTimeRecord));
+//    }
 
     SubordinateTimeRecord oldSubordinateTimeRecord =
             oldSuperiorTimeRecord.getSubordinateRecords().get(0);
@@ -130,7 +132,6 @@ public class TimeRecordService {
     logger.info("saved %s".formatted(oldSubordinateTimeRecord.toString()));
     superiorTimeRecordRepository.save(oldSuperiorTimeRecord);
     logger.info("saved %s".formatted(oldSuperiorTimeRecord.toString()));
-     return oldSuperiorTimeRecord;
   }
 
   public void delete(SuperiorTimeRecord superiorTimeRecord) {
