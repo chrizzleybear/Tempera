@@ -1,0 +1,16 @@
+name: tempera-env
+channels:
+  - defaults
+dependencies:
+  - pip=23.3.1=py311h06a4308_0
+  - python=3.11.8=h955ad1f_0
+  - sqlite=3.41.2=h5eee18b_0
+  - pip:
+      - black==24.3.0
+      - bleak==0.21.1
+      - fastapi==0.110.0
+      - pyyaml==6.0.1
+      - requests==2.31.0
+      - sqlalchemy==2.0.29
+      - tenacity==8.2.3
+      - uvicorn==0.29.0

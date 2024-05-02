@@ -1,6 +1,7 @@
 package at.qe.skeleton.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Persistable;
 
 import java.util.List;
@@ -10,16 +11,13 @@ import java.util.UUID;
 @Entity
 public class TemperaStation implements Persistable<String> {
 
-    // wir wählen UUID, weil sie nicht nur innerhalb eines DBS sondern weltweit einmalig sind.
-    // Daher ist eine eindeutige identifikation Problemlos möglich.
+    // we set id manually (has to be configurable from admin)
     @Id
     private String id;
     @OneToOne
     private Userx user;
     private boolean enabled;
 
-    @OneToMany
-    private List<SuperiorTimeRecord> superiorTimeRecords;
 
     // We need to implement Persistable since we set Id manually
     // the following strategy for the isNew Method comes from spring documentation:
@@ -43,8 +41,11 @@ public class TemperaStation implements Persistable<String> {
         this.isNew = false;
     }
 
-    public TemperaStation (String id) {
-        this.id = id;
+    /** direct creation of TemperaStations should be avoided, use {@link at.qe.skeleton.services.TemperaStationService#createTemperaStation} instead */
+    public TemperaStation (@NotNull String id, boolean enabled, Userx user) {
+        this.user = user;
+        this.id = Objects.requireNonNull(id);
+        this.enabled = enabled;
     }
     protected TemperaStation(){};
 
@@ -64,16 +65,6 @@ public class TemperaStation implements Persistable<String> {
         this.enabled = enabled;
     }
 
-    public List<SuperiorTimeRecord> getSuperiorTimeRecords() {
-        return superiorTimeRecords;
-    }
-
-    public void addSuperiorTimeRecord(SuperiorTimeRecord superiorTimeRecord) {
-        if (superiorTimeRecord == null) {
-            throw new NullPointerException("superiorTimeRecord should not be null");
-        }
-        this.superiorTimeRecords.add(superiorTimeRecord);
-    }
 
     @Override
     public boolean equals(Object o) {

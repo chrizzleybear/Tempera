@@ -49,8 +49,8 @@ unsigned long lastTimeUpdate = millis();
 unsigned long lastRoomClimateUpdate = millis();
 LED led;
 timedSession session;
-elapsedTimeCharacteristicUnion currentElapsedTime = {0, 0, 0, 0, 1, 0};
-
+elapsedTimeCharacteristicUnion currentElapsedTime = {0, 0, 0, 0, (uint8_t) 1, 0};
+Adafruit_BME680 bme; // get an I2C-Instance
 
 
 void setup() {
@@ -79,6 +79,17 @@ void setup() {
   led.setColor(findButtonColor(session.workMode));
   led.turnOn();
 
+  // BME688: Set up oversampling and filter initialization
+  if (!bme.begin() && ERROR) {
+    Serial.println("Tempera > [ERROR] Could not find BME688-board.");
+  } else {
+    bme.setTemperatureOversampling(BME680_OS_8X);
+    bme.setHumidityOversampling(BME680_OS_2X);
+    bme.setPressureOversampling(BME680_OS_4X);
+    bme.setIIRFilterSize(BME680_FILTER_SIZE_3);
+    bme.setGasHeater(320, 150); // 320*C for 150 ms
+    if (INFO) Serial.println("Tempera > [INFO] BME688-Board initialized.");
+  }
   // BLE: Setup for BLE connectivity and device infos
   if (ERROR) {
     if (!BLE.begin()) {
@@ -102,41 +113,34 @@ void setup() {
 
   BLEDescriptor serialInfoDescriptor("2901", "Unique serial number");
   serialNumberCharacteristic.addDescriptor(serialInfoDescriptor);
-  serialNumberCharacteristic.writeValue(DEVICE_ID);
+  serialNumberCharacteristic.writeValue(DEVICE_SN);
   serialNumberCharacteristic.setEventHandler(BLERead, readSerialNumber);
   deviceInformationService.addCharacteristic(serialNumberCharacteristic);
 
   BLE.addService(deviceInformationService);
 
   // BLE: Setup for elapsed time characteristic
-  BLEDescriptor elapsedTimeDescriptor("2901", "Elapsed Time service used for time tracking.");
+  BLEDescriptor elapsedTimeDescriptor("2901", "Elapsed Time service used for time tracking, time in ms.");
   currentElapsedTimeCharacteristic.addDescriptor(elapsedTimeDescriptor);
   currentElapsedTimeCharacteristic.setEventHandler(BLERead, readElapsedTime);
   elapsedTimeService.addCharacteristic(currentElapsedTimeCharacteristic);
   BLE.addService(elapsedTimeService);
 
   // BLE: Setup for room climate data
-  // to-do: maybe set unique functions for the event handlers
-  BLEDescriptor temperatureCharacteristicDescriptor("2901", "Last measured temperature in deg. C, accuracy of 0.01.");
-  temperatureCharacteristic.addDescriptor(temperatureCharacteristicDescriptor);
-  temperatureCharacteristic.setEventHandler(BLERead, readAnyRoomClimateData);
+  BLECharacteristic characteristics[] = {temperatureCharacteristic, irradianceCharacteristic, humidityCharacteristic, nmvocCharacteristic};
+  BLEDescriptor descriptors[] = {
+    BLEDescriptor("2901", "Last measured temperature in deg. C, accuracy of 0.01."),
+    BLEDescriptor("2901", "Last measured irradiance in W/m^2, accuracy of 0.1"),
+    BLEDescriptor("2901", "Last measured relative humidity in %, accuracy of 0.01"),
+    BLEDescriptor("2901", "Last measured non-methane-volatile-organic-compound-concentration in 10^(-2)*Ohm, accuracy of 1")
+  };
+  String names[] = {"Temperature", "Irradiance", "Humidity", "NMVOC"};
+  for (int i = 0; i < 4; i++) {
+    characteristics[i].setEventHandler(BLERead, readAnyRoomClimateData);
+    characteristics[i].addDescriptor(descriptors[i]);
+    environmentalSensingService.addCharacteristic(characteristics[i]);
+  }
 
-  BLEDescriptor irradianceCharacteristicDescriptor("2901", "Last measured irradiance in W/m^2, accuracy of 0.1");
-  irradianceCharacteristic.addDescriptor(irradianceCharacteristicDescriptor);
-  irradianceCharacteristic.setEventHandler(BLERead, readAnyRoomClimateData);
-
-  BLEDescriptor humidityCharacteristicDescriptor("2901", "Last measured relative humidity in %, accuracy of 0.01");
-  humidityCharacteristic.addDescriptor(humidityCharacteristicDescriptor);
-  humidityCharacteristic.setEventHandler(BLERead, readAnyRoomClimateData);
-
-  BLEDescriptor nmvocCharacteristicDescriptor("2901", "Last measured non-methane-volatile-organic-compound-concentration in g/m^3.");
-  nmvocCharacteristic.addDescriptor(nmvocCharacteristicDescriptor);
-  nmvocCharacteristic.setEventHandler(BLERead, readAnyRoomClimateData);
-  
-  environmentalSensingService.addCharacteristic(temperatureCharacteristic);
-  environmentalSensingService.addCharacteristic(irradianceCharacteristic);
-  environmentalSensingService.addCharacteristic(humidityCharacteristic);
-  environmentalSensingService.addCharacteristic(nmvocCharacteristic);
   BLE.addService(environmentalSensingService);
 
   // BLE: Advertise services
@@ -148,25 +152,55 @@ void setup() {
 // ############### RUNTIME CODE ###############
 
 void loop() {
+
   /* 
   * PERIODIC UPDATE OF THE ROOM CLIMATE DATA:
   * Updates the current room climate data struct.
-  * (This works in a pull configuration.)
+  * (The transmission via BLE works in a pull configuration.)
   */  
   if (lastRoomClimateUpdate + UPDATE_INTERVAL_RC < millis()) {
+    bme.setGasHeater(0, 0); // turn off the gas heater to not manipulate other measurements
+    unsigned long endTime = bme.beginReading();
+    if (endTime == 0 && ERROR) {
+      Serial.println("Tempera > [ERROR] Could not start room climate measurements.");
+    } else if (INFO) {
+      Serial.println("Tempera > [INFO] Started room climate measurement: ");
+      Serial.print("Tempera > [INFO]    Start time: ");
+      Serial.println(millis());
+      Serial.print("Tempera > [INFO]    Finish time: ");
+      Serial.println(endTime);
+    }
 
+    // Wait briefly for the measurement to be completed.
+    delay(200);
 
-    // to-do: update the roomclimatedata with new values from the sensors
-    // some temporary dummy operations for now:
-    roomClimateData.temperature += 1/0.01;
-    roomClimateData.irradiance += 1/0.1;
-    roomClimateData.humidity += 1/0.01;
-    roomClimateData.nmvoc += 1;
+    if (!bme.endReading() && ERROR) {
+      Serial.println("Tempera > [ERROR] Could not complete room climate measurements.");
+      Serial.println("Tempera > [ERROR]    Previously set values will be used.");
+    } else {
+      // Write temperature and humidity measurements with respective accuracies to roomClimateStructure
+      roomClimateData.temperature = bme.temperature / 0.01;
+      roomClimateData.humidity = bme.humidity / 0.01;
+      // start a new measurement to only measure NMVOC
+      bme.setGasHeater(320, 150); // 320*C for 150 ms
+      endTime = bme.beginReading();
+      if (endTime == 0 && ERROR) {
+        Serial.println("Tempera > [ERROR] Could not perform air quality measurement.");
+      }
+      delay(200);
+      if (!bme.endReading() && ERROR) {
+        Serial.println("Tempera > [ERROR] Could not complete air quality measurement.");
+      }
+      // now write only the NMVOC to roomClimateData since the other measurements are skewed due to the heating
+      roomClimateData.nmvoc = bme.gas_resistance /  100.0;
+      roomClimateData.irradiance = analogRead(PT_PIN) / 0.01; // to-do: measure over longer time spans, use exponential smoothing, possibly moving average
+    }
 
-
-    lastRoomClimateUpdate = millis();
+    // Confirm set values
     if (INFO) printRoomClimateDataUpdate(roomClimateData);
+    lastRoomClimateUpdate = millis();
 
+    // Write to characteristics
     writeRoomClimateAllCharacteristics(\
       roomClimateData,\
       temperatureCharacteristic,\
@@ -179,14 +213,18 @@ void loop() {
   /* 
   * PERIODIC UPDATE OF THE TIME TRACKING:
   * Send the current work status after a given time interval.
-  * (This works in a push configuration.)
+  * (The transmission via BLE works in a push configuration.)
   */
   if (lastTimeUpdate + UPDATE_INTERVAL_TIME < millis()) {
     writeElapsedTimeCharacteristicStructure(\
-      {0, UPDATE_INTERVAL_TIME, 0, 0, (uint8_t) session.workMode, (uint8_t) 0},\
+      {0, (millis() - session.startTime), 0, 0, session.workMode, (uint8_t) 0},\
       currentElapsedTimeCharacteristic\
     );
-    session.lastSessionDuration = millis() - session.startTime; // to-do: fix possible overflow error
+    session.lastSessionDuration = millis() - session.startTime;
+    // Overflow fix for internal clock
+    if (millis() < session.startTime) {
+      session.lastSessionDuration = fixTimeOverflow(session);
+    }
     session.startTime = millis();
     lastTimeUpdate = millis();
     if (INFO) printSessionUpdate(session);
@@ -195,7 +233,7 @@ void loop() {
   /*
   * MANUAL UPDATE OF THE TIME TRACKING:
   * If a button has been pressed a manual update is triggered.
-  * (This works in a push configuration.)
+  * (The transmission via BLE works in a push configuration.)
   */
   if (pin_size_t b = whichButtonPressed()) {
     led.turnOff();
@@ -203,11 +241,15 @@ void loop() {
 
     // Update the work session info so the duration and time etc since the last mode change
     writeElapsedTimeCharacteristicStructure(\
-      {0, (millis()-lastTimeUpdate), 0, 0, (uint8_t) session.workMode, (uint8_t) 7},\
+      {0, (millis()-lastTimeUpdate), 0, 0, session.workMode, (uint8_t) 7},\
       currentElapsedTimeCharacteristic\
     );
     session.workMode = b;
-    session.lastSessionDuration = millis() - session.startTime; // to-do: fix possible overflow error
+    session.lastSessionDuration = millis() - session.startTime;
+    // Overflow fix for internal clock
+    if (millis() < session.startTime) {
+      session.lastSessionDuration = fixTimeOverflow(session);
+    }
     session.startTime = millis();
     lastTimeUpdate = millis();
     if (INFO) printSessionUpdate(session);

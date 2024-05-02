@@ -63,7 +63,7 @@ public class Room implements Persistable<String> {
      * returns true if TemperaStation was not already part of the Set
      *
      * @param threshold to be added to this Room
-     * @return true if this Accesspoint did not already contain a threshold
+     * @return true if this AccessPoint did not already contain a threshold
      * with the same ThresholdType and SensorType.
      *
      */

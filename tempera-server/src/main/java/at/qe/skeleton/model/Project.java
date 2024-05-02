@@ -13,9 +13,6 @@ public class Project {
     private Long id;
     private String name;
     private String description;
-    //bidirectional one-to-many association:
-    @OneToMany(mappedBy = "assignedProject")
-    private List<SubordinateTimeRecord> subordinateTimeRecords;
     @ManyToOne
     private Userx manager;
     @ManyToMany
@@ -31,9 +28,9 @@ public class Project {
 
 
 
-    public List<SubordinateTimeRecord> getSubordinateTimeRecords() {
-        return subordinateTimeRecords;
-    }
+//    public List<SubordinateTimeRecord> getSubordinateTimeRecords() {
+//        return subordinateTimeRecords;
+//    }
 
     public Userx getManager() {
         return manager;
