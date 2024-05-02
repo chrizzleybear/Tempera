@@ -24,6 +24,7 @@ services:
 
   postgres_db:
     image: postgres:16-alpine
+    restart: always
     environment:
       - POSTGRES_USER=g4t1
       - POSTGRES_PASSWORD=passwd
@@ -31,7 +32,8 @@ services:
     ports:
       - 5432:5432
 
-  test-api:
-    build: ./tempera-accesspoint/src/tempera/api
-    ports:
-      - "80:80"
+# For testing only
+#  test-api:
+#    build: ./tempera-accesspoint/src/tempera/api
+#    ports:
+#      - "80:80"
