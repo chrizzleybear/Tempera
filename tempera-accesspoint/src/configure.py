@@ -5,7 +5,7 @@ from typing import Literal
 from uuid import UUID
 
 import yaml
-from tenacity import retry
+from tenacity import retry, retry_if_exception_type
 
 welcome_art = """
 #######################################################
@@ -24,7 +24,7 @@ welcome_art = """
 """
 
 
-@retry()
+@retry(retry=retry_if_exception_type(ValueError))
 def _prompt(
     message: str, parse: Literal["UUID", "float", "str"] = "str"
 ) -> float | str:
@@ -58,7 +58,7 @@ def _prompt(
             return parameter
 
 
-@retry()
+@retry(retry=retry_if_exception_type(ValueError))
 def _prompt_password() -> str:
     parameter = getpass()
 
