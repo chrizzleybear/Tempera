@@ -78,14 +78,5 @@ public class ProjectService {
         project.setManager(userxService.loadUser(manager));
         return projectRepository.save(project);
     }
-    public Project createProject2(Project project) {
-        Project newpro = new Project();
-        System.out.println(project.getName());
-        System.out.println(project.getDescription());
-        System.out.println(project.getManager());
-        newpro.setName(project.getName());
-        newpro.setDescription(project.getDescription());
-        newpro.setManager(project.getManager());
-        return projectRepository.save(project);
-    }
+
 }
