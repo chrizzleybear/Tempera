@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../_services/user.service';
+import { HomeService } from '../_services/home.service';
 import { State } from '../models/user.model';
 import { DatePipe, NgIf } from '@angular/common';
 import { MessageModule } from 'primeng/message';
@@ -26,14 +26,13 @@ export class HomeComponent implements OnInit {
   public homeData?: HomeData;
 
 
-  constructor(private userService: UserService) {
+  constructor(private homeService: HomeService) {
   }
 
   ngOnInit(): void {
-    this.userService.getHomeData().subscribe({
+    this.homeService.getHomeData().subscribe({
       next: data => {
         this.homeData = data;
-        console.log(data);
       },
       error: err => {
         console.log(err);

@@ -3,12 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {HomeData} from "../models/home-data.model";
 
-const API_URL = 'http://localhost:8080/api/user/';
+const API_URL = 'http://localhost:8080/api/';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UserService {
+export class HomeService {
   constructor(private http: HttpClient) {}
 
   getHomeData(): Observable<HomeData> {
