@@ -10,6 +10,7 @@ import {UserCreateComponent} from "../../userManagement/user-create/user-create.
 import {ProjectCreateComponent} from "../project-create/project-create.component";
 import {DialogModule} from "primeng/dialog";
 import {Router} from "@angular/router";
+import {ProjectEditComponent} from "../project-edit/project-edit.component";
 @Component({
   selector: 'app-projects',
   standalone: true,
@@ -21,7 +22,8 @@ import {Router} from "@angular/router";
     NgIf,
     UserCreateComponent,
     ProjectCreateComponent,
-    DialogModule
+    DialogModule,
+    ProjectEditComponent
   ],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.css'
@@ -32,6 +34,8 @@ export class ProjectsComponent implements OnInit{
   filteredProjects: Project[] = [];
   messages: any;
   displayCreateDialog: boolean = false;
+  displayEditDialog: boolean = false;
+  selectedProject!: Project;
 
   constructor(private projectService: ProjectService, private router: Router) {
 
@@ -85,6 +89,13 @@ export class ProjectsComponent implements OnInit{
       this.returnToProjects();
     }
   }
+
+  onEditCompleted(success: boolean) {
+    if (success) {
+      this.messages = [{severity:'success', summary:'Success', detail:'Project updated successfully'}];
+      this.returnToProjects();
+    }
+  }
   returnToProjects() {
     this.loadProjects();
     this.displayCreateDialog = false;
@@ -95,4 +106,11 @@ export class ProjectsComponent implements OnInit{
     console.log("Project ID:", project.id);
     this.router.navigate(['/project', project.id]);
   }
+
+  editProject(project: Project) {
+    console.log("Edit project:", project);
+    this.selectedProject = project;
+    this.displayEditDialog = true;
+  }
+
 }

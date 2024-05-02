@@ -25,11 +25,11 @@ export class ProjectDetailsComponent {
   ngOnInit(): void {
     const projectId = this.route.snapshot.paramMap.get('id');
     if (projectId) {
-      this.fetchProjectDetails(projectId);
+
     }
   }
 
-  private fetchProjectDetails(projectId: string) {
+  private fetchProjectDetails(projectId: number) {
     this.projectService.getProjectById(projectId).subscribe({
       next: (data) => {
         this.project = data;

@@ -42,6 +42,7 @@ export class AppMenuComponent implements OnInit {
                         }
                       })},
                     { label: 'User-Management', icon: 'pi pi-fw pi-check-square', routerLink: ['/users'], visible: this.storageService.getUser().roles.includes('ADMIN') },
+                    { label: 'Project-Management', icon: 'pi pi-fw pi-clipboard', routerLink: ['/projects'], visible: this.storageService.getUser().roles.includes('MANAGER') },
             //         { label: 'Float Label', icon: 'pi pi-fw pi-bookmark', routerLink: ['/uikit/floatlabel'] },
             //         { label: 'Invalid State', icon: 'pi pi-fw pi-exclamation-circle', routerLink: ['/uikit/invalidstate'] },
             //         { label: 'Button', icon: 'pi pi-fw pi-box', routerLink: ['/uikit/button'] },
