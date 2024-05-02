@@ -6,7 +6,8 @@ import at.qe.skeleton.exceptions.TemperaStationIsNotEnabledException;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.Unit;
-import at.qe.skeleton.rest.dtos.MeasurementDto;
+import at.qe.skeleton.rest.raspberry.dtos.MeasurementDto;
+import at.qe.skeleton.rest.raspberry.mappers.MeasurementMapper;
 import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.MeasurementService;
 import at.qe.skeleton.services.SensorService;
@@ -18,7 +19,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

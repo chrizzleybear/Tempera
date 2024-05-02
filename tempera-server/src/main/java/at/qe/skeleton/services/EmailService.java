@@ -18,29 +18,29 @@ import org.springframework.stereotype.Component;
 @Scope("application")
 public class EmailService {
 
-    @Autowired private JavaMailSender mailSender;
+  @Autowired private JavaMailSender mailSender;
 
-    @Value("${spring.mail.username}")
-    private String projectEmail;
+  @Value("${spring.mail.username}")
+  private String projectEmail;
 
-    /**
-     * Sends an email to the user.
-     *
-     * @param email the email address of the user
-     * @param subject the subject of the email
-     * @param message the message of the email
-     */
-    public void sendEmail(String email, String subject, String message)
-            throws IllegalArgumentException, MailException {
-        if (email == null || email.isEmpty()) {
-            throw new IllegalArgumentException("Email address must not be empty");
-        }
-
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setFrom(projectEmail);
-        mailMessage.setTo(email);
-        mailMessage.setText(message);
-        mailMessage.setSubject(subject);
-        mailSender.send(mailMessage);
+  /**
+   * Sends an email to the user.
+   *
+   * @param email the email address of the user
+   * @param subject the subject of the email
+   * @param message the message of the email
+   */
+  public void sendEmail(String email, String subject, String message)
+      throws IllegalArgumentException, MailException {
+    if (email == null || email.isEmpty()) {
+      throw new IllegalArgumentException("Email address must not be empty");
     }
+
+    SimpleMailMessage mailMessage = new SimpleMailMessage();
+    mailMessage.setFrom(projectEmail);
+    mailMessage.setTo(email);
+    mailMessage.setText(message);
+    mailMessage.setSubject(subject);
+    mailSender.send(mailMessage);
+  }
 }

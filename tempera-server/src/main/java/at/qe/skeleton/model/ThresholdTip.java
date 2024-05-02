@@ -8,41 +8,40 @@ import jakarta.persistence.Id;
 @Entity
 public class ThresholdTip {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    private String tip;
+  private String tip;
 
-    public ThresholdTip(String tip) {
-        this.tip = tip;
+  public ThresholdTip(String tip) {
+    this.tip = tip;
+  }
+
+  public ThresholdTip() {}
+
+  public String getTip() {
+    return tip;
+  }
+
+  @Override
+  public int hashCode() {
+    return this.tip.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null) {
+      return false;
     }
-
-    public ThresholdTip() {}
-
-    public String getTip() {
-        return tip;
+    if (!(o instanceof ThresholdTip other)) {
+      return false;
     }
+    return other.tip.equals(this.tip);
+  }
 
-    @Override
-    public int hashCode() {
-        return this.tip.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null) {
-            return false;
-        }
-        if (!(o instanceof ThresholdTip other)) {
-            return false;
-        }
-        return other.tip.equals(this.tip);
-    }
-
-    @Override
-    public String toString() {
-        return tip;
-    }
-
+  @Override
+  public String toString() {
+    return tip;
+  }
 }

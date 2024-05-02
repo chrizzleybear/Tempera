@@ -43,7 +43,8 @@ public class TimeRecordService {
     return superiorTimeRecordRepository.findFirstByOrderByStartDesc();
   }
 
-  // todo: subordinate bereits parallel zum neuen Superior TR anlegen, da user bereits im aktuellen TR ein Projekt zuordnen kann
+  // todo: subordinate bereits parallel zum neuen Superior TR anlegen, da user bereits im aktuellen
+  // TR ein Projekt zuordnen kann
   /**
    * this method saves a new SuperiorTimeRecord and adds the start-Time of the new TimeRecord minus
    * 1sec as the End-Time to the SuperiorTimeRecord entity with the latest start datetime before the
@@ -76,12 +77,14 @@ public class TimeRecordService {
 
       lastTimeRecord.setEnd(oldEnd);
       lastTimeRecord.addSubordinateTimeRecord(subordinateTimeRecord);
-      logger.info("added SubordinateTimeRecord %s to SuperiorTimeRecord %s".formatted(subordinateTimeRecord, lastTimeRecord));
+      logger.info(
+          "added SubordinateTimeRecord %s to SuperiorTimeRecord %s"
+              .formatted(subordinateTimeRecord, lastTimeRecord));
       superiorTimeRecordRepository.save(lastTimeRecord);
       logger.info("saved last SuperiorTimeRecord %s".formatted(lastTimeRecord.toString()));
     }
 
-    newSuperiorTimeRecord =  superiorTimeRecordRepository.save(newSuperiorTimeRecord);
+    newSuperiorTimeRecord = superiorTimeRecordRepository.save(newSuperiorTimeRecord);
     logger.info("Saved new SuperiorTimeRecord %s".formatted(newSuperiorTimeRecord));
 
     return newSuperiorTimeRecord;

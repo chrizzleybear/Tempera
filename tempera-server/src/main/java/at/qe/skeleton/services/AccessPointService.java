@@ -51,7 +51,7 @@ public class AccessPointService {
    * @throws CouldNotFindEntityException if there is no AccessPoint with that id in the DB.
    */
   public boolean isEnabled(UUID id) throws CouldNotFindEntityException {
-   AccessPoint accessPoint = this.getAccessPointById(id);
+    AccessPoint accessPoint = this.getAccessPointById(id);
     return accessPoint.isEnabled();
   }
 }
