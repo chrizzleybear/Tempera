@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import {User} from "../models/user.model";
+import { User } from '../models/user.model';
 
 const USER_KEY = 'auth-user';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StorageService {
   clean(): void {
@@ -22,7 +22,7 @@ export class StorageService {
       return JSON.parse(user);
     }
 
-    console.error("Active user could not be found")
+    console.error('Active user could not be found');
     return undefined;
   }
 

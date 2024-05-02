@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
     NgIf,
   ],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
 })
 export class LoginComponent implements OnInit {
   public form = new FormGroup({
@@ -34,7 +34,8 @@ export class LoginComponent implements OnInit {
   public roles: string[] = [];
   public submitted = false;
 
-  constructor(private authService: AuthService, private storageService: StorageService, private router: Router) { }
+  constructor(private authService: AuthService, private storageService: StorageService, private router: Router) {
+  }
 
   ngOnInit(): void {
     if (this.storageService.isLoggedIn()) {
@@ -62,7 +63,7 @@ export class LoginComponent implements OnInit {
       error: err => {
         this.errorMessage = err.error.message;
         this.isLoginFailed = true;
-      }
+      },
     });
   }
 }
