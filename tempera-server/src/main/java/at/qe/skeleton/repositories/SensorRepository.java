@@ -5,8 +5,7 @@ import at.qe.skeleton.model.SensorTemperaCompositeId;
 
 import java.util.List;
 
+public interface SensorRepository extends AbstractRepository<Sensor, SensorTemperaCompositeId> {
 
-public interface SensorRepository extends AbstractRepository<Sensor, SensorTemperaCompositeId>{
-
-    List<Sensor> findAllByTemperaStationId(String temperaStationId);
+  List<Sensor> findAllByTemperaStationId(String temperaStationId);
 }

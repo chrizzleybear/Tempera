@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
-import {StorageService} from './_services/storage.service';
-import {AuthService} from './_services/auth.service';
-import {NgIf} from "@angular/common";
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { StorageService } from './_services/storage.service';
+import { AuthService } from './_services/auth.service';
+import { NgIf } from '@angular/common';
 import { PrimeNGConfig } from 'primeng/api';
 
 @Component({
@@ -10,9 +10,9 @@ import { PrimeNGConfig } from 'primeng/api';
   standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIf],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
   private roles: string[] = [];
   public isLoggedIn = false;
   public showAdminBoard = false;
@@ -40,12 +40,12 @@ export class AppComponent implements OnInit{
 
     if (this.isLoggedIn) {
       const user = this.storageService.getUser();
-      this.roles = user.roles;
+      this.roles = user?.roles ?? [];
 
       this.showAdminBoard = this.roles.includes('ADMIN');
       this.showModeratorBoard = this.roles.includes('MANAGER');
 
-      this.username = user.username;
+      this.username = user?.username;
     }
   }
 
@@ -59,7 +59,7 @@ export class AppComponent implements OnInit{
       },
       error: err => {
         console.log(err);
-      }
+      },
     });
   }
 }

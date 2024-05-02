@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { LayoutService } from "../service/app.layout.service";
-import { MenuService } from "../app.menu.service";
+import { LayoutService } from '../service/app.layout.service';
+import { MenuService } from '../app.menu.service';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormsModule } from '@angular/forms';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -9,102 +9,103 @@ import { ButtonModule } from 'primeng/button';
 import { SidebarModule } from 'primeng/sidebar';
 
 @Component({
-    selector: 'app-config',
-    templateUrl: './app.config.component.html',
-    standalone: true,
-    imports: [SidebarModule, ButtonModule, NgFor, NgClass, NgIf, RadioButtonModule, FormsModule, InputSwitchModule]
+  selector: 'app-config',
+  templateUrl: './app.config.component.html',
+  standalone: true,
+  imports: [SidebarModule, ButtonModule, NgFor, NgClass, NgIf, RadioButtonModule, FormsModule, InputSwitchModule],
 })
 export class AppConfigComponent {
 
-    @Input() minimal: boolean = false;
+  @Input() minimal: boolean = false;
 
-    scales: number[] = [12, 13, 14, 15, 16];
+  scales: number[] = [12, 13, 14, 15, 16];
 
-    constructor(public layoutService: LayoutService, public menuService: MenuService) { }
+  constructor(public layoutService: LayoutService, public menuService: MenuService) {
+  }
 
-    get visible(): boolean {
-        return this.layoutService.state.configSidebarVisible;
-    }
+  get visible(): boolean {
+    return this.layoutService.state.configSidebarVisible;
+  }
 
-    set visible(_val: boolean) {
-        this.layoutService.state.configSidebarVisible = _val;
-    }
+  set visible(_val: boolean) {
+    this.layoutService.state.configSidebarVisible = _val;
+  }
 
-    get scale(): number {
-        return this.layoutService.config.scale;
-    }
+  get scale(): number {
+    return this.layoutService.config.scale;
+  }
 
-    set scale(_val: number) {
-        this.layoutService.config.scale = _val;
-    }
+  set scale(_val: number) {
+    this.layoutService.config.scale = _val;
+  }
 
-    get menuMode(): string {
-        return this.layoutService.config.menuMode;
-    }
+  get menuMode(): string {
+    return this.layoutService.config.menuMode;
+  }
 
-    set menuMode(_val: string) {
-        this.layoutService.config.menuMode = _val;
-    }
+  set menuMode(_val: string) {
+    this.layoutService.config.menuMode = _val;
+  }
 
-    get inputStyle(): string {
-        return this.layoutService.config.inputStyle;
-    }
+  get inputStyle(): string {
+    return this.layoutService.config.inputStyle;
+  }
 
-    set inputStyle(_val: string) {
-        this.layoutService.config.inputStyle = _val;
-    }
+  set inputStyle(_val: string) {
+    this.layoutService.config.inputStyle = _val;
+  }
 
-    get ripple(): boolean {
-        return this.layoutService.config.ripple;
-    }
+  get ripple(): boolean {
+    return this.layoutService.config.ripple;
+  }
 
-    set ripple(_val: boolean) {
-        this.layoutService.config.ripple = _val;
-    }
+  set ripple(_val: boolean) {
+    this.layoutService.config.ripple = _val;
+  }
 
-    onConfigButtonClick() {
-        this.layoutService.showConfigSidebar();
-    }
+  onConfigButtonClick() {
+    this.layoutService.showConfigSidebar();
+  }
 
-    changeTheme(theme: string, colorScheme: string) {
-        const themeLink = <HTMLLinkElement>document.getElementById('theme-css');
-        const newHref = themeLink.getAttribute('href')!.replace(this.layoutService.config.theme, theme);
-        this.layoutService.config.colorScheme
-        this.replaceThemeLink(newHref, () => {
-            this.layoutService.config.theme = theme;
-            this.layoutService.config.colorScheme = colorScheme;
-            this.layoutService.onConfigUpdate();
-        });
-    }
+  changeTheme(theme: string, colorScheme: string) {
+    const themeLink = <HTMLLinkElement>document.getElementById('theme-css');
+    const newHref = themeLink.getAttribute('href')!.replace(this.layoutService.config.theme, theme);
 
-    replaceThemeLink(href: string, onComplete: Function) {
-        const id = 'theme-css';
-        const themeLink = <HTMLLinkElement>document.getElementById('theme-css');
-        const cloneLinkElement = <HTMLLinkElement>themeLink.cloneNode(true);
+    this.replaceThemeLink(newHref, () => {
+      this.layoutService.config.theme = theme;
+      this.layoutService.config.colorScheme = colorScheme;
+      this.layoutService.onConfigUpdate();
+    });
+  }
 
-        cloneLinkElement.setAttribute('href', href);
-        cloneLinkElement.setAttribute('id', id + '-clone');
+  replaceThemeLink(href: string, onComplete: Function) {
+    const id = 'theme-css';
+    const themeLink = <HTMLLinkElement>document.getElementById('theme-css');
+    const cloneLinkElement = <HTMLLinkElement>themeLink.cloneNode(true);
 
-        themeLink.parentNode!.insertBefore(cloneLinkElement, themeLink.nextSibling);
+    cloneLinkElement.setAttribute('href', href);
+    cloneLinkElement.setAttribute('id', id + '-clone');
 
-        cloneLinkElement.addEventListener('load', () => {
-            themeLink.remove();
-            cloneLinkElement.setAttribute('id', id);
-            onComplete();
-        });
-    }
+    themeLink.parentNode!.insertBefore(cloneLinkElement, themeLink.nextSibling);
 
-    decrementScale() {
-        this.scale--;
-        this.applyScale();
-    }
+    cloneLinkElement.addEventListener('load', () => {
+      themeLink.remove();
+      cloneLinkElement.setAttribute('id', id);
+      onComplete();
+    });
+  }
 
-    incrementScale() {
-        this.scale++;
-        this.applyScale();
-    }
+  decrementScale() {
+    this.scale--;
+    this.applyScale();
+  }
 
-    applyScale() {
-        document.documentElement.style.fontSize = this.scale + 'px';
-    }
+  incrementScale() {
+    this.scale++;
+    this.applyScale();
+  }
+
+  applyScale() {
+    document.documentElement.style.fontSize = this.scale + 'px';
+  }
 }
