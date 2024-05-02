@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../_services/user.service';
 import { State } from '../models/user.model';
-import { NgIf } from '@angular/common';
+import { DatePipe, NgIf } from '@angular/common';
 import { MessageModule } from 'primeng/message';
 import { HomeData } from '../models/home-data.model';
 import { DropdownModule } from 'primeng/dropdown';
-import { DateTime } from 'luxon';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 
@@ -18,6 +17,7 @@ import { TagModule } from 'primeng/tag';
     DropdownModule,
     TableModule,
     TagModule,
+    DatePipe,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
@@ -72,12 +72,4 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  getTime(): string {
-    if (!this.homeData?.stateTimestamp) {
-      return 'Unknown';
-    }
-    let time = DateTime.fromISO(this.homeData.stateTimestamp);
-
-    return time.toFormat('HH:mm');
-  }
 }

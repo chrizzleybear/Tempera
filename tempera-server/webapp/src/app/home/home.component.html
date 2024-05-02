@@ -4,7 +4,7 @@
       <div class=" text-center text-4xl !border-b-1 !border-black">Status</div>
       <div class="flex justify-around">
         <div class="pl-2 pt-12 text-2xl">{{ showState(this.homeData.state) }}</div>
-        <div class="pr-2 pt-4 text-lg">Since: {{ getTime() }} <br>Projekt:
+        <div class="pr-2 pt-4 text-lg">Since: {{ this.homeData.stateTimestamp | date: 'H:mm' }} <br>Projekt:
           <p-dropdown class="pl-2"></p-dropdown>
         </div>
       </div>
