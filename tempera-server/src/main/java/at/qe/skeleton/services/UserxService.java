@@ -2,7 +2,7 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.TemperaStation;
-import at.qe.skeleton.model.DTOs.UserxDTO;
+import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.repositories.UserxRepository;
@@ -126,7 +126,7 @@ public class UserxService implements UserDetailsService {
   }
 
   @Transactional
-  public UserxDTO loadUserDTOById(String username) {
+  public UserxDto loadUserDTOById(String username) {
     Userx user =
         userRepository
             .findById(username)
@@ -141,7 +141,7 @@ public class UserxService implements UserDetailsService {
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
-  public Userx updateUser(UserxDTO userxDTO) {
+  public Userx updateUser(UserxDto userxDTO) {
     Userx user = userRepository.findFirstByUsername(userxDTO.getUsername());
     if(user == null) {
       throw new IllegalArgumentException("User not found");
@@ -157,8 +157,8 @@ public class UserxService implements UserDetailsService {
     return userRepository.save(user);
   }
 
-  public UserxDTO convertToDTO(Userx user) {
-    UserxDTO userxDTO = new UserxDTO();
+  public UserxDto convertToDTO(Userx user) {
+    UserxDto userxDTO = new UserxDto();
     userxDTO.setUsername(user.getUsername());
     userxDTO.setFirstName(user.getFirstName());
     userxDTO.setLastName(user.getLastName());
@@ -169,7 +169,7 @@ public class UserxService implements UserDetailsService {
     return userxDTO;
   }
 
-  public Userx convertToEntity(UserxDTO userxDTO) {
+  public Userx convertToEntity(UserxDto userxDTO) {
     Userx user = new Userx();
     user.setUsername(userxDTO.getUsername());
     user.setFirstName(userxDTO.getFirstName());
@@ -181,7 +181,7 @@ public class UserxService implements UserDetailsService {
     return user;
     }
 
-  public UserxDTO validateUser(String username, String password) {
+  public UserxDto validateUser(String username, String password) {
     Userx user = userRepository.findFirstByUsername(username);
     if(passwordEncoder.matches(password, user.getPassword())){
       return convertToDTO(user);
