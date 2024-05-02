@@ -33,7 +33,6 @@ export class UsersComponent implements OnInit{
 
   users: User[] = [];
   filteredUsers: User[] = [];
-  selectedUsers: User[] = []
   displayEditDialog: boolean = false;
   selectedUser: any;
   displayCreateDialog: boolean = false;
@@ -56,8 +55,6 @@ export class UsersComponent implements OnInit{
       );
     } else {
       this.filteredUsers = this.users;
-
-      OverlayPanelModule
     }
   }
 
