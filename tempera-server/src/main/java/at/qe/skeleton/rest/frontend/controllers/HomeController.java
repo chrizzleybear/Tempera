@@ -11,26 +11,30 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
-@CrossOrigin(origins = "http://localhost:4200", allowCredentials="true")
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 @RestController
 @RequestMapping("/api")
 public class HomeController {
 
-    @GetMapping("/homeData")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
-    public ResponseEntity<HomeDataResponse> homeData() {
-        var colleagueStates = List.of(
-                new ColleagueStateDto("Max Mustermann", "Raum 1", State.DEEPWORK),
-                new ColleagueStateDto("Jane Doe", "Raum 3", State.AVAILABLE),
-                new ColleagueStateDto("Cooler Typ", "Raum 1", State.MEETING)
-        );
+  @GetMapping("/homeData")
+  @PreAuthorize("hasAuthority('USER') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
+  public ResponseEntity<HomeDataResponse> homeData() {
+    var colleagueStates =
+        List.of(
+            new ColleagueStateDto("Max Mustermann", "Raum 1", State.DEEPWORK),
+            new ColleagueStateDto("Jane Doe", "Raum 3", State.AVAILABLE),
+            new ColleagueStateDto("Cooler Typ", "Raum 1", State.MEETING));
 
-        return ResponseEntity.ok(
-                new HomeDataResponse(25, 50, 100, 500, Visibility.PUBLIC, State.AVAILABLE, LocalDateTime.now().toString(), null, colleagueStates)
-        );
-
-    }
-
+    return ResponseEntity.ok(
+        new HomeDataResponse(
+            25,
+            50,
+            100,
+            500,
+            Visibility.PUBLIC,
+            State.AVAILABLE,
+            LocalDateTime.now().toString(),
+            null,
+            colleagueStates));
+  }
 }
-

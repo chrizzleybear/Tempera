@@ -9,11 +9,9 @@ import java.time.LocalDateTime;
  * the TemperaStation and at the same time allow Users to assign these subordinate timerecords to
  * projects and divide them in smaller subunits. As soon as a SuperiorTimeRecord has been initiated,
  * a Subordinate TimeRecord with exactly the same characteristics as the SuperiorTimeRecord is
- * initialized.
- * A SubordinateTimeRecord stores the Project and Group it is assigned to. But it does not have to be assigned to
- * a Project or a Group. Once a Group or Project gets deleted, all the TR that were assigned to that Group or Project
- * reference null as assigned Group/Project.
- *
+ * initialized. A SubordinateTimeRecord stores the Project and Group it is assigned to. But it does
+ * not have to be assigned to a Project or a Group. Once a Group or Project gets deleted, all the TR
+ * that were assigned to that Group or Project reference null as assigned Group/Project.
  */
 @Entity
 public class SubordinateTimeRecord {
@@ -28,7 +26,8 @@ public class SubordinateTimeRecord {
   @Column(name = "time_end")
   private LocalDateTime end;
 
-  //todo: when the Group or Project, that this TR was assigned to, gets deleted, this Reference needs to get set to null.
+  // todo: when the Group or Project, that this TR was assigned to, gets deleted, this Reference
+  // needs to get set to null.
 
   // bidirectional one-to-many association
   @ManyToOne

@@ -24,10 +24,11 @@ public class PeripheryConnectionController {
     this.accessPointService = accessPointService;
   }
 
-  //Get Requests dont allow Request Bodys according to the HTTP/1.1 specification
+  // Get Requests dont allow Request Bodys according to the HTTP/1.1 specification
   // wie funktioniert das mit RequestParam - ist das dasselbe wie header? und url??
   @GetMapping("/valid_devices")
-  public ResponseEntity<AccessPointDto> getAccessPointDto(@RequestParam("access_point_id") UUID access_point_id) {
+  public ResponseEntity<AccessPointDto> getAccessPointDto(
+      @RequestParam("access_point_id") UUID access_point_id) {
     try {
       logger.info("getAccessPointDto getting request with id: %s".formatted(access_point_id));
       AccessPoint entity = accessPointService.getAccessPointById(access_point_id);
@@ -38,19 +39,16 @@ public class PeripheryConnectionController {
     }
   }
 
-
   @GetMapping("/scan_order")
-  public ResponseEntity<ScanOrderDto> getScanOrder(@RequestParam("access_point_id") UUID access_point_id) {
+  public ResponseEntity<ScanOrderDto> getScanOrder(
+      @RequestParam("access_point_id") UUID access_point_id) {
     try {
       logger.info("getScanOrder: getting request with id: %s".formatted(access_point_id));
-      //todo: implement logic here
+      // todo: implement logic here
       return ResponseEntity.ok(new ScanOrderDto(false));
     } catch (Exception e) {
       logger.info("caught exception: %s".formatted(e));
       return ResponseEntity.badRequest().build();
     }
   }
-
-
-
 }

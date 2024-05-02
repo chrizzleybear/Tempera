@@ -9,60 +9,63 @@ import java.time.LocalDateTime;
 @Entity
 public class AuditLog {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime timeStamp;
+  @Temporal(TemporalType.TIMESTAMP)
+  private LocalDateTime timeStamp;
 
-    private String message;
+  private String message;
 
-    private LogAffectedType affectedType;
+  private LogAffectedType affectedType;
 
-    @ManyToOne
-    private Userx triggeringUser;
+  @ManyToOne private Userx triggeringUser;
 
-    private LogEvent event;
+  private LogEvent event;
 
-    /**
-     * For creating AuditLogs only this Constructor should be used.
-     * @param message The message to store in the Log-Entry - should contain some information on what exactly happened.
-     * @param affectedType The Class that was affected by the action which is being logged.
-     * @param triggeringUser The Userx that initiated the Action that is being logged.
-     * @param event A categorization of the Action that is being logged.
-     */
-    public AuditLog(String message, LogAffectedType affectedType, Userx triggeringUser, LogEvent event) {
-        this.message = message;
-        this.affectedType = affectedType;
-        this.triggeringUser = triggeringUser;
-        this.event = event;
-        this.timeStamp = LocalDateTime.now();
-    }
+  /**
+   * For creating AuditLogs only this Constructor should be used.
+   *
+   * @param message The message to store in the Log-Entry - should contain some information on what
+   *     exactly happened.
+   * @param affectedType The Class that was affected by the action which is being logged.
+   * @param triggeringUser The Userx that initiated the Action that is being logged.
+   * @param event A categorization of the Action that is being logged.
+   */
+  public AuditLog(
+      String message, LogAffectedType affectedType, Userx triggeringUser, LogEvent event) {
+    this.message = message;
+    this.affectedType = affectedType;
+    this.triggeringUser = triggeringUser;
+    this.event = event;
+    this.timeStamp = LocalDateTime.now();
+  }
 
-    protected AuditLog() {};
+  protected AuditLog() {}
+  ;
 
-    public long getId() {
-        return id;
-    }
+  public long getId() {
+    return id;
+  }
 
-    public LocalDateTime getTimeStamp() {
-        return timeStamp;
-    }
+  public LocalDateTime getTimeStamp() {
+    return timeStamp;
+  }
 
-    public String getMessage() {
-        return message;
-    }
+  public String getMessage() {
+    return message;
+  }
 
-    public LogAffectedType getAffectedType() {
-        return affectedType;
-    }
+  public LogAffectedType getAffectedType() {
+    return affectedType;
+  }
 
-    public Userx getTriggeringUser() {
-        return triggeringUser;
-    }
+  public Userx getTriggeringUser() {
+    return triggeringUser;
+  }
 
-    public LogEvent getEvent() {
-        return event;
-    }
+  public LogEvent getEvent() {
+    return event;
+  }
 }

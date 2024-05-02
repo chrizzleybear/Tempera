@@ -2,8 +2,9 @@ package at.qe.skeleton.rest.raspberry.mappers;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 
-//took this code from Workshop 4
+// took this code from Workshop 4
 public interface DTOMapper<E, D> {
-    D mapToDto(E entity) throws CouldNotFindEntityException;
-    E mapFromDto(D dto) throws CouldNotFindEntityException;
+  D mapToDto(E entity) throws CouldNotFindEntityException;
+
+  E mapFromDto(D dto) throws CouldNotFindEntityException;
 }

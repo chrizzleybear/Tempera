@@ -19,7 +19,7 @@ public class TemperaStationService {
 
   private final Logger logger = Logger.getLogger("logger");
 
-    private final TemperaStationRepository temperaStationRepository;
+  private final TemperaStationRepository temperaStationRepository;
   private final SensorService sensorService;
 
   public TemperaStationService(
@@ -31,7 +31,8 @@ public class TemperaStationService {
   /**
    * Creates and saves a new TemperaStation with the passed on ID. It also creates 4 new sensors for
    * this TemperaStation and assigns them to it, saving them in the db as well. This method should
-   * be preferable used when creating a new TemperaStation instead of directly using the constructor.
+   * be preferable used when creating a new TemperaStation instead of directly using the
+   * constructor.
    *
    * @param id of the new TemperaStation, has to be unique
    * @param enabled whether the TemperaStation is enabled or not
@@ -65,14 +66,15 @@ public class TemperaStationService {
         .orElseThrow(() -> new CouldNotFindEntityException("TemperaStation %s".formatted(id)));
   }
 
-    public Optional<TemperaStation> findByUser(Userx user){
-        logger.info("trying to find Temperastation of User %s".formatted(user));
-        return temperaStationRepository.findFirstByUser(user);
-    }
-    public TemperaStation save(TemperaStation temperaStation){
-        logger.info("trying to save temperastation %s".formatted(temperaStation.toString()));
-        return temperaStationRepository.save(temperaStation);
-    }
+  public Optional<TemperaStation> findByUser(Userx user) {
+    logger.info("trying to find Temperastation of User %s".formatted(user));
+    return temperaStationRepository.findFirstByUser(user);
+  }
+
+  public TemperaStation save(TemperaStation temperaStation) {
+    logger.info("trying to save temperastation %s".formatted(temperaStation.toString()));
+    return temperaStationRepository.save(temperaStation);
+  }
 
   public void delete(TemperaStation temperaStation) {
     logger.info("trying to delete temperaStation %s".formatted(temperaStation.toString()));

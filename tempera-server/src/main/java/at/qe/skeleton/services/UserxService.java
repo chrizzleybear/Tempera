@@ -130,7 +130,8 @@ public class UserxService implements UserDetailsService {
     Userx user =
         userRepository
             .findById(username)
-            .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+            .orElseThrow(
+                () -> new UsernameNotFoundException("User Not Found with username: " + username));
 
     return convertToDTO(user);
   }
@@ -143,7 +144,7 @@ public class UserxService implements UserDetailsService {
   @PreAuthorize("hasAuthority('ADMIN')")
   public Userx updateUser(UserxDto userxDTO) {
     Userx user = userRepository.findFirstByUsername(userxDTO.getUsername());
-    if(user == null) {
+    if (user == null) {
       throw new IllegalArgumentException("User not found");
     }
     user.setFirstName(userxDTO.getFirstName());
@@ -179,11 +180,11 @@ public class UserxService implements UserDetailsService {
     user.setEnabled(userxDTO.isEnabled());
     user.setRoles(userxDTO.getRoles());
     return user;
-    }
+  }
 
   public UserxDto validateUser(String username, String password) {
     Userx user = userRepository.findFirstByUsername(username);
-    if(passwordEncoder.matches(password, user.getPassword())){
+    if (passwordEncoder.matches(password, user.getPassword())) {
       return convertToDTO(user);
     }
     return null;
@@ -196,7 +197,7 @@ public class UserxService implements UserDetailsService {
     }
     user.setPassword(passwordEncoder.encode(password));
     user.setEnabled(true);
-    //log "Enable user with username: " + username
+    // log "Enable user with username: " + username
     userRepository.save(user);
   }
 }

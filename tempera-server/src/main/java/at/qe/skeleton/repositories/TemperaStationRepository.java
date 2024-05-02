@@ -11,9 +11,8 @@ import java.util.UUID;
 
 public interface TemperaStationRepository extends AbstractRepository<TemperaStation, String> {
 
-    @Query("SELECT t FROM TemperaStation t WHERE t.enabled = :enabled")
-    List<TemperaStation> findAllByEnabled(@Param("enabled") boolean enabled);
+  @Query("SELECT t FROM TemperaStation t WHERE t.enabled = :enabled")
+  List<TemperaStation> findAllByEnabled(@Param("enabled") boolean enabled);
 
-    Optional<TemperaStation> findFirstByUser(Userx user);
-
+  Optional<TemperaStation> findFirstByUser(Userx user);
 }
