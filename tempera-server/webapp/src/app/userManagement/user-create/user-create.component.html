@@ -20,7 +20,7 @@
 <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
   <div class="p-field">
     <label for="username">Username: </label>
-    <input id="username" type="text" pInputText formControlName="username" placeholder="Username">
+    <input id="username" type="text" pInputText formControlName="username" placeholder="Username" autocomplete="new-username"> <!-- autocomplete avoidance if user saved username/password -->
   </div>
   <br>
   <div class="p-field">
@@ -35,7 +35,7 @@
   <br>
   <div class="p-field">
     <label for="password">Password: </label>
-    <input id="password" type="password" pInputText formControlName="password" placeholder="Password">
+    <input id="password" type="password" pInputText formControlName="password" placeholder="Password" autocomplete="new-password">
   </div>
   <br>
   <div class="p-field">
