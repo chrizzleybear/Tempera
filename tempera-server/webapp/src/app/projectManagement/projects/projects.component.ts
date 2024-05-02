@@ -63,20 +63,6 @@ export class ProjectsComponent implements OnInit{
         this.filteredProjects = this.projects;
       }
   }
-  addProject() {
-    this.projectService.test().subscribe({
-      next: (response) => {
-        console.log("Test response:", response);
-        this.loadProjects();
-        this.messages = [{severity:'success', summary:'Success', detail:'Project added successfully'}];
-      },
-      error: (error) => {
-        console.error("Error adding project:", error);
-        this.messages = [{severity:'error', summary:'Error', detail:'Error adding project'}];
-      }
-    });
-    }
-
   createProject() {
     this.displayCreateDialog = true;
   }

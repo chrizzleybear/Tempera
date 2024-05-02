@@ -3,6 +3,7 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.ProjectRepository;
+import at.qe.skeleton.repositories.UserxRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,13 +18,15 @@ public class ProjectService {
     private ProjectRepository projectRepository;
 
     @Autowired
-    private UserxService userxService;
+    private UserxRepository userxRepository;
 
     @Transactional
-    public Project createProject(Project project) {
-        if(projectRepository.findFirstByName(project.getName()) != null) {
-            throw new IllegalArgumentException("Project with name " + project.getName() + " already exists");
-        }
+    public Project createProject(String name, String description, String manager) {
+        Userx managerUser = userxRepository.findById(manager).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Project project = new Project();
+        project.setName(name);
+        project.setDescription(description);
+        project.setManager(managerUser);
         return projectRepository.save(project);
     }
 
@@ -69,14 +72,6 @@ public class ProjectService {
     public void deleteProject(String name) {
         Project project = projectRepository.findFirstByName(name);
         projectRepository.delete(project);
-    }
-
-    public Project createProject1(String name, String description, String manager) {
-        Project project = new Project();
-        project.setName(name);
-        project.setDescription(description);
-        project.setManager(userxService.loadUser(manager));
-        return projectRepository.save(project);
     }
 
 }

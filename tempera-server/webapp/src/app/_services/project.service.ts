@@ -15,19 +15,13 @@ export class ProjectService {
     return this.http.get<Project[]>(this.API_URL + 'all');
   }
 
-  test(): Observable<any> {
-    return this.http.post(`${this.API_URL}test`, "test");
-
-  }
-
-  test1(name: string, description: string, manager: string): Observable<any> {
+  createProject(name: string, description: string, manager: string): Observable<any> {
     const projectData = {
       name: name,
       description: description,
       manager: manager
     };
-    return this.http.post(`${this.API_URL}test`, projectData);
-
+    return this.http.post(`${this.API_URL}create`, projectData);
   }
 
 
@@ -53,11 +47,6 @@ export class ProjectService {
 
   getProjectById(projectId: string): Observable<Project> {
     return this.http.get<Project>(`${this.API_URL}load/${projectId}`);
-  }
-
-  createProject(projectData: Project): Observable<any> {
-    console.log("Create project with ID: ", projectData.name);
-    return this.http.put(`${this.API_URL}create`, projectData);
   }
 
 }

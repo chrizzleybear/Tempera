@@ -22,7 +22,6 @@
       </tr>
     </ng-template>
   </p-table>
-  <button pButton type="button" label="Add Project" (click)="addProject()"></button>
 </div>
 <p-dialog header="Create Project" [(visible)]="displayCreateDialog" [modal]="true" [style]="{width: '50vw'}" [closable]="true">
   <app-project-create (creatComplete)="onCreateCompleted($event)"></app-project-create>

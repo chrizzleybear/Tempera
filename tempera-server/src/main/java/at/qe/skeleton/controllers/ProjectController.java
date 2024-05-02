@@ -29,15 +29,10 @@ public class ProjectController {
         return ResponseEntity.ok(updatedProject);
     }
 
-    //@PostMapping("/create")
-   // public ResponseEntity<Project> createProject(@RequestBody Project project) {
-   //     Project createdProject = projectService.createProject(project);
-   //     return ResponseEntity.ok(createdProject);
-   // }
-
-    @PostMapping("/test")
+    @PostMapping("/create")
     public ResponseEntity<Project> createProject(@RequestBody Map<String, String> projectData) {
-        Project createdProject = projectService.createProject1(projectData.get("name"), projectData.get("description"), projectData.get("manager"));
+        System.out.println(projectData);
+        Project createdProject = projectService.createProject(projectData.get("name"), projectData.get("description"), projectData.get("manager"));
         return ResponseEntity.ok(createdProject);
     }
 
@@ -51,7 +46,5 @@ public class ProjectController {
         Project project = projectService.loadProject(id);
         return ResponseEntity.ok(project);
     }
-
-
 
 }

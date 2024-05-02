@@ -6,8 +6,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { UsersService } from '../../_services/users.service';
 import { User } from '../../models/user.model';
-import {Project} from "../../models/project.model";
-
 @Component({
   selector: 'app-project-create',
   standalone: true,
@@ -47,33 +45,19 @@ export class ProjectCreateComponent {
 
   onSubmit() {
     if (this.projectForm.valid) {
-      console.log('Project Data:', this.projectForm.value);
-      this.projectService.createProject(this.projectForm.value).subscribe({
+      this.projectService.createProject(
+        this.projectForm.value.name, this.projectForm.value.description, this.projectForm.value.manager.value.username ).subscribe({
         next: (response) => {
-          console.log('Project created successfully:', response);
+          console.log("Test response:", this.projectForm.value);
           this.creatComplete.emit(true);
         },
         error: (error) => {
-          console.error('Error creating project:', error);
+          console.error("Error adding project:", error);
           this.creatComplete.emit(false);
         }
       });
     } else {
       console.error('Invalid form');
     }
-  }
-
-  addProject1() {
-    console.log(this.projectForm.value.manager.value.username);
-    this.projectService.test1(this.projectForm.value.name, this.projectForm.value.description, this.projectForm.value.manager.value.username ).subscribe({
-      next: (response) => {
-        console.log("Test response:", this.projectForm.value);
-        this.creatComplete.emit(true);
-      },
-      error: (error) => {
-        console.error("Error adding project:", error);
-        this.creatComplete.emit(false);
-      }
-    });
   }
 }
