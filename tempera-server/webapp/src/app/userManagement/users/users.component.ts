@@ -32,7 +32,6 @@ export class UsersComponent implements OnInit{
 
   users: User[] = [];
   filteredUsers: User[] = [];
-  selectedUsers: User[] = []
   displayEditDialog: boolean = false;
   selectedUser: any;
   displayCreateDialog: boolean = false;

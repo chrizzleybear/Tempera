@@ -34,8 +34,8 @@ public class UserManagementController{
 
     @GetMapping("/load/{id}")
     public ResponseEntity<UserxDTO> getUser(@PathVariable String id) {
-        Userx user = userxService.loadUser(id);
-        return ResponseEntity.ok(userxService.convertToDTO(user));
+        UserxDTO user = userxService.loadUserDTOById(id);
+        return ResponseEntity.ok(user);
     }
 
 
@@ -57,5 +57,21 @@ public class UserManagementController{
     public ResponseEntity<UserxDTO> createUser(@RequestBody UserxDTO userxDto) {
         UserxDTO createdUser = authenticationService.registerUser(userxDto);
         return ResponseEntity.ok(createdUser);
+    }
+
+    @PostMapping("/validate")
+    public ResponseEntity<UserxDTO> validateUser(@RequestBody Map<String, String> credentials) {
+        String username = credentials.get("username");
+        String password = credentials.get("password");
+        UserxDTO isValidUser = userxService.validateUser(username, password);
+        return ResponseEntity.ok(isValidUser);
+    }
+
+    @PostMapping("/enable")
+    public ResponseEntity<Map<String, String>> enableUser(@RequestBody Map<String, String> credentials) {
+        String username = credentials.get("username");
+        String password = credentials.get("password");
+        userxService.enableUser(username, password);
+        return ResponseEntity.ok(Map.of("message", "User enabled"));
     }
 }

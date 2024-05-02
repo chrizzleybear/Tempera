@@ -6,6 +6,7 @@ import {DialogModule} from "primeng/dialog";
 import {InputTextModule} from "primeng/inputtext";
 import {ButtonModule} from "primeng/button";
 import {MessageModule} from "primeng/message";
+import {User} from "../../models/user.model";
 
 @Component({
   selector: 'app-user-edit',
@@ -16,9 +17,9 @@ import {MessageModule} from "primeng/message";
 })
 export class UserEditComponent implements OnInit {
   userForm: FormGroup;
-  username: any;
+  username!: string;
   roles: string[];
-  @Input() user: any;
+  @Input({required: true}) user!: User;
   @Output() editCompleted = new EventEmitter<boolean>();
 
 

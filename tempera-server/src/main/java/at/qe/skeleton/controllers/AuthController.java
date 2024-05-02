@@ -2,10 +2,12 @@ package at.qe.skeleton.controllers;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import at.qe.skeleton.jwt.JwtUtils;
+import at.qe.skeleton.model.DTOs.UserxDTO;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.payload.request.LoginRequest;
@@ -14,6 +16,7 @@ import at.qe.skeleton.payload.response.MessageResponse;
 import at.qe.skeleton.payload.response.UserInfoResponse;
 import at.qe.skeleton.repositories.UserxRepository;
 import at.qe.skeleton.services.UserDetailsImpl;
+import at.qe.skeleton.services.UserxService;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +51,9 @@ public class AuthController {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired
+    UserxService userxService;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -102,5 +108,13 @@ public class AuthController {
         ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(new MessageResponse("You've been signed out!"));
+    }
+
+    @PostMapping("/validate")
+    public ResponseEntity<UserxDTO> validateUser(@RequestBody Map<String, String> credentials) {
+        String username = credentials.get("username");
+        String password = credentials.get("password");
+        UserxDTO isValidUser = userxService.validateUser(username, password);
+        return ResponseEntity.ok(isValidUser);
     }
 }
