@@ -93,10 +93,6 @@ export class ProjectsComponent implements OnInit{
   viewProjectDetails(project: Project) {
     console.log("View project details:", project);
     console.log("Project ID:", project.id);
-    if (!project.id) {
-      console.error('Project ID is undefined');
-      return; // Stop the function if there's no ID
-    }
     this.router.navigate(['/project', project.id]);
   }
 }
