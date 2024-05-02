@@ -4,7 +4,7 @@ import logging.config
 from bleak import BleakClient
 
 from logging_conf import config
-from tempera import bleclient, utils
+from tempera import bleclient, utils, api
 
 logging.config.dictConfig(config)
 logger = logging.getLogger("tempera")
@@ -35,12 +35,12 @@ async def get_measurements(client: BleakClient) -> None:
 
 
 # TODO: add retry
-async def post_data(client: BleakClient) -> None:
-    pass
+async def send_data() -> None:
+    await api.send_measurements_and_time_records()
 
 
 # @retry()
-async def run():
+async def main():
     async with asyncio.TaskGroup() as tg:
         _ = tg.create_task(utils.init_globals())
         tempera_station = tg.create_task(bleclient.discovery_loop())
@@ -85,17 +85,8 @@ async def run():
                 raise RuntimeError
 
             measurements.result()
-            await post_data(client)
-
-
-# Use main to run the app with async, because defining the script in pyproject.toml executes it like so:
-# import tempera.main; main(). This means that if __name__ ... never gets executed.
-# Not executing asyncio.run(main()) means that the async main() function is never awaited and throws an error.
-# This way, no matter if you run main.py as module directly or import it and run it, the run() function is
-# always executed with the asyncio runner and is awaited properly.
-def main():
-    asyncio.run(run(), debug=False)
+            await send_data()
 
 
 if __name__ == "__main__":
-    asyncio.run(run(), debug=False)
+    asyncio.run(main(), debug=False)

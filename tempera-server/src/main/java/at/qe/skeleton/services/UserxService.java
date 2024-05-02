@@ -1,5 +1,7 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.exceptions.CouldNotFindEntityException;
+import at.qe.skeleton.model.TemperaStation;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.repositories.UserxRepository;
@@ -32,6 +34,7 @@ public class UserxService implements UserDetailsService {
 
   @Autowired private UserxRepository userRepository;
   @Autowired private PasswordEncoder passwordEncoder;
+  @Autowired private TemperaStationService temperaStationService;
 
   /**
    * Returns a collection of all users.
@@ -89,7 +92,16 @@ public class UserxService implements UserDetailsService {
    * @param user the user to delete
    */
   @PreAuthorize("hasAuthority('ADMIN')")
-  public void deleteUser(Userx user) {
+  public void deleteUser(Userx user) throws CouldNotFindEntityException {
+    TemperaStation temperaStation =
+        temperaStationService
+            .findByUser(user)
+            .orElseThrow(
+                () ->
+                    new CouldNotFindEntityException(
+                        "Could not find Temperastation assigned to User %s".formatted(user)));
+    temperaStation.setUser(null);
+    temperaStationService.save(temperaStation);
     userRepository.delete(user);
     // :TODO: write some audit log stating who and when this user was permanently deleated.
   }

@@ -1,22 +1,31 @@
 # Running the python components with docker
 
-It is as simple as typing
+(In the project root directory) it is as simple as typing
 
 ```bash
-# Since the app container depends on the api one, this
+# Since the app container depends on the back-end, this
 # command will start both in the correct order and launch the app.
-$ docker compose run app
+$ docker compose run ble-app
+# Or if you want to rebuild the images before starting the app
+# (like after making changes to the code)
+$ docker compose run --build ble-app
 
-# If you just want to run the api container.
-$ docker compose run api
+# If you just want to run the back-end container.
+$ docker compose run back-end
 ```
 
 > :warning:
-> Set the *hostname* to *api* in the configure script if running the app via *docker compose*.
-> This is the only way that the two containers can communicate the http requests with each other.
+> To allow the containers to communicate amongst each other, use the name
+> of the service of one container as the host. E.g., to make REST calls from
+> the ble-app to the back-end set http://back-end:port as the host. The port
+> must be the one exposed in the container you are trying to connect to
+> (see -ports in the docker-compose.yaml).
 
-You can connect to the testing api in your browser by clicking the link that appears in the terminal
-when you run the command above or navigate to `http://0.0.0.0:80`.
+### Test api
+
+If you run just the api container, you can connect to the testing api in your browser
+by clicking the link that appears in the terminal
+when you run the container or navigate to `http://0.0.0.0:80` directly.
 The host and port are set in the api `Dockerfile` *CMD* command if you want to change them (you also
 have to change the mapping in the `compose.yaml` -> api service -> ports, to match the new one!).
 
