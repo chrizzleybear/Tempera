@@ -1,6 +1,7 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.TemperaStation;
+import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.TemperaStationRepository;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,7 @@ public class TemperaStationService {
 
     private final Logger logger =Logger.getLogger("logger");
 
-    private TemperaStationRepository temperaStationRepository;
+    private final TemperaStationRepository temperaStationRepository;
 
     public TemperaStationService(TemperaStationRepository temperaStationRepository) {
         this.temperaStationRepository = temperaStationRepository;
@@ -28,6 +29,10 @@ public class TemperaStationService {
         return temperaStationRepository.findById(id);
     }
 
+    public Optional<TemperaStation> findByUser(Userx user){
+        logger.info("trying to find Temperastation of User %s".formatted(user));
+        return temperaStationRepository.findFirstByUser(user);
+    }
     public TemperaStation save(TemperaStation temperaStation){
         logger.info("trying to save temperastation %s".formatted(temperaStation.toString()));
         return temperaStationRepository.save(temperaStation);

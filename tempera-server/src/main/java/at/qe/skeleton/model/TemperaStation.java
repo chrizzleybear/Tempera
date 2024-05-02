@@ -18,8 +18,6 @@ public class TemperaStation implements Persistable<String> {
     private Userx user;
     private boolean enabled;
 
-    @OneToMany
-    private List<SuperiorTimeRecord> superiorTimeRecords;
 
     // We need to implement Persistable since we set Id manually
     // the following strategy for the isNew Method comes from spring documentation:
@@ -64,16 +62,6 @@ public class TemperaStation implements Persistable<String> {
         this.enabled = enabled;
     }
 
-    public List<SuperiorTimeRecord> getSuperiorTimeRecords() {
-        return superiorTimeRecords;
-    }
-
-    public void addSuperiorTimeRecord(SuperiorTimeRecord superiorTimeRecord) {
-        if (superiorTimeRecord == null) {
-            throw new NullPointerException("superiorTimeRecord should not be null");
-        }
-        this.superiorTimeRecords.add(superiorTimeRecord);
-    }
 
     @Override
     public boolean equals(Object o) {
