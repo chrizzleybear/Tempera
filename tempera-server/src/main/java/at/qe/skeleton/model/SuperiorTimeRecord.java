@@ -29,7 +29,7 @@ public class SuperiorTimeRecord {
   private LocalDateTime end;
 
   @ManyToOne
-          @MapsId("userName")
+  @MapsId("userName")
   Userx user;
 
   private long duration;
