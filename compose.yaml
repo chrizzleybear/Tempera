@@ -3,8 +3,8 @@ services:
     build: ./tempera-accesspoint
     volumes:
       - /var/run/dbus:/var/run/dbus
-    depends_on:
-      - back-end
+#    depends_on:
+#      - back-end
 #      - test-api
 
   back-end:
