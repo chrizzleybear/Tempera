@@ -7,68 +7,60 @@ TEMPERA - next generation time tracking
 > Pro tip: you can run and manage docker images & containers from your IDE like Intellij or Pycharm.
 > Just select the *services* widget on your sidebar and/or open any Dockerfile or compose.yaml in your IDE.
 
-To run the web-app back-end server and the Bluetooth-LE Raspberry app,
-docker containers are provided, so you don't have to install anything locally.
-If you don't already have docker on your machine, follow these [instructions](https://docs.docker.com/get-docker/).
+To run the web-server and the Bluetooth-LE Raspberry app,
+docker images are provided, so you don't have to install anything locally.
+If you don't already have docker on your machine, follow these [instructions](https://docs.docker.com/get-docker/) and come back.
 
-If you have docker installed:
 
-* If you want to run all the components
+
+The compose.yaml file is designed to have the back-end (with its database) and the BLE app to be independent from each other,
+because you'll likely want to run them on separate machines. Here, independent means that you can create the container of one 
+service (services are defined in compose.yaml) without creating it for the other. The same goes for running the containers.
+
+In practice, it looks like this
 
 ```bash
 # In the project root directory (where the compose.yaml file is found)
+
+# 1. To build/pull the image and create the container for the back-end/ble-app services from the compose.yaml
+# If you want to use all services
+$ docker compose create
+
+# If you want to use only a specific service e.g., back-end
+$ docker compose create <service>
+
+# (Optional) Check the images you built
+$ docker image ls
+
+# 2. Start the container of the service created and all its dependencies
+# Back-end
+$ docker compose start back-end
+# To see the output in your terminal
+$ docker compose attach back-end
+
+# Ble-app
+# Note: the BLE app requires user input in the config file. To be run in interactive mode, you have to use docker run.
+# Important: if you are trying to send the data from the ble-app container to the back-end container, you have to set
+# the hostname in the BLE configure script to the name of the service you are trying to reach, i.e., back-end:8080.
+# If the server runs on your machine, set it to localhost:<port> as usual (see the note below for more info on this).
 $ docker compose run ble-app
 
-# When you're done, hit ctrl-c to stop the containers and then shut them down
-# (not shutting down or deleting the containers may lead to problems at the next start-up!)
+# 3. When you're done, hit ctrl-c to stop the containers currently active in your terminal. Then, delete the containers.
+# Note: not deleting up the containers after use may lead to problems at the next start-up!
 $ docker compose down
+
+# (4. If you want to start a sevice again, just repeat steps 1 to 3)
 ```
 
-> :bangbang:
+> :mega:
 > All docker containers started from a compose.yaml file share a common network. To use the API of the back-end
 > container in the ble-app container set the name of the target service as host ID, docker will match
-> the exact ID automatically. In other words, when prompted by the config script set e.g., hostname >> http://back-end.
-
-> :warning:
-> Don't forget to shut down all containers with *docker compose down* or else there might be database
-> integrity violations at the next start-up with *docker compose up*.
+> the exact ID automatically. In other words, when prompted by the config script set e.g., hostname >> http://back-end:8080.
+> If you want to connect from your machine to a container or from a container to your machine, use localhost:port as usual.
 
 > :information_source:
-> Here we use *docker compose run* because the BLE app requires user input and is thus interactive.
-> The BLE app depends on the back-end, which depends on the postgresql database. Therefore, each time
-> the ble-app is run, it automatically spins up all other containers beforehand.
-> Spin up means that docker builds the images defined for each component in the respective Dockerfiles across the
-> project.
-> Then, from each image a container is created at every *docker compose run* and destroyed at every
-> *docker compose down*.
-
-* If you want to run only the Bluetooth-LE Raspberry app
-
-Use the command from above and comment out *depends on* in the ble-app service of the compose.yaml file
-or run the Dockerfile in tempera-accesspoint directly like so
-
-```bash
-$ docker run -iv -v /var/run/dbus:/var/run/dbus tempera-ble-app
-```
-
-* If you want to run only the Web-server
-
-```bash
-# In the project root directory (where the compose.yaml file is found)
-
-# Create the containers for the service
-$ docker compose create back-end
-
-# Start the containers
-$ docker compose start back-end
-
-# Stop and remove all containers
-$ docker compose down
-
-# Pro tip: if you are stuck
-$ docker compose
-# wqill print all the commands at your disposal including descriptions 
-```
-
-> :information_source:
-> You can reach the web-server API at localhost as usual, even if started in a container. 
+> If you know you want to run all services on the same machine, just uncomment the *depends on* key in the ble-service of
+> the compose.yaml file. The same goes if you want to run the ble-app with the python testing api (also commented out).
+> If the database depends on the back-end, and the back-end on the ble-app, you just have to run the ble-app and every
+> thing else will be handled automatically by docker. This is why you never have to handle anything (docker-) related to the database
+> explicitly, because it depends on the back-end.
