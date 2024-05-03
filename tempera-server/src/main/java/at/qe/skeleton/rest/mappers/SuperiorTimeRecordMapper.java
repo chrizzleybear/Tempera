@@ -26,13 +26,20 @@ public class SuperiorTimeRecordMapper
     this.temperaStationService = temperaStationService;
   }
 
+  /**
+   * returns a SuperiorTimeRecordDto from a SuperiorTimeRecord Entity. Auto_update will always be set to false.
+   * @param entity
+   * @return
+   * @throws CouldNotFindEntityException
+   */
   @Override
   public SuperiorTimeRecordDto mapToDto(SuperiorTimeRecord entity)
       throws CouldNotFindEntityException {
     if (entity == null) {
       return null;
     }
-    TemperaStation temperaStation = entity.getTemperaStation();
+    Userx user = entity.getUser();
+    TemperaStation temperaStation = temperaStationService.findByUser(user).orElseThrow(()-> new CouldNotFindEntityException("TemperaStation %s".formatted(user.getUsername())));
     AccessPoint accessPoint =
         accessPointService.getAccessPointByTemperaStationId(temperaStation.getId());
     return new SuperiorTimeRecordDto(
@@ -41,7 +48,7 @@ public class SuperiorTimeRecordMapper
         entity.getStart(),
         entity.getDuration(),
         entity.getState(),
-        entity.getEnd() != null // if end is null, the SuperiorTimeRecord is still running
+        false
         );
   }
 
@@ -65,9 +72,9 @@ public class SuperiorTimeRecordMapper
     TemperaStation temperaStation = temperaStationService.findById(dto.tempera_station_id());
     Userx user = temperaStation.getUser();
     SuperiorTimeRecord superiorTimeRecord;
-    // auto_update == true heißt der vorherige TimeRecord ist abgeschlossen und es handelt sich um
-    // einen neuen timerecord. Wenn also auto_update false ist, müssen wir nur die Zeit updaten.
-    if (!dto.auto_update()) {
+    // auto_update == false heißt der vorherige TimeRecord ist abgeschlossen und es handelt sich um
+    // einen neuen timerecord. Wenn also auto_update true ist, müssen wir nur die Zeit updaten.
+    if (dto.auto_update()) {
       // todo: is this lazy loaded? and if so does it work?
 
       superiorTimeRecord =
@@ -76,7 +83,7 @@ public class SuperiorTimeRecordMapper
               .orElseThrow(
                   () ->
                       new CouldNotFindEntityException(
-                          "SuperiorTimeRecord %s".formatted(dto.start())));
+                          "SuperiorTimeRecord %s has set auto_update to true but did not exist in db".formatted(dto.start())));
       superiorTimeRecord.setDuration(dto.duration());
     }
     else{

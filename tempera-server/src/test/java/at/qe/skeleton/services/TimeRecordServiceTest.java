@@ -125,7 +125,7 @@ class TimeRecordServiceTest {
       roles = {"ADMIN"})
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:addRecordWithOlderRecordsRealRepositoryTest.sql")
   //todo decide wether to put @Transactional here or to keep SubordinateTimeRecords in fetchmode join
-  public void addRecordWithOlderRecordsRealRepository() throws CouldNotFindEntityException {
+  public void addRecordWithOlderRecordsRealRepository() throws Exception {
 
  LocalDateTime startNew = LocalDateTime.now();
  Userx admin = userxService.loadUser("admin");

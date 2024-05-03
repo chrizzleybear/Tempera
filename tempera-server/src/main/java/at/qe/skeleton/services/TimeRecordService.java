@@ -1,7 +1,9 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
+import at.qe.skeleton.exceptions.InconsistentObjectRelationException;
 import at.qe.skeleton.exceptions.SubordinateTimeRecordOutOfBoundsException;
+import at.qe.skeleton.exceptions.SuperiorTimeRecordOutOfBoundsException;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.SubordinateTimeRecordRepository;
 import at.qe.skeleton.repositories.SuperiorTimeRecordRepository;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -25,7 +28,7 @@ import java.util.logging.Logger;
 @Scope("application")
 public class TimeRecordService {
 
-  private final Logger logger = Logger.getLogger("logger");
+  private final Logger logger = Logger.getLogger("TimeRecordServiceLogger");
   private final SubordinateTimeRecordRepository subordinateTimeRecordRepository;
   private final SuperiorTimeRecordRepository superiorTimeRecordRepository;
   private final UserxRepository userxRepository;
@@ -39,13 +42,13 @@ public class TimeRecordService {
     this.userxRepository = userxRepository;
   }
 
-  public SuperiorTimeRecord findSuperiorTimeRecordByUserAndStart(Userx user, LocalDateTime start) throws CouldNotFindEntityException {
+  public SuperiorTimeRecord findSuperiorTimeRecordByUserAndStart(Userx user, LocalDateTime start)
+      throws CouldNotFindEntityException {
     SuperiorTimeRecordId id = new SuperiorTimeRecordId(start, user.getUsername());
     return superiorTimeRecordRepository
         .findById(id)
         .orElseThrow(() -> new CouldNotFindEntityException("SuperiorTimeRecord %s".formatted(id)));
   }
-
 
   /**
    * this method saves a new SuperiorTimeRecord and adds the start-Time of the new TimeRecord minus
@@ -59,31 +62,31 @@ public class TimeRecordService {
    * @param newSuperiorTimeRecord
    * @return the SuperiorTimeRecord that was newly created.
    */
-  @Transactional
+  @Transactional(rollbackFor = {SuperiorTimeRecordOutOfBoundsException.class, CouldNotFindEntityException.class})
   public SuperiorTimeRecord addRecord(SuperiorTimeRecord newSuperiorTimeRecord)
-      throws CouldNotFindEntityException {
+      throws CouldNotFindEntityException, IOException {
     if (newSuperiorTimeRecord.getStart() == null) {
       throw new NullPointerException(
           "SuperiorTimeRecord must have a Start Time when being added to db.");
     }
-    // might cause problems when lazy fetched...
     Userx user = newSuperiorTimeRecord.getUser();
     finalizeOldTimeRecord(user, newSuperiorTimeRecord);
-
-    return saveNewTimeRecord(newSuperiorTimeRecord);
+    return saveNewTimeRecord(newSuperiorTimeRecord, user);
   }
 
-
-  public SuperiorTimeRecord saveNewTimeRecord(SuperiorTimeRecord superiorTimeRecord) {
+  public SuperiorTimeRecord saveNewTimeRecord(SuperiorTimeRecord superiorTimeRecord, Userx user) {
     SubordinateTimeRecord subordinateTimeRecord =
         new SubordinateTimeRecord(superiorTimeRecord.getStart());
     subordinateTimeRecord = subordinateTimeRecordRepository.save(subordinateTimeRecord);
-    logger.info("saved %s".formatted(subordinateTimeRecord.toString()));
+    logger.info("saved new %s".formatted(subordinateTimeRecord.toString()));
     superiorTimeRecord.addSubordinateTimeRecord(subordinateTimeRecord);
-    logger.info(
-        "Added subordinate %s to superior %s".formatted(subordinateTimeRecord, superiorTimeRecord));
+    logger.info("Added new %s to new %s".formatted(subordinateTimeRecord, superiorTimeRecord));
     superiorTimeRecord = superiorTimeRecordRepository.save(superiorTimeRecord);
-    logger.info("saved %s".formatted(superiorTimeRecord.toString()));
+    logger.info("saved new %s".formatted(superiorTimeRecord.toString()));
+    if (superiorTimeRecordRepository.findAllByUserAndEndIsNull(user).size() > 1) {
+      throw new SubordinateTimeRecordOutOfBoundsException(
+          "There are more than one SuperiorTimeRecords with no End for user %s".formatted(user));
+    }
     return superiorTimeRecord;
   }
 
@@ -92,8 +95,8 @@ public class TimeRecordService {
    * sets the End for both of them to one second before the start of the newSuperiorTimeRecord.
    * After that it saves both old TimeRecord entities to the database.
    */
-
-  public void finalizeOldTimeRecord(Userx user, SuperiorTimeRecord newSuperiorTimeRecord) {
+  public void finalizeOldTimeRecord(Userx user, SuperiorTimeRecord newSuperiorTimeRecord)
+      throws IOException {
     Optional<SuperiorTimeRecord> oldSuperiorTimeRecordOptional =
         findLatestSuperiorTimeRecordByUser(user);
     if (oldSuperiorTimeRecordOptional.isEmpty()) {
@@ -103,20 +106,28 @@ public class TimeRecordService {
     SuperiorTimeRecord oldSuperiorTimeRecord = oldSuperiorTimeRecordOptional.get();
     logger.info("found old SuperiorTimeRecord %s".formatted(oldSuperiorTimeRecord));
 
+    SuperiorTimeRecordId incomingId = newSuperiorTimeRecord.getId();
+    if(oldSuperiorTimeRecord.getId().equals(incomingId)){
+      logger.info("incoming SuperiorTimeRecord is the same as the old one. No need to finalize");
+      return;
+    }
+
+
     // fetch the subordinate Timerecord of this old superior TimeRecord
     SubordinateTimeRecord oldSubordinateTimeRecord =
-        oldSuperiorTimeRecord.getSubordinateRecords().get(0) ;
+        oldSuperiorTimeRecord.getSubordinateRecords().get(0);
     LocalDateTime oldEnd = newSuperiorTimeRecord.getStart().minusSeconds(1);
     LocalDateTime oldStart = oldSuperiorTimeRecord.getStart();
     long durationInSeconds = ChronoUnit.SECONDS.between(oldStart, oldEnd);
+    if(durationInSeconds <= 0) throw new SuperiorTimeRecordOutOfBoundsException("the new TimeRecord starts before the old one.");
 
     // time setting
     oldSuperiorTimeRecord.setDuration(durationInSeconds);
     oldSuperiorTimeRecord.setEnd(oldEnd);
     oldSubordinateTimeRecord.setEnd(oldEnd);
     logger.info(
-        "set End TimeStamp for %s and %s"
-            .formatted(oldSuperiorTimeRecord, oldSubordinateTimeRecord));
+        "set End TimeStamp for %s and %s to %s"
+            .formatted(oldSuperiorTimeRecord, oldSubordinateTimeRecord, oldEnd));
 
     // persisting the Entities
     subordinateTimeRecordRepository.save(oldSubordinateTimeRecord);
@@ -135,7 +146,7 @@ public class TimeRecordService {
   }
 
   public Optional<SuperiorTimeRecord> findLatestSuperiorTimeRecordByUser(Userx user) {
-    return superiorTimeRecordRepository.findFirstByUserOrderById_Start(user);
+    return superiorTimeRecordRepository.findFirstByUserAndEndIsNull(user);
   }
 
   public Optional<SuperiorTimeRecord> findSuperiorTimeRecordByStartAndUser(

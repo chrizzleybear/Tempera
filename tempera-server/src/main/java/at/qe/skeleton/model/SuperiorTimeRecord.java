@@ -34,8 +34,6 @@ public class SuperiorTimeRecord {
 
   private long duration;
 
-  @ManyToOne private TemperaStation temperaStation;
-
   @OneToMany @Fetch(FetchMode.JOIN) private List<SubordinateTimeRecord> subordinateRecords;
 
   @Enumerated(EnumType.STRING)
@@ -116,9 +114,6 @@ public class SuperiorTimeRecord {
     return id;
   }
 
-  public TemperaStation getTemperaStation() {
-    return temperaStation;
-  }
 
   @Override
   public int hashCode() {

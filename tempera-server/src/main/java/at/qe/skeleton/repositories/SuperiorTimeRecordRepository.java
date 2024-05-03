@@ -21,10 +21,10 @@ public interface SuperiorTimeRecordRepository extends AbstractRepository<Superio
 //    @Query("SELECT sub from SuperiorTimeRecord.subordinateRecords sub where SuperiorTimeRecord.id = :id")
 //    List<SubordinateTimeRecord> findAllSubordinateRecordsById(Long id);
 
+    List<SuperiorTimeRecord> findAllByUserAndEndIsNull(Userx user);
 
-
-
-    Optional<SuperiorTimeRecord> findFirstByUserOrderById_Start(Userx user);
+    Optional<SuperiorTimeRecord> findFirstByUserAndEndIsNull(Userx user);
     Optional<SuperiorTimeRecord> findByUserAndId_Start(Userx user, LocalDateTime start);
 
+    boolean existsByUserAndId_Start(Userx user, LocalDateTime start);
 }

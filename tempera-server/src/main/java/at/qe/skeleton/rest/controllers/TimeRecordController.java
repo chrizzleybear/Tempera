@@ -14,6 +14,7 @@ import at.qe.skeleton.services.TimeRecordService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -70,12 +71,19 @@ public class TimeRecordController {
         throw new IllegalArgumentException(
             "temperaStation %s is not enabled".formatted(timeRecordDto.tempera_station_id()));
       }
+      logger.info("incoming time record: " + timeRecordDto + "\n");
       SuperiorTimeRecord entity =
           timeRecordService.addRecord(timeRecordMapper.mapFromDto(timeRecordDto));
       return ResponseEntity.status(201).body(timeRecordMapper.mapToDto(entity));
     } catch (CouldNotFindEntityException e) {
+      logger.info(e.getMessage());
       return ResponseEntity.badRequest().build();
     }
+    catch (IOException e) {
+      logger.info(e.getMessage());
+      return ResponseEntity.badRequest().build();
+    }
+
   }
 
 }
