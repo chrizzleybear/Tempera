@@ -117,6 +117,9 @@ public class TimeRecordService {
     SubordinateTimeRecord oldSubordinateTimeRecord =
         oldSuperiorTimeRecord.getSubordinateRecords().get(0);
     LocalDateTime oldEnd = newSuperiorTimeRecord.getStart().minusSeconds(1);
+    if(ChronoUnit.SECONDS.between(oldEnd, newSuperiorTimeRecord.getStart())!=1) {
+      throw new RuntimeException("End TimeStamp is not one second before the new TimeRecord starts.");
+    }
     LocalDateTime oldStart = oldSuperiorTimeRecord.getStart();
     long durationInSeconds = ChronoUnit.SECONDS.between(oldStart, oldEnd);
     if(durationInSeconds <= 0) throw new SuperiorTimeRecordOutOfBoundsException("the new TimeRecord starts before the old one.");
