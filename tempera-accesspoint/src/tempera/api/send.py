@@ -85,7 +85,7 @@ def _build_payload(
             }
 
 
-async def send_data(*, kind: DataType):
+async def send_data(kind: DataType):
     match kind:
         case "Measurement":
             endpoint = "measurement"
@@ -132,6 +132,5 @@ def _safe_delete_data(
 
 
 async def send_measurements_and_time_records():
-    async with TaskGroup() as tg:
-        tg.create_task(send_data(kind="Measurement"))
-        tg.create_task(send_data(kind="TimeRecord"))
+    await send_data("Measurement")
+    await send_data("TimeRecord")
