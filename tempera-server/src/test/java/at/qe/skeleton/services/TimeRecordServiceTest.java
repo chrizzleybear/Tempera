@@ -86,7 +86,7 @@ class TimeRecordServiceTest {
     oldSuperiorTimeRecord.addSubordinateTimeRecord(oldSubordinateTimeRecord);
 
     // method will call findLatestSuperiorTimeRecordByUser which will call this method:
-    when(superiorTimeRecordRepositoryMock.findFirstByUserOrderById_Start(admin))
+    when(superiorTimeRecordRepositoryMock.findFirstByUserAndEndIsNull(admin))
         .thenReturn(Optional.of(oldSuperiorTimeRecord));
 
     // method will call finalizeOldTimeRecord which will call this method in Repository:
