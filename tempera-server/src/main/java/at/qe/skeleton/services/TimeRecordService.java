@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -72,15 +73,10 @@ public class TimeRecordService {
       throw new NullPointerException(
           "SuperiorTimeRecord must have a Start Time when being added to db.");
     }
-    TemperaStation temperaStation = newSuperiorTimeRecord.getTemperaStation();
-//    Optional<SuperiorTimeRecord> oldSuperiorTimeRecordOptional =
-//        findLastTimeRecordByUser(temperaStation.getUser());
-//    if (oldSuperiorTimeRecordOptional.isEmpty()) {
-//      logger.info("did not find an old SuperiorTimeRecord");
-//    } else {
-//      logger.info("found old SuperiorTimeRecord %s".formatted(oldSuperiorTimeRecordOptional.get()));
-      finalizeOldTimeRecord(temperaStation.getUser(), newSuperiorTimeRecord);
-//    }
+    //might cause problems when lazy fetched...
+    Userx user = newSuperiorTimeRecord.getUser();
+      finalizeOldTimeRecord(user, newSuperiorTimeRecord);
+
     return saveNewTimeRecord(newSuperiorTimeRecord);
   }
 
@@ -106,13 +102,26 @@ public class TimeRecordService {
    * @param oldSuperiorTimeRecordOptional
    * @return
    */
-
+@Transactional
   public void finalizeOldTimeRecord(Userx user, SuperiorTimeRecord newSuperiorTimeRecord) {
-    SuperiorTimeRecord oldSuperiorTimeRecord = userxRepository.findLastSuperiorTimeRecordByUser(user)
-            .orElseThrow(() -> new RuntimeException("Could not find old SuperiorTimeRecord"));
+    Optional<SuperiorTimeRecord> oldSuperiorTimeRecordOptional = findLatestSuperiorTimeRecordByUser(user);
+    if(oldSuperiorTimeRecordOptional.isEmpty()){
+      logger.info("No old SuperiorTimeRecord found for user %s".formatted(user));
+      return;
+    }
+    SuperiorTimeRecord oldSuperiorTimeRecord = oldSuperiorTimeRecordOptional.get();
     logger.info("found old SuperiorTimeRecord %s".formatted(oldSuperiorTimeRecord));
-//
-//    SuperiorTimeRecord oldSuperiorTimeRecord = oldSuperiorTimeRecordOptional.orElseThrow(() -> new RuntimeException("Could not find old SuperiorTimeRecord"));
+
+    //fetch the subordinate Timerecord of this old superior TimeRecord
+  SubordinateTimeRecord oldSubordinateTimeRecord = oldSuperiorTimeRecord.getSubordinateRecords().get(0);
+  LocalDateTime oldEnd = newSuperiorTimeRecord.getStart().minusSeconds(1);
+  LocalDateTime oldStart = oldSuperiorTimeRecord.getStart();
+  //duration is in seconds
+  long durationInSeconds = ChronoUnit.SECONDS.between(oldStart, oldEnd);
+
+  oldSuperiorTimeRecord.setDuration(durationInSeconds);
+
+
 //    if (oldSuperiorTimeRecord.getSubordinateRecords().size() != 1) {
 //      throw new IllegalArgumentException(
 //              "There seem to be %d SubordinateTimeRecords stored in SuperiorTimeRecord %s while we expect only one"

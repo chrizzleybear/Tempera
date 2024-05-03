@@ -165,7 +165,7 @@ class TimeRecordServiceTest {
 
     // create new SuperiorTimeRecord
     SuperiorTimeRecord newSuperiorTimeRecord =
-        new SuperiorTimeRecord(temperaStation, startNew, null, State.DEEPWORK);
+        new SuperiorTimeRecord(temperaStation, startNew, 30L, State.DEEPWORK);
 
     // call the method
     SuperiorTimeRecord result = timeRecordServiceReal.addRecord(newSuperiorTimeRecord);

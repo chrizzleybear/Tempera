@@ -32,7 +32,7 @@ public class SuperiorTimeRecord {
           @MapsId("userName")
   Userx user;
 
-  private int duration;
+  private long duration;
 
   @ManyToOne private TemperaStation temperaStation;
 
@@ -46,7 +46,7 @@ public class SuperiorTimeRecord {
   }
 
   public SuperiorTimeRecord(
-          @NotNull Userx user, @NotNull LocalDateTime start, int duration, LocalDateTime end, @NotNull State state) {
+          @NotNull Userx user, @NotNull LocalDateTime start, long duration, LocalDateTime end, @NotNull State state) {
     this.user = Objects.requireNonNull(user);
     this.id = new SuperiorTimeRecordId(start, user.getUsername());
     this.end = end;
@@ -67,12 +67,12 @@ public class SuperiorTimeRecord {
     this.user = user;
   }
 
-  public void setDuration(int duration) {
+  public void setDuration(long duration) {
     this.duration = duration;
   }
 
   public LocalDateTime getStart() {
-    return start;
+    return id.getStart();
   }
 
   public LocalDateTime getEnd() {
@@ -91,7 +91,7 @@ public class SuperiorTimeRecord {
     if (subordinateTimeRecord == null) {
       throw new NullPointerException("SubordinateTimeRecord should not be null");
     }
-    if (subordinateTimeRecord.getStart().isBefore(this.start)) {
+    if (subordinateTimeRecord.getStart().isBefore(this.id.getStart())) {
       throw new SubordinateTimeRecordOutOfBoundsException(
           "subordinateTimeRecord should not start before its superiorTimeRecord.");
     }
@@ -112,7 +112,7 @@ public class SuperiorTimeRecord {
     this.state = state;
   }
 
-  public Long getId() {
+  public SuperiorTimeRecordId getId() {
     return id;
   }
 
@@ -122,8 +122,8 @@ public class SuperiorTimeRecord {
 
   @Override
   public int hashCode() {
-    return start.hashCode();
-  }
+    return Objects.hashCode(id);
+    }
 
   @Override
   public boolean equals(Object o) {
@@ -133,12 +133,12 @@ public class SuperiorTimeRecord {
     if (!(o instanceof SuperiorTimeRecord other)) {
       return false;
     }
-    return other.start.equals(this.start);
+    return other.id.equals(this.id);
   }
 
   @Override
   public String toString() {
     return "[SuperiorTimeRecord start: %s, end: %s, state: %s]"
-        .formatted(start.toString(), end == null ? "null" : end, state.toString());
+        .formatted(id.getStart().toString(), end == null ? "null" : end, state.toString());
   }
 }
