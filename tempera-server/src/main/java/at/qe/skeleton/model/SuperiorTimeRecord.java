@@ -4,6 +4,8 @@ import at.qe.skeleton.exceptions.SubordinateTimeRecordOutOfBoundsException;
 import at.qe.skeleton.model.enums.State;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,8 +24,6 @@ public class SuperiorTimeRecord {
   @EmbeddedId
   SuperiorTimeRecordId id;
 
-
-
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "time_end")
   private LocalDateTime end;
@@ -36,7 +36,7 @@ public class SuperiorTimeRecord {
 
   @ManyToOne private TemperaStation temperaStation;
 
-  @OneToMany private List<SubordinateTimeRecord> subordinateRecords;
+  @OneToMany @Fetch(FetchMode.JOIN) private List<SubordinateTimeRecord> subordinateRecords;
 
   @Enumerated(EnumType.STRING)
   private State state;
@@ -134,6 +134,10 @@ public class SuperiorTimeRecord {
       return false;
     }
     return other.id.equals(this.id);
+  }
+
+  public void setId(SuperiorTimeRecordId id) {
+    this.id = id;
   }
 
   @Override

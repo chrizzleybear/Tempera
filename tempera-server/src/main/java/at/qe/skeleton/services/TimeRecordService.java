@@ -2,10 +2,7 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.exceptions.SubordinateTimeRecordOutOfBoundsException;
-import at.qe.skeleton.model.SubordinateTimeRecord;
-import at.qe.skeleton.model.SuperiorTimeRecord;
-import at.qe.skeleton.model.TemperaStation;
-import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.SubordinateTimeRecordRepository;
 import at.qe.skeleton.repositories.SuperiorTimeRecordRepository;
 import at.qe.skeleton.repositories.UserxRepository;
@@ -25,7 +22,6 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 @Component
-@Transactional
 @Scope("application")
 public class TimeRecordService {
 
@@ -43,7 +39,8 @@ public class TimeRecordService {
     this.userxRepository = userxRepository;
   }
 
-  public SuperiorTimeRecord findSuperiorTimeRecordById(Long id) throws CouldNotFindEntityException {
+  public SuperiorTimeRecord findSuperiorTimeRecordByUserAndStart(Userx user, LocalDateTime start) throws CouldNotFindEntityException {
+    SuperiorTimeRecordId id = new SuperiorTimeRecordId(start, user.getUsername());
     return superiorTimeRecordRepository
         .findById(id)
         .orElseThrow(() -> new CouldNotFindEntityException("SuperiorTimeRecord %s".formatted(id)));
@@ -76,7 +73,7 @@ public class TimeRecordService {
     return saveNewTimeRecord(newSuperiorTimeRecord);
   }
 
-    @Transactional
+
   public SuperiorTimeRecord saveNewTimeRecord(SuperiorTimeRecord superiorTimeRecord) {
     SubordinateTimeRecord subordinateTimeRecord =
         new SubordinateTimeRecord(superiorTimeRecord.getStart());
@@ -95,7 +92,7 @@ public class TimeRecordService {
    * sets the End for both of them to one second before the start of the newSuperiorTimeRecord.
    * After that it saves both old TimeRecord entities to the database.
    */
-  @Transactional
+
   public void finalizeOldTimeRecord(Userx user, SuperiorTimeRecord newSuperiorTimeRecord) {
     Optional<SuperiorTimeRecord> oldSuperiorTimeRecordOptional =
         findLatestSuperiorTimeRecordByUser(user);
@@ -108,7 +105,7 @@ public class TimeRecordService {
 
     // fetch the subordinate Timerecord of this old superior TimeRecord
     SubordinateTimeRecord oldSubordinateTimeRecord =
-        oldSuperiorTimeRecord.getSubordinateRecords().get(0);
+        oldSuperiorTimeRecord.getSubordinateRecords().get(0) ;
     LocalDateTime oldEnd = newSuperiorTimeRecord.getStart().minusSeconds(1);
     LocalDateTime oldStart = oldSuperiorTimeRecord.getStart();
     long durationInSeconds = ChronoUnit.SECONDS.between(oldStart, oldEnd);
