@@ -30,7 +30,7 @@ public class SubordinateTimeRecord {
   @Column(name = "time_end")
   private LocalDateTime end;
 
-  //todo: when the Group or Project, that this TR was assigned to, gets deleted, this Reference needs to get set to null.
+  //todo: should we add duration here as well?
 
   // bidirectional one-to-many association
   @ManyToOne

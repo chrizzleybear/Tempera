@@ -26,7 +26,6 @@ import java.util.logging.Logger;
 
 @Component
 @Scope("application")
-
 public class TimeRecordService {
 
   private final Logger logger = Logger.getLogger("logger");
@@ -34,11 +33,10 @@ public class TimeRecordService {
   private final SuperiorTimeRecordRepository superiorTimeRecordRepository;
   private final UserxRepository userxRepository;
 
-
   public TimeRecordService(
       SuperiorTimeRecordRepository superiorTimeRecordRepository,
-      SubordinateTimeRecordRepository subordinateTimeRecordRepository, UserxRepository
-          userxRepository) {
+      SubordinateTimeRecordRepository subordinateTimeRecordRepository,
+      UserxRepository userxRepository) {
     this.superiorTimeRecordRepository = superiorTimeRecordRepository;
     this.subordinateTimeRecordRepository = subordinateTimeRecordRepository;
     this.userxRepository = userxRepository;
@@ -59,9 +57,9 @@ public class TimeRecordService {
    * 1sec as the End-Time to the SuperiorTimeRecord entity with the latest start datetime before the
    * current one. Furthermore the method instantiates a SubordinateTimeRecord with the identical
    * properties and adds this to the list of Subordinate TimeRecords stored in the
-   * SuperiorTimeRecords.
-   * In case this is the first SuperiorTimeRecord that was saved for User of the stored TemperaStation, the method
-   * just saves the new SuperiorTimeRecord and its SubordinateTimeRecord to the database.
+   * SuperiorTimeRecords. In case this is the first SuperiorTimeRecord that was saved for User of
+   * the stored TemperaStation, the method just saves the new SuperiorTimeRecord and its
+   * SubordinateTimeRecord to the database.
    *
    * @param newSuperiorTimeRecord
    * @return the SuperiorTimeRecord that was newly created.
@@ -73,76 +71,59 @@ public class TimeRecordService {
       throw new NullPointerException(
           "SuperiorTimeRecord must have a Start Time when being added to db.");
     }
-    //might cause problems when lazy fetched...
+    // might cause problems when lazy fetched...
     Userx user = newSuperiorTimeRecord.getUser();
-      finalizeOldTimeRecord(user, newSuperiorTimeRecord);
+    finalizeOldTimeRecord(user, newSuperiorTimeRecord);
 
     return saveNewTimeRecord(newSuperiorTimeRecord);
   }
 
-
+    @Transactional
   public SuperiorTimeRecord saveNewTimeRecord(SuperiorTimeRecord superiorTimeRecord) {
     SubordinateTimeRecord subordinateTimeRecord =
-            new SubordinateTimeRecord(superiorTimeRecord.getStart());
-    subordinateTimeRecord = saveSubordinateTimeRecord(subordinateTimeRecord);
+        new SubordinateTimeRecord(superiorTimeRecord.getStart());
+    subordinateTimeRecord = subordinateTimeRecordRepository.save(subordinateTimeRecord);
     logger.info("saved %s".formatted(subordinateTimeRecord.toString()));
     superiorTimeRecord.addSubordinateTimeRecord(subordinateTimeRecord);
     logger.info(
-            "Added subordinate %s to superior %s"
-                    .formatted(subordinateTimeRecord, superiorTimeRecord));
-    superiorTimeRecord =  superiorTimeRecordRepository.save(superiorTimeRecord);
+        "Added subordinate %s to superior %s".formatted(subordinateTimeRecord, superiorTimeRecord));
+    superiorTimeRecord = superiorTimeRecordRepository.save(superiorTimeRecord);
     logger.info("saved %s".formatted(superiorTimeRecord.toString()));
     return superiorTimeRecord;
   }
 
   /**
-   * internal Method, that retrieves the SubordinateTimeRecord form the oldSuperiorTimeRecord and sets the End for both of them
-   * to one second before the start of the newSuperiorTimeRecord. After that it saves both old TimeRecord entities to the database.
-   * @param newSuperiorTimeRecord
-   * @param oldSuperiorTimeRecordOptional
-   * @return
+   * internal Method, that retrieves the SubordinateTimeRecord form the oldSuperiorTimeRecord and
+   * sets the End for both of them to one second before the start of the newSuperiorTimeRecord.
+   * After that it saves both old TimeRecord entities to the database.
    */
-@Transactional
+  @Transactional
   public void finalizeOldTimeRecord(Userx user, SuperiorTimeRecord newSuperiorTimeRecord) {
-    Optional<SuperiorTimeRecord> oldSuperiorTimeRecordOptional = findLatestSuperiorTimeRecordByUser(user);
-    if(oldSuperiorTimeRecordOptional.isEmpty()){
+    Optional<SuperiorTimeRecord> oldSuperiorTimeRecordOptional =
+        findLatestSuperiorTimeRecordByUser(user);
+    if (oldSuperiorTimeRecordOptional.isEmpty()) {
       logger.info("No old SuperiorTimeRecord found for user %s".formatted(user));
       return;
     }
     SuperiorTimeRecord oldSuperiorTimeRecord = oldSuperiorTimeRecordOptional.get();
     logger.info("found old SuperiorTimeRecord %s".formatted(oldSuperiorTimeRecord));
 
-    //fetch the subordinate Timerecord of this old superior TimeRecord
-  SubordinateTimeRecord oldSubordinateTimeRecord = oldSuperiorTimeRecord.getSubordinateRecords().get(0);
-  LocalDateTime oldEnd = newSuperiorTimeRecord.getStart().minusSeconds(1);
-  LocalDateTime oldStart = oldSuperiorTimeRecord.getStart();
-  //duration is in seconds
-  long durationInSeconds = ChronoUnit.SECONDS.between(oldStart, oldEnd);
-
-  oldSuperiorTimeRecord.setDuration(durationInSeconds);
-
-
-//    if (oldSuperiorTimeRecord.getSubordinateRecords().size() != 1) {
-//      throw new IllegalArgumentException(
-//              "There seem to be %d SubordinateTimeRecords stored in SuperiorTimeRecord %s while we expect only one"
-//                      .formatted(
-//                              oldSuperiorTimeRecord.getSubordinateRecords().size(), oldSuperiorTimeRecord));
-//    }
+    // fetch the subordinate Timerecord of this old superior TimeRecord
     SubordinateTimeRecord oldSubordinateTimeRecord =
-            oldSuperiorTimeRecord.getSubordinateRecords().get(0);
+        oldSuperiorTimeRecord.getSubordinateRecords().get(0);
+    LocalDateTime oldEnd = newSuperiorTimeRecord.getStart().minusSeconds(1);
+    LocalDateTime oldStart = oldSuperiorTimeRecord.getStart();
+    long durationInSeconds = ChronoUnit.SECONDS.between(oldStart, oldEnd);
 
-    if (oldSubordinateTimeRecord.getStart() != oldSuperiorTimeRecord.getStart()) {
-      throw new SubordinateTimeRecordOutOfBoundsException(
-              "Start of %s does not match start of %s"
-                      .formatted(oldSubordinateTimeRecord.getStart(), oldSuperiorTimeRecord.getStart()));
-      }
-
-    oldSuperiorTimeRecord.setEnd(newSuperiorTimeRecord.getStart().minusSeconds(1));
-    oldSubordinateTimeRecord.setEnd(newSuperiorTimeRecord.getStart().minusSeconds(1));
+    // time setting
+    oldSuperiorTimeRecord.setDuration(durationInSeconds);
+    oldSuperiorTimeRecord.setEnd(oldEnd);
+    oldSubordinateTimeRecord.setEnd(oldEnd);
     logger.info(
-            "set End TimeStamp for %s and %s"
-                    .formatted(oldSuperiorTimeRecord, oldSubordinateTimeRecord));
+        "set End TimeStamp for %s and %s"
+            .formatted(oldSuperiorTimeRecord, oldSubordinateTimeRecord));
 
+    // persisting the Entities
     subordinateTimeRecordRepository.save(oldSubordinateTimeRecord);
     logger.info("saved %s".formatted(oldSubordinateTimeRecord.toString()));
     superiorTimeRecordRepository.save(oldSuperiorTimeRecord);
@@ -158,12 +139,12 @@ public class TimeRecordService {
     return this.subordinateTimeRecordRepository.save(subordinateTimeRecord);
   }
 
-
-  //find by user and start
-  public Optional<SuperiorTimeRecord> findLatestSuperiorTimeRecordByUser(Userx user){
+  public Optional<SuperiorTimeRecord> findLatestSuperiorTimeRecordByUser(Userx user) {
     return superiorTimeRecordRepository.findFirstByUserOrderByStartDesc(user);
   }
-  public Optional<SuperiorTimeRecord> findSuperiorTimeRecordByStartAndUser(LocalDateTime start, Userx user){
+
+  public Optional<SuperiorTimeRecord> findSuperiorTimeRecordByStartAndUser(
+      LocalDateTime start, Userx user) {
     return superiorTimeRecordRepository.findByStartAndUser(start, user);
   }
 }
