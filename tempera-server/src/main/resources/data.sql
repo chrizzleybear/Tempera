@@ -25,9 +25,9 @@ INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_STATION_ID, UNIT) VALUES ('H
 INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_STATION_ID, UNIT) VALUES ('NMVOC', -4, 'tempera_station_1', 'OHM');
 INSERT INTO measurement (measurement_value, id, sensor_sensor_id, timestamp, sensor_tempera_station_id)  VALUES (20.0, -1, -1, '2016-01-01 00:00:00', 'tempera_station_1');
 -- Testdata for TimeRecordService
-INSERT INTO superior_time_record (state, id, start, time_end, tempera_station_id) VALUES ('DEEPWORK', -1, '2016-01-01 00:00:00', null, 'tempera_station_1');
+INSERT INTO superior_time_record (duration, start, time_end, user_username, state, tempera_station_id) VALUES (30, '2016-01-01 00:00:00', null, 'admin', 'DEEPWORK', 'tempera_station_1');
 INSERT INTO subordinate_time_record (groupx_id, id, project_id, start, time_end) VALUES (null, -1, null, '2016-01-01 00:00:00', null);
-INSERT INTO superior_time_record_subordinate_records (subordinate_records_id, superior_time_record_id) VALUES (-1, -1);
+INSERT INTO superior_time_record_subordinate_records (subordinate_records_id, superior_time_record_start, superior_time_record_user_username) VALUES (-1, '2016-01-01 00:00:00', 'admin');
 INSERT INTO userx_superior_time_records (superior_time_records_id, userx_username) VALUES (-1, 'admin');
 
 

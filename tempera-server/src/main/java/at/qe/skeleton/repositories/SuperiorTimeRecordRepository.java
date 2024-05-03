@@ -15,14 +15,11 @@ public interface SuperiorTimeRecordRepository extends AbstractRepository<Superio
 
     List<SuperiorTimeRecord> findAllByState(State state);
 
-    Optional<SuperiorTimeRecord> findFirstByOrderByStartDesc();
-
-    @Query("SELECT sub from SuperiorTimeRecord.subordinateRecords sub where SuperiorTimeRecord.id = :id")
-    List<SubordinateTimeRecord> findAllSubordinateRecordsById(Long id);
+//    @Query("SELECT sub from SuperiorTimeRecord.subordinateRecords sub where SuperiorTimeRecord.id = :id")
+//    List<SubordinateTimeRecord> findAllSubordinateRecordsById(Long id);
 
 
-    Optional<SuperiorTimeRecord> findFirstByUserOrderByStartDesc(Userx user);
-    Optional<SuperiorTimeRecord> findByStartAndUser(LocalDateTime start, Userx user);
+    Optional<SuperiorTimeRecord> findFirstByUserOrderById_Start(Userx user);
+    Optional<SuperiorTimeRecord> findByUserAndId_Start(Userx user, LocalDateTime start);
 
-//    Optional<SuperiorTimeRecord> findFirstByUserxOrderByStartDesc(Userx user);
 }

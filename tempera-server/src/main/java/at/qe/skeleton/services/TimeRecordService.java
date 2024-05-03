@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 @Component
+@Transactional
 @Scope("application")
 public class TimeRecordService {
 
@@ -48,9 +49,6 @@ public class TimeRecordService {
         .orElseThrow(() -> new CouldNotFindEntityException("SuperiorTimeRecord %s".formatted(id)));
   }
 
-  public Optional<SuperiorTimeRecord> findLastSavedTimeRecord() {
-    return superiorTimeRecordRepository.findFirstByOrderByStartDesc();
-  }
 
   /**
    * this method saves a new SuperiorTimeRecord and adds the start-Time of the new TimeRecord minus
@@ -140,11 +138,11 @@ public class TimeRecordService {
   }
 
   public Optional<SuperiorTimeRecord> findLatestSuperiorTimeRecordByUser(Userx user) {
-    return superiorTimeRecordRepository.findFirstByUserOrderByStartDesc(user);
+    return superiorTimeRecordRepository.findFirstByUserOrderById_Start(user);
   }
 
   public Optional<SuperiorTimeRecord> findSuperiorTimeRecordByStartAndUser(
       LocalDateTime start, Userx user) {
-    return superiorTimeRecordRepository.findByStartAndUser(start, user);
+    return superiorTimeRecordRepository.findByUserAndId_Start(user, start);
   }
 }

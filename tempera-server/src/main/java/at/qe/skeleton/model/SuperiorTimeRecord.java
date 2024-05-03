@@ -41,7 +41,7 @@ public class SuperiorTimeRecord {
   @Enumerated(EnumType.STRING)
   private State state;
 
-  private SuperiorTimeRecord() {
+  protected SuperiorTimeRecord() {
     subordinateRecords = new ArrayList<>();
   }
 
@@ -55,7 +55,7 @@ public class SuperiorTimeRecord {
     subordinateRecords = new ArrayList<>();
   }
 
-  public int getDuration() {
+  public long getDuration() {
     return duration;
   }
 
