@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 
 // code was written with workshop 5 code as template
 @RestController
-@RequestMapping("/rasp/api/timerecord")
+@RequestMapping("/rasp/api/time_record")
 public class TimeRecordController {
   private final TimeRecordService timeRecordService;
   private final SuperiorTimeRecordMapper timeRecordMapper;
@@ -41,34 +41,34 @@ public class TimeRecordController {
     this.temperaStationService = temperaStationService;
   }
 
-  @GetMapping("/{id}")
-  private ResponseEntity<SuperiorTimeRecordDto> getTimeRecord(
-      @PathVariable Long id, @RequestParam UUID accessPointId) {
-    try {
-      if (!accessPointService.isEnabled(accessPointId)) {
-        throw new IllegalArgumentException(
-            "accessPoint %s is not enabled".formatted(accessPointId));
-      }
-      SuperiorTimeRecord entity = timeRecordService.findSuperiorTimeRecordById(id);
-      return ResponseEntity.ok(timeRecordMapper.mapToDto(entity));
-    } catch (Exception e) {
-      logger.log(
-          Level.SEVERE, "Could not map SuperiorTimeRecordDto to SuperiorTimeRecord entity", e);
-      return ResponseEntity.badRequest().build();
-    }
-  }
+//  @GetMapping("/{id}")
+//  private ResponseEntity<SuperiorTimeRecordDto> getTimeRecord(
+//      @PathVariable Long id, @RequestParam UUID accessPointId) {
+//    try {
+//      if (!accessPointService.isEnabled(accessPointId)) {
+//        throw new IllegalArgumentException(
+//            "accessPoint %s is not enabled".formatted(accessPointId));
+//      }
+//      SuperiorTimeRecord entity = timeRecordService.findSuperiorTimeRecordById(id);
+//      return ResponseEntity.ok(timeRecordMapper.mapToDto(entity));
+//    } catch (Exception e) {
+//      logger.log(
+//          Level.SEVERE, "Could not map SuperiorTimeRecordDto to SuperiorTimeRecord entity", e);
+//      return ResponseEntity.badRequest().build();
+//    }
+//  }
 
-  @PostMapping("/create")
+  @PostMapping("")
   private ResponseEntity<SuperiorTimeRecordDto> postTimeRecord(
       @RequestBody SuperiorTimeRecordDto timeRecordDto) {
     try {
-      if (!accessPointService.isEnabled(timeRecordDto.accessPointId())) {
+      if (!accessPointService.isEnabled(timeRecordDto.access_point_id())) {
         throw new IllegalArgumentException(
-            "accessPoint %s is not enabled".formatted(timeRecordDto.accessPointId()));
+            "accessPoint %s is not enabled".formatted(timeRecordDto.access_point_id()));
       }
-      if (!temperaStationService.isEnabled(timeRecordDto.stationId())) {
+      if (!temperaStationService.isEnabled(timeRecordDto.tempera_station_id())) {
         throw new IllegalArgumentException(
-            "temperaStation %s is not enabled".formatted(timeRecordDto.stationId()));
+            "temperaStation %s is not enabled".formatted(timeRecordDto.tempera_station_id()));
       }
       SuperiorTimeRecord entity =
           timeRecordService.addRecord(timeRecordMapper.mapFromDto(timeRecordDto));

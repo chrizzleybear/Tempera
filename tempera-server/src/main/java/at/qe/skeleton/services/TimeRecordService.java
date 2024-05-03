@@ -8,6 +8,7 @@ import at.qe.skeleton.model.TemperaStation;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.SubordinateTimeRecordRepository;
 import at.qe.skeleton.repositories.SuperiorTimeRecordRepository;
+import at.qe.skeleton.repositories.UserxRepository;
 import com.fasterxml.jackson.databind.annotation.JsonAppend;
 
 import org.jboss.weld.exceptions.IllegalArgumentException;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -29,13 +31,16 @@ public class TimeRecordService {
   private final Logger logger = Logger.getLogger("logger");
   private final SubordinateTimeRecordRepository subordinateTimeRecordRepository;
   private final SuperiorTimeRecordRepository superiorTimeRecordRepository;
+  private final UserxRepository userxRepository;
 
 
   public TimeRecordService(
       SuperiorTimeRecordRepository superiorTimeRecordRepository,
-      SubordinateTimeRecordRepository subordinateTimeRecordRepository) {
+      SubordinateTimeRecordRepository subordinateTimeRecordRepository, UserxRepository
+          userxRepository) {
     this.superiorTimeRecordRepository = superiorTimeRecordRepository;
     this.subordinateTimeRecordRepository = subordinateTimeRecordRepository;
+    this.userxRepository = userxRepository;
   }
 
   public SuperiorTimeRecord findSuperiorTimeRecordById(Long id) throws CouldNotFindEntityException {
@@ -74,7 +79,7 @@ public class TimeRecordService {
 //      logger.info("did not find an old SuperiorTimeRecord");
 //    } else {
 //      logger.info("found old SuperiorTimeRecord %s".formatted(oldSuperiorTimeRecordOptional.get()));
-      finalizeOldTimeRecord(temperaStation.getUser().getUsername(), newSuperiorTimeRecord);
+      finalizeOldTimeRecord(temperaStation.getUser(), newSuperiorTimeRecord);
 //    }
     return saveNewTimeRecord(newSuperiorTimeRecord);
   }
@@ -101,9 +106,11 @@ public class TimeRecordService {
    * @param oldSuperiorTimeRecordOptional
    * @return
    */
-@Transactional
-  public void finalizeOldTimeRecord(String username, SuperiorTimeRecord newSuperiorTimeRecord) {
-    SuperiorTimeRecord oldSuperiorTimeRecord = superiorTimeRecordRepository.findLastSavedByUser(username).get(0);
+
+  public void finalizeOldTimeRecord(Userx user, SuperiorTimeRecord newSuperiorTimeRecord) {
+    SuperiorTimeRecord oldSuperiorTimeRecord = userxRepository.findLastSuperiorTimeRecordByUser(user)
+            .orElseThrow(() -> new RuntimeException("Could not find old SuperiorTimeRecord"));
+    logger.info("found old SuperiorTimeRecord %s".formatted(oldSuperiorTimeRecord));
 //
 //    SuperiorTimeRecord oldSuperiorTimeRecord = oldSuperiorTimeRecordOptional.orElseThrow(() -> new RuntimeException("Could not find old SuperiorTimeRecord"));
 //    if (oldSuperiorTimeRecord.getSubordinateRecords().size() != 1) {
@@ -112,7 +119,6 @@ public class TimeRecordService {
 //                      .formatted(
 //                              oldSuperiorTimeRecord.getSubordinateRecords().size(), oldSuperiorTimeRecord));
 //    }
-
     SubordinateTimeRecord oldSubordinateTimeRecord =
             oldSuperiorTimeRecord.getSubordinateRecords().get(0);
 
@@ -143,9 +149,12 @@ public class TimeRecordService {
     return this.subordinateTimeRecordRepository.save(subordinateTimeRecord);
   }
 
-  private Optional<SuperiorTimeRecord> findLastTimeRecordByUser(Userx user) {
-    List<SuperiorTimeRecord> timeRecords =
-        superiorTimeRecordRepository.findLastSavedByUser(user.getUsername());
-    return timeRecords.isEmpty() ? Optional.empty() : Optional.of(timeRecords.get(0));
+
+  //find by user and start
+  public Optional<SuperiorTimeRecord> findLatestSuperiorTimeRecordByUser(Userx user){
+    return superiorTimeRecordRepository.findFirstByUserOrderByStartDesc(user);
+  }
+  public Optional<SuperiorTimeRecord> findSuperiorTimeRecordByStartAndUser(LocalDateTime start, Userx user){
+    return superiorTimeRecordRepository.findByStartAndUser(start, user);
   }
 }

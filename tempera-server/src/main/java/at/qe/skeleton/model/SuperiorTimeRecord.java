@@ -18,34 +18,57 @@ import java.util.Objects;
  */
 @Entity
 public class SuperiorTimeRecord {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  private LocalDateTime start;
+  @EmbeddedId
+  SuperiorTimeRecordId id;
+
+
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "time_end")
   private LocalDateTime end;
 
+  @ManyToOne
+          @MapsId("userName")
+  Userx user;
+
+  private int duration;
+
   @ManyToOne private TemperaStation temperaStation;
 
   @OneToMany private List<SubordinateTimeRecord> subordinateRecords;
 
+  @Enumerated(EnumType.STRING)
   private State state;
 
-  public SuperiorTimeRecord() {
+  private SuperiorTimeRecord() {
     subordinateRecords = new ArrayList<>();
   }
 
   public SuperiorTimeRecord(
-          @NotNull TemperaStation temperaStation, @NotNull LocalDateTime start, LocalDateTime end, @NotNull State state) {
-    this.temperaStation = Objects.requireNonNull(temperaStation);
-    this.start = Objects.requireNonNull(start);
+          @NotNull Userx user, @NotNull LocalDateTime start, int duration, LocalDateTime end, @NotNull State state) {
+    this.user = Objects.requireNonNull(user);
+    this.id = new SuperiorTimeRecordId(start, user.getUsername());
     this.end = end;
     this.state = Objects.requireNonNull(state);
+    this.duration = duration;
     subordinateRecords = new ArrayList<>();
+  }
+
+  public int getDuration() {
+    return duration;
+  }
+
+  public Userx getUser() {
+    return user;
+  }
+
+  public void setUser(Userx user) {
+    this.user = user;
+  }
+
+  public void setDuration(int duration) {
+    this.duration = duration;
   }
 
   public LocalDateTime getStart() {

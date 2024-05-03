@@ -42,10 +42,6 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     @JsonIgnore
     private LocalDateTime updateDate;
 
-    // todo: what if user gets deleted? we should keep the timerecords in the aggregated
-    // team and project time calculation?
-    @OneToMany
-    private List<SuperiorTimeRecord> superiorTimeRecords;
 
     private String password;
 
@@ -71,16 +67,6 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
         this.createDate = createDate;
     }
 
-    public List<SuperiorTimeRecord> getSuperiorTimeRecords() {
-        return superiorTimeRecords;
-    }
-
-    public void addSuperiorTimeRecord(SuperiorTimeRecord superiorTimeRecord) {
-        if (superiorTimeRecord == null) {
-            throw new NullPointerException("superiorTimeRecord should not be null");
-        }
-        this.superiorTimeRecords.add(superiorTimeRecord);
-    }
 
     public String getUsername() {
         return username;

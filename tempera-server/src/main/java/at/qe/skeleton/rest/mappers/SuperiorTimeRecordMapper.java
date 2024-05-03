@@ -1,9 +1,7 @@
 package at.qe.skeleton.rest.mappers;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
-import at.qe.skeleton.model.AccessPoint;
-import at.qe.skeleton.model.SuperiorTimeRecord;
-import at.qe.skeleton.model.TemperaStation;
+import at.qe.skeleton.model.*;
 import at.qe.skeleton.rest.dtos.SuperiorTimeRecordDto;
 import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.TemperaStationService;
@@ -38,12 +36,13 @@ public class SuperiorTimeRecordMapper
     AccessPoint accessPoint =
         accessPointService.getAccessPointByTemperaStationId(temperaStation.getId());
     return new SuperiorTimeRecordDto(
-        entity.getId(),
-        temperaStation.getId(),
         accessPoint.getId(),
+        temperaStation.getId(),
         entity.getStart(),
-        entity.getEnd(),
-        entity.getState());
+        entity.getDuration(),
+        entity.getState(),
+        entity.getEnd() != null // if end is null, the SuperiorTimeRecord is still running
+        );
   }
 
   /**
@@ -63,11 +62,26 @@ public class SuperiorTimeRecordMapper
     if (dto == null) {
       return null;
     }
-    SuperiorTimeRecord entity = null;
-    if (dto.Id() != null) {
-      return timeRecordService.findSuperiorTimeRecordById(dto.Id());
+    TemperaStation temperaStation = temperaStationService.findById(dto.tempera_station_id());
+    Userx user = temperaStation.getUser();
+    SuperiorTimeRecord superiorTimeRecord;
+    // auto_update == true heißt der vorherige TimeRecord ist abgeschlossen und es handelt sich um
+    // einen neuen timerecord. Wenn also auto_update false ist, müssen wir nur die Zeit updaten.
+    if (!dto.auto_update()) {
+      // todo: is this lazy loaded? and if so does it work?
+
+      superiorTimeRecord =
+          timeRecordService
+              .findSuperiorTimeRecordByStartAndUser(dto.start(), user)
+              .orElseThrow(
+                  () ->
+                      new CouldNotFindEntityException(
+                          "SuperiorTimeRecord %s".formatted(dto.start())));
+      superiorTimeRecord.setDuration(dto.duration());
     }
-    TemperaStation temperaStation = temperaStationService.findById(dto.stationId());
-    return new SuperiorTimeRecord(temperaStation, dto.start(), dto.end(), dto.state());
+    else{
+        superiorTimeRecord = new SuperiorTimeRecord(user, dto.start(), dto.duration(), null, dto.mode());
+    }
+    return superiorTimeRecord;
   }
 }
