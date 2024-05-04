@@ -15,8 +15,8 @@ export class GroupService {
     return this.http.get<Group[]>(this.API_URL + 'all');
   }
 
-  createGroup(group: Group): Observable<Group> {
-    return this.http.post<Group>(this.API_URL + 'create', group);
+  createGroup(name: string, description: string, groupLead: string ): Observable<Group> {
+    return this.http.post<Group>(this.API_URL + 'create', {name, description, groupLead});
   }
 
   getGroupById(id: string): Observable<Group> {
@@ -29,7 +29,17 @@ export class GroupService {
 
 
   deleteGroup(groupId: string) {
-    return this.http.delete(this.API_URL + 'delete/' + groupId);
+    return this.http.delete(`${this.API_URL}delete/${groupId}`, { responseType: 'text' })
+      .pipe(
+        map(response => {
+          console.log("Group deleted successfully:", response);
+          return response;
+        }),
+        catchError(error => {
+          console.error("Error deleting group:", error);
+          return throwError(() => new Error('Error deleting project: ' + error.message));  // properly handle and throw an error
+        })
+      );
 
   }
 }

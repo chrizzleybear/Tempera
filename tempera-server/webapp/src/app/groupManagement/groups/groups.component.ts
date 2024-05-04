@@ -8,7 +8,8 @@ import { InputTextModule } from "primeng/inputtext";
 import { NgIf } from "@angular/common";
 import { DialogModule } from "primeng/dialog";
 import { Router } from "@angular/router";
-
+import {group} from "@angular/animations";
+import {GroupCreateComponent} from "../group-create/group-create.component";
 @Component({
   selector: 'app-groups',
   standalone: true,
@@ -18,7 +19,9 @@ import { Router } from "@angular/router";
     ButtonModule,
     InputTextModule,
     NgIf,
-    DialogModule
+    DialogModule,
+    GroupCreateComponent,
+
   ],
   templateUrl: './groups.component.html',
   styleUrls: ['./groups.component.css']
@@ -80,5 +83,12 @@ export class GroupsComponent implements OnInit {
     console.log("Edit group:", group);
     this.selectedGroup = group;
     this.displayCreateDialog = true;
+  }
+
+  protected readonly group = group;
+
+  onCreateCompleted($event: any) {
+    this.displayCreateDialog = false;
+    this.loadGroups();
   }
 }

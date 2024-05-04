@@ -2,32 +2,31 @@ package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.model.Group;
 import at.qe.skeleton.services.GroupService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 @RequestMapping("/api/groups")
 public class GroupManagementController {
 
-    private final GroupService groupService;
-
-    public GroupManagementController(GroupService groupService) {
-        this.groupService = groupService;
-    }
+    @Autowired
+    GroupService groupService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Group>> getAllUsers() {
+    public ResponseEntity<List<Group>> getAllGroups() {
         List<Group> users =
                 groupService.getAllGroups();
         return ResponseEntity.ok(users);
     }
 
-    @PostMapping
-    public ResponseEntity<Group> createGroup(@RequestParam String name, @RequestParam String description, @RequestParam String groupLeadId) {
-        Group group = groupService.createGroup(name, description, groupLeadId);
+    @PostMapping("/create")
+    public ResponseEntity<Group> createGroup(@RequestBody Map<String, String> groupData) {
+        Group group = groupService.createGroup(groupData.get("name"), groupData.get("description"), groupData.get("groupLead"));
         return ResponseEntity.ok(group);
     }
 
@@ -37,9 +36,10 @@ public class GroupManagementController {
         return ResponseEntity.ok(updatedGroup);
     }
 
-    @DeleteMapping("/{groupId}")
-    public ResponseEntity<Void> deleteGroup(@PathVariable Long groupId) {
-        groupService.deleteGroup(groupId);
+    @DeleteMapping("delete/{groupId}")
+    public ResponseEntity<Void> deleteGroup(@PathVariable String groupId) {
+        groupService.deleteGroup(Long.parseLong(groupId));
         return ResponseEntity.ok().build();
+
     }
 }
