@@ -18,7 +18,7 @@ import java.util.Objects;
 @Embeddable
 public class SensorTemperaCompositeId implements Serializable {
 
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Long sensorId;
 
   private String temperaStationId;
@@ -29,16 +29,16 @@ public class SensorTemperaCompositeId implements Serializable {
     return sensorId;
   }
 
-  public void setSensorId(Long id) {
-    this.sensorId = id;
-  }
-
   public String getTemperaStationId() {
     return temperaStationId;
   }
 
   public void setTemperaStationId(String temperaStationId) {
     this.temperaStationId = temperaStationId;
+  }
+
+  public void setSensorId(Long sensorId) {
+    this.sensorId = sensorId;
   }
 
   @Override

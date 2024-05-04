@@ -10,7 +10,7 @@ export const isLoggedInGuard: CanActivateFn = () => {
     return true;
   }
 
-  router.navigate(['/login'])
+  router.navigate(['/login']);
 
   return false;
 };

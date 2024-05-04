@@ -5,5 +5,5 @@ public enum Unit {
   FAHRENHEIT,
   PERCENT,
   LUX,
-  OHM, //Air quality
+  OHM, // Air quality
 }

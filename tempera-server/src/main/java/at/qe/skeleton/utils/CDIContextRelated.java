@@ -8,16 +8,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * A custom annotation to indicate that a spring-managed bean contains fields
- * which need to be initialized by CDI. See {@link CDIAutowired}
+ * A custom annotation to indicate that a spring-managed bean contains fields which need to be
+ * initialized by CDI. See {@link CDIAutowired}
  *
- * This class is part of the skeleton project provided for students of the
- * course "Software Engineering" offered by the University of Innsbruck.
- *
+ * <p>This class is part of the skeleton project provided for students of the course "Software
+ * Engineering" offered by the University of Innsbruck.
  */
 @Documented
 @Retention(RUNTIME)
 @Target(TYPE)
-public @interface CDIContextRelated {
-
-}
+public @interface CDIContextRelated {}

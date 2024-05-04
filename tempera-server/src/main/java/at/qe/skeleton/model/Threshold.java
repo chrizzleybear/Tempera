@@ -9,76 +9,75 @@ import java.util.Objects;
 @Entity
 public class Threshold {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private SensorType sensorType;
-    private ThresholdType thresholdType;
-    @Column(name="threshold_value")
-    private double value;
-    @OneToOne
-    private Modification modification;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @OneToOne
-    private ThresholdTip tip;
+  private SensorType sensorType;
+  private ThresholdType thresholdType;
 
+  @Column(name = "threshold_value")
+  private double value;
 
-    public SensorType getSensorType() {
-        return sensorType;
-    }
+  @OneToOne private Modification modification;
 
-    public void setSensorType(SensorType sensorType) {
-        this.sensorType = sensorType;
-    }
+  @OneToOne private ThresholdTip tip;
 
-    public ThresholdType getThresholdType() {
-        return thresholdType;
-    }
+  public SensorType getSensorType() {
+    return sensorType;
+  }
 
-    public void setThresholdType(ThresholdType thresholdType) {
-        this.thresholdType = thresholdType;
-    }
+  public void setSensorType(SensorType sensorType) {
+    this.sensorType = sensorType;
+  }
 
-    public double getValue() {
-        return value;
-    }
+  public ThresholdType getThresholdType() {
+    return thresholdType;
+  }
 
-    public void setValue(double value) {
-        this.value = value;
-    }
+  public void setThresholdType(ThresholdType thresholdType) {
+    this.thresholdType = thresholdType;
+  }
 
-    public Modification getModificationReason() {
-        return modification;
-    }
+  public double getValue() {
+    return value;
+  }
 
-    public void setModificationReason(Modification modification) {
-        this.modification = modification;
-    }
+  public void setValue(double value) {
+    this.value = value;
+  }
 
-    public ThresholdTip getTip() {
-        return tip;
-    }
+  public Modification getModificationReason() {
+    return modification;
+  }
 
-    public void setTip(ThresholdTip tip) {
-        this.tip = tip;
-    }
+  public void setModificationReason(Modification modification) {
+    this.modification = modification;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Threshold threshold = (Threshold) o;
-        return id == threshold.id;
-    }
+  public ThresholdTip getTip() {
+    return tip;
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+  public void setTip(ThresholdTip tip) {
+    this.tip = tip;
+  }
 
-    @Override
-    public String toString() {
-        return String.valueOf(id);
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Threshold threshold = (Threshold) o;
+    return id == threshold.id;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
+
+  @Override
+  public String toString() {
+    return String.valueOf(id);
+  }
 }
-

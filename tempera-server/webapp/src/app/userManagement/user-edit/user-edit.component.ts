@@ -1,47 +1,47 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UsersService } from '../../_services/users.service';
-import {NgForOf, NgIf} from "@angular/common";
-import {DialogModule} from "primeng/dialog";
-import {InputTextModule} from "primeng/inputtext";
-import {ButtonModule} from "primeng/button";
-import {MessageModule} from "primeng/message";
+import { NgForOf, NgIf } from '@angular/common';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
+import { MessageModule } from 'primeng/message';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-user-edit',
   templateUrl: './user-edit.component.html',
   styleUrls: ['./user-edit.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, NgForOf, DialogModule, InputTextModule, ButtonModule, MessageModule, NgIf]
+  imports: [ReactiveFormsModule, NgForOf, DialogModule, InputTextModule, ButtonModule, MessageModule, NgIf],
 })
 export class UserEditComponent implements OnInit {
   userForm: FormGroup;
-  username: any;
+  username!: string;
   roles: string[];
-  @Input() user: any;
+  @Input({ required: true }) user!: User;
   @Output() editCompleted = new EventEmitter<boolean>();
 
 
   constructor(private fb: FormBuilder, private usersService: UsersService) {
-    this.roles = ['ADMIN', 'EMPLOYEE', 'MANAGER', "GROUPLEAD"];
+    this.roles = ['ADMIN', 'EMPLOYEE', 'MANAGER', 'GROUPLEAD'];
     this.userForm = this.fb.group({
       username: '',
-      password:['',Validators.minLength(6)],
-      firstName: ['',Validators.required],
-      lastName: ['',Validators.required],
-      email: ['',Validators.email],
+      password: ['', Validators.minLength(6)],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', Validators.email],
       enabled: '',
       roles: this.fb.group({
         ADMIN: false,
         EMPLOYEE: false,
         MANAGER: false,
-        GROUPLEAD: false
+        GROUPLEAD: false,
       }),
     });
   }
 
   ngOnInit() {
-    //this.username = this.route.snapshot.paramMap.get('id');
     this.username = this.user.username;
     this.usersService.getUserById(this.username).subscribe({
       next: (data) => {
@@ -50,8 +50,16 @@ export class UserEditComponent implements OnInit {
       },
       error: (error) => {
         console.error('Failed to load user details:', error);
-      }
+      },
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    // Check if 'user' input has changed
+    if (changes['user']?.currentValue) {
+      this.username = this.user.username;
+      this.populateForm();
+    }
   }
 
   private populateForm() {
@@ -62,7 +70,7 @@ export class UserEditComponent implements OnInit {
         lastName: this.user.lastName,
         password: this.user.password,
         email: this.user.email,
-        enabled: this.user.enabled
+        enabled: this.user.enabled,
       });
       const rolesControl = this.userForm.get('roles') as FormGroup;
       this.roles.forEach(role => {
@@ -70,6 +78,7 @@ export class UserEditComponent implements OnInit {
       });
     }
   }
+
   onSubmit() {
     this.userForm.value.roles = Object.keys(this.userForm.value.roles).filter((role) => this.userForm.value.roles[role]);
     console.log(this.userForm.value);
@@ -81,7 +90,7 @@ export class UserEditComponent implements OnInit {
       error: (error) => {
         console.error('Error updating user:', error);
         this.editCompleted.emit(false);
-      }
+      },
     });
   }
 

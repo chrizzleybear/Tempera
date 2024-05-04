@@ -31,11 +31,9 @@ public class Project {
     }
     public Project() {}
 
-
-
-    public List<SubordinateTimeRecord> getSubordinateTimeRecords() {
-        return subordinateTimeRecords;
-    }
+  //    public List<SubordinateTimeRecord> getSubordinateTimeRecords() {
+  //        return subordinateTimeRecords;
+  //    }
 
     public Userx getManager() {
         return manager;

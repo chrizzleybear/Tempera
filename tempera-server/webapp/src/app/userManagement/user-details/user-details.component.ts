@@ -1,26 +1,30 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {UsersService} from "../../_services/users.service";
-import {NgForOf, NgIf} from "@angular/common";
-import { ReactiveFormsModule } from "@angular/forms";
+import { UsersService } from '../../_services/users.service';
+import { NgForOf, NgIf } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { User } from '../../models/user.model';
+import { CardModule } from 'primeng/card';
+
 @Component({
   selector: 'app-user-details',
   standalone: true,
   imports: [
     NgIf,
     NgForOf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CardModule,
   ],
   templateUrl: './user-details.component.html',
-  styleUrls: ['./user-details.component.css']
+  styleUrls: ['./user-details.component.css'],
 })
 export class UserDetailsComponent implements OnInit {
-  user: any;
+  user: User | undefined;
   userId: string | null | undefined;
 
   constructor(
     private route: ActivatedRoute,
-    private usersService: UsersService
+    private usersService: UsersService,
   ) {
   }
 
@@ -35,11 +39,11 @@ export class UserDetailsComponent implements OnInit {
     this.usersService.getUserById(id).subscribe({
       next: (data) => {
         this.user = data;
-        console.log("User details: ", this.user);
+        console.log('User details: ', this.user);
       },
       error: (error) => {
         console.error('Failed to load user details:', error);
-      }
+      },
     });
   }
 }

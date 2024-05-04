@@ -10,16 +10,16 @@ import java.util.Optional;
 
 public interface SuperiorTimeRecordRepository extends AbstractRepository<SuperiorTimeRecord, Long> {
 
-    List<SuperiorTimeRecord> findAllByState(State state);
+  List<SuperiorTimeRecord> findAllByState(State state);
 
-    Optional<SuperiorTimeRecord> findFirstByOrderByStartDesc();
+  Optional<SuperiorTimeRecord> findFirstByOrderByStartDesc();
 
-    @Query("SELECT s FROM SuperiorTimeRecord s " +
-            "JOIN s.temperaStation t " +
-            "JOIN t.user u " +
-            "WHERE u.username = :username " +
-            "ORDER BY s.start DESC " +
-            "Limit 1")
-    List<SuperiorTimeRecord> findLastSavedByUser(@Param("username") String username);
-
+  @Query(
+      "SELECT s FROM SuperiorTimeRecord s "
+          + "JOIN s.temperaStation t "
+          + "JOIN t.user u "
+          + "WHERE u.username = :username "
+          + "ORDER BY s.start DESC "
+          + "Limit 1")
+  List<SuperiorTimeRecord> findLastSavedByUser(@Param("username") String username);
 }
