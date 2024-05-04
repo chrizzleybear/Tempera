@@ -1,0 +1,39 @@
+services:
+  ble-app:
+    build: ./tempera-accesspoint
+    volumes:
+      - /var/run/dbus:/var/run/dbus
+#    depends_on:
+#      - back-end
+#      - test-api
+
+  back-end:
+    build:
+      ./tempera-server
+    environment:
+      - POSTGRES_USER=g4t1
+      - POSTGRES_PASSWORD=passwd
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_db:5432/tempera
+      - SPRING_DATASOURCE_USERNAME=g4t1
+      - SPRING_DATASOURCE_PASSWORD=passwd
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      - postgres_db
+    ports:
+      - 8080:8080
+
+  postgres_db:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=g4t1
+      - POSTGRES_PASSWORD=passwd
+      - POSTGRES_DB=tempera
+    ports:
+      - 5432:5432
+
+# For testing only
+#  test-api:
+#    build: ./tempera-accesspoint/src/tempera/api
+#    ports:
+#      - "80:80"

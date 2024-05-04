@@ -1,52 +1,62 @@
 <p-messages [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
 <div *ngIf="!displayEditDialog && !displayCreateDialog">
   <div class="mb-4">
-    <input type="text" pInputText placeholder="Search by username" (input)="applyFilter($event)" class="mr-2">
+    <input type="text" pInputText placeholder="Search" (input)="applyFilter($event)" class="mr-2">
 
     <button type="button" pButton label="Add New User" icon="pi pi-plus" (click)="createUser()" class="mr-2"></button>
-
-    <button type="button" pButton label="Delete Selected Users" icon="pi pi-trash"
-            (click)="deleteSelectedUsers()" [disabled]="!selectedUsers || selectedUsers.length === 0"></button>
   </div>
 
-  <p-table [value]="filteredUsers" [paginator]="true" [rows]="10" selectionMode="multiple" [(selection)]="selectedUsers" dataKey="id" responsiveLayout="scroll">
-  <ng-template pTemplate="header">
-    <tr>
-      <th scope="col" pSortableColumn="username">Benutzername<p-sortIcon field="username"></p-sortIcon></th>
-      <th scope="col" pSortableColumn="firstName">Vorname <p-sortIcon field="firstName"></p-sortIcon></th>
-      <th scope="col" pSortableColumn="lastName">Nachname <p-sortIcon field="lastName"></p-sortIcon></th>
-      <th scope="col">Rollen</th>
-      <th scope="col">Enabled</th>
-      <!--  Empty headers for styling    -->
-      <th></th>
-      <th></th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-user>
-    <tr (click)="viewUserDetails(user)">
-      <td>{{ user.username }}</td>
-      <td>{{ user.firstName }}</td>
-      <td>{{ user.lastName }}</td>
-      <td>
-        <ul>
-          <li *ngFor="let role of user.roles">{{ role }}</li>
-        </ul>
-      </td>
-      <td>{{ user.enabled ? "Yes" : "No" }}</td>
-      <td>
-        <p-button label="Edit" (onClick)="editUser(user)" icon="pi pi-pencil"></p-button>
-      </td>
-      <td> <p-tableCheckbox [value]="user" (click)="$event.stopPropagation()"></p-tableCheckbox> </td>
-    </tr>
-  </ng-template>
-</p-table>
+  <p-table [value]="filteredUsers" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+      <tr>
+        <th scope="col" pSortableColumn="username">Benutzername
+          <p-sortIcon field="username"></p-sortIcon>
+        </th>
+        <th scope="col" pSortableColumn="firstName">Vorname
+          <p-sortIcon field="firstName"></p-sortIcon>
+        </th>
+        <th scope="col" pSortableColumn="lastName">Nachname
+          <p-sortIcon field="lastName"></p-sortIcon>
+        </th>
+        <th scope="col">Rollen</th>
+        <th scope="col">Enabled</th>
+        <!--  Empty headers for styling    -->
+        <th></th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-user>
+      <tr (click)="viewUserDetails(user.username)">
+        <td>{{ user.username }}</td>
+        <td>{{ user.firstName }}</td>
+        <td>{{ user.lastName }}</td>
+        <td>
+          <ul>
+            <li *ngFor="let role of user.roles">{{ role }}</li>
+          </ul>
+        </td>
+        <td>{{ user.enabled ? "Yes" : "No" }}</td>
+        <td>
+          <p-button label="Edit" (onClick)="editUser(user); $event.stopPropagation()" icon="pi pi-pencil"></p-button>
+        </td>
+        <td>
+          <p-button label="Delete" (onClick)="deleteSelectedUsers(user.username); $event.stopPropagation()"
+                    icon="pi pi-trash"></p-button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
 </div>
-<div *ngIf="displayEditDialog">
-  <app-user-edit [user]="selectedUser" (editCompleted)="onEditCompleted($event)"></app-user-edit>
-  <button type="button" pButton label="Back" icon="pi pi-arrow-left" (click)="returnToUsers()"></button>
-</div>
-<div *ngIf="displayCreateDialog">
+<p-dialog header="Edit User" [(visible)]="displayEditDialog" [modal]="true" [style]="{width: '50vw'}" [closable]="true">
+  <div *ngIf="selectedUser">
+    <app-user-edit [user]="selectedUser" (editCompleted)="onEditCompleted($event)"></app-user-edit>
+    <button type="button" pButton label="Back" icon="pi pi-arrow-left" (click)="displayEditDialog = false"></button>
+  </div>
+</p-dialog>
+<p-dialog header="Create User" [(visible)]="displayCreateDialog" [modal]="true" [style]="{width: '50vw'}"
+          [closable]="true">
   <app-user-create (creatComplete)="onCreateCompleted($event)"></app-user-create>
-  <button type="button" pButton label="Back" icon="pi pi-arrow-left" (click)="returnToUsers()"></button>
-</div>
+  <button type="button" pButton label="Back" icon="pi pi-arrow-left" (click)="displayCreateDialog = false"></button>
+</p-dialog>
+
 

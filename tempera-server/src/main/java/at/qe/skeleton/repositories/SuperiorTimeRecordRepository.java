@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public interface SuperiorTimeRecordRepository extends AbstractRepository<SuperiorTimeRecord, SuperiorTimeRecordId> {
 
-    List<SuperiorTimeRecord> findAllByState(State state);
+  List<SuperiorTimeRecord> findAllByState(State state);
 
 //    @Query("SELECT sub from SuperiorTimeRecord.subordinateRecords sub where SuperiorTimeRecord.id = :id")
 //    List<SubordinateTimeRecord> findAllSubordinateRecordsById(Long id);

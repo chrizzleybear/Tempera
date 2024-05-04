@@ -1,14 +1,14 @@
-import {Component, OnInit} from '@angular/core';
-import {UsersService} from '../../_services/users.service';
-import {NgForOf, NgIf} from "@angular/common";
-import {User} from "../../models/user.model";
-import {TableModule} from 'primeng/table';
-import {InputTextModule} from "primeng/inputtext";
-import {Router} from '@angular/router';
-import {ButtonModule} from "primeng/button";
-import {UserEditComponent} from "../user-edit/user-edit.component";
-import {DialogModule} from "primeng/dialog";
-import {UserCreateComponent} from "../user-create/user-create.component";
+import { Component, OnInit } from '@angular/core';
+import { UsersService } from '../../_services/users.service';
+import { NgForOf, NgIf } from '@angular/common';
+import { User } from '../../models/user.model';
+import { TableModule } from 'primeng/table';
+import { InputTextModule } from 'primeng/inputtext';
+import { Router } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { UserEditComponent } from '../user-edit/user-edit.component';
+import { DialogModule } from 'primeng/dialog';
+import { UserCreateComponent } from '../user-create/user-create.component';
 import { MessagesModule } from 'primeng/messages';
 
 @Component({
@@ -26,21 +26,21 @@ import { MessagesModule } from 'primeng/messages';
     MessagesModule,
   ],
   templateUrl: './users.component.html',
-  styleUrl: './users.component.css'
+  styleUrl: './users.component.css',
 })
-export class UsersComponent implements OnInit{
+export class UsersComponent implements OnInit {
 
   users: User[] = [];
   filteredUsers: User[] = [];
-  selectedUsers: User[] = []
   displayEditDialog: boolean = false;
   selectedUser: any;
   displayCreateDialog: boolean = false;
   messages: any;
 
-  constructor(private usersService: UsersService, private router: Router ) {
+  constructor(private usersService: UsersService, private router: Router) {
 
   }
+
   ngOnInit(): void {
     this.loadUsers();
   }
@@ -49,61 +49,66 @@ export class UsersComponent implements OnInit{
     const filterValue = (event.target as HTMLInputElement).value;
     if (filterValue) {
       this.filteredUsers = this.users.filter(user =>
-        user.username.toLowerCase().includes(filterValue.toLowerCase())
+        user.username.toLowerCase().includes(filterValue.toLowerCase()) ||
+        user.firstName.toLowerCase().includes(filterValue.toLowerCase()) ||
+        user.lastName.toLowerCase().includes(filterValue.toLowerCase()),
       );
     } else {
       this.filteredUsers = this.users;
     }
   }
 
-  deleteSelectedUsers(): void {
-    console.log("delete selected users");
-    this.selectedUsers.forEach(user => {
-      this.usersService.deleteUser(user.id);
-      this.returnToUsers();
-      this.messages = [{severity:'success', summary:'Success', detail:'User deleted successfully'}];
-
-    });
+  deleteSelectedUsers(userId: string): void {
+    console.log('Delete user with ID: ', userId);
+    this.usersService.deleteUser(userId);
+    this.messages = [{ severity: 'success', summary: 'Success', detail: 'User deleted successfully' }];
+    this.loadUsers();
   }
 
   loadUsers() {
     this.usersService.getAllUsers().subscribe(users => {
       this.users = users;
       this.filteredUsers = users;
+      console.log('update');
     });
   }
+
   editUser(user: any) {
-    this.selectedUser = user;
+    this.selectedUser = { ...user };
     this.displayEditDialog = true;
-    console.log(user);
+    console.log('detail', user);
 
   }
+
   createUser() {
     this.displayCreateDialog = true;
 
   }
+
   returnToUsers() {
     this.loadUsers();
     this.displayEditDialog = false;
     this.displayCreateDialog = false;
 
   }
+
   onEditCompleted(success: boolean) {
     if (success) {
-      this.messages = [{severity:'success', summary:'Success', detail:'User updated successfully'}];
+      this.messages = [{ severity: 'success', summary: 'Success', detail: 'User updated successfully' }];
       this.returnToUsers();
     }
   }
 
   onCreateCompleted(success: boolean) {
     if (success) {
-      this.messages = [{severity:'success', summary:'Success', detail:'User created successfully'}];
+      this.messages = [{ severity: 'success', summary: 'Success', detail: 'User created successfully' }];
       this.returnToUsers();
     }
   }
-  viewUserDetails(user: any) {
-    this.router.navigate(['/user', user.id]);
-    console.log(user);
+
+  viewUserDetails(userId: string) {
+    this.router.navigate(['/user', userId]);
+    console.log(userId);
   }
 
 }

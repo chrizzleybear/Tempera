@@ -1,12 +1,10 @@
 package at.qe.skeleton.repositories;
 
-import at.qe.skeleton.model.SuperiorTimeRecord;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.UserxRole;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.annotations.Fetch;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -33,10 +31,4 @@ public interface UserxRepository extends AbstractRepository<Userx, String> {
 
   @Query("SELECT u FROM Userx u WHERE :role MEMBER OF u.roles")
   List<Userx> findByRole(@Param("role") UserxRole role);
-
-//  @Query(
-//      "SELECT s FROM SuperiorTimeRecord s Join SubordinateTimeRecord WHERE s.temperaStation.user = :user ORDER BY s.start DESC")
-//  Optional<SuperiorTimeRecord> findLastSuperiorTimeRecordByUser(@Param("user") Userx user);
-
-
 }

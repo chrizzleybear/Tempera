@@ -8,8 +8,9 @@ import at.qe.skeleton.model.TemperaStation;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.Unit;
-import at.qe.skeleton.rest.dtos.MeasurementDto;
-import at.qe.skeleton.rest.mappers.MeasurementMapper;
+import at.qe.skeleton.rest.raspberry.controllers.MeasurementController;
+import at.qe.skeleton.rest.raspberry.dtos.MeasurementDto;
+import at.qe.skeleton.rest.raspberry.mappers.MeasurementMapper;
 import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.MeasurementService;
 import at.qe.skeleton.services.TemperaStationService;
@@ -19,12 +20,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 

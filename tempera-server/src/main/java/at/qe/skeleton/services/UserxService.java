@@ -2,6 +2,7 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.TemperaStation;
+import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.repositories.UserxRepository;
@@ -124,23 +125,79 @@ public class UserxService implements UserDetailsService {
     return UserDetailsImpl.build(user);
   }
 
+  @Transactional
+  public UserxDto loadUserDTOById(String username) {
+    Userx user =
+        userRepository
+            .findById(username)
+            .orElseThrow(
+                () -> new UsernameNotFoundException("User Not Found with username: " + username));
+
+    return convertToDTO(user);
+  }
+
   public void deleteUser(String id) {
     Optional<Userx> userx = userRepository.findById(id);
     userx.ifPresent(value -> userRepository.delete(value));
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
-  public Userx updateUser(Userx userData) {
-    Userx newUser = userRepository.findById(userData.getId()).orElse(userData);
-    newUser.setId(userData.getId());
-    newUser.setFirstName(userData.getFirstName());
-    newUser.setLastName(userData.getLastName());
-    newUser.setUsername(userData.getUsername());
-    newUser.setEmail(userData.getEmail());
-    newUser.setRoles(userData.getRoles());
-    newUser.setEnabled(userData.isEnabled());
-    newUser.setUpdateDate(LocalDateTime.now());
-    newUser.setUpdateUser(getAuthenticatedUser());
-    return userRepository.save(newUser);
+  public Userx updateUser(UserxDto userxDTO) {
+    Userx user = userRepository.findFirstByUsername(userxDTO.getUsername());
+    if (user == null) {
+      throw new IllegalArgumentException("User not found");
+    }
+    user.setFirstName(userxDTO.getFirstName());
+    user.setLastName(userxDTO.getLastName());
+    user.setPassword(passwordEncoder.encode(userxDTO.getPassword()));
+    user.setEmail(userxDTO.getEmail());
+    user.setRoles(userxDTO.getRoles());
+    user.setEnabled(userxDTO.isEnabled());
+    user.setUpdateDate(LocalDateTime.now());
+    user.setUpdateUser(getAuthenticatedUser());
+    return userRepository.save(user);
+  }
+
+  public UserxDto convertToDTO(Userx user) {
+    UserxDto userxDTO = new UserxDto();
+    userxDTO.setUsername(user.getUsername());
+    userxDTO.setFirstName(user.getFirstName());
+    userxDTO.setLastName(user.getLastName());
+    userxDTO.setPassword(user.getPassword());
+    userxDTO.setEmail(user.getEmail());
+    userxDTO.setEnabled(user.isEnabled());
+    userxDTO.setRoles(user.getRoles());
+    return userxDTO;
+  }
+
+  public Userx convertToEntity(UserxDto userxDTO) {
+    Userx user = new Userx();
+    user.setUsername(userxDTO.getUsername());
+    user.setFirstName(userxDTO.getFirstName());
+    user.setLastName(userxDTO.getLastName());
+    user.setPassword(userxDTO.getPassword());
+    user.setEmail(userxDTO.getEmail());
+    user.setEnabled(userxDTO.isEnabled());
+    user.setRoles(userxDTO.getRoles());
+    return user;
+  }
+
+  public UserxDto validateUser(String username, String password) {
+    Userx user = userRepository.findFirstByUsername(username);
+    if (passwordEncoder.matches(password, user.getPassword())) {
+      return convertToDTO(user);
+    }
+    return null;
+  }
+
+  public void enableUser(String username, String password) {
+    Userx user = userRepository.findFirstByUsername(username);
+    if (user == null) {
+      throw new IllegalArgumentException("User not found");
+    }
+    user.setPassword(passwordEncoder.encode(password));
+    user.setEnabled(true);
+    // log "Enable user with username: " + username
+    userRepository.save(user);
   }
 }
