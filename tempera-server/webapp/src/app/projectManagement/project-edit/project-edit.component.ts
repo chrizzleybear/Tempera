@@ -24,7 +24,7 @@ import {UsersService} from "../../_services/users.service";
   templateUrl: './project-edit.component.html',
   styleUrl: './project-edit.component.css'
 })
-export class ProjectEditComponent implements OnChanges {
+export class ProjectEditComponent implements OnChanges, OnInit {
 
   projectForm: FormGroup;
   managers: any[] = [];
@@ -39,11 +39,6 @@ export class ProjectEditComponent implements OnChanges {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-        console.log('ProjectEditComponent: ngOnChanges:', this.project);
-        this.populateForm();
-    }
-
   ngOnInit() {
     this.projectService.getProjectById(this.project?.id).subscribe({
       next: (data) => {
@@ -57,6 +52,11 @@ export class ProjectEditComponent implements OnChanges {
     this.fetchManagers();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('ProjectEditComponent: ngOnChanges:', this.project);
+    this.fetchManagers();
+    this.populateForm();
+  }
 
   private populateForm() {
     if (this.project) {
