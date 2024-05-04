@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ProjectService} from "../../_services/project.service";
 import {Project} from "../../models/project.model";
@@ -24,7 +24,7 @@ import {UsersService} from "../../_services/users.service";
   templateUrl: './project-edit.component.html',
   styleUrl: './project-edit.component.css'
 })
-export class ProjectEditComponent {
+export class ProjectEditComponent implements OnChanges {
 
   projectForm: FormGroup;
   managers: any[] = [];
@@ -38,6 +38,11 @@ export class ProjectEditComponent {
       manager: [null, [Validators.required]]
     });
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+        console.log('ProjectEditComponent: ngOnChanges:', this.project);
+        this.populateForm();
+    }
 
   ngOnInit() {
     this.projectService.getProjectById(this.project?.id).subscribe({
@@ -58,14 +63,14 @@ export class ProjectEditComponent {
       this.projectForm.patchValue({
         name: this.project.name,
         description: this.project.description,
-        manager:`${this.project.manager.firstName} ${this.project.manager.lastName}`
+        manager: this.managers.find(manager => manager.value.username === this.project.manager.id)
       });
     }
   }
 
   onSubmit() {
     if (this.projectForm.valid) {
-      this.projectService.updateProject(this.project.id,this.projectForm.value.name, this.projectForm.value.description,this.projectForm.value.manager.value.username??this.project.manager.username).subscribe({
+      this.projectService.updateProject(this.project.id, this.projectForm.value.name, this.projectForm.value.description, this.projectForm.value.manager.value.username).subscribe({
         next: (response) => {
           console.log('Project updated successfully:', response);
           this.editComplete.emit(true);

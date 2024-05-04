@@ -35,7 +35,7 @@ export class ProjectsComponent implements OnInit{
   messages: any;
   displayCreateDialog: boolean = false;
   displayEditDialog: boolean = false;
-  selectedProject!: Project;
+  selectedProject: Project | undefined;
 
   constructor(private projectService: ProjectService, private router: Router) {
 
@@ -99,6 +99,7 @@ export class ProjectsComponent implements OnInit{
   returnToProjects() {
     this.loadProjects();
     this.displayCreateDialog = false;
+    this.displayEditDialog = false;
   }
 
   viewProjectDetails(project: Project) {

@@ -25,7 +25,7 @@ export class ProjectDetailsComponent {
   ngOnInit(): void {
     const projectId = this.route.snapshot.paramMap.get('id');
     if (projectId) {
-
+      this.fetchProjectDetails(parseInt(projectId));
     }
   }
 
