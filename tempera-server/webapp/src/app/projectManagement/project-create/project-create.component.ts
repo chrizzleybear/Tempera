@@ -32,7 +32,7 @@ export class ProjectCreateComponent {
   }
 
   ngOnInit() {
-    this.usersService.getAllUsers().subscribe({
+    this.usersService.getAllManagers().subscribe({
       next: (users: User[]) => {
         console.log('Loaded users:', users);
         this.managers = users.map(user => ({ label: `${user.firstName} ${user.lastName}`, value: user }));

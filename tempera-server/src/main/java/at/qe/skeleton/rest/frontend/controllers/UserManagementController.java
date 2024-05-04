@@ -73,4 +73,11 @@ public class UserManagementController {
     userxService.enableUser(username, password);
     return ResponseEntity.ok(Map.of("message", "User enabled"));
   }
+
+  @GetMapping("/managers")
+    public ResponseEntity<List<UserxDto>> getManagers() {
+        List<UserxDto> managers = userxService.getManagers().stream().map(userxService::convertToDTO).toList();
+        return ResponseEntity.ok(managers);
+    }
+
 }

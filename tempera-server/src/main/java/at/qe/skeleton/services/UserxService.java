@@ -2,6 +2,7 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.TemperaStation;
+import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.Visibility;
@@ -200,5 +201,9 @@ public class UserxService implements UserDetailsService {
     user.setEnabled(true);
     // log "Enable user with username: " + username
     userRepository.save(user);
+  }
+
+  public Collection<Userx> getManagers() {
+    return userRepository.findByRole(UserxRole.MANAGER);
   }
 }

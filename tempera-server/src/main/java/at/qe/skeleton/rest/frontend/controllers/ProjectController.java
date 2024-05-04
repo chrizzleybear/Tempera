@@ -1,4 +1,4 @@
-package at.qe.skeleton.controllers;
+package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.services.ProjectService;
