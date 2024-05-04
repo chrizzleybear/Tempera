@@ -32,7 +32,9 @@
   <app-project-create (creatComplete)="onCreateCompleted($event)"></app-project-create>
 </p-dialog>
 <p-dialog header="Edit Project" [(visible)]="displayEditDialog" [modal]="true" [style]="{width: '50vw'}" [closable]="true">
+  <div *ngIf="selectedProject">
   <app-project-edit [project]="selectedProject" (editComplete)="onEditCompleted($event)"></app-project-edit>
+  </div>
 </p-dialog>
 
 

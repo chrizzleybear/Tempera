@@ -1,1 +1,26 @@
-<p>project-edit works!</p>
+<form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+  <div class="p-field">
+    <label for="name">Name: </label>
+    <input id="name" type="text" pInputText formControlName="name" placeholder="Project name">
+    <div *ngIf="projectForm.controls['name'].invalid && projectForm.controls['name'].touched">
+      <p-message severity="error" text="Name is required."></p-message>
+    </div>
+  </div>
+  <br>
+  <div class="p-field">
+    <label for="description">Description: </label>
+    <input id="description" type="text" pInputText formControlName="description" placeholder="Project description">
+    <div *ngIf="projectForm.controls['description'].invalid && projectForm.controls['description'].touched">
+      <p-message severity="error" text="Description is required."></p-message>
+    </div>
+  </div>
+  <br>
+  <p-dropdown [options]="managers" appendTo="body" id="manager" formControlName="manager"
+              placeholder="Select a manager" optionLabel="name"></p-dropdown>
+  <br>
+  <div class="p-col-12">
+    <button pButton type="submit" label="Save Changes" [disabled]="!projectForm.valid"
+            class="p-button-rounded p-button-success p-mr-2"></button>
+  </div>
+  <br>
+</form>

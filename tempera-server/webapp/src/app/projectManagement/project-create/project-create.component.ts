@@ -20,8 +20,7 @@ import { User } from '../../models/user.model';
 })
 export class ProjectCreateComponent {
   projectForm: FormGroup;
-  userDropdownOptions: any[] | undefined;
-
+  managers: any[] | undefined;
   @Output() creatComplete = new EventEmitter<boolean>();
 
   constructor(private fb: FormBuilder, private projectService: ProjectService, private usersService: UsersService) {
@@ -36,8 +35,8 @@ export class ProjectCreateComponent {
     this.usersService.getAllUsers().subscribe({
       next: (users: User[]) => {
         console.log('Loaded users:', users);
-        this.userDropdownOptions = users.map(user => ({ label: `${user.firstName} ${user.lastName}`, value: user }));
-        console.log('User dropdown options:', this.userDropdownOptions);
+        this.managers = users.map(user => ({ label: `${user.firstName} ${user.lastName}`, value: user }));
+        console.log('User dropdown options:', this.managers);
       },
       error: (error) => console.error('Error loading users:', error)
     });
@@ -59,5 +58,16 @@ export class ProjectCreateComponent {
     } else {
       console.error('Invalid form');
     }
+  }
+
+  fetchManagers() {
+    this.usersService.getAllUsers().subscribe({
+      next: (users: User[]) => {
+        console.log('Loaded users:', users);
+        this.managers = users.map(user => ({ label: `${user.firstName} ${user.lastName}`, value: user }));
+        console.log('User dropdown options:', this.managers);
+      },
+      error: (error) => console.error('Error loading users:', error)
+    });
   }
 }

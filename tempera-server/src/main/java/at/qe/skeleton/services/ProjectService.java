@@ -65,8 +65,9 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
-    public Project loadProject(Long id) {
-        return projectRepository.findFirstById(id);
+    public Project loadProject(String id) {
+        Long idNumber = Long.parseLong(id);
+        return projectRepository.findFirstById(idNumber);
     }
 
     public Project updateProject(Project project) {
