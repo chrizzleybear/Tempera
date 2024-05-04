@@ -14,9 +14,10 @@ import java.util.Map;
 @RequestMapping("/api/groups")
 public class GroupManagementController {
 
-    @Autowired
-    GroupService groupService;
-
+    private final GroupService groupService;
+    GroupManagementController(GroupService groupService) {
+        this.groupService = groupService;
+    }
     @GetMapping("/all")
     public ResponseEntity<List<Group>> getAllGroups() {
         List<Group> users =
@@ -30,7 +31,7 @@ public class GroupManagementController {
         return ResponseEntity.ok(group);
     }
 
-    @PutMapping("/{groupId}")
+    @PutMapping("/load/{groupId}")
     public ResponseEntity<Group> updateGroup(@PathVariable String groupId, @RequestParam String name, @RequestParam String description) {
         Group updatedGroup = groupService.updateGroup(groupId, name, description);
         return ResponseEntity.ok(updatedGroup);
@@ -41,5 +42,11 @@ public class GroupManagementController {
         groupService.deleteGroup(Long.parseLong(groupId));
         return ResponseEntity.ok().build();
 
+    }
+
+    @GetMapping("/load/{groupId}")
+    public ResponseEntity<Group> getGroup(@PathVariable String groupId) {
+        Group group = groupService.getGroup(Long.parseLong(groupId));
+        return ResponseEntity.ok(group);
     }
 }

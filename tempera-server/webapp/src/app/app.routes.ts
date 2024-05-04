@@ -8,6 +8,7 @@ import { UsersComponent } from './userManagement/users/users.component';
 import { UserDetailsComponent } from './userManagement/user-details/user-details.component';
 import { ValidationComponent } from './validation/validation.component';
 import {GroupsComponent} from "./groupManagement/groups/groups.component";
+import {GroupDetailsComponent} from "./groupManagement/group-details/group-details.component";
 
 export const routes: Routes = [
   {
@@ -18,6 +19,7 @@ export const routes: Routes = [
           { path: 'users', component: UsersComponent },
           { path: 'user/:id', component: UserDetailsComponent },
           { path: 'groups', component: GroupsComponent },
+          { path: 'group/:id', component: GroupDetailsComponent}
         ],
       },
     ],

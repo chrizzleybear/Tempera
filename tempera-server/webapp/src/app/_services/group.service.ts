@@ -20,7 +20,7 @@ export class GroupService {
   }
 
   getGroupById(id: string): Observable<Group> {
-    return this.http.get<Group>(this.API_URL + id);
+    return this.http.get<Group>(this.API_URL + 'load/'+ id);
   }
 
   updateGroup(group: Group): Observable<Group> {
