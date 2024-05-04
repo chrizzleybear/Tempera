@@ -68,7 +68,7 @@ export class ProjectEditComponent {
       this.project.name = this.projectForm.value.name;
       this.project.description = this.projectForm.value.description;
       this.project.manager = this.projectForm.value.manager;
-      this.projectService.updateProject(this.project).subscribe({
+      this.projectService.updateProject(this.project.id,this.projectForm.value.name, this.projectForm.value.description,this.projectForm.value.manager.value.username).subscribe({
         next: (response) => {
           console.log('Project updated successfully:', response);
           this.editComplete.emit(true);

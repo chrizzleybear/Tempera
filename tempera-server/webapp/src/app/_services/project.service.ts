@@ -40,9 +40,8 @@ export class ProjectService {
       );
   }
 
-  updateProject(project: Project): Observable<any> {
-    console.log("Update project with ID: ");
-    return this.http.put(`${this.API_URL}update`, project);
+  updateProject(id: number, name: string, description: string, manager: string): Observable<any> {
+    return this.http.put(`${this.API_URL}update`, {id, name, description, manager});
   }
 
   getProjectById(projectId: number): Observable<Project> {

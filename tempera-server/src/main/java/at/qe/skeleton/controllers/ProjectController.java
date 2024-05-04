@@ -24,8 +24,8 @@ public class ProjectController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Project> updateProject(@RequestBody Project project) {
-        Project updatedProject = projectService.updateProject(project);
+    public ResponseEntity<Project> updateProject(@RequestBody Map<String, String> projectData) {
+        Project updatedProject = projectService.updateProject(projectData.get("id"), projectData.get("name"), projectData.get("description"), projectData.get("manager"));
         return ResponseEntity.ok(updatedProject);
     }
 
