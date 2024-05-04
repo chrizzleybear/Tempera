@@ -83,6 +83,8 @@ public class WebSecurityConfig {
                   authorize
                       .requestMatchers(new AntPathRequestMatcher("/api/auth/**"))
                       .permitAll()
+                          .requestMatchers(new AntPathRequestMatcher("/api/groups/**"))
+                          .permitAll()
                       .requestMatchers(new AntPathRequestMatcher("/api/user/**"))
                       .permitAll()
                       .requestMatchers(new AntPathRequestMatcher("/api/users/**"))

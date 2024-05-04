@@ -37,6 +37,12 @@ export class AppMenuComponent implements OnInit {
             routerLink: ['/users'],
             visible: this.storageService.getUser()?.roles.includes('ADMIN'),
           },
+          {
+            label: 'Group-Management',
+            icon: 'pi pi-fw pi-check-square',
+            routerLink: ['/groups'],
+            visible: this.storageService.getUser()?.roles.includes('ADMIN'),
+          },
         ],
       },
     ];
