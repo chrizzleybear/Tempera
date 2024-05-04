@@ -8,6 +8,7 @@ import { UsersComponent } from './userManagement/users/users.component';
 import {UserDetailsComponent} from "./userManagement/user-details/user-details.component";
 import {ProjectsComponent} from "./projectManagement/projects/projects.component";
 import {ProjectDetailsComponent} from "./projectManagement/project-details/project-details.component";
+import {ValidationComponent} from "./validation/validation.component";
 
 export const routes: Routes = [
   {
