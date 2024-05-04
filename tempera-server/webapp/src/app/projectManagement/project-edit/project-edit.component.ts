@@ -58,17 +58,14 @@ export class ProjectEditComponent {
       this.projectForm.patchValue({
         name: this.project.name,
         description: this.project.description,
-        manager: this.project.manager
+        manager:`${this.project.manager.firstName} ${this.project.manager.lastName}`
       });
     }
   }
 
   onSubmit() {
     if (this.projectForm.valid) {
-      this.project.name = this.projectForm.value.name;
-      this.project.description = this.projectForm.value.description;
-      this.project.manager = this.projectForm.value.manager;
-      this.projectService.updateProject(this.project.id,this.projectForm.value.name, this.projectForm.value.description,this.projectForm.value.manager.value.username).subscribe({
+      this.projectService.updateProject(this.project.id,this.projectForm.value.name, this.projectForm.value.description,this.projectForm.value.manager.value.username??this.project.manager.username).subscribe({
         next: (response) => {
           console.log('Project updated successfully:', response);
           this.editComplete.emit(true);
