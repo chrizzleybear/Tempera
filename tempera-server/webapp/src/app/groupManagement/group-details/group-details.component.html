@@ -1,0 +1,19 @@
+<div *ngIf="group">
+<p-card header="Group Details">
+  <p>Name: {{ group.name }}</p>
+  <br>
+  <p>Description: {{ group.description }}</p>
+  <br>
+  <h3>Manager Details</h3>
+  <p>{{ group.groupLead.firstName }} {{ group.groupLead.lastName }}</p>
+  <p>{{ group.groupLead.email }}</p>
+  <br>
+  <h3>Members</h3>
+  <ul>
+    <li *ngFor="let member of group.members">
+      <p>Name: {{ member.firstName }} {{ member.lastName }}</p>
+      <p>Email: {{ member.email }}</p>
+    </li>
+  </ul>
+</p-card>
+</div>
