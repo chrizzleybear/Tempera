@@ -4,8 +4,7 @@ import java.io.IOException;
 
 public class SuperiorTimeRecordOutOfBoundsException extends IOException {
 
-    public SuperiorTimeRecordOutOfBoundsException(String message) {
-        super(message);
-    }
-
+  public SuperiorTimeRecordOutOfBoundsException(String message) {
+    super(message);
+  }
 }

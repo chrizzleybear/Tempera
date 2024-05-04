@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 @Scope("application")
 public class TemperaStationService {
 
-  private final Logger logger = Logger.getLogger("logger");
+  private final Logger logger = Logger.getLogger("TemperaStationServiceLogger");
 
   private final TemperaStationRepository temperaStationRepository;
   private final SensorService sensorService;
@@ -40,7 +40,7 @@ public class TemperaStationService {
    * @return the newly created TemperaStation
    */
   public TemperaStation createTemperaStation(String id, boolean enabled, Userx user) {
-    logger.info("trying to create new TemperaStation");
+    logger.info("creating new Temperastation with id %s".formatted(id));
     TemperaStation temperaStation = new TemperaStation(id, enabled, user);
     save(temperaStation);
 
@@ -60,24 +60,24 @@ public class TemperaStationService {
   }
 
   public TemperaStation findById(String id) throws CouldNotFindEntityException {
-    logger.info("trying to find TemperaStation with Id: %s".formatted(id));
     return temperaStationRepository
         .findById(id)
         .orElseThrow(() -> new CouldNotFindEntityException("TemperaStation %s".formatted(id)));
   }
 
   public Optional<TemperaStation> findByUser(Userx user) {
-    logger.info("trying to find Temperastation of User %s".formatted(user));
     return temperaStationRepository.findFirstByUser(user);
   }
 
   public TemperaStation save(TemperaStation temperaStation) {
-    logger.info("trying to save temperastation %s".formatted(temperaStation.toString()));
+    logger.info("saving temperaStation %s".formatted(temperaStation.toString()));
     return temperaStationRepository.save(temperaStation);
+
   }
 
   public void delete(TemperaStation temperaStation) {
-    logger.info("trying to delete temperaStation %s".formatted(temperaStation.toString()));
+    logger.info("deleting temperaStation %s".formatted(temperaStation.toString()));
+    temperaStationRepository.delete(temperaStation);
   }
 
   /**

@@ -21,8 +21,7 @@ import java.util.Objects;
 @Entity
 public class SuperiorTimeRecord {
 
-  @EmbeddedId
-  SuperiorTimeRecordId id;
+  @EmbeddedId SuperiorTimeRecordId id;
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "time_end")
@@ -34,7 +33,9 @@ public class SuperiorTimeRecord {
 
   private long duration;
 
-  @OneToMany @Fetch(FetchMode.JOIN) private List<SubordinateTimeRecord> subordinateRecords;
+  @OneToMany
+  @Fetch(FetchMode.JOIN)
+  private List<SubordinateTimeRecord> subordinateRecords;
 
   @Enumerated(EnumType.STRING)
   private State state;
@@ -44,7 +45,11 @@ public class SuperiorTimeRecord {
   }
 
   public SuperiorTimeRecord(
-          @NotNull Userx user, @NotNull LocalDateTime start, long duration, LocalDateTime end, @NotNull State state) {
+      @NotNull Userx user,
+      @NotNull LocalDateTime start,
+      long duration,
+      LocalDateTime end,
+      @NotNull State state) {
     this.user = Objects.requireNonNull(user);
     this.id = new SuperiorTimeRecordId(start, user.getUsername());
     this.end = end;
@@ -93,8 +98,9 @@ public class SuperiorTimeRecord {
       throw new SubordinateTimeRecordOutOfBoundsException(
           "subordinateTimeRecord should not start before its superiorTimeRecord.");
     }
-    if (subordinateTimeRecord.getEnd() != null && (subordinateTimeRecord.getEnd().isAfter(this.end)
-        || subordinateTimeRecord.getEnd().isAfter(LocalDateTime.now()))) {
+    if (subordinateTimeRecord.getEnd() != null
+        && (subordinateTimeRecord.getEnd().isAfter(this.end)
+            || subordinateTimeRecord.getEnd().isAfter(LocalDateTime.now()))) {
       throw new SubordinateTimeRecordOutOfBoundsException(
           "subordinateTimeRecord should not end after its superiorTimeRecord. If SuperiorTimeRecord has not yet"
               + "ended, SubordinateTimeRecord should not extend beyond now.");
@@ -114,11 +120,10 @@ public class SuperiorTimeRecord {
     return id;
   }
 
-
   @Override
   public int hashCode() {
     return Objects.hashCode(id);
-    }
+  }
 
   @Override
   public boolean equals(Object o) {

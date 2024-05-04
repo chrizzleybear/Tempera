@@ -11,48 +11,46 @@ import java.util.Objects;
 
 @Embeddable
 public class SuperiorTimeRecordId implements Serializable {
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime start;
+  @Temporal(TemporalType.TIMESTAMP)
+  private LocalDateTime start;
 
-    private String userName;
+  private String userName;
 
-    public LocalDateTime getStart() {
-        return start;
-    }
+  public LocalDateTime getStart() {
+    return start;
+  }
 
-    public SuperiorTimeRecordId(LocalDateTime start, String userName) {
-        this.start = start;
-        this.userName = userName;
-    }
+  public SuperiorTimeRecordId(LocalDateTime start, String userName) {
+    this.start = start;
+    this.userName = userName;
+  }
 
-    protected SuperiorTimeRecordId() {
-    }
+  protected SuperiorTimeRecordId() {}
 
-    public void setStart(LocalDateTime start) {
-        this.start = start;
-    }
+  public void setStart(LocalDateTime start) {
+    this.start = start;
+  }
 
-    public String getUserName() {
-        return userName;
-    }
+  public String getUserName() {
+    return userName;
+  }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-    
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null ) return false;
-        if (!(o instanceof SuperiorTimeRecordId other)) return false;
+  public void setUserName(String userName) {
+    this.userName = userName;
+  }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null) return false;
+    if (!(o instanceof SuperiorTimeRecordId other)) return false;
 
-        if (!Objects.equals(start, other.start)) return false;
-        return Objects.equals(userName, other.userName);
-    }
+    if (!Objects.equals(start, other.start)) return false;
+    return Objects.equals(userName, other.userName);
+  }
 
-    @Override
-    public int hashCode(){
-        return Objects.hash(start, userName);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(start, userName);
+  }
 }

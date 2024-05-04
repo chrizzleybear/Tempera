@@ -45,7 +45,6 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   @JsonIgnore
   private LocalDateTime updateDate;
 
-
   private String password;
 
   private String firstName;
@@ -68,7 +67,6 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     this.password = password;
     this.createDate = createDate;
   }
-
 
   public String getUsername() {
     return username;

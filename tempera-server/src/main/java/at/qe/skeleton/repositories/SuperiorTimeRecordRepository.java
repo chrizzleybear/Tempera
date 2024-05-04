@@ -14,17 +14,20 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface SuperiorTimeRecordRepository extends AbstractRepository<SuperiorTimeRecord, SuperiorTimeRecordId> {
+public interface SuperiorTimeRecordRepository
+    extends AbstractRepository<SuperiorTimeRecord, SuperiorTimeRecordId> {
 
   List<SuperiorTimeRecord> findAllByState(State state);
 
-//    @Query("SELECT sub from SuperiorTimeRecord.subordinateRecords sub where SuperiorTimeRecord.id = :id")
-//    List<SubordinateTimeRecord> findAllSubordinateRecordsById(Long id);
+  //    @Query("SELECT sub from SuperiorTimeRecord.subordinateRecords sub where
+  // SuperiorTimeRecord.id = :id")
+  //    List<SubordinateTimeRecord> findAllSubordinateRecordsById(Long id);
 
-    List<SuperiorTimeRecord> findAllByUserAndEndIsNull(Userx user);
+  List<SuperiorTimeRecord> findAllByUserAndEndIsNull(Userx user);
 
-    Optional<SuperiorTimeRecord> findFirstByUserAndEndIsNull(Userx user);
-    Optional<SuperiorTimeRecord> findByUserAndId_Start(Userx user, LocalDateTime start);
+  Optional<SuperiorTimeRecord> findFirstByUserAndEndIsNull(Userx user);
 
-    boolean existsByUserAndId_Start(Userx user, LocalDateTime start);
+  Optional<SuperiorTimeRecord> findByUserAndId_Start(Userx user, LocalDateTime start);
+
+  boolean existsByUserAndId_Start(Userx user, LocalDateTime start);
 }

@@ -2,7 +2,6 @@ package at.qe.skeleton.rest.raspberry.mappers;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.*;
-import at.qe.skeleton.rest.dtos.SuperiorTimeRecordDto;
 import at.qe.skeleton.model.AccessPoint;
 import at.qe.skeleton.model.SuperiorTimeRecord;
 import at.qe.skeleton.model.TemperaStation;
@@ -31,7 +30,9 @@ public class SuperiorTimeRecordMapper
   }
 
   /**
-   * returns a SuperiorTimeRecordDto from a SuperiorTimeRecord Entity. Auto_update will always be set to false.
+   * returns a SuperiorTimeRecordDto from a SuperiorTimeRecord Entity. Auto_update will always be
+   * set to false.
+   *
    * @param entity
    * @return
    * @throws CouldNotFindEntityException
@@ -43,7 +44,13 @@ public class SuperiorTimeRecordMapper
       return null;
     }
     Userx user = entity.getUser();
-    TemperaStation temperaStation = temperaStationService.findByUser(user).orElseThrow(()-> new CouldNotFindEntityException("TemperaStation %s".formatted(user.getUsername())));
+    TemperaStation temperaStation =
+        temperaStationService
+            .findByUser(user)
+            .orElseThrow(
+                () ->
+                    new CouldNotFindEntityException(
+                        "TemperaStation %s".formatted(user.getUsername())));
     AccessPoint accessPoint =
         accessPointService.getAccessPointByTemperaStationId(temperaStation.getId());
     return new SuperiorTimeRecordDto(
@@ -52,8 +59,7 @@ public class SuperiorTimeRecordMapper
         entity.getStart(),
         entity.getDuration(),
         entity.getState(),
-        false
-        );
+        false);
   }
 
   /**
@@ -87,11 +93,12 @@ public class SuperiorTimeRecordMapper
               .orElseThrow(
                   () ->
                       new CouldNotFindEntityException(
-                          "SuperiorTimeRecord %s has set auto_update to true but did not exist in db".formatted(dto.start())));
+                          "SuperiorTimeRecord %s has set auto_update to true but did not exist in db"
+                              .formatted(dto.start())));
       superiorTimeRecord.setDuration(dto.duration());
-    }
-    else{
-        superiorTimeRecord = new SuperiorTimeRecord(user, dto.start(), dto.duration(), null, dto.mode());
+    } else {
+      superiorTimeRecord =
+          new SuperiorTimeRecord(user, dto.start(), dto.duration(), null, dto.mode());
     }
     return superiorTimeRecord;
   }

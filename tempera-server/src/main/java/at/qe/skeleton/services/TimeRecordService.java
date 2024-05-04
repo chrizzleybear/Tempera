@@ -62,7 +62,11 @@ public class TimeRecordService {
    * @param newSuperiorTimeRecord
    * @return the SuperiorTimeRecord that was newly created.
    */
-  @Transactional(rollbackFor = {SuperiorTimeRecordOutOfBoundsException.class, CouldNotFindEntityException.class})
+  @Transactional(
+      rollbackFor = {
+        SuperiorTimeRecordOutOfBoundsException.class,
+        CouldNotFindEntityException.class
+      })
   public SuperiorTimeRecord addRecord(SuperiorTimeRecord newSuperiorTimeRecord)
       throws CouldNotFindEntityException, IOException {
     if (newSuperiorTimeRecord.getStart() == null) {
@@ -107,22 +111,24 @@ public class TimeRecordService {
     logger.info("found old SuperiorTimeRecord %s".formatted(oldSuperiorTimeRecord));
 
     SuperiorTimeRecordId incomingId = newSuperiorTimeRecord.getId();
-    if(oldSuperiorTimeRecord.getId().equals(incomingId)){
+    if (oldSuperiorTimeRecord.getId().equals(incomingId)) {
       logger.info("incoming SuperiorTimeRecord is the same as the old one. No need to finalize");
       return;
     }
-
 
     // fetch the subordinate Timerecord of this old superior TimeRecord
     SubordinateTimeRecord oldSubordinateTimeRecord =
         oldSuperiorTimeRecord.getSubordinateRecords().get(0);
     LocalDateTime oldEnd = newSuperiorTimeRecord.getStart().minusSeconds(1);
-    if(ChronoUnit.SECONDS.between(oldEnd, newSuperiorTimeRecord.getStart())!=1) {
-      throw new RuntimeException("End TimeStamp is not one second before the new TimeRecord starts.");
+    if (ChronoUnit.SECONDS.between(oldEnd, newSuperiorTimeRecord.getStart()) != 1) {
+      throw new RuntimeException(
+          "End TimeStamp is not one second before the new TimeRecord starts.");
     }
     LocalDateTime oldStart = oldSuperiorTimeRecord.getStart();
     long durationInSeconds = ChronoUnit.SECONDS.between(oldStart, oldEnd);
-    if(durationInSeconds <= 0) throw new SuperiorTimeRecordOutOfBoundsException("the new TimeRecord starts before the old one.");
+    if (durationInSeconds <= 0)
+      throw new SuperiorTimeRecordOutOfBoundsException(
+          "the new TimeRecord starts before the old one.");
 
     // time setting
     oldSuperiorTimeRecord.setDuration(durationInSeconds);
