@@ -48,7 +48,6 @@ def _get_from_database(
             logger.warning(
                 f"No {kind}(s) found for station {shared.current_station_id}."
             )
-            raise ValueError
 
     return result, tempera_station
 
