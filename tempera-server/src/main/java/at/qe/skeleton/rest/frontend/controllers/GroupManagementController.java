@@ -71,4 +71,10 @@ public class GroupManagementController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/groupLead/{groupLeadId}")
+    public ResponseEntity<List<Group>> getGroupByGroupLead(@PathVariable String groupLeadId) {
+        List<Group> groups = groupService.getGroupFromGroupLead(groupLeadId);
+        return ResponseEntity.ok(groups);
+    }
+
 }

@@ -33,20 +33,26 @@ export class AppMenuComponent implements OnInit {
           { label: 'Logout', icon: 'pi pi-fw pi-id-card', command: () => this.logout() },
           {
             label: 'User-Management',
-            icon: 'pi pi-fw pi-check-square',
+            icon: 'pi pi-fw pi-user',
             routerLink: ['/users'],
             visible: this.storageService.getUser()?.roles.includes('ADMIN'),
           },
           {
             label: 'Group-Management',
-            icon: 'pi pi-fw pi-check-square',
+            icon: 'pi pi-fw pi-users',
             routerLink: ['/groups'],
-            visible: this.storageService.getUser()?.roles.includes('ADMIN'),
+            visible: this.storageService.getUser()?.roles.includes('MANAGER'),
           },
           { label: 'Project-Management',
             icon: 'pi pi-fw pi-clipboard',
             routerLink: ['/projects'],
-            visible: this.storageService.getUser()?.roles.includes('MANAGER') }
+            visible: this.storageService.getUser()?.roles.includes('MANAGER') },
+          { label: 'My Groups',
+            icon: 'pi pi-fw pi-users',
+            routerLink: ['/myGroups'],
+            visible: this.storageService.getUser()?.roles.includes('GROUP_LEAD')
+          },
+
         ],
       },
     ];

@@ -13,6 +13,8 @@ import {GroupsComponent} from "./groupManagement/groups/groups.component";
 import {GroupDetailsComponent} from "./groupManagement/group-details/group-details.component";
 import {GroupMembersComponent} from "./groupManagement/group-members/group-members.component";
 import {ProjectGroupsComponent} from "./projectManagement/project-groups/project-groups.component";
+import {isGroupLeadGuard} from "./_guards/is-groupLead.guard";
+import {GroupsGroupleadComponent} from "./groupManagement/groups/groups-grouplead/groups-grouplead.component";
 
 export const routes: Routes = [
   {
@@ -28,6 +30,7 @@ export const routes: Routes = [
           { path: 'project/groups/:id', component: ProjectGroupsComponent},
           { path: 'projects', component: ProjectsComponent},
           { path: 'project/:id', component: ProjectDetailsComponent},
+          { path: 'myGroups', component: GroupsGroupleadComponent},
         ],
       },
     ],

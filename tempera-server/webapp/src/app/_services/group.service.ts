@@ -53,4 +53,8 @@ export class GroupService {
   deleteGroupMember(groupId: string, memberId: string): Observable<any> {
     return this.http.delete(`${this.API_URL}removeMember/${groupId}/${memberId}`);
   }
+
+  getGroupByLead(groupLeadId: string): Observable<Group[]> {
+    return this.http.get<Group[]>(`${this.API_URL}/groupLead/${groupLeadId}`);
+  }
 }

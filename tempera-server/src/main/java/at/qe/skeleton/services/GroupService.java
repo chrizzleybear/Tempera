@@ -81,4 +81,10 @@ public class GroupService {
         group.removeMember(member);
         groupRepository.save(group);
     }
+
+    public List<Group> getGroupFromGroupLead(String userId) {
+        Userx groupLead = userxRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException(INVALID_GROUPLEAD_ID));
+        List<Group> groups = groupRepository.findByGroupLead(groupLead);
+        return groups;
+    }
 }
