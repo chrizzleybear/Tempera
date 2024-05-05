@@ -1,0 +1,13 @@
+export * from './authController.service';
+import { AuthControllerService } from './authController.service';
+export * from './homeController.service';
+import { HomeControllerService } from './homeController.service';
+export * from './measurementController.service';
+import { MeasurementControllerService } from './measurementController.service';
+export * from './peripheryConnectionController.service';
+import { PeripheryConnectionControllerService } from './peripheryConnectionController.service';
+export * from './timeRecordController.service';
+import { TimeRecordControllerService } from './timeRecordController.service';
+export * from './userManagementController.service';
+import { UserManagementControllerService } from './userManagementController.service';
+export const APIS = [AuthControllerService, HomeControllerService, MeasurementControllerService, PeripheryConnectionControllerService, TimeRecordControllerService, UserManagementControllerService];
