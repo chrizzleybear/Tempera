@@ -103,4 +103,15 @@ export class GroupMembersComponent implements OnInit{
     });
 
     }
+
+    deleteMember(userId: string) {
+    this.groupService.deleteGroupMember(this.groupId!, userId).subscribe({
+      next: response => {
+        console.log("Member deleted successfully:", response);
+        this.loadMembersAndUsers(this.groupId!);
+      },
+      error: err => console.error("Error deleting member:", err)
+    });
+    }
+
 }

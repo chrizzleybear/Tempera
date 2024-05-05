@@ -49,4 +49,8 @@ export class GroupService {
   addGroupMember(groupId: string, memberId: string): Observable<User> {
     return this.http.post<User>(`${this.API_URL}addMember`, {groupId, memberId});
   }
+
+  deleteGroupMember(groupId: string, memberId: string): Observable<any> {
+    return this.http.delete(`${this.API_URL}removeMember/${groupId}/${memberId}`);
+  }
 }

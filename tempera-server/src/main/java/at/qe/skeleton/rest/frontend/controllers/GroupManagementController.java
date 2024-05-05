@@ -56,7 +56,7 @@ public class GroupManagementController {
 
     @GetMapping("/members/{groupId}")
     public ResponseEntity<List<UserxDto>> getMembers(@PathVariable String groupId) {
-        List<UserxDto> members = groupService.getMembers(Long.parseLong(groupId)).stream().map(userxService::convertToDTO).toList();
+        List<UserxDto> members = groupService.getGroup(Long.parseLong(groupId)).getMembers().stream().map(userxService::convertToDTO).toList();
         return ResponseEntity.ok(members);
     }
 
@@ -64,6 +64,12 @@ public class GroupManagementController {
     public ResponseEntity<UserxDto> addMember(@RequestBody Map<String, String> memberData) {
         Userx member = groupService.addMember(Long.parseLong(memberData.get("groupId")), memberData.get("memberId"));
         return ResponseEntity.ok(userxService.convertToDTO(member));
+    }
+
+    @DeleteMapping("/removeMember/{groupId}/{memberId}")
+    public ResponseEntity<Void> removeMember(@PathVariable String groupId, @PathVariable String memberId) {
+        groupService.removeMember(Long.parseLong(groupId), memberId);
+        return ResponseEntity.ok().build();
     }
 
 }
