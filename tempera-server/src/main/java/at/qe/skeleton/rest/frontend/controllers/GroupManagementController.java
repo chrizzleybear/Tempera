@@ -45,7 +45,6 @@ public class GroupManagementController {
     public ResponseEntity<Void> deleteGroup(@PathVariable String groupId) {
         groupService.deleteGroup(Long.parseLong(groupId));
         return ResponseEntity.ok().build();
-
     }
 
     @GetMapping("/load/{groupId}")
