@@ -97,8 +97,6 @@ export class GroupMembersComponent implements OnInit{
     this.groupService.addGroupMember(this.groupId!, userId).subscribe({
       next: response => {
         console.log("Member added successfully:", response);
-        this.loadMembersAndUsers(this.groupId!);
-        this.displayAddDialog = false;
       },
       error: err => console.error("Error adding member:", err)
     });
@@ -109,6 +107,8 @@ export class GroupMembersComponent implements OnInit{
       this.addMember(user.username);
     });
     this.selectedUsers = [];
+    this.displayAddDialog = false;
+    this.loadMembersAndUsers(this.groupId!);
   }
 
     deleteMember(userId: string) {
