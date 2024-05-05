@@ -18,6 +18,11 @@ public class Project {
     @ManyToMany
     private List<Userx> contributors;
     @ManyToMany
+    @JoinTable(
+            name = "project_group",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id")
+    )
     private List<Group> groups;
 
     public Project(String name, String description, Userx manager) {
@@ -27,10 +32,6 @@ public class Project {
         this.contributors = new ArrayList<>();
     }
     public Project() {}
-
-  //    public List<SubordinateTimeRecord> getSubordinateTimeRecords() {
-  //        return subordinateTimeRecords;
-  //    }
 
     public Userx getManager() {
         return manager;

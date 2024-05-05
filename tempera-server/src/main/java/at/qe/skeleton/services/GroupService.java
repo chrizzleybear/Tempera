@@ -1,10 +1,12 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.Group;
+import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.UserxRepository;
+import at.qe.skeleton.rest.frontend.controllers.GroupManagementController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;

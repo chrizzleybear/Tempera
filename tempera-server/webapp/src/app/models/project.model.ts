@@ -6,5 +6,7 @@ export interface Project {
   name: string;
   description: string;
   manager: User;
-  contributors?: Group[];
+  groups?: Group[];
+  contributors?: User[];
+
 }

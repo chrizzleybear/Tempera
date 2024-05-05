@@ -89,4 +89,9 @@ public class ProjectService {
         project.addContributor(contributor);
         projectRepository.save(project);
     }
+    public List<Project> getProjectsForGroups(Long groupId) {
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException("Group not found"));
+        List<Project> projects = projectRepository.findByGroupId(groupId);
+        return projects;
+    }
 }

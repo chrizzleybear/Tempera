@@ -63,4 +63,12 @@ export class ProjectService {
     return this.http.delete(`${this.API_URL}deleteGroup/${projectId}/${groupId}`);
 
   }
+
+  getProjectsOfGroup(groupId: string): Observable<Project[]> {
+    return this.http.get<Project[]>(`${this.API_URL}allOfGroup/${groupId}`);
+  }
+
+  addMemberToProject(projectId: string, contributorId: string): Observable<any> {
+    return this.http.post(`${this.API_URL}addContributor`, {projectId, contributorId});
+  }
 }

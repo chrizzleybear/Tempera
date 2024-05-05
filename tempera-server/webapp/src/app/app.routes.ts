@@ -16,6 +16,7 @@ import {ProjectGroupsComponent} from "./projectManagement/project-groups/project
 import {isGroupLeadGuard} from "./_guards/is-groupLead.guard";
 import {GroupsGroupleadComponent} from "./grouplead/groups-grouplead.component";
 import {ProfileComponent} from "./profile/profile.component";
+import {GroupProjectsComponent} from "./grouplead/group-projects/group-projects.component";
 
 export const routes: Routes = [
   {
@@ -32,6 +33,7 @@ export const routes: Routes = [
           { path: 'projects', component: ProjectsComponent},
           { path: 'project/:id', component: ProjectDetailsComponent},
           { path: 'myGroups', component: GroupsGroupleadComponent},
+          { path: 'group/projects/:id', component: GroupProjectsComponent},
         ],
       },
     ],

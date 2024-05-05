@@ -1,6 +1,7 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.model.Group;
+import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.services.GroupService;

@@ -66,8 +66,19 @@ public class ProjectController {
 
     @PostMapping("/addContributor")
     public ResponseEntity<Void> addContributor(@RequestBody Map<String, String> projectData) {
+        if(projectData.get("projectId") == null || projectData.get("contributorId") == null) {
+            System.out.println("ProjectId: " + projectData.get("projectId"));
+            throw new NullPointerException("ProjectId and ContributorId can not be null");
+        }
         projectService.addContributor(Long.parseLong(projectData.get("projectId")), projectData.get("contributorId"));
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/allOfGroup/{groupId}")
+    public ResponseEntity<List<Project>> getProjects(@PathVariable String groupId) {
+        System.out.println("groupId: " + groupId);
+        List<Project> projects = projectService.getProjectsForGroups(Long.parseLong(groupId));
+        return ResponseEntity.ok(projects);
     }
 
 }

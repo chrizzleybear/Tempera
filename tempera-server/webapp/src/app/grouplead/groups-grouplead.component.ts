@@ -67,4 +67,8 @@ export class GroupsGroupleadComponent implements OnInit{
     this.router.navigate(['/group/members', group.id]);
   }
 
+  projects(group: Group) {
+    this.router.navigate(['/group/projects', group.id]);
+
+  }
 }
