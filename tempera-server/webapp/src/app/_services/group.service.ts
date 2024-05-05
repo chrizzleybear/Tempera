@@ -19,12 +19,12 @@ export class GroupService {
     return this.http.post<Group>(this.API_URL + 'create', {name, description, groupLead});
   }
 
-  getGroupById(id: string): Observable<Group> {
-    return this.http.get<Group>(this.API_URL + 'load/'+ id);
+  getGroupById(groupId: string): Observable<Group> {
+    return this.http.get<Group>(this.API_URL + 'load/'+ groupId);
   }
 
-  updateGroup(group: Group): Observable<Group> {
-    return this.http.put<Group>(this.API_URL + 'update', group);
+  updateGroup(groupId: string, name: string, description: string, groupLead: string ): Observable<Group> {
+    return this.http.put<Group>(this.API_URL + 'update', {groupId, name, description, groupLead});
   }
 
 

@@ -36,11 +36,12 @@ public class GroupService {
     }
 
     @Transactional
-    public Group updateGroup(String groupId, String name, String description) {
-        Group group = groupRepository.findById(Long.parseLong(groupId))
+    public Group updateGroup(Long groupId, String name, String description, String groupLeadId) {
+        Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid group ID"));
         group.setName(name);
         group.setDescription(description);
+        group.setGroupLead(userxRepository.findById(groupLeadId).orElseThrow(() -> new IllegalArgumentException("Invalid group lead ID")));
         return groupRepository.save(group);
     }
 

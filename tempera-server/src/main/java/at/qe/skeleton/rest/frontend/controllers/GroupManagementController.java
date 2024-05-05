@@ -31,9 +31,9 @@ public class GroupManagementController {
         return ResponseEntity.ok(group);
     }
 
-    @PutMapping("/load/{groupId}")
-    public ResponseEntity<Group> updateGroup(@PathVariable String groupId, @RequestParam String name, @RequestParam String description) {
-        Group updatedGroup = groupService.updateGroup(groupId, name, description);
+    @PutMapping("/update")
+    public ResponseEntity<Group> updateGroup(@RequestBody Map<String, String> groupData) {
+        Group updatedGroup = groupService.updateGroup(Long.parseLong(groupData.get("groupId")), groupData.get("name"), groupData.get("description"), groupData.get("groupLead"));
         return ResponseEntity.ok(updatedGroup);
     }
 

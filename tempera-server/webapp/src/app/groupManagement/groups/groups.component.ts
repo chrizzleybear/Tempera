@@ -10,6 +10,7 @@ import { DialogModule } from "primeng/dialog";
 import { Router } from "@angular/router";
 import {group} from "@angular/animations";
 import {GroupCreateComponent} from "../group-create/group-create.component";
+import {GroupEditComponent} from "../group-edit/group-edit.component";
 @Component({
   selector: 'app-groups',
   standalone: true,
@@ -21,6 +22,7 @@ import {GroupCreateComponent} from "../group-create/group-create.component";
     NgIf,
     DialogModule,
     GroupCreateComponent,
+    GroupEditComponent,
 
   ],
   templateUrl: './groups.component.html',
@@ -31,6 +33,7 @@ export class GroupsComponent implements OnInit {
   filteredGroups: Group[] = [];
   messages: any;
   displayCreateDialog: boolean = false;
+  displayEditDialog: boolean = false;
   selectedGroup!: Group;
 
   constructor(private groupService: GroupService, private router: Router) {}
@@ -82,13 +85,16 @@ export class GroupsComponent implements OnInit {
   editGroup(group: Group) {
     console.log("Edit group:", group);
     this.selectedGroup = group;
-    this.displayCreateDialog = true;
+    this.displayEditDialog = true;
   }
-
-  protected readonly group = group;
 
   onCreateCompleted($event: any) {
     this.displayCreateDialog = false;
+    this.loadGroups();
+  }
+
+  onEditCompleted($event: any) {
+    this.displayEditDialog = false;
     this.loadGroups();
   }
 }
