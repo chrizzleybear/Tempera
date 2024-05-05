@@ -86,8 +86,6 @@ export class GroupMembersComponent implements OnInit{
     }
   }
   addMemberDialog(){
-    console.log(this.members);
-    console.log(this.filteredUsers);
     this.loadMembersAndUsers(this.groupId!);
     this.displayAddDialog = true;
   }
