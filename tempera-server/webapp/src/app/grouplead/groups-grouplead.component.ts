@@ -9,9 +9,10 @@ import {GroupCreateComponent} from "../groupManagement/group-create/group-create
 import {GroupEditComponent} from "../groupManagement/group-edit/group-edit.component";
 import {InputTextModule} from "primeng/inputtext";
 import {MessagesModule} from "primeng/messages";
-import {NgIf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {SharedModule} from "primeng/api";
 import {TableModule} from "primeng/table";
+import {CardModule} from "primeng/card";
 
 @Component({
   selector: 'app-groups-grouplead',
@@ -25,7 +26,9 @@ import {TableModule} from "primeng/table";
     MessagesModule,
     NgIf,
     SharedModule,
-    TableModule
+    TableModule,
+    CardModule,
+    NgForOf
   ],
   templateUrl: './groups-grouplead.component.html',
   styleUrl: './groups-grouplead.component.css'
