@@ -29,6 +29,7 @@ export class GroupMembersComponent implements OnInit{
   groupId: string | null | undefined;
   filteredMembers: User[] = [];
   filteredUsers: User[] = [];
+  selectedUsers: User[] = [];
 
   constructor(private groupService: GroupService, private userService: UsersService ,private route: ActivatedRoute) {
 
@@ -101,8 +102,14 @@ export class GroupMembersComponent implements OnInit{
       },
       error: err => console.error("Error adding member:", err)
     });
-
     }
+
+  addMembers() {
+    this.selectedUsers.forEach(user => {
+      this.addMember(user.username);
+    });
+    this.selectedUsers = [];
+  }
 
     deleteMember(userId: string) {
     this.groupService.deleteGroupMember(this.groupId!, userId).subscribe({
