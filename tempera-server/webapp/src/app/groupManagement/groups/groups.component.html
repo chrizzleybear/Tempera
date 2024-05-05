@@ -19,6 +19,9 @@
       <td>{{ group.description }}</td>
       <td>{{ group.groupLead.firstName }} {{group.groupLead.lastName}}</td>
       <td>
+        <p-button label="Members" (onClick)="members(group); $event.stopPropagation()" icon="pi pi-users"></p-button>
+      </td>
+      <td>
         <p-button label="Edit" (onClick)="editGroup(group); $event.stopPropagation()" icon="pi pi-pencil"></p-button>
       </td>
       <td>

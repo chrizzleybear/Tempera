@@ -8,7 +8,6 @@ import { InputTextModule } from "primeng/inputtext";
 import { NgIf } from "@angular/common";
 import { DialogModule } from "primeng/dialog";
 import { Router } from "@angular/router";
-import {group} from "@angular/animations";
 import {GroupCreateComponent} from "../group-create/group-create.component";
 import {GroupEditComponent} from "../group-edit/group-edit.component";
 @Component({
@@ -96,5 +95,9 @@ export class GroupsComponent implements OnInit {
   onEditCompleted($event: any) {
     this.displayEditDialog = false;
     this.loadGroups();
+  }
+
+  members(group: Group) {
+    this.router.navigate(['/group/members', group.id]);
   }
 }

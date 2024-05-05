@@ -1,7 +1,9 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.model.Group;
+import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.services.GroupService;
+import at.qe.skeleton.services.UserxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +17,10 @@ import java.util.Map;
 public class GroupManagementController {
 
     private final GroupService groupService;
-    GroupManagementController(GroupService groupService) {
+    private final UserxService userxService;
+    GroupManagementController(GroupService groupService, UserxService userxService) {
         this.groupService = groupService;
+        this.userxService = userxService;
     }
     @GetMapping("/all")
     public ResponseEntity<List<Group>> getAllGroups() {
@@ -49,4 +53,11 @@ public class GroupManagementController {
         Group group = groupService.getGroup(Long.parseLong(groupId));
         return ResponseEntity.ok(group);
     }
+
+    @GetMapping("/members/{groupId}")
+    public ResponseEntity<List<UserxDto>> getMembers(@PathVariable String groupId) {
+        List<UserxDto> members = groupService.getMembers(Long.parseLong(groupId)).stream().map(userxService::convertToDTO).toList();
+        return ResponseEntity.ok(members);
+    }
+
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {catchError, map, Observable, throwError} from 'rxjs';
 import {Group} from "../models/group.model";
+import {User} from "../models/user.model";
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,6 @@ export class GroupService {
     return this.http.put<Group>(this.API_URL + 'update', {groupId, name, description, groupLead});
   }
 
-
   deleteGroup(groupId: string) {
     return this.http.delete(`${this.API_URL}delete/${groupId}`, { responseType: 'text' })
       .pipe(
@@ -40,6 +40,9 @@ export class GroupService {
           return throwError(() => new Error('Error deleting project: ' + error.message));  // properly handle and throw an error
         })
       );
+  }
 
+  getGroupMembers(groupId: string): Observable<User[]> {
+    return this.http.get<User[]>(`${this.API_URL}members/${groupId}`);
   }
 }

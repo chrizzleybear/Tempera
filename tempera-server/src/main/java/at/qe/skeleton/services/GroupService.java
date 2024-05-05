@@ -60,6 +60,12 @@ public class GroupService {
         groupRepository.save(group);
         }
 
+        public List<Userx> getMembers(Long groupId) {
+        return groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid group ID"))
+                .getMembers();
+        }
+
 
     public Group getGroup(Long groupId) {
         return groupRepository.findById(groupId)
