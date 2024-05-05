@@ -14,7 +14,8 @@ import {GroupDetailsComponent} from "./groupManagement/group-details/group-detai
 import {GroupMembersComponent} from "./groupManagement/group-members/group-members.component";
 import {ProjectGroupsComponent} from "./projectManagement/project-groups/project-groups.component";
 import {isGroupLeadGuard} from "./_guards/is-groupLead.guard";
-import {GroupsGroupleadComponent} from "./groupManagement/groups/groups-grouplead/groups-grouplead.component";
+import {GroupsGroupleadComponent} from "./grouplead/groups-grouplead.component";
+import {ProfileComponent} from "./profile/profile.component";
 
 export const routes: Routes = [
   {

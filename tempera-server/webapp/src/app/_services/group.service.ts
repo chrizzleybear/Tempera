@@ -55,6 +55,6 @@ export class GroupService {
   }
 
   getGroupByLead(groupLeadId: string): Observable<Group[]> {
-    return this.http.get<Group[]>(`${this.API_URL}/groupLead/${groupLeadId}`);
+    return this.http.get<Group[]>(`${this.API_URL}groupLead/${groupLeadId}`);
   }
 }

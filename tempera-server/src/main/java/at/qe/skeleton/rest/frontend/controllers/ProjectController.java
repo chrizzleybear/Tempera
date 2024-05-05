@@ -64,4 +64,10 @@ public class ProjectController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/addContributor")
+    public ResponseEntity<Void> addContributor(@RequestBody Map<String, String> projectData) {
+        projectService.addContributor(Long.parseLong(projectData.get("projectId")), projectData.get("contributorId"));
+        return ResponseEntity.ok().build();
+    }
+
 }

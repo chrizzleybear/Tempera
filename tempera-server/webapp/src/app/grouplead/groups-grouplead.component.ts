@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {Group} from "../../../models/group.model";
-import {GroupService} from "../../../_services/group.service";
+import {Group} from "../models/group.model";
+import {GroupService} from "../_services/group.service";
 import {Router} from "@angular/router";
-import {StorageService} from "../../../_services/storage.service";
+import {StorageService} from "../_services/storage.service";
 import {ButtonModule} from "primeng/button";
 import {DialogModule} from "primeng/dialog";
-import {GroupCreateComponent} from "../../group-create/group-create.component";
-import {GroupEditComponent} from "../../group-edit/group-edit.component";
+import {GroupCreateComponent} from "../groupManagement/group-create/group-create.component";
+import {GroupEditComponent} from "../groupManagement/group-edit/group-edit.component";
 import {InputTextModule} from "primeng/inputtext";
 import {MessagesModule} from "primeng/messages";
 import {NgIf} from "@angular/common";

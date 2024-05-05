@@ -124,4 +124,14 @@ export class GroupMembersComponent implements OnInit{
     });
     }
 
+    addMemberToProject(projectId: string, userId: string) {
+
+    this.groupService.addGroupMember(projectId, userId).subscribe({
+      next: response => {
+        console.log("Member added successfully:", response);
+      },
+      error: err => console.error("Error adding member:", err)
+    });
+    }
+
 }

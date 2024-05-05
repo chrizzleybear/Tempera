@@ -82,4 +82,11 @@ public class ProjectService {
         project.removeGroup(group);
         projectRepository.save(project);
     }
+
+    public void addContributor(Long projectId, String contributorId) {
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException("Project not found"));
+        Userx contributor = userxRepository.findById(contributorId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        project.addContributor(contributor);
+        projectRepository.save(project);
+    }
 }

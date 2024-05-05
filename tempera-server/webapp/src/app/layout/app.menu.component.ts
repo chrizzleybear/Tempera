@@ -50,7 +50,7 @@ export class AppMenuComponent implements OnInit {
           { label: 'My Groups',
             icon: 'pi pi-fw pi-users',
             routerLink: ['/myGroups'],
-            visible: this.storageService.getUser()?.roles.includes('GROUP_LEAD')
+            visible: this.storageService.getUser()?.roles.includes('GROUPLEAD')
           },
 
         ],
