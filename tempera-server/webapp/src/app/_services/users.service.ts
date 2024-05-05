@@ -51,4 +51,8 @@ export class UsersService {
     console.log('Enable user with ID: ', username);
     return this.http.post(`http://localhost:8080/api/users/enable`, { username, password });
   }
+
+  getAllManagers(): Observable<any> {
+    return this.http.get<User[]>(this.API_URL + 'managers');
+  }
 }
