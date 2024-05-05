@@ -1,20 +1,36 @@
 <div *ngIf="project">
-  <h2>Project Details</h2>
-  <br>
-  <p>Name: {{ project.name }}</p>
-  <p>Description: {{ project.description }}</p>
-  <br>
-  <h3>Manager Details</h3>
-  <p>Username: {{ project.manager.username }}</p>
-  <p>First Name: {{ project.manager.firstName }}</p>
-  <p>Last Name: {{ project.manager.lastName }}</p>
-  <p>Email: {{ project.manager.email }}</p>
-  <br>
-  <h3>Groups</h3>
-  <ul>
-    <li *ngFor="let group of project.groups">
-      <p>Name: {{ group.name }}</p>
-      <p>Grouplead: {{ group.groupLead.firstName }} {{ group.groupLead.lastName}}</p>
-    </li>
-  </ul>
+  <p-card header="Project Details" class="project-details-card">
+  <div class="project-info">
+    <p><strong>Name:</strong> {{ project.name }}</p>
+    <p><strong>Description:</strong> {{ project.description }}</p>
+  </div>
+
+  <div class="manager-details">
+    <h3><strong>Manager Details</strong></h3>
+    <br>
+    <p><strong>Username:</strong> {{ project.manager.username }}</p>
+    <p><strong>First Name:</strong> {{ project.manager.firstName }}</p>
+    <p><strong>Last Name:</strong> {{ project.manager.lastName }}</p>
+    <p><strong>Email:</strong> {{ project.manager.email }}</p>
+  </div>
+
+  <div class="groups-section">
+    <h3><strong>Groups</strong></h3>
+    <br>
+    <p-table [value]="project.groups!" [paginator]="true" [rows]="10" responsiveLayout="scroll" class="groups-table">
+      <ng-template pTemplate="header">
+        <tr>
+          <th scope="col">Group Name</th>
+          <th scope="col">Group Leader</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-group>
+        <tr>
+          <td>{{ group.name }}</td>
+          <td>{{ group.groupLead.firstName }} {{ group.groupLead.lastName }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  </p-card>
 </div>

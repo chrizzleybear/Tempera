@@ -3,13 +3,17 @@ import {Project} from "../../models/project.model";
 import {ProjectService} from "../../_services/project.service";
 import {ActivatedRoute} from "@angular/router";
 import {NgForOf, NgIf} from "@angular/common";
+import {TableModule} from "primeng/table";
+import {CardModule} from "primeng/card";
 
 @Component({
   selector: 'app-project-details',
   standalone: true,
   imports: [
     NgForOf,
-    NgIf
+    NgIf,
+    TableModule,
+    CardModule
   ],
   templateUrl: './project-details.component.html',
   styleUrl: './project-details.component.css'
