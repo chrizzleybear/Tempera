@@ -4,6 +4,8 @@ import {ActivatedRoute} from "@angular/router";
 import {GroupService} from "../../_services/group.service";
 import {CardModule} from "primeng/card";
 import {NgForOf, NgIf} from "@angular/common";
+import {TableModule} from "primeng/table";
+import {ButtonModule} from "primeng/button";
 
 @Component({
   selector: 'app-group-details',
@@ -11,7 +13,9 @@ import {NgForOf, NgIf} from "@angular/common";
   imports: [
     CardModule,
     NgIf,
-    NgForOf
+    NgForOf,
+    TableModule,
+    ButtonModule
   ],
   templateUrl: './group-details.component.html',
   styleUrl: './group-details.component.css'
