@@ -12,6 +12,7 @@ import {ProjectDetailsComponent} from "./projectManagement/project-details/proje
 import {GroupsComponent} from "./groupManagement/groups/groups.component";
 import {GroupDetailsComponent} from "./groupManagement/group-details/group-details.component";
 import {GroupMembersComponent} from "./groupManagement/group-members/group-members.component";
+import {ProjectGroupsComponent} from "./projectManagement/project-groups/project-groups.component";
 
 export const routes: Routes = [
   {
@@ -24,6 +25,7 @@ export const routes: Routes = [
           { path: 'groups', component: GroupsComponent },
           { path: 'group/:id', component: GroupDetailsComponent},
           { path: 'group/members/:id', component: GroupMembersComponent},
+          { path: 'project/groups/:id', component: ProjectGroupsComponent},
           { path: 'projects', component: ProjectsComponent},
           { path: 'project/:id', component: ProjectDetailsComponent},
         ],

@@ -19,6 +19,9 @@
         <td>{{ project.description }}</td>
         <td>{{ project.manager.username }}</td>
         <td>
+          <p-button label="Groups" (onClick)="addGroupToProject(project); $event.stopPropagation()" icon="pi pi-users"></p-button>
+        </td>
+        <td>
           <p-button label="Edit" (onClick)="editProject(project); $event.stopPropagation()" icon="pi pi-pencil"></p-button>
         </td>
         <td>

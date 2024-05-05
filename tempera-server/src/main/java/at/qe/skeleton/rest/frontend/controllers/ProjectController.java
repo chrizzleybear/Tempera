@@ -1,5 +1,6 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
+import at.qe.skeleton.model.Group;
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,23 @@ public class ProjectController {
     public ResponseEntity<Project> getProject(@PathVariable String id) {
         Project project = projectService.loadProject(id);
         return ResponseEntity.ok(project);
+    }
+
+    @GetMapping("/getGroups/{id}")
+    public ResponseEntity<List<Group>> getGroups(@PathVariable String id) {
+        List<Group> groups = projectService.loadProject(id).getGroups();
+        return ResponseEntity.ok(groups);
+    }
+    @PostMapping("/addGroup")
+    public ResponseEntity<Void> addGroupToProject(@RequestBody Map<String, String> projectData) {
+        projectService.addGroupToProject(Long.parseLong(projectData.get("groupId")), Long.parseLong(projectData.get("projectId")));
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/deleteGroup/{projectId}/{groupId}")
+    public ResponseEntity<Void> removeGroupFromProject(@PathVariable String projectId, @PathVariable String groupId) {
+        projectService.deleteGroup(Long.parseLong(groupId), Long.parseLong(projectId));
+        return ResponseEntity.ok().build();
     }
 
 }

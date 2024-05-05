@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {catchError, map, Observable, throwError} from 'rxjs';
 import {Project} from "../models/project.model";
+import {Group} from "../models/group.model";
 
 @Injectable({
   providedIn: 'root'
@@ -48,4 +49,18 @@ export class ProjectService {
     return this.http.get<Project>(`${this.API_URL}load/${projectId}`);
   }
 
+  addGroupToProject(projectId: string, groupId: string): Observable<any> {
+    console.log("Get groups for project with ID: ", projectId, " and group ID: ", groupId);
+    return this.http.post(`${this.API_URL}addGroup`, {projectId, groupId});
+  }
+
+  getGroups(projectId: string | null): Observable<Group[]> {
+    return this.http.get<Group[]>(`${this.API_URL}getGroups/${projectId}`);
+
+  }
+
+  deleteGroupFromProject(projectId: string, groupId: string) {
+    return this.http.delete(`${this.API_URL}deleteGroup/${projectId}/${groupId}`);
+
+  }
 }

@@ -114,4 +114,10 @@ export class ProjectsComponent implements OnInit{
     this.displayEditDialog = true;
   }
 
+  addGroupToProject(project: Project) {
+    console.log("Add group to project:", project);
+    this.router.navigate(['/project/groups', project.id]);
+
+  }
+
 }
