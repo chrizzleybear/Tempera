@@ -8,6 +8,7 @@ import {ButtonModule} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
 import {UsersService} from "../../_services/users.service";
 import {DialogModule} from "primeng/dialog";
+import {MessagesModule} from "primeng/messages";
 @Component({
   selector: 'app-group-members',
   standalone: true,
@@ -16,7 +17,8 @@ import {DialogModule} from "primeng/dialog";
     TableModule,
     ButtonModule,
     InputTextModule,
-    DialogModule
+    DialogModule,
+    MessagesModule
   ],
   templateUrl: './group-members.component.html',
   styleUrl: './group-members.component.css'
@@ -30,6 +32,7 @@ export class GroupMembersComponent implements OnInit{
   filteredMembers: User[] = [];
   filteredUsers: User[] = [];
   selectedUsers: User[] = [];
+  messages: any;
 
   constructor(private groupService: GroupService, private userService: UsersService ,private route: ActivatedRoute) {
 
@@ -107,6 +110,7 @@ export class GroupMembersComponent implements OnInit{
     this.selectedUsers = [];
     this.displayAddDialog = false;
     this.loadMembersAndUsers(this.groupId!);
+    this.messages = [{severity:'success', summary:'Success', detail:'Members added successfully'}];
   }
 
     deleteMember(userId: string) {
@@ -114,6 +118,7 @@ export class GroupMembersComponent implements OnInit{
       next: response => {
         console.log("Member deleted successfully:", response);
         this.loadMembersAndUsers(this.groupId!);
+        this.messages = [{severity:'success', summary:'Success', detail:'Member deleted successfully'}];
       },
       error: err => console.error("Error deleting member:", err)
     });
