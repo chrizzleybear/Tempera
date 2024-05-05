@@ -1,10 +1,10 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.model.Group;
+import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.services.GroupService;
 import at.qe.skeleton.services.UserxService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,6 +58,12 @@ public class GroupManagementController {
     public ResponseEntity<List<UserxDto>> getMembers(@PathVariable String groupId) {
         List<UserxDto> members = groupService.getMembers(Long.parseLong(groupId)).stream().map(userxService::convertToDTO).toList();
         return ResponseEntity.ok(members);
+    }
+
+    @PostMapping("/addMember")
+    public ResponseEntity<UserxDto> addMember(@RequestBody Map<String, String> memberData) {
+        Userx member = groupService.addMember(Long.parseLong(memberData.get("groupId")), memberData.get("memberId"));
+        return ResponseEntity.ok(userxService.convertToDTO(member));
     }
 
 }

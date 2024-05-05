@@ -16,6 +16,8 @@ import java.util.List;
 @Scope("application")
 public class GroupService {
 
+    private static final String INVALID_GROUP_ID = "Invalid group lead ID";
+
     @Autowired
     private UserxRepository userxRepository;
 
@@ -30,7 +32,7 @@ public class GroupService {
     @Transactional
     public Group createGroup(String name, String description, String groupLeadId) {
         Userx groupLead = userxRepository.findById(groupLeadId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid group lead ID"));
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
         Group group = new Group(name, description, groupLead);
         return groupRepository.save(group);
     }
@@ -38,7 +40,7 @@ public class GroupService {
     @Transactional
     public Group updateGroup(Long groupId, String name, String description, String groupLeadId) {
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid group ID"));
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
         group.setName(name);
         group.setDescription(description);
         group.setGroupLead(userxRepository.findById(groupLeadId).orElseThrow(() -> new IllegalArgumentException("Invalid group lead ID")));
@@ -48,27 +50,28 @@ public class GroupService {
     @Transactional
     public void deleteGroup(Long groupId) {
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid group ID"));
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
         groupRepository.delete(group);
     }
 
     @Transactional
-    public void addMember(Long groupId, String memberId) {
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException("Invalid group ID"));
-        Userx member = userxRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
+    public Userx addMember(Long groupId, String memberId) {
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
+        Userx member = userxRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
         group.addMember(member);
         groupRepository.save(group);
+        return member;
         }
 
         public List<Userx> getMembers(Long groupId) {
         return groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid group ID"))
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID))
                 .getMembers();
         }
 
 
     public Group getGroup(Long groupId) {
         return groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid group ID"));
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
     }
 }

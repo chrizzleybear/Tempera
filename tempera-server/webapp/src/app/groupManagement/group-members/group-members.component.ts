@@ -44,12 +44,12 @@ export class GroupMembersComponent implements OnInit{
     this.groupService.getGroupMembers(groupId).subscribe({
       next: members => {
         this.members = members;
-        this.filteredMembers = members;
+        this.filteredMembers = [...members];
         // Load all users
         this.userService.getAllUsers().subscribe({
           next: users => {
-            this.users = users.filter((user: { id: string; }) =>
-              !this.members.some(member => member.id === user.id));
+            this.users = users.filter((user: { username: string; }) =>
+              !this.members.some(member => member.username === user.username));
               this.filteredUsers = [...this.users];
           },
           error: err => console.error("Error loading users:", err)
@@ -84,8 +84,23 @@ export class GroupMembersComponent implements OnInit{
       this.filteredUsers = this.users;
     }
   }
-
-  addMember(){
+  addMemberDialog(){
+    console.log(this.members);
+    console.log(this.filteredUsers);
+    this.loadMembersAndUsers(this.groupId!);
     this.displayAddDialog = true;
   }
+
+  addMember(userId: string) {
+    console.log("Adding member with ID:", userId);
+    this.groupService.addGroupMember(this.groupId!, userId).subscribe({
+      next: response => {
+        console.log("Member added successfully:", response);
+        this.loadMembersAndUsers(this.groupId!);
+        this.displayAddDialog = false;
+      },
+      error: err => console.error("Error adding member:", err)
+    });
+
+    }
 }
