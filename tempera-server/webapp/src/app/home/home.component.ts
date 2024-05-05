@@ -7,6 +7,7 @@ import { HomeData } from '../models/home-data.model';
 import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { AirQualityPipe } from '../_pipes/air-quality.pipe';
 
 @Component({
   selector: 'app-home',
@@ -18,6 +19,7 @@ import { TagModule } from 'primeng/tag';
     TableModule,
     TagModule,
     DatePipe,
+    AirQualityPipe,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
