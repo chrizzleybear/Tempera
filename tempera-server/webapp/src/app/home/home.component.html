@@ -41,7 +41,18 @@
     <!-- Colleague state table -->
     <div class="w-full lg:w-1/2 p-4">
       <div class="card h-full">
-        <p-table [value]="this.homeData.colleagueStates" [rows]="8" [paginator]="true">
+        <p-table #table [value]="this.homeData.colleagueStates" [rows]="6" [paginator]="true"
+                 [globalFilterFields]="filterFields">
+          <ng-template pTemplate="caption">
+            <div class="flex">
+              <input
+                class="ml-auto"
+                pInputText
+                type="text"
+                (input)="table.filterGlobal($any($event.target).value, 'contains')"
+                placeholder="Search keyword" />
+            </div>
+          </ng-template>
           <ng-template pTemplate="header">
             <tr>
               <th>Name</th>

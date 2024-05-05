@@ -8,6 +8,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { AirQualityPipe } from '../_pipes/air-quality.pipe';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-home',
@@ -20,6 +23,9 @@ import { AirQualityPipe } from '../_pipes/air-quality.pipe';
     TagModule,
     DatePipe,
     AirQualityPipe,
+    IconFieldModule,
+    InputIconModule,
+    InputTextModule,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
@@ -27,6 +33,7 @@ import { AirQualityPipe } from '../_pipes/air-quality.pipe';
 export class HomeComponent implements OnInit {
   public homeData?: HomeData;
 
+  public filterFields: string[] = [];
 
   constructor(private homeService: HomeService) {
   }
@@ -35,6 +42,7 @@ export class HomeComponent implements OnInit {
     this.homeService.getHomeData().subscribe({
       next: data => {
         this.homeData = data;
+        this.filterFields = Object.keys(this.homeData?.colleagueStates[0] ?? []);
       },
       error: err => {
         console.log(err);
@@ -72,5 +80,4 @@ export class HomeComponent implements OnInit {
 
     }
   }
-
 }
