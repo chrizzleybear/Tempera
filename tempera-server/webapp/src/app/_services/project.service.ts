@@ -26,9 +26,9 @@ export class ProjectService {
   }
 
 
-  deleteProject(projectName: string): Observable<string> {
-    console.log("Delete project with Name: ", projectName);
-    return this.http.delete(`${this.API_URL}delete/${projectName}`, { responseType: 'text' })
+  deleteProject(projectId: string): Observable<string> {
+    console.log("Delete project with Name: ", projectId);
+    return this.http.delete(`${this.API_URL}delete/${projectId}`, { responseType: 'text' })
       .pipe(
         map(response => {
           console.log("Project deleted successfully:", response);
@@ -41,8 +41,8 @@ export class ProjectService {
       );
   }
 
-  updateProject(id: number, name: string, description: string, manager: string): Observable<any> {
-    return this.http.put(`${this.API_URL}update`, {id, name, description, manager});
+  updateProject(projectId: number, name: string, description: string, manager: string): Observable<any> {
+    return this.http.put(`${this.API_URL}update`, {projectId, name, description, manager});
   }
 
   getProjectById(projectId: number): Observable<Project> {

@@ -71,8 +71,8 @@ export class ProjectsComponent implements OnInit{
   createProject() {
     this.displayCreateDialog = true;
   }
-    deleteProject(projectName: string) {
-      this.projectService.deleteProject(projectName).subscribe({
+    deleteProject(projectId: string) {
+      this.projectService.deleteProject(projectId).subscribe({
         next: (response) => {
           this.loadProjects();
           this.messages = [{severity:'success', summary:'Success', detail:'Project deleted successfully'}];

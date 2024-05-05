@@ -25,7 +25,7 @@
           <p-button label="Edit" (onClick)="editProject(project); $event.stopPropagation()" icon="pi pi-pencil"></p-button>
         </td>
         <td>
-          <p-button label="Delete" icon="pi pi-trash" (onClick)="deleteProject(project.name); $event.stopPropagation()"></p-button>
+          <p-button label="Delete" icon="pi pi-trash" (onClick)="deleteProject(project.id); $event.stopPropagation()"></p-button>
         </td>
       </tr>
     </ng-template>
