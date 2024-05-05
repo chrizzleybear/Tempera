@@ -3,6 +3,20 @@ TEMPERA - next generation time tracking
 
 # Running the components (Web-Server & Raspberry)
 
+---
+
+### Secrets
+
+In order to run the web server docker, an email key and database password must be provided.
+To avoid saving them in plain text inside the compose.yaml, they are read from text files you
+have to create and write the password/key in. So, in the same directory as the compose.yaml file
+create a *secrets* directory and in it create these files with your password/key in them
+
+* database_password.txt
+* email_key.txt
+
+---
+
 > :rocket:
 > Pro tip: you can run and manage docker images & containers from your IDE like Intellij or Pycharm.
 > Just select the *services* widget on your sidebar and/or open any Dockerfile or compose.yaml in your IDE.
