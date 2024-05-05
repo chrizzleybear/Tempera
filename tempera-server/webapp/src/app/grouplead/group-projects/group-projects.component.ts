@@ -28,6 +28,7 @@ export class GroupProjectsComponent {
   projects: Project[] = [];
   messages: any;
   displayAddMemberDialog: boolean = false;
+  displayDeleteMemberDialog: boolean = false;
   selectedProject!: Project;
   members: User[] = [];
   avaiableProjectContribuiters: User[] = [];
@@ -81,7 +82,6 @@ export class GroupProjectsComponent {
     console.log("Add contributors to project:", project);
     this.displayAddMemberDialog = true;
     this.selectedProject = project;
-    //this.avaiableProjectContribuiters = this.members;
     this.avaiableProjectContribuiters = this.members.filter((member: { username: string; }) =>
      !project.contributors!.some(projectMember => projectMember.username === member.username)
     );
@@ -108,6 +108,7 @@ export class GroupProjectsComponent {
     );
     this.displayAddMemberDialog = false;
     this.selcetedMembers = [];
+    this.reloadProjects();
   }
 
   applyFilterUsers(event: Event): void {
@@ -122,15 +123,35 @@ export class GroupProjectsComponent {
       this.filteredMembers = this.avaiableProjectContribuiters;
     }
   }
-  loadMembers(groupId: string) {
-    this.groupService.getGroupMembers(groupId).subscribe({
-      next: members => {
-        this.members = members;
-        this.filteredMembers = [...members];
+
+  deleteContributorDialog(project: Project) {
+    console.log("Delete contributor from project:", project);
+    this.displayDeleteMemberDialog = true;
+    this.selectedProject = project;
+    this.avaiableProjectContribuiters = project.contributors!;
+  }
+
+  deleteContributorsFromProject() {
+    this.selcetedMembers.forEach(member => {
+      this.deleteContributorFromProject(this.selectedProject.id.toString(), member.username);
+    });
+    this.displayDeleteMemberDialog = false;
+    this.selcetedMembers = [];
+    this.reloadProjects();
+  }
+
+  deleteContributorFromProject(projectId: string, memberId: string) {
+    this.projectService.removeMemberFromProject(projectId, memberId).subscribe({
+      next: (response) => {
+        console.log("Contributor removed from project:", response);
       },
-      error: error => {
-        console.error("Error loading members:", error);
+      error: (error) => {
+        console.error("Error removing contributor from project:", error);
       }
     });
+  }
+
+  reloadProjects() {
+
   }
 }

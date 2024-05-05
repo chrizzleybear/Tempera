@@ -71,6 +71,7 @@ export class GroupsGroupleadComponent implements OnInit{
   }
 
   projects(group: Group) {
+    console.log("View group projects:", group);
     this.router.navigate(['/group/projects', group.id]);
 
   }

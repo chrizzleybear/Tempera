@@ -94,4 +94,11 @@ public class ProjectService {
         List<Project> projects = projectRepository.findByGroupId(groupId);
         return projects;
     }
+
+    public void deleteContributor(Long projectId, String contributorId) {
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException("Project not found"));
+        Userx contributor = userxRepository.findById(contributorId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        project.removeContributor(contributor);
+        projectRepository.save(project);
+    }
 }

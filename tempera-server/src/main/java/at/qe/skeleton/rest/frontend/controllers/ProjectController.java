@@ -74,6 +74,12 @@ public class ProjectController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/deleteContributor/{projectId}/{contributorId}")
+    public ResponseEntity<Void> removeContributor(@PathVariable String projectId, @PathVariable String contributorId) {
+        projectService.deleteContributor(Long.parseLong(projectId),contributorId);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/allOfGroup/{groupId}")
     public ResponseEntity<List<Project>> getProjects(@PathVariable String groupId) {
         System.out.println("groupId: " + groupId);

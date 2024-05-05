@@ -71,4 +71,8 @@ export class ProjectService {
   addMemberToProject(projectId: string, contributorId: string): Observable<any> {
     return this.http.post(`${this.API_URL}addContributor`, {projectId, contributorId});
   }
+
+  removeMemberFromProject(projectId: string, contributorId: string) {
+    return this.http.delete(`${this.API_URL}deleteContributor/${projectId}/${contributorId}`);
+  }
 }
