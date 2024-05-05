@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from "../../models/user.model";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {GroupService} from "../../_services/group.service";
 import {SharedModule} from "primeng/api";
 import {TableModule} from "primeng/table";
