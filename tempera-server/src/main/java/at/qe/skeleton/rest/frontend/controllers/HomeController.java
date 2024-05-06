@@ -17,7 +17,7 @@ import java.util.List;
 public class HomeController {
 
   @GetMapping("/homeData")
-  @PreAuthorize("hasAuthority('USER') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
+  @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<HomeDataResponse> homeData() {
     var colleague1 = new ColleagueStateDto("Max Mustermann", "Raum 1", State.DEEPWORK);
     var colleague2 = new ColleagueStateDto("Jane Doe", "Raum 3", State.AVAILABLE);
