@@ -45,7 +45,7 @@ async def make_request(kind: Literal["get", "post"], url: str, **kwargs) -> Dict
                 f"is registered and enabled in the web server. {response.json()}"
             )
         case _:
-            logger.error(f"{response.status_code}: {response.json()}")
+            logger.error(f"{response.status_code}: {response}")
             raise RuntimeError
 
     response = response.json()

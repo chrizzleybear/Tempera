@@ -68,7 +68,7 @@ async def main():
                 # starting with device discovery. This is sort of a 'goto'.
                 scan_order = tg.create_task(bleclient.get_scan_order())
 
-                measurements = tg.create_task(get_measurements(client))
+                _measurements = tg.create_task(get_measurements(client))
 
                 # Sending interval is the timeout of data sending from the raspberry to the web server.
                 # Here it is also used as the data collection interval for simplicity and convenience.
@@ -84,7 +84,6 @@ async def main():
                 logger.info("Scan order received. Returning to device discovery.")
                 raise RuntimeError
 
-            measurements.result()
             await send_data()
 
 
