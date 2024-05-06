@@ -6,8 +6,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class AirQualityPipe implements PipeTransform {
 
-  transform(value: number): string {
-    if (value > 70) {
+  transform(value: number | undefined): string {
+    if (value === undefined) {
+      return 'Unknown';
+    } else if (value > 70) {
       return 'Good';
     } else if (value > 40) {
       return 'Moderate';

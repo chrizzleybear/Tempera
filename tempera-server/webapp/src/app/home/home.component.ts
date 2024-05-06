@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HomeService } from '../_services/home.service';
-import { State } from '../models/user.model';
+import { State, User } from '../models/user.model';
 import { DatePipe, NgIf } from '@angular/common';
 import { MessageModule } from 'primeng/message';
-import { HomeData } from '../models/home-data.model';
 import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
@@ -11,6 +9,12 @@ import { AirQualityPipe } from '../_pipes/air-quality.pipe';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
+import { ColleagueStateDto, HomeControllerService, HomeDataResponse, UserxDto } from '../../api';
+import StateEnum = ColleagueStateDto.StateEnum;
+import VisibilityEnum = HomeDataResponse.VisibilityEnum;
+import { StorageService } from '../_services/storage.service';
+import { ButtonModule } from 'primeng/button';
+import RolesEnum = UserxDto.RolesEnum;
 
 @Component({
   selector: 'app-home',
@@ -26,28 +30,37 @@ import { InputTextModule } from 'primeng/inputtext';
     IconFieldModule,
     InputIconModule,
     InputTextModule,
+    ButtonModule,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
 export class HomeComponent implements OnInit {
-  public homeData?: HomeData;
+  public homeData?: HomeDataResponse;
+  public user?: User;
 
   public filterFields: string[] = [];
 
-  constructor(private homeService: HomeService) {
+  // todo: delete when actual data is available
+  public visibilityOptions: VisibilityEnum[] = Object.values(VisibilityEnum);
+
+  protected readonly RolesEnum = RolesEnum;
+
+  constructor(private homeService: HomeControllerService, private storageService: StorageService) {
   }
 
   ngOnInit(): void {
-    this.homeService.getHomeData().subscribe({
+    this.homeService.homeData().subscribe({
       next: data => {
         this.homeData = data;
-        this.filterFields = Object.keys(this.homeData?.colleagueStates[0] ?? []);
+        this.filterFields = Object.keys(this.homeData?.colleagueStates?.[0] ?? []);
       },
       error: err => {
         console.log(err);
       },
     });
+
+    this.user = this.storageService.getUser();
   }
 
   getSeverity(state: State) {
@@ -65,15 +78,15 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  showState(state: State | undefined) {
+  showState(state: StateEnum | undefined) {
     switch (state) {
-      case State.AVAILABLE:
+      case StateEnum.Available:
         return 'Available';
-      case State.MEETING:
+      case StateEnum.Meeting:
         return 'In a meeting';
-      case State.DEEPWORK:
+      case StateEnum.Deepwork:
         return 'Deep work';
-      case State.OUT_OF_OFFICE:
+      case StateEnum.OutOfOffice:
         return 'Out of office';
       default:
         return 'Unknown';
