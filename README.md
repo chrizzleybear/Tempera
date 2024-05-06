@@ -50,7 +50,7 @@ $ docker image ls
 
 # 2. Start the container of the service created and all its dependencies
 # Back-end
-$ docker compose start back-end
+$ docker compose start back-end && docker compose attach back-end
 # Note: If you have postres running on your machine, the default port 5432
 # will be used by that process and you'll get an error like this:
 # Error response from daemon: driver failed programming external connectivity on 
@@ -58,9 +58,6 @@ $ docker compose start back-end
 # In this case switch to the postgres user and stop the process using that port
 $ su postgres
 $ pg_ctl stop -D /var/lib/postgres/data/
-
-# To see the output in your terminal
-$ docker compose attach back-end
 
 # Ble-app
 # Note: the BLE app requires user input in the config file. To be run in interactive mode, you have to use docker run.
