@@ -67,6 +67,9 @@ public class GroupService {
     public Userx addMember(Long groupId, String memberId) {
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
         Userx member = userxRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException(INVALID_MEMBER_ID));
+        if(group.getMembers().contains(member)){
+            throw new IllegalArgumentException("Member already exists");
+        }
         group.addMember(member);
         groupRepository.save(group);
         return member;

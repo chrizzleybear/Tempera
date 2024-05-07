@@ -62,7 +62,7 @@ export class GroupProjectsComponent {
   }
 
   private loadGroupMembers(groupId: string) {
-    this.groupService.getGroupMembers(groupId).subscribe({
+    this.groupService.getGroupMembers(Number(groupId)).subscribe({
       next: (members) => {
         console.log("Loaded group members:", members);
         this.members = members;

@@ -113,8 +113,11 @@ export class GroupMembersComponent implements OnInit{
     });
     this.selectedUsers = [];
     this.displayAddDialog = false;
-    this.loadMembersAndUsers(this.groupId!);
-    this.messages = [{severity:'success', summary:'Success', detail:'Members added successfully'}];
+    //wait for the members to be added
+    setTimeout(() => {
+      this.loadMembersAndUsers(this.groupId!);
+      this.messages = [{severity:'success', summary:'Success', detail:'Members added successfully'}];
+    }, 1000); // 3000 milliseconds = 3 seconds
   }
 
     deleteMember(userId: string) {
@@ -127,5 +130,4 @@ export class GroupMembersComponent implements OnInit{
       error: err => console.error("Error deleting member:", err)
     });
     }
-
 }

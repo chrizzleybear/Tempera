@@ -6,6 +6,7 @@ import {DropdownModule} from 'primeng/dropdown';
 import {GroupService} from '../../_services/group.service';
 import {UsersService} from '../../_services/users.service';
 import {User} from '../../models/user.model';
+import {GroupCreateDTO} from "../../models/groupDtos";
 
 @Component({
   selector: 'app-group-create',
@@ -52,10 +53,12 @@ export class GroupCreateComponent {
 
     onSubmit() {
         if (this.groupForm.valid) {
-            this.groupService.createGroup(
-                this.groupForm.value.name,
-                this.groupForm.value.description,
-                this.groupForm.value.groupLead.value.username
+          const dto: GroupCreateDTO = {
+            name: this.groupForm.value.name,
+            description: this.groupForm.value.description,
+            groupLead: this.groupForm.value.groupLead.value.username
+          }
+            this.groupService.createGroup(dto
             ).subscribe({
                 next: (response) => {
                     console.log('Group created:', response);

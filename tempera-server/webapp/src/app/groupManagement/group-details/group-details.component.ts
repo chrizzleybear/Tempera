@@ -39,7 +39,7 @@ export class GroupDetailsComponent {
   }
 
   fetchGroupDetails(id: string) {
-    this.groupService.getGroupById(id).subscribe({
+    this.groupService.getGroupById(Number(id)).subscribe({
       next: (data) => {
         this.group = data;
         console.log('Group details: ', this.group);
