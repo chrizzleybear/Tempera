@@ -46,7 +46,7 @@ export class ProjectsComponent implements OnInit{
   }
 
   private loadProjects() {
-    this.projectService.getAllProject().subscribe({
+    this.projectService.getAllProjects().subscribe({
       next: (projects) => {
         console.log("Loaded projects:", projects);
         this.projects = projects;
@@ -71,7 +71,7 @@ export class ProjectsComponent implements OnInit{
   createProject() {
     this.displayCreateDialog = true;
   }
-    deleteProject(projectId: string) {
+    deleteProject(projectId: number) {
       this.projectService.deleteProject(projectId).subscribe({
         next: (response) => {
           this.loadProjects();

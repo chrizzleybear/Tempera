@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, signal} from '@angular/core';
 import {Project} from "../../models/project.model";
 import {ProjectService} from "../../_services/project.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -9,6 +9,7 @@ import {DialogModule} from "primeng/dialog";
 import {InputTextModule} from "primeng/inputtext";
 import {User} from "../../models/user.model";
 import {GroupService} from "../../_services/group.service";
+import {ContributorAssignmentDTO} from "../../models/projectDtos";
 
 @Component({
   selector: 'app-group-projects',
@@ -49,7 +50,7 @@ export class GroupProjectsComponent {
   }
 
   private loadProjects(groupId: string) {
-    this.projectService.getProjectsOfGroup(groupId).subscribe({
+    this.projectService.getProjectsOfGroup(Number(groupId)).subscribe({
       next: (projects) => {
         console.log("Loaded projects:", projects);
         this.projects = projects;
@@ -91,7 +92,11 @@ export class GroupProjectsComponent {
   }
 
   addContributorToProject(memberId: string) {
-    this.projectService.addMemberToProject(this.selectedProject.id.toString(), memberId).subscribe({
+    const dto: ContributorAssignmentDTO = {
+      projectId: this.selectedProject.id,
+      contributorId: memberId
+    }
+    this.projectService.addMemberToProject(dto).subscribe({
       next: (response) => {
         console.log("Member added to project:", response);
       },
@@ -133,15 +138,19 @@ export class GroupProjectsComponent {
 
   deleteContributorsFromProject() {
     this.selcetedMembers.forEach(member => {
-      this.deleteContributorFromProject(this.selectedProject.id.toString(), member.username);
+      this.deleteContributorFromProject(this.selectedProject.id, member.username);
     });
     this.displayDeleteMemberDialog = false;
     this.selcetedMembers = [];
     this.reloadProjects();
   }
 
-  deleteContributorFromProject(projectId: string, memberId: string) {
-    this.projectService.removeMemberFromProject(projectId, memberId).subscribe({
+  deleteContributorFromProject(projectId: number, memberId: string) {
+    const dto: ContributorAssignmentDTO = {
+      projectId: projectId,
+      contributorId: memberId
+    }
+    this.projectService.removeMemberFromProject(dto).subscribe({
       next: (response) => {
         console.log("Contributor removed from project:", response);
       },
@@ -153,5 +162,9 @@ export class GroupProjectsComponent {
 
   reloadProjects() {
 
+  }
+
+  backToGroups() {
+    this.router.navigate(['/myGroups']);
   }
 }

@@ -8,6 +8,7 @@ import {GroupService} from "../../_services/group.service";
 import {MessagesModule} from "primeng/messages";
 import {ButtonModule} from "primeng/button";
 import {DialogModule} from "primeng/dialog";
+import {GroupAssignmentDTO} from "../../models/projectDtos";
 
 @Component({
   selector: 'app-project-groups',
@@ -40,7 +41,7 @@ export class ProjectGroupsComponent implements OnInit{
     this.fetchGroups(this.projectId);
   }
 
-  fetchGroups(projectId: string | null) {
+  fetchGroups(projectId: string) {
     this.projectService.getGroups(projectId).subscribe((groups: Group[]) => {
       this.groups = groups;
     });
@@ -59,16 +60,24 @@ export class ProjectGroupsComponent implements OnInit{
     this.displayAddDialog = true;
   }
 
-  addGroupToProject(groupId: string) {
-    this.projectService.addGroupToProject(this.projectId, groupId).subscribe(() => {
+  addGroupToProject(groupId: number) {
+    const dto: GroupAssignmentDTO = {
+      projectId: Number(this.projectId),
+      groupId: groupId
+    }
+    this.projectService.addGroupToProject(dto).subscribe(() => {
       console.log(groupId, " added to project with ID: ", this.projectId);
       this.fetchGroups(this.projectId);
       this.displayAddDialog = false;
     });
   }
 
-  deleteGroupFromProject(groupId: string) {
-    this.projectService.deleteGroupFromProject(this.projectId, groupId).subscribe(() => {
+  deleteGroupFromProject(groupId: number) {
+    const dto: GroupAssignmentDTO = {
+      projectId: Number(this.projectId),
+      groupId: groupId
+    }
+    this.projectService.deleteGroupFromProject(dto).subscribe(() => {
       console.log(groupId, " deleted from project with ID: ", this.projectId);
       this.fetchGroups(this.projectId);
     });

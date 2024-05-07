@@ -47,8 +47,8 @@ public class ProjectService {
     }
 
     @Transactional
-    public Project updateProject(String id, String name, String description, String manager) {
-        Project project = projectRepository.findById(Long.parseLong(id)).orElseThrow(() -> new IllegalArgumentException("Project with ID " + id + " not found"));
+    public Project updateProject(Long id, String name, String description, String manager) {
+        Project project = projectRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Project with ID " + id + " not found"));
         project.setName(name);
         project.setDescription(description);
         project.setManager(userxRepository.findById(manager).orElseThrow(() -> new IllegalArgumentException("User not found")));

@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import {catchError, map, Observable, throwError} from 'rxjs';
 import {Project} from "../models/project.model";
 import {Group} from "../models/group.model";
+import {ContributorAssignmentDTO, GroupAssignmentDTO, ProjectCreateDTO, ProjectUpdateDTO} from "../models/projectDtos";
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,67 +14,50 @@ export class ProjectService {
 
   constructor(private http: HttpClient) { }
 
-  getAllProject(): Observable<any> {
+  getAllProjects(): Observable<Project[]> {
     return this.http.get<Project[]>(this.API_URL + 'all');
   }
 
-  createProject(name: string, description: string, manager: string): Observable<any> {
-    const projectData = {
-      name: name,
-      description: description,
-      manager: manager
-    };
-    return this.http.post(`${this.API_URL}create`, projectData);
+  createProject(dto: ProjectCreateDTO): Observable<Project> {
+    return this.http.post<Project>(`${this.API_URL}create`, dto);
   }
 
+  updateProject(dto: ProjectUpdateDTO): Observable<Project> {
+    return this.http.put<Project>(`${this.API_URL}update`, dto);
+  }
 
-  deleteProject(projectId: string): Observable<string> {
-    console.log("Delete project with Name: ", projectId);
+  deleteProject(projectId: number): Observable<string> {
     return this.http.delete(`${this.API_URL}delete/${projectId}`, { responseType: 'text' })
       .pipe(
-        map(response => {
-          console.log("Project deleted successfully:", response);
-          return response;
-        }),
-        catchError(error => {
-          console.error("Error deleting project:", error);
-          return throwError(() => new Error('Error deleting project: ' + error.message));  // properly handle and throw an error
-        })
+        catchError(error => throwError(() => new Error('Error deleting project: ' + error.message)))
       );
-  }
-
-  updateProject(projectId: number, name: string, description: string, manager: string): Observable<any> {
-    return this.http.put(`${this.API_URL}update`, {projectId, name, description, manager});
   }
 
   getProjectById(projectId: number): Observable<Project> {
     return this.http.get<Project>(`${this.API_URL}load/${projectId}`);
   }
 
-  addGroupToProject(projectId: string, groupId: string): Observable<any> {
-    console.log("Get groups for project with ID: ", projectId, " and group ID: ", groupId);
-    return this.http.post(`${this.API_URL}addGroup`, {projectId, groupId});
+  addGroupToProject(dto: GroupAssignmentDTO): Observable<void> {
+    return this.http.post<void>(`${this.API_URL}addGroup`, dto);
   }
 
-  getGroups(projectId: string | null): Observable<Group[]> {
+  getGroups(projectId: string): Observable<Group[]> {
     return this.http.get<Group[]>(`${this.API_URL}getGroups/${projectId}`);
-
   }
 
-  deleteGroupFromProject(projectId: string, groupId: string) {
-    return this.http.delete(`${this.API_URL}deleteGroup/${projectId}/${groupId}`);
-
+  deleteGroupFromProject(dto: GroupAssignmentDTO): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}deleteGroup/${dto.projectId}/${dto.groupId}`);
   }
 
-  getProjectsOfGroup(groupId: string): Observable<Project[]> {
+  addMemberToProject(dto: ContributorAssignmentDTO): Observable<void> {
+    return this.http.post<void>(`${this.API_URL}addContributor`, dto);
+  }
+
+  removeMemberFromProject(dto: ContributorAssignmentDTO): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}deleteContributor/${dto.projectId}/${dto.contributorId}`);
+  }
+
+  getProjectsOfGroup(groupId: number): Observable<Project[]> {
     return this.http.get<Project[]>(`${this.API_URL}allOfGroup/${groupId}`);
-  }
-
-  addMemberToProject(projectId: string, contributorId: string): Observable<any> {
-    return this.http.post(`${this.API_URL}addContributor`, {projectId, contributorId});
-  }
-
-  removeMemberFromProject(projectId: string, contributorId: string) {
-    return this.http.delete(`${this.API_URL}deleteContributor/${projectId}/${contributorId}`);
   }
 }

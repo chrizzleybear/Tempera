@@ -6,6 +6,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { UsersService } from '../../_services/users.service';
 import { User } from '../../models/user.model';
+import {ProjectCreateDTO} from "../../models/projectDtos";
+
 @Component({
   selector: 'app-project-create',
   standalone: true,
@@ -20,8 +22,8 @@ import { User } from '../../models/user.model';
 })
 export class ProjectCreateComponent {
   projectForm: FormGroup;
-  managers: any[] | undefined;
-  @Output() creatComplete = new EventEmitter<boolean>();
+  managers: { label: string, value: User }[] | undefined;
+  @Output() createComplete = new EventEmitter<boolean>();
 
   constructor(private fb: FormBuilder, private projectService: ProjectService, private usersService: UsersService) {
     this.projectForm = this.fb.group({
@@ -32,42 +34,40 @@ export class ProjectCreateComponent {
   }
 
   ngOnInit() {
+    this.fetchManagers();
+  }
+
+  fetchManagers() {
     this.usersService.getAllManagers().subscribe({
       next: (users: User[]) => {
-        console.log('Loaded users:', users);
-        this.managers = users.map(user => ({ label: `${user.firstName} ${user.lastName}`, value: user }));
-        console.log('User dropdown options:', this.managers);
+        this.managers = users.map(user => ({
+          label: `${user.firstName} ${user.lastName}`, value: user
+        }));
       },
-      error: (error) => console.error('Error loading users:', error)
+      error: (error) => console.error('Error loading managers:', error)
     });
   }
 
   onSubmit() {
     if (this.projectForm.valid) {
-      this.projectService.createProject(
-        this.projectForm.value.name, this.projectForm.value.description, this.projectForm.value.manager.value.username ).subscribe({
-        next: (response) => {
-          console.log('Project created successfully:', response);
-          this.creatComplete.emit(true);
+      const dto: ProjectCreateDTO = {
+        projectId: 1,
+        name: this.projectForm.value.name,
+        description: this.projectForm.value.description,
+        manager: this.projectForm.value.manager.value.username
+      };
+      this.projectService.createProject(dto).subscribe({
+        next: () => {
+          console.log('Project created successfully');
+          this.createComplete.emit(true);
         },
         error: (error) => {
           console.error("Error adding project:", error);
-          this.creatComplete.emit(false);
+          this.createComplete.emit(false);
         }
       });
     } else {
       console.error('Invalid form');
     }
-  }
-
-  fetchManagers() {
-    this.usersService.getAllUsers().subscribe({
-      next: (users: User[]) => {
-        console.log('Loaded users:', users);
-        this.managers = users.map(user => ({ label: `${user.firstName} ${user.lastName}`, value: user }));
-        console.log('User dropdown options:', this.managers);
-      },
-      error: (error) => console.error('Error loading users:', error)
-    });
   }
 }

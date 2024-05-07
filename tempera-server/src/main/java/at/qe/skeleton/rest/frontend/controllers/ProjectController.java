@@ -2,6 +2,9 @@ package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.model.Group;
 import at.qe.skeleton.model.Project;
+import at.qe.skeleton.rest.frontend.dtos.ContributorAssignmentDto;
+import at.qe.skeleton.rest.frontend.dtos.GroupAssignmentDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
 import at.qe.skeleton.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +28,16 @@ public class ProjectController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Project> updateProject(@RequestBody Map<String, String> projectData) {
-        Project updatedProject = projectService.updateProject(projectData.get("id"), projectData.get("name"), projectData.get("description"), projectData.get("manager"));
+    public ResponseEntity<Project> updateProject(@RequestBody SimpleProjectDto projectData) {
+        System.out.println(projectData);
+        Project updatedProject = projectService.updateProject(projectData.projectId(), projectData.name(), projectData.description(), projectData.manager());
         return ResponseEntity.ok(updatedProject);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Project> createProject(@RequestBody Map<String, String> projectData) {
-        Project createdProject = projectService.createProject(projectData.get("name"), projectData.get("description"), projectData.get("manager"));
+    public ResponseEntity<Project> createProject(@RequestBody SimpleProjectDto projectData) {
+        System.out.println(projectData);
+        Project createdProject = projectService.createProject(projectData.name(), projectData.description(), projectData.manager());
         return ResponseEntity.ok(createdProject);
     }
 
@@ -53,8 +58,8 @@ public class ProjectController {
         return ResponseEntity.ok(groups);
     }
     @PostMapping("/addGroup")
-    public ResponseEntity<Void> addGroupToProject(@RequestBody Map<String, String> projectData) {
-        projectService.addGroupToProject(Long.parseLong(projectData.get("groupId")), Long.parseLong(projectData.get("projectId")));
+    public ResponseEntity<Void> addGroupToProject(@RequestBody GroupAssignmentDto groupAssignmentDto) {
+        projectService.addGroupToProject(groupAssignmentDto.projectId(), groupAssignmentDto.groupId());
         return ResponseEntity.ok().build();
     }
 
@@ -65,12 +70,8 @@ public class ProjectController {
     }
 
     @PostMapping("/addContributor")
-    public ResponseEntity<Void> addContributor(@RequestBody Map<String, String> projectData) {
-        if(projectData.get("projectId") == null || projectData.get("contributorId") == null) {
-            System.out.println("ProjectId: " + projectData.get("projectId"));
-            throw new NullPointerException("ProjectId and ContributorId can not be null");
-        }
-        projectService.addContributor(Long.parseLong(projectData.get("projectId")), projectData.get("contributorId"));
+    public ResponseEntity<Void> addContributor(@RequestBody ContributorAssignmentDto contributorAssignmentDto) {
+        projectService.addContributor(contributorAssignmentDto.projectId(), contributorAssignmentDto.contributorId());
         return ResponseEntity.ok().build();
     }
 
@@ -82,7 +83,6 @@ public class ProjectController {
 
     @GetMapping("/allOfGroup/{groupId}")
     public ResponseEntity<List<Project>> getProjects(@PathVariable String groupId) {
-        System.out.println("groupId: " + groupId);
         List<Project> projects = projectService.getProjectsForGroups(Long.parseLong(groupId));
         return ResponseEntity.ok(projects);
     }

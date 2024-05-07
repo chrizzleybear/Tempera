@@ -9,6 +9,7 @@ import {NgIf} from "@angular/common";
 import {PaginatorModule} from "primeng/paginator";
 import {User} from "../../models/user.model";
 import {UsersService} from "../../_services/users.service";
+import {ProjectUpdateDTO} from "../../models/projectDtos";
 
 @Component({
   selector: 'app-project-edit',
@@ -70,7 +71,13 @@ export class ProjectEditComponent implements OnChanges, OnInit {
 
   onSubmit() {
     if (this.projectForm.valid) {
-      this.projectService.updateProject(this.project.id, this.projectForm.value.name, this.projectForm.value.description, this.projectForm.value.manager.value.username).subscribe({
+      const dto: ProjectUpdateDTO = {
+        projectId: this.project.id,
+        name: this.projectForm.value.name,
+        description: this.projectForm.value.description,
+        manager: this.projectForm.value.manager.value.username
+      }
+      this.projectService.updateProject(dto).subscribe({
         next: (response) => {
           console.log('Project updated successfully:', response);
           this.editComplete.emit(true);
