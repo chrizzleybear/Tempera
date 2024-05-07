@@ -9,6 +9,7 @@ import {InputTextModule} from "primeng/inputtext";
 import {UsersService} from "../../_services/users.service";
 import {DialogModule} from "primeng/dialog";
 import {MessagesModule} from "primeng/messages";
+import {GroupMemberDTO} from "../../models/groupDtos";
 @Component({
   selector: 'app-group-members',
   standalone: true,
@@ -45,7 +46,7 @@ export class GroupMembersComponent implements OnInit{
 
   loadMembersAndUsers(groupId: string) {
     // Load members
-    this.groupService.getGroupMembers(groupId).subscribe({
+    this.groupService.getGroupMembers(Number(groupId)).subscribe({
       next: members => {
         this.members = members;
         this.filteredMembers = [...members];
@@ -94,8 +95,11 @@ export class GroupMembersComponent implements OnInit{
   }
 
   addMember(userId: string) {
-    console.log("Adding member with ID:", userId);
-    this.groupService.addGroupMember(this.groupId!, userId).subscribe({
+    const dto: GroupMemberDTO = {
+      groupId: Number(this.groupId),
+      memberId: userId
+    }
+    this.groupService.addGroupMember(dto).subscribe({
       next: response => {
         console.log("Member added successfully:", response);
       },
@@ -114,7 +118,7 @@ export class GroupMembersComponent implements OnInit{
   }
 
     deleteMember(userId: string) {
-    this.groupService.deleteGroupMember(this.groupId!, userId).subscribe({
+    this.groupService.deleteGroupMember(Number(this.groupId!), userId).subscribe({
       next: response => {
         console.log("Member deleted successfully:", response);
         this.loadMembersAndUsers(this.groupId!);

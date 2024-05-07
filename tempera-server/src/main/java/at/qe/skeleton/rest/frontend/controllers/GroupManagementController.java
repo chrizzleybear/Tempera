@@ -3,6 +3,8 @@ package at.qe.skeleton.rest.frontend.controllers;
 import at.qe.skeleton.model.Group;
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.rest.frontend.dtos.MemberAssigmentDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleGroupDto;
 import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.services.GroupService;
 import at.qe.skeleton.services.UserxService;
@@ -31,14 +33,14 @@ public class GroupManagementController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Group> createGroup(@RequestBody Map<String, String> groupData) {
-        Group group = groupService.createGroup(groupData.get("name"), groupData.get("description"), groupData.get("groupLead"));
+    public ResponseEntity<Group> createGroup(@RequestBody SimpleGroupDto groupData) {
+        Group group = groupService.createGroup(groupData.name(), groupData.description(), groupData.groupLead());
         return ResponseEntity.ok(group);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Group> updateGroup(@RequestBody Map<String, String> groupData) {
-        Group updatedGroup = groupService.updateGroup(Long.parseLong(groupData.get("groupId")), groupData.get("name"), groupData.get("description"), groupData.get("groupLead"));
+    public ResponseEntity<Group> updateGroup(@RequestBody SimpleGroupDto groupData) {
+        Group updatedGroup = groupService.updateGroup(groupData.groupId(), groupData.name(), groupData.description(), groupData.groupLead());
         return ResponseEntity.ok(updatedGroup);
     }
 
@@ -61,8 +63,8 @@ public class GroupManagementController {
     }
 
     @PostMapping("/addMember")
-    public ResponseEntity<UserxDto> addMember(@RequestBody Map<String, String> memberData) {
-        Userx member = groupService.addMember(Long.parseLong(memberData.get("groupId")), memberData.get("memberId"));
+    public ResponseEntity<UserxDto> addMember(@RequestBody MemberAssigmentDto memberAssigmentDto) {
+        Userx member = groupService.addMember(memberAssigmentDto.groupId(), memberAssigmentDto.memberId());
         return ResponseEntity.ok(userxService.convertToDTO(member));
     }
 

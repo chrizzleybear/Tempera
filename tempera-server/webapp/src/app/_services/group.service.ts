@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import {catchError, map, Observable, throwError} from 'rxjs';
 import {Group} from "../models/group.model";
 import {User} from "../models/user.model";
+import {GroupCreateDTO, GroupMemberDTO, GroupUpdateDTO} from "../models/groupDtos";
 
 @Injectable({
   providedIn: 'root'
@@ -16,42 +17,35 @@ export class GroupService {
     return this.http.get<Group[]>(this.API_URL + 'all');
   }
 
-  createGroup(name: string, description: string, groupLead: string ): Observable<Group> {
-    return this.http.post<Group>(this.API_URL + 'create', {name, description, groupLead});
+  createGroup(dto: GroupCreateDTO): Observable<Group> {
+    return this.http.post<Group>(this.API_URL + 'create', dto);
   }
 
-  getGroupById(groupId: string): Observable<Group> {
-    return this.http.get<Group>(this.API_URL + 'load/'+ groupId);
+  getGroupById(groupId: number): Observable<Group> {
+    return this.http.get<Group>(this.API_URL + 'load/' + groupId);
   }
 
-  updateGroup(groupId: string, name: string, description: string, groupLead: string ): Observable<Group> {
-    return this.http.put<Group>(this.API_URL + 'update', {groupId, name, description, groupLead});
+  updateGroup(dto: GroupUpdateDTO): Observable<Group> {
+    return this.http.put<Group>(this.API_URL + 'update', dto);
   }
 
-  deleteGroup(groupId: string) {
+  deleteGroup(groupId: number): Observable<string> {
     return this.http.delete(`${this.API_URL}delete/${groupId}`, { responseType: 'text' })
       .pipe(
-        map(response => {
-          console.log("Group deleted successfully:", response);
-          return response;
-        }),
-        catchError(error => {
-          console.error("Error deleting group:", error);
-          return throwError(() => new Error('Error deleting project: ' + error.message));  // properly handle and throw an error
-        })
+        catchError(error => throwError(() => new Error('Error deleting group: ' + error.message)))
       );
   }
 
-  getGroupMembers(groupId: string): Observable<User[]> {
+  getGroupMembers(groupId: number): Observable<User[]> {
     return this.http.get<User[]>(`${this.API_URL}members/${groupId}`);
   }
 
-  addGroupMember(groupId: string, memberId: string): Observable<User> {
-    return this.http.post<User>(`${this.API_URL}addMember`, {groupId, memberId});
+  addGroupMember(dto: GroupMemberDTO): Observable<User> {
+    return this.http.post<User>(`${this.API_URL}addMember`, dto);
   }
 
-  deleteGroupMember(groupId: string, memberId: string): Observable<any> {
-    return this.http.delete(`${this.API_URL}removeMember/${groupId}/${memberId}`);
+  deleteGroupMember(groupId: number, memberId: string): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}removeMember/${groupId}/${memberId}`);
   }
 
   getGroupByLead(groupLeadId: string): Observable<Group[]> {

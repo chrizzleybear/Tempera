@@ -64,7 +64,7 @@ export class GroupsComponent implements OnInit {
     this.displayCreateDialog = true;
   }
 
-  deleteGroup(groupId: string) {
+  deleteGroup(groupId: number) {
     this.groupService.deleteGroup(groupId).subscribe({
       next: (response) => {
         this.loadGroups();

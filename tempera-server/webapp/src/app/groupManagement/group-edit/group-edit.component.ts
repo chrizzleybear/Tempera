@@ -9,6 +9,7 @@ import {InputTextModule} from "primeng/inputtext";
 import {ButtonModule} from "primeng/button";
 import {NgIf} from "@angular/common";
 import {MessageModule} from "primeng/message";
+import {GroupUpdateDTO} from "../../models/groupDtos";
 
 @Component({
   selector: 'app-group-edit',
@@ -82,12 +83,13 @@ export class GroupEditComponent implements OnInit, OnChanges{
 
   onSubmit() {
     if (this.groupForm.valid) {
-      this.groupService.updateGroup(
-        this.group.id,
-        this.groupForm.value.name,
-        this.groupForm.value.description,
-        this.groupForm.value.groupLead.value.username
-      ).subscribe({
+      const dto: GroupUpdateDTO = {
+        groupId: Number(this.group.id),
+        name: this.groupForm.value.name,
+        description: this.groupForm.value.description,
+        groupLead: this.groupForm.value.groupLead.value.username
+      };
+      this.groupService.updateGroup(dto).subscribe({
         next: (response) => {
           console.log('Group updated:', response);
           this.editComplete.emit(response);
