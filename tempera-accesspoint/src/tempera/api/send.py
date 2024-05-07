@@ -156,7 +156,7 @@ def _safe_delete_data(
 
 async def send_measurements_and_time_records():
     """
-    Wrapper around :func: `~send_data` to send measurements and time records with one function call.
+    Wrapper around :func:`~send_data` to send measurements and time records with one function call.
 
     :return:
     """
