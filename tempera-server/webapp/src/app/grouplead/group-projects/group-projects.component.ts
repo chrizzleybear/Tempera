@@ -1,4 +1,4 @@
-import {Component, Input, signal} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Project} from "../../models/project.model";
 import {ProjectService} from "../../_services/project.service";
 import {ActivatedRoute, Router} from "@angular/router";

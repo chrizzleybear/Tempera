@@ -1,7 +1,6 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.model.Group;
-import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.rest.frontend.dtos.MemberAssigmentDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleGroupDto;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")

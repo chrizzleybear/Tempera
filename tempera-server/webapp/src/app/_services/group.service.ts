@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {catchError, map, Observable, throwError} from 'rxjs';
+import {catchError, Observable, throwError} from 'rxjs';
 import {Group} from "../models/group.model";
 import {User} from "../models/user.model";
 import {GroupCreateDTO, GroupMemberDTO, GroupUpdateDTO} from "../models/groupDtos";

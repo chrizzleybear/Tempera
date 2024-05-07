@@ -1,15 +1,12 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.Group;
-import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.UserxRepository;
-import at.qe.skeleton.rest.frontend.controllers.GroupManagementController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +25,6 @@ public class GroupService {
 
     @Autowired
     private GroupRepository groupRepository;
-
-    //@PreAuthorize("hasAuthority('GROUPLEAD')")
     public List<Group> getAllGroups() {
         return groupRepository.findAll();
     }

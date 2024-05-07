@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {catchError, map, Observable, throwError} from 'rxjs';
+import {catchError, Observable, throwError} from 'rxjs';
 import {Project} from "../models/project.model";
 import {Group} from "../models/group.model";
 import {ContributorAssignmentDTO, GroupAssignmentDTO, ProjectCreateDTO, ProjectUpdateDTO} from "../models/projectDtos";
