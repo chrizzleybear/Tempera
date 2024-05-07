@@ -10,6 +10,7 @@ from tempera.utils import shared, make_request
 
 logger = logging.getLogger(f"tempera.{__name__}")
 
+
 # Explanation of the func(*, kwarg) notation i.e., how to force kwarg only input.
 # https://www.youtube.com/watch?v=R8-oAqCgHag
 
@@ -19,6 +20,11 @@ DataType = Literal["TimeRecord", "Measurement"]
 def _get_from_database(
     *, kind: DataType
 ) -> Tuple[Sequence[TimeRecord | Measurement], TemperaStation]:
+    """
+
+    :param kind:
+    :return:
+    """
     with Session(shared.db_engine) as session:
         tempera_station = session.scalars(
             select(TemperaStation).where(TemperaStation.id == shared.current_station_id)
@@ -58,6 +64,13 @@ def _build_payload(
     *,
     kind: DataType,
 ) -> Dict[str, Any]:
+    """
+
+    :param tempera_station:
+    :param data:
+    :param kind:
+    :return:
+    """
     match kind:
         case "Measurement":
             return {
@@ -85,6 +98,11 @@ def _build_payload(
 
 
 async def send_data(kind: DataType):
+    """
+
+    :param kind:
+    :return:
+    """
     match kind:
         case "Measurement":
             endpoint = "measurement"
@@ -119,6 +137,12 @@ async def send_data(kind: DataType):
 def _safe_delete_data(
     data: Sequence[Measurement | TimeRecord], *, kind: DataType
 ) -> None:
+    """
+
+    :param data:
+    :param kind:
+    :return:
+    """
     # Remove the time_record with auto_update == True from the list of those to be deleted
     # so that it keeps being updated at every etl cycle.
     # ETL should ensure that only the very last time_record can have auto_update == True
@@ -131,5 +155,10 @@ def _safe_delete_data(
 
 
 async def send_measurements_and_time_records():
+    """
+    Wrapper around :func: `~send_data` to send measurements and time records with one function call.
+
+    :return:
+    """
     await send_data("Measurement")
     await send_data("TimeRecord")
