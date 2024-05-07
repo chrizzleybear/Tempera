@@ -51,7 +51,6 @@ export class ProjectCreateComponent {
   onSubmit() {
     if (this.projectForm.valid) {
       const dto: ProjectCreateDTO = {
-        projectId: 1,
         name: this.projectForm.value.name,
         description: this.projectForm.value.description,
         manager: this.projectForm.value.manager.value.username

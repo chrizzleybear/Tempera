@@ -1,5 +1,4 @@
 export interface ProjectCreateDTO {
-  projectId: 1;
   name: string;
   description: string;
   manager: string;
