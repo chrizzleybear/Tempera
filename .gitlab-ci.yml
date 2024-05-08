@@ -61,7 +61,7 @@ pages:
   stage: build
   image: sphinxdoc/sphinx
   script:
-    - pip install -U sphinx
+    - pip install tempera-accesspoint
     - cd tempera-accesspoint/docs
     - make html
     - mv build public
