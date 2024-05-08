@@ -62,7 +62,7 @@ pages:
   image: sphinxdoc/sphinx
   script:
     - cd tempera-accesspoint
-    - pip install .
+    - pip install .[docs]
     - cd docs
     - make html
     - mv build public
