@@ -68,7 +68,7 @@ pages:
     - mv build public
   artifacts:
     paths:
-      - public
+      - tempera-accesspoint/docs/public
 
 .python-sonarqube-check:
   image:
