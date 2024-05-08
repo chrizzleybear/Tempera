@@ -1,0 +1,13 @@
+<p-table [value] = "rooms" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Room Number</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-room>
+    <tr>
+      <td>{{room.roomId}}</td>
+    </tr>
+    <p-button label="Delete" (click)="deleteRoom(room.roomId)"></p-button>
+  </ng-template>
+</p-table>

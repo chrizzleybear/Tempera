@@ -16,20 +16,12 @@ export class RoomService {
   constructor(private http: HttpClient) {
   }
 
-  getAllRooms(): Observable<List<Room>> {
+  getAllRooms(): Observable<Room[]> {
     return this.http.get<Room[]>(this.API_URL + 'all');
   }
 
-  deleteRoom(roomId: string): void {
-    console.log('Delete room with ID: ', roomId);
-    this.http.delete(`${this.API_URL}delete/${roomId}`).subscribe({
-      next: (response) => {
-        console.log('Room deleted successfully:', response);
-      },
-      error: (error) => {
-        console.error('Error deleting room:', error);
-      },
-    });
+  deleteRoom(roomId: string): Observable<any> {
+    return this.http.delete(`${this.API_URL}delete/${roomId}`);
   }
 
   getRoomById(roomId: string): Observable<Room> {

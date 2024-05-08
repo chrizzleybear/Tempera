@@ -33,6 +33,11 @@ public class RoomService {
         return roomRepository.save(new Room(roomId));
     }
     @Transactional
+    public void deleteRoom(String roomId) {
+        Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("Room not found: " + roomId));
+        roomRepository.delete(room);
+    }
+    @Transactional
     public boolean addThresholdToRoom(String roomId, Threshold threshold){
         Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("Room not found: " + roomId));
         room.addThreshold(threshold);

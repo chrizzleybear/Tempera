@@ -35,6 +35,16 @@ public class RoomController {
         }
     }
 
+    @DeleteMapping("/delete/{roomId}")
+    public ResponseEntity<String> deleteRoom(@PathVariable String roomId) {
+        try {
+            roomService.deleteRoom(roomId);
+            return ResponseEntity.ok("Room deleted successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @PostMapping("/{roomId}/addThreshold")
     public ResponseEntity<String> addThresholdToRoom(@PathVariable String roomId, @RequestBody Threshold threshold) {
         try {

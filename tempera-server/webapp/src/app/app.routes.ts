@@ -7,6 +7,7 @@ import { isNotLoggedInGuard } from './_guards/is-not-logged-in.guard';
 import { UsersComponent } from './userManagement/users/users.component';
 import { UserDetailsComponent } from './userManagement/user-details/user-details.component';
 import { ValidationComponent } from './validation/validation.component';
+import {RoomsComponent} from "./roomManagement/rooms/rooms.component";
 
 export const routes: Routes = [
   {
@@ -16,6 +17,7 @@ export const routes: Routes = [
           { path: '', component: HomeComponent },
           { path: 'users', component: UsersComponent },
           { path: 'user/:id', component: UserDetailsComponent },
+          { path: 'rooms', component: RoomsComponent}
         ],
       },
     ],
