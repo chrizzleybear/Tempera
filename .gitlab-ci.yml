@@ -57,6 +57,15 @@ python-build-job:
       - tempera-accesspoint/dist/*
     expire_in: 2 days
 
+pages:
+  stage: build
+  script:
+    - pip install -U sphinx
+    - sphinx-build -b html tempera-accesspoint/docs/source tempera-accesspoint/docs/public
+  artifacts:
+    paths:
+      - tempera-accesspoint/docs/public
+
 python-sonarqube-check:
   image:
     name: sonarsource/sonar-scanner-cli:latest
