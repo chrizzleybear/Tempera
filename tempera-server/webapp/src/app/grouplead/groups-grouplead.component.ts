@@ -38,8 +38,7 @@ export class GroupsGroupleadComponent implements OnInit{
   groups: Group[] = [];
   filteredGroups: Group[] = [];
   messages: any;
-  selectedGroup!: Group;
-  currentUserId: string = '';
+  currentUserId!: string;
 
   constructor(private groupService: GroupService, private router: Router, private storageService: StorageService) {}
 
@@ -62,7 +61,6 @@ export class GroupsGroupleadComponent implements OnInit{
   }
 
   viewGroupDetails(group: Group) {
-    console.log("View group details:", group);
     this.router.navigate(['/group', group.id]);
   }
 
@@ -71,7 +69,6 @@ export class GroupsGroupleadComponent implements OnInit{
   }
 
   projects(group: Group) {
-    console.log("View group projects:", group);
     this.router.navigate(['/group/projects', group.id]);
 
   }

@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Project} from "../../models/project.model";
 import {ProjectService} from "../../_services/project.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -10,6 +10,9 @@ import {InputTextModule} from "primeng/inputtext";
 import {User} from "../../models/user.model";
 import {GroupService} from "../../_services/group.service";
 import {ContributorAssignmentDTO} from "../../models/projectDtos";
+import {MessageModule} from "primeng/message";
+import {NgIf} from "@angular/common";
+import {MessagesModule} from "primeng/messages";
 
 @Component({
   selector: 'app-group-projects',
@@ -19,38 +22,40 @@ import {ContributorAssignmentDTO} from "../../models/projectDtos";
     SharedModule,
     TableModule,
     DialogModule,
-    InputTextModule
+    InputTextModule,
+    MessageModule,
+    NgIf,
+    MessagesModule
   ],
   templateUrl: './group-projects.component.html',
   styleUrl: './group-projects.component.css'
 })
-export class GroupProjectsComponent {
+export class GroupProjectsComponent implements OnInit{
 
   projects: Project[] = [];
   messages: any;
   displayAddMemberDialog: boolean = false;
   displayDeleteMemberDialog: boolean = false;
-  selectedProject!: Project;
+  selectedProject: Project | undefined;
   members: User[] = [];
-  avaiableProjectContribuiters: User[] = [];
+  availableProjectContributors: User[] = [];
   filteredMembers: User[] = [];
-  selcetedMembers: User[] = [];
-
-  @Input() groupId!: string | null;
+  selectedMembers: User[] = [];
+  groupId: number | null | undefined;
 
   constructor(private projectService: ProjectService, private groupService: GroupService, private route: ActivatedRoute, private router: Router) {
 
   }
   ngOnInit(): void {
-    this.groupId = this.route.snapshot.paramMap.get('id');
+    this.groupId = Number(this.route.snapshot.paramMap.get('id'));
     if (this.groupId) {
       this.loadProjects(this.groupId);
       this.loadGroupMembers(this.groupId);
     }
   }
 
-  private loadProjects(groupId: string) {
-    this.projectService.getProjectsOfGroup(Number(groupId)).subscribe({
+  private loadProjects(groupId: number) {
+    this.projectService.getProjectsOfGroup(groupId).subscribe({
       next: (projects) => {
         console.log("Loaded projects:", projects);
         this.projects = projects;
@@ -61,8 +66,8 @@ export class GroupProjectsComponent {
     });
   }
 
-  private loadGroupMembers(groupId: string) {
-    this.groupService.getGroupMembers(Number(groupId)).subscribe({
+  private loadGroupMembers(groupId: number) {
+    this.groupService.getGroupMembers(groupId).subscribe({
       next: (members) => {
         console.log("Loaded group members:", members);
         this.members = members;
@@ -83,17 +88,16 @@ export class GroupProjectsComponent {
     console.log("Add contributors to project:", project);
     this.displayAddMemberDialog = true;
     this.selectedProject = project;
-    this.avaiableProjectContribuiters = this.members.filter((member: { username: string; }) =>
+    this.availableProjectContributors = this.members.filter((member: { username: string; }) =>
      !project.contributors!.some(projectMember => projectMember.username === member.username)
     );
-    this.filteredMembers = [...this.avaiableProjectContribuiters];
-    console.log("Avaiable project contributors:", this.avaiableProjectContribuiters);
+    this.filteredMembers = [...this.availableProjectContributors];
+    console.log("Avaiable project contributors:", this.availableProjectContributors);
 
   }
-
   addContributorToProject(memberId: string) {
     const dto: ContributorAssignmentDTO = {
-      projectId: this.selectedProject.id,
+      projectId: this.selectedProject!.id,
       contributorId: memberId
     }
     this.projectService.addMemberToProject(dto).subscribe({
@@ -107,42 +111,42 @@ export class GroupProjectsComponent {
     }
 
   addContributorsToProject() {
-    this.selcetedMembers.forEach(member => {
+    this.selectedMembers.forEach(member => {
       this.addContributorToProject(member.username);
     }
     );
     this.displayAddMemberDialog = false;
-    this.selcetedMembers = [];
-    this.reloadProjects();
+    this.selectedMembers = [];
+    this.messages = [{severity: 'success', summary: 'Success', detail: 'Contributors added successfully'}];
   }
 
   applyFilterUsers(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     if (filterValue) {
-      this.filteredMembers = this.avaiableProjectContribuiters.filter(user =>
+      this.filteredMembers = this.availableProjectContributors.filter(user =>
         user.username.toLowerCase().includes(filterValue.toLowerCase()) ||
         user.firstName.toLowerCase().includes(filterValue.toLowerCase()) ||
         user.lastName.toLowerCase().includes(filterValue.toLowerCase()),
       );
     } else {
-      this.filteredMembers = this.avaiableProjectContribuiters;
+      this.filteredMembers = this.availableProjectContributors;
     }
   }
 
   deleteContributorDialog(project: Project) {
-    console.log("Delete contributor from project:", project);
     this.displayDeleteMemberDialog = true;
     this.selectedProject = project;
-    this.avaiableProjectContribuiters = project.contributors!;
+    this.availableProjectContributors = project.contributors!;
   }
 
   deleteContributorsFromProject() {
-    this.selcetedMembers.forEach(member => {
-      this.deleteContributorFromProject(this.selectedProject.id, member.username);
+    this.selectedMembers.forEach(member => {
+      this.deleteContributorFromProject(this.selectedProject!.id, member.username);
     });
+    this.messages = [{severity: 'success', summary: 'Success', detail: 'Contributors removed successfully'}];
     this.displayDeleteMemberDialog = false;
-    this.selcetedMembers = [];
-    this.reloadProjects();
+    this.selectedMembers = [];
+    this.loadProjects(this.groupId!);
   }
 
   deleteContributorFromProject(projectId: number, memberId: string) {
@@ -153,17 +157,14 @@ export class GroupProjectsComponent {
     this.projectService.removeMemberFromProject(dto).subscribe({
       next: (response) => {
         console.log("Contributor removed from project:", response);
+        this.messages = [{severity: 'success', summary: 'Success', detail: 'Contributor removed successfully'}];
       },
       error: (error) => {
+        this.messages = [{severity: 'error', summary: 'Error', detail: 'Error removing contributor from project'}];
         console.error("Error removing contributor from project:", error);
       }
     });
   }
-
-  reloadProjects() {
-
-  }
-
   backToGroups() {
     this.router.navigate(['/myGroups']);
   }

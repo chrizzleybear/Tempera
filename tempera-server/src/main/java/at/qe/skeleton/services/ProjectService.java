@@ -56,7 +56,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public void addGroupToProject(Long groupId, Long projectId) {
+    public void addGroupToProject(Long projectId, Long groupId) {
         if (groupId == null) {
             throw new NullPointerException("Contributor can not be null");
         }
@@ -90,7 +90,7 @@ public class ProjectService {
         projectRepository.save(project);
     }
     public List<Project> getProjectsForGroups(Long groupId) {
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException("Group not found"));
+        groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException("Group not found"));
         List<Project> projects = projectRepository.findByGroupId(groupId);
         return projects;
     }

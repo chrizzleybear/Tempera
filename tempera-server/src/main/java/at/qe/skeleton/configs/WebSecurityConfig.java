@@ -86,7 +86,7 @@ public class WebSecurityConfig {
                           .requestMatchers(new AntPathRequestMatcher("/api/groups/**"))
                           .permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/rooms/**"))
-                        .permitAll()
+                        .hasAnyAuthority(ADMIN)
                       .requestMatchers(new AntPathRequestMatcher("/api/user/**"))
                       .permitAll()
                       .requestMatchers(new AntPathRequestMatcher("/api/users/**"))

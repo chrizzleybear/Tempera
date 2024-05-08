@@ -41,6 +41,7 @@
   <p-table [value]="filteredUsers" [paginator]="true" [rows]="10" responsiveLayout="scroll" [(selection)]="selectedUsers">
     <ng-template pTemplate="header">
       <tr>
+        <th></th>
         <th scope="col" pSortableColumn="username">Benutzername
           <p-sortIcon field="username"></p-sortIcon>
         </th>

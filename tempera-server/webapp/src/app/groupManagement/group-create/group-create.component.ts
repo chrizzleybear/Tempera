@@ -1,11 +1,11 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ButtonModule} from 'primeng/button';
 import {InputTextModule} from 'primeng/inputtext';
 import {DropdownModule} from 'primeng/dropdown';
 import {GroupService} from '../../_services/group.service';
 import {UsersService} from '../../_services/users.service';
-import {User} from '../../models/user.model';
+import {DropdownOptionUser, User} from '../../models/user.model';
 import {GroupCreateDTO} from "../../models/groupDtos";
 
 @Component({
@@ -20,10 +20,10 @@ import {GroupCreateDTO} from "../../models/groupDtos";
   templateUrl: './group-create.component.html',
   styleUrl: './group-create.component.css'
 })
-export class GroupCreateComponent {
+export class GroupCreateComponent implements OnInit{
 
   groupForm: FormGroup;
-  groupLeads: any[] | undefined;
+  groupLeads: DropdownOptionUser[] = [];
 
   @Output() createCompleted = new EventEmitter<boolean>();
 
@@ -48,7 +48,6 @@ export class GroupCreateComponent {
         },
         error: (error) => console.error('Error loading users:', error)
       });
-
     }
 
     onSubmit() {
@@ -62,12 +61,11 @@ export class GroupCreateComponent {
             ).subscribe({
                 next: (response) => {
                     console.log('Group created:', response);
+                    this.groupForm.reset();
                     this.createCompleted.emit(true);
                 },
                 error: (error) => console.error('Error creating group:', error)
             });
         }
     }
-
-
 }

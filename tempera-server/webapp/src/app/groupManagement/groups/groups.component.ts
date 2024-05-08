@@ -30,10 +30,10 @@ import {GroupEditComponent} from "../group-edit/group-edit.component";
 export class GroupsComponent implements OnInit {
   groups: Group[] = [];
   filteredGroups: Group[] = [];
-  messages: any;
   displayCreateDialog: boolean = false;
   displayEditDialog: boolean = false;
-  selectedGroup!: Group;
+  selectedGroup: Group | undefined;
+  messages: any;
 
   constructor(private groupService: GroupService, private router: Router) {}
 

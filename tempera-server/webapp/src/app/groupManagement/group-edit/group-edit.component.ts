@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
-import {User} from "../../models/user.model";
+import {DropdownOptionUser, User} from "../../models/user.model";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {GroupService} from "../../_services/group.service";
 import {Group} from "../../models/group.model";
@@ -21,7 +21,6 @@ import {GroupUpdateDTO} from "../../models/groupDtos";
     DropdownModule,
     NgIf,
     MessageModule,
-
   ],
   templateUrl: './group-edit.component.html',
   styleUrl: './group-edit.component.css'
@@ -29,9 +28,9 @@ import {GroupUpdateDTO} from "../../models/groupDtos";
 export class GroupEditComponent implements OnInit, OnChanges{
 
   groupForm: FormGroup;
-  groupLeads: any[] = [];
+  groupLeads: DropdownOptionUser[] = [];
 
-  @Input() group!: Group;
+  @Input({required: true}) group!: Group;
   @Output() editComplete = new EventEmitter<unknown>();
 
   constructor(

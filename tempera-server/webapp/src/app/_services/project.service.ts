@@ -41,7 +41,7 @@ export class ProjectService {
     return this.http.post<void>(`${this.API_URL}addGroup`, dto);
   }
 
-  getGroups(projectId: string): Observable<Group[]> {
+    getGroups(projectId: number): Observable<Group[]> {
     return this.http.get<Group[]>(`${this.API_URL}getGroups/${projectId}`);
   }
 

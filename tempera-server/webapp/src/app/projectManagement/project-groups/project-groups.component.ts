@@ -29,7 +29,7 @@ export class ProjectGroupsComponent implements OnInit{
 
   groups: Group[] = [];
   allGroups: Group[] = [];
-  projectId!: string;
+  projectId!: number;
   displayAddDialog: boolean = false;
   messages: any;
   constructor(private projectService: ProjectService, private route: ActivatedRoute, private groupService: GroupService) {
@@ -37,11 +37,11 @@ export class ProjectGroupsComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.projectId = this.route.snapshot.paramMap.get('id')?? '';
+    this.projectId = Number(this.route.snapshot.paramMap.get('id')!);
     this.fetchGroups(this.projectId);
   }
 
-  fetchGroups(projectId: string) {
+  fetchGroups(projectId: number) {
     this.projectService.getGroups(projectId).subscribe((groups: Group[]) => {
       this.groups = groups;
     });
@@ -52,7 +52,6 @@ export class ProjectGroupsComponent implements OnInit{
       this.allGroups = groups.filter((group: { id: string; }) =>
         !this.groups.some(groupP => group.id === groupP.id));
     });
-
   }
 
   addGroupDialog() {
@@ -62,11 +61,10 @@ export class ProjectGroupsComponent implements OnInit{
 
   addGroupToProject(groupId: number) {
     const dto: GroupAssignmentDTO = {
-      projectId: Number(this.projectId),
+      projectId: this.projectId!,
       groupId: groupId
     }
     this.projectService.addGroupToProject(dto).subscribe(() => {
-      console.log(groupId, " added to project with ID: ", this.projectId);
       this.fetchGroups(this.projectId);
       this.displayAddDialog = false;
     });

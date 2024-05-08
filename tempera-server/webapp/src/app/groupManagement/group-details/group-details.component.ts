@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Group} from "../../models/group.model";
 import {ActivatedRoute} from "@angular/router";
 import {GroupService} from "../../_services/group.service";
@@ -20,7 +20,7 @@ import {ButtonModule} from "primeng/button";
   templateUrl: './group-details.component.html',
   styleUrl: './group-details.component.css'
 })
-export class GroupDetailsComponent {
+export class GroupDetailsComponent implements OnInit{
 
   group: Group | undefined;
   groupId: string | null | undefined;

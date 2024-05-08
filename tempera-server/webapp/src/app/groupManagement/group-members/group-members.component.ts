@@ -29,7 +29,7 @@ export class GroupMembersComponent implements OnInit{
   members: User[] = [];
   users: User[] = [];
   displayAddDialog: boolean = false;
-  groupId: string | null | undefined;
+  groupId: number | null | undefined;
   filteredMembers: User[] = [];
   filteredUsers: User[] = [];
   selectedUsers: User[] = [];
@@ -39,18 +39,18 @@ export class GroupMembersComponent implements OnInit{
 
   }
   ngOnInit(): void {
-    this.groupId = this.route.snapshot.paramMap.get('id');
+    this.groupId = Number(this.route.snapshot.paramMap.get('id'));
     this.loadMembersAndUsers(this.groupId!);
   }
 
 
-  loadMembersAndUsers(groupId: string) {
+  loadMembersAndUsers(groupId: number) {
     // Load members
-    this.groupService.getGroupMembers(Number(groupId)).subscribe({
+    this.groupService.getGroupMembers(groupId).subscribe({
       next: members => {
         this.members = members;
         this.filteredMembers = [...members];
-        // Load all users
+        // Load all users that are not members
         this.userService.getAllUsers().subscribe({
           next: users => {
             this.users = users.filter((user: { username: string; }) =>
@@ -89,16 +89,19 @@ export class GroupMembersComponent implements OnInit{
       this.filteredUsers = this.users;
     }
   }
+
   addMemberDialog(){
     this.loadMembersAndUsers(this.groupId!);
     this.displayAddDialog = true;
   }
 
-  addMember(userId: string) {
+  private addMember(userId: string) {
     const dto: GroupMemberDTO = {
-      groupId: Number(this.groupId),
+      groupId: this.groupId!,
       memberId: userId
-    }
+    };
+    //wait for the members to be added to avoid async issues
+    setTimeout(() => {}, 500);
     this.groupService.addGroupMember(dto).subscribe({
       next: response => {
         console.log("Member added successfully:", response);
@@ -113,15 +116,15 @@ export class GroupMembersComponent implements OnInit{
     });
     this.selectedUsers = [];
     this.displayAddDialog = false;
-    //wait for the members to be added
+    //wait for the members to be added to avoid async issues
     setTimeout(() => {
       this.loadMembersAndUsers(this.groupId!);
       this.messages = [{severity:'success', summary:'Success', detail:'Members added successfully'}];
-    }, 1000); // 3000 milliseconds = 3 seconds
+    }, 200);
   }
 
     deleteMember(userId: string) {
-    this.groupService.deleteGroupMember(Number(this.groupId!), userId).subscribe({
+    this.groupService.deleteGroupMember(this.groupId!, userId).subscribe({
       next: response => {
         console.log("Member deleted successfully:", response);
         this.loadMembersAndUsers(this.groupId!);
