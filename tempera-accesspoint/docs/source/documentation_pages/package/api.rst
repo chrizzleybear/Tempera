@@ -15,4 +15,4 @@ Testing API
 ===========
 
 .. automodule:: tempera.api._test_api
-    :private-members:
+    :members:
