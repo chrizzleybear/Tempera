@@ -59,6 +59,7 @@ python-build-job:
 
 pages:
   stage: build
+  image: python:3.11.8-alpine
   script:
     - pip install -U sphinx
     - sphinx-build -b html tempera-accesspoint/docs/source tempera-accesspoint/docs/public
