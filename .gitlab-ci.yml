@@ -4,7 +4,7 @@ stages:
   - test
   - sonarCheck
   - format
-  - build
+  - deploy
 
 # shared variables between all sonarCheck jobs
 variables:
@@ -43,8 +43,8 @@ variables:
     - black tempera-accesspoint/ --check --verbose --diff --color
   allow_failure: true
 
-.python-build-job:
-  stage: build
+.python-deploy-job:
+  stage: deploy
   image: python:3.11.8-alpine
   script:
     - python --version ; pip --version
@@ -58,14 +58,14 @@ variables:
     expire_in: 2 days
 
 pages:
-  stage: build
+  stage: deploy
   image: sphinxdoc/sphinx
   script:
     - cd tempera-accesspoint
     - pip install .[docs]
     - cd docs
     - make html
-    - mv build/html public
+    - mv build public
   artifacts:
     paths:
       - tempera-accesspoint/docs/public
