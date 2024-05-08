@@ -14,7 +14,7 @@ import java.util.UUID;
 @Entity
 public class AccessPoint implements Persistable<UUID>, Serializable {
 
-  // We need to implement Persistable since we set UUID manually
+  // We need to implement persistable since we set UUID manually
   // the following strategy for the isNew Method comes from spring documentation:
   // https://docs.spring.io/spring-data/jpa/reference/jpa/entity-persistence.html
   @Transient private boolean isNew = true;
