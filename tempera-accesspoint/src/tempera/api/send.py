@@ -97,7 +97,7 @@ def _build_payload(
             }
 
 
-async def send_data(kind: DataType):
+async def send_data(*, kind: DataType):
     """
 
     :param kind:
@@ -160,5 +160,5 @@ async def send_measurements_and_time_records():
 
     :return:
     """
-    await send_data("Measurement")
-    await send_data("TimeRecord")
+    await send_data(kind="Measurement")
+    await send_data(kind="TimeRecord")
