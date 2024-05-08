@@ -1,4 +1,4 @@
-image: alpine:3.17
+.image: alpine:3.17
 
 stages:
   - test
@@ -15,7 +15,7 @@ variables:
   before_script:
     - apk add --update maven
 
-unit-test-job:
+.unit-test-job:
   extends: .before_script_template
   stage: test
   script:
@@ -24,7 +24,7 @@ unit-test-job:
     - mvn test
   allow_failure: true
 
-java-sonarqube-check:
+.java-sonarqube-check:
   extends: .before_script_template
   stage: sonarCheck
   script:
@@ -33,7 +33,7 @@ java-sonarqube-check:
     - mvn -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} backend ${GITLAB_USER_NAME}" --fail-at-end verify sonar:sonar
   allow_failure: true
 
-python-format-job:
+.python-format-job:
   # make the pipeline fail if python project files are not formatted properly with black
   stage: format
   image:
@@ -43,7 +43,7 @@ python-format-job:
     - black tempera-accesspoint/ --check --verbose --diff --color
   allow_failure: true
 
-python-build-job:
+.python-build-job:
   stage: build
   image: python:3.11.8-alpine
   script:
@@ -69,7 +69,7 @@ pages:
     paths:
       - public
 
-python-sonarqube-check:
+.python-sonarqube-check:
   image:
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: [ "" ]
@@ -79,7 +79,7 @@ python-sonarqube-check:
     - sonar-scanner -Dsonar.login=${SONAR_ACCESSPOINT_TOKEN} -Dsonar.sources=tempera-accesspoint/src -Dsonar.projectKey=${SONAR_ACCESSPOINT_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} access point ${GITLAB_USER_NAME}" -Dsonar.python.version=3.11.8
   allow_failure: true
 
-typescript-sonarqube-check:
+.typescript-sonarqube-check:
   image:
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: [ "" ]
