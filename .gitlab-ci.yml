@@ -4,7 +4,7 @@ stages:
   - format
   - build
 
-.java-setup:
+java-setup:
   image: alpine:3.17
   script:
     - apk add --update maven
@@ -26,7 +26,6 @@ java-unit-test-job:
   stage: test
   script:
     - cd tempera-server
-    - echo "Running unit tests..."
     - mvn test
   allow_failure: true
 
@@ -43,7 +42,6 @@ java-sonarqube-check:
   stage: sonarCheck
   script:
     - cd tempera-server
-    - echo Running sonar analysis for ${SONAR_PROJECT_KEY}
     - mvn -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} backend ${GITLAB_USER_NAME}" --fail-at-end verify sonar:sonar
   allow_failure: true
 
@@ -51,7 +49,6 @@ python-sonarqube-check:
   extends: .sonar-cli-setup
   stage: sonarCheck
   script:
-    - echo Running sonar analysis of the Raspberry code for ${SONAR_PROJECT_KEY}
     - sonar-scanner -Dsonar.login=${SONAR_ACCESSPOINT_TOKEN} -Dsonar.sources=tempera-accesspoint/src -Dsonar.projectKey=${SONAR_ACCESSPOINT_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} access point ${GITLAB_USER_NAME}" -Dsonar.python.version=3.11.8
   allow_failure: true
 
@@ -59,7 +56,6 @@ typescript-sonarqube-check:
   extends: .sonar-cli-setup
   stage: sonarCheck
   script:
-    - echo Running sonar analysis of the front end code for ${SONAR_PROJECT_KEY}
     - sonar-scanner -Dsonar.login=${SONAR_FRONTEND_TOKEN} -Dsonar.sources=tempera-server/webapp -Dsonar.projectKey=${SONAR_FRONTEND_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} frontend ${GITLAB_USER_NAME}"
   allow_failure: true
 
