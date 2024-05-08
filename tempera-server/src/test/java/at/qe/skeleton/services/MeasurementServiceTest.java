@@ -24,9 +24,9 @@ class MeasurementServiceTest {
   @Autowired private SensorService sensorService;
 
   private Sensor getSensor() {
-    SensorTemperaCompositeId sensorId = new SensorTemperaCompositeId();
+    SensorId sensorId = new SensorId();
     sensorId.setSensorId(-1L);
-    sensorId.setTemperaStationId("tempera_station_1");
+    sensorId.setTemperaId("tempera_station_1");
     return sensorService.findSensorById(sensorId);
   }
 
@@ -36,8 +36,8 @@ class MeasurementServiceTest {
     // loads a measurement Entity from the database (testdata in data.sql)
     MeasurementId measurementId = new MeasurementId();
     measurementId.setTimestamp(LocalDateTime.of(2016, 1, 1, 0, 0, 0));
-    SensorTemperaCompositeId sensorId = new SensorTemperaCompositeId();
-    sensorId.setTemperaStationId("tempera_station_1");
+    SensorId sensorId = new SensorId();
+    sensorId.setTemperaId("tempera_station_1");
     sensorId.setSensorId(-1L);
     measurementId.setSensorId(sensorId);
     Measurement measurement = measurementService.loadMeasurement(measurementId);
@@ -51,7 +51,7 @@ class MeasurementServiceTest {
         "Measurement timestamp should be 2016-01-01 00:00:00");
     assertEquals(
         "tempera_station_1",
-        measurement.getSensor().getId().getTemperaStationId(),
+        measurement.getSensor().getId().getTemperaId(),
         "Tempera Station Id should be tempera_station_1");
   }
 

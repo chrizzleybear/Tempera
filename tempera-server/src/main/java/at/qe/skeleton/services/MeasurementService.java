@@ -3,7 +3,6 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.Measurement;
 import at.qe.skeleton.model.MeasurementId;
-import at.qe.skeleton.model.SensorTemperaCompositeId;
 import at.qe.skeleton.repositories.MeasurementRepository;
 import at.qe.skeleton.repositories.SensorRepository;
 import at.qe.skeleton.repositories.TemperaStationRepository;
@@ -11,7 +10,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @Scope("application")

@@ -12,17 +12,17 @@ import java.util.Objects;
 @Embeddable
 public class MeasurementId implements Serializable {
 
-  private SensorTemperaCompositeId sensorId;
+  private SensorId sensorId;
   @Column(nullable = false)
   @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime timestamp;
 
-  public SensorTemperaCompositeId getSensorId() {
+  public SensorId getSensorId() {
     return sensorId;
   }
 
-  public void setSensorId(SensorTemperaCompositeId sensorTemperaCompositeId) {
-    this.sensorId = sensorTemperaCompositeId;
+  public void setSensorId(SensorId sensorId) {
+    this.sensorId = sensorId;
   }
 
   public LocalDateTime getTimestamp() {

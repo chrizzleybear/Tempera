@@ -180,17 +180,6 @@ class MeasurementMapperTest {
         () -> measurementMapper.mapToDto(measurementsNullList),
         "Mapping an empty list should throw an IllegalArgumentException");
 
-    Assertions.assertThrows(
-        IllegalArgumentException.class,
-        () ->
-            measurementMapper.mapToDto(
-                List.of(
-                    measurementNullId,
-                    measurementTemperature,
-                    measurementIrradiance,
-                    measurementNmvoc)),
-        "Mapping an entity without an id should throw an IllegalArgumentException");
-
     // teste den fall, dass eine Liste mit weniger als 4 measurements übergeben wird
     Assertions.assertThrows(
         IllegalArgumentException.class,

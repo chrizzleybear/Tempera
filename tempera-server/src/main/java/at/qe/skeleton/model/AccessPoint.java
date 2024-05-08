@@ -32,7 +32,7 @@ public class AccessPoint implements Persistable<UUID>, Serializable {
 
   @Id private UUID id;
   @OneToMany private Set<TemperaStation> temperaStations;
-  @OneToOne private Room room;
+  @ManyToOne private Room room;
   private boolean enabled;
 
   public AccessPoint(@NotNull UUID id, @NotNull Room room, boolean enabled) {
