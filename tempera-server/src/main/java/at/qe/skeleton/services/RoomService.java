@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -19,6 +20,10 @@ public class RoomService {
     @Autowired
     public RoomService(RoomRepository roomRepository) {
         this.roomRepository = roomRepository;
+    }
+    @Transactional
+    public List<Room> getAllRooms() {
+        return roomRepository.findAll();
     }
     @Transactional
     public Room createRoom(String roomId) {
