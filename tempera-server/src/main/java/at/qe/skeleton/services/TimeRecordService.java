@@ -8,19 +8,14 @@ import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.SubordinateTimeRecordRepository;
 import at.qe.skeleton.repositories.SuperiorTimeRecordRepository;
 import at.qe.skeleton.repositories.UserxRepository;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 
-import org.jboss.weld.exceptions.IllegalArgumentException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 

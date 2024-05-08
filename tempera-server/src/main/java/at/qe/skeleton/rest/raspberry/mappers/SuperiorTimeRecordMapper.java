@@ -82,11 +82,8 @@ public class SuperiorTimeRecordMapper
     TemperaStation temperaStation = temperaStationService.findById(dto.tempera_station_id());
     Userx user = temperaStation.getUser();
     SuperiorTimeRecord superiorTimeRecord;
-    // auto_update == false heißt der vorherige TimeRecord ist abgeschlossen und es handelt sich um
-    // einen neuen timerecord. Wenn also auto_update true ist, müssen wir nur die Zeit updaten.
     if (dto.auto_update()) {
       // todo: is this lazy loaded?
-
       superiorTimeRecord =
           timeRecordService
               .findSuperiorTimeRecordByStartAndUser(dto.start(), user)
