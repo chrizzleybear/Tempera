@@ -65,7 +65,7 @@ pages:
     - pip install .[docs]
     - cd docs
     - make html
-    - mv build public
+    - mv build/html public
   artifacts:
     paths:
       - tempera-accesspoint/docs/public
