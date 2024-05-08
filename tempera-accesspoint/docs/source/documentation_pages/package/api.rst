@@ -23,5 +23,21 @@ Low level helper functions
 Testing API
 ===========
 
-.. automodule:: tempera.api._test_api
-    :members:
+Models
+------
+
+.. autoclass:: tempera.api._test_api.Measurement
+.. autoclass:: tempera.api._test_api.ScanOrder
+.. autoclass:: tempera.api._test_api.TemperaStation
+.. autoclass:: tempera.api._test_api.TimeRecord
+.. autoclass:: tempera.api._test_api.ValidDevices
+
+Endpoints
+---------
+
+.. autofunction:: tempera.api._test_api.check_access_point_id
+.. autofunction:: tempera.api._test_api.check_credentials
+.. autofunction:: tempera.api._test_api.get_active_station_ids
+.. autofunction:: tempera.api._test_api.get_scan_order
+.. autofunction:: tempera.api._test_api.post_measurements
+.. autofunction:: tempera.api._test_api.root
