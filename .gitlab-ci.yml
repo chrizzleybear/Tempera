@@ -22,7 +22,7 @@ java-setup:
 # Unit tests #
 ##############
 java-unit-test-job:
-  extends: .java-setup
+  extends: java-setup
   stage: test
   script:
     - cd tempera-server
@@ -38,7 +38,7 @@ variables:
   GIT_DEPTH: "0"
 
 java-sonarqube-check:
-  extends: .java-setup
+  extends: java-setup
   stage: sonarCheck
   script:
     - cd tempera-server
@@ -76,7 +76,7 @@ python-format-job:
 # Deployment #
 ##############
 java-build-job:
-  extends: .java-setup
+  extends: java-setup
   stage: build
   script:
     - cd tempera-server
