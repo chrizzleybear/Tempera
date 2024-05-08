@@ -70,16 +70,12 @@ class MeasurementMapperTest {
     LocalDateTime differentTimestamp = timestamp.minusMinutes(3);
 
     measurementHumidity = new Measurement(50.0, timestamp, sensorHumidity);
-    measurementHumidity.setId(1L); // must set id bc we dont save to db, normally gets auto generated
 
     measurementIrradiance = new Measurement(500.0, timestamp, sensorIrradiance);
-    measurementIrradiance.setId(2L);
 
     measurementNmvoc = new Measurement(23.0, timestamp, sensorNmvoc);
-    measurementNmvoc.setId(3L);
 
     measurementTemperature = new Measurement(19.9, timestamp, sensorTemperature);
-    measurementTemperature.setId(4L);
 
     // because we dont persist to db, the id should be null:
     measurementNullId = new Measurement(50.0, timestamp, sensorHumidity);
@@ -88,7 +84,6 @@ class MeasurementMapperTest {
     Sensor sensorInvalidTemperaId =
             new Sensor(SensorType.HUMIDITY, Unit.PERCENT, invalidTemperaStation);
     measurementInvalidTemperaId = new Measurement(50.0, timestamp, sensorInvalidTemperaId);
-    measurementInvalidTemperaId.setId(1L);
 
     differentTemperaStation = new TemperaStation("differentTemperaStation", true, null);
     sensorDifferentTemperaStation =
@@ -96,10 +91,8 @@ class MeasurementMapperTest {
 
     measurementDifferentTemperaStation =
         new Measurement(50.0, timestamp, sensorDifferentTemperaStation);
-    measurementDifferentTemperaStation.setId(5L);
 
     measurementDifferentTimestamp = new Measurement(50.0, differentTimestamp, sensorHumidity);
-    measurementDifferentTimestamp.setId(6L);
 
     measurementDto =
         new MeasurementDto(
@@ -145,7 +138,7 @@ class MeasurementMapperTest {
         mappedMeasurementDto.tempera_station_id(),
         "sensor id does not match");
     Assertions.assertEquals(
-        measurementHumidity.getTimestamp(),
+        measurementHumidity.getId().getTimestamp(),
         mappedMeasurementDto.timestamp(),
         "timestamp does not match");
     Assertions.assertEquals(
@@ -333,7 +326,7 @@ class MeasurementMapperTest {
     // Make sure the measurements have the correct values
     Assertions.assertEquals(
         measurementDto.timestamp(),
-        mappedHumidity.getTimestamp(),
+        mappedHumidity.getId().getTimestamp(),
         "Timestamp of Humidity does not match the dto");
     Assertions.assertEquals(
         measurementDto.tempera_station_id(),

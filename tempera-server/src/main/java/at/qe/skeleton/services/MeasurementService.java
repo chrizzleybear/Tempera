@@ -2,6 +2,7 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.Measurement;
+import at.qe.skeleton.model.MeasurementId;
 import at.qe.skeleton.model.SensorTemperaCompositeId;
 import at.qe.skeleton.repositories.MeasurementRepository;
 import at.qe.skeleton.repositories.SensorRepository;
@@ -25,7 +26,7 @@ public class MeasurementService {
     this.measurementRepository = measurementRepository;
   }
 
-  public Measurement loadMeasurement(Long id) throws CouldNotFindEntityException {
+  public Measurement loadMeasurement(MeasurementId id) throws CouldNotFindEntityException {
     return measurementRepository
         .findById(id)
         .orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id));

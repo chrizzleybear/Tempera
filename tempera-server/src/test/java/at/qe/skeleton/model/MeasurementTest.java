@@ -35,7 +35,7 @@ class MeasurementTest {
     void setTimestamp() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             Measurement measurement = new Measurement();
-            measurement.setTimestamp(null);
+            measurement.getId().setTimestamp(null);
         }, "timestamp should not be allowed to be null");
       }
 

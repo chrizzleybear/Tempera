@@ -2,15 +2,9 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.*;
-import at.qe.skeleton.model.enums.SensorType;
-import at.qe.skeleton.model.enums.Unit;
 import at.qe.skeleton.repositories.MeasurementRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -19,7 +13,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.LocalDateTime;
 
-import static com.fasterxml.jackson.databind.type.LogicalType.DateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
@@ -41,14 +34,20 @@ class MeasurementServiceTest {
   @Test
   void loadMeasurement() throws CouldNotFindEntityException {
     // loads a measurement Entity from the database (testdata in data.sql)
-    Measurement measurement = measurementService.loadMeasurement(-1L);
+    MeasurementId measurementId = new MeasurementId();
+    measurementId.setTimestamp(LocalDateTime.of(2016, 1, 1, 0, 0, 0));
+    SensorTemperaCompositeId sensorId = new SensorTemperaCompositeId();
+    sensorId.setTemperaStationId("tempera_station_1");
+    sensorId.setSensorId(-1L);
+    measurementId.setSensorId(sensorId);
+    Measurement measurement = measurementService.loadMeasurement(measurementId);
 
-    assertEquals(-1L, measurement.getId(), "Measurement ID should be 1");
+    assertEquals(measurementId, measurement.getId(), "Measurement ID should be 1");
     assertEquals(-1L, measurement.getSensor().getId().getSensorId(), "Sensor Id should be 1");
     assertEquals(20.0, measurement.getValue(), "Measurement value should be 20.0");
     assertEquals(
         LocalDateTime.of(2016, 1, 1, 0, 0, 0),
-        measurement.getTimestamp(),
+        measurement.getId().getTimestamp(),
         "Measurement timestamp should be 2016-01-01 00:00:00");
     assertEquals(
         "tempera_station_1",
@@ -78,7 +77,7 @@ class MeasurementServiceTest {
     Measurement savedMeasurement = measurementService.saveMeasurement(measurement);
     assertEquals(measurement.getSensor(), savedMeasurement.getSensor(), "sensor should be equal");
     assertEquals(
-        measurement.getTimestamp(), savedMeasurement.getTimestamp(), "timestamp should be equal");
+        measurement.getId().getTimestamp(), savedMeasurement.getId().getTimestamp(), "timestamp should be equal");
     assertEquals(measurement.getValue(), savedMeasurement.getValue(), "value should be equal");
 
     assertEquals(
