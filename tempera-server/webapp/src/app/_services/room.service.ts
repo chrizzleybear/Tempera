@@ -17,17 +17,17 @@ export class RoomService {
     return this.http.get<Room[]>(this.API_URL + 'all');
   }
 
-  deleteRoom(roomId: string): Observable<any> {
-    return this.http.delete(`${this.API_URL}delete/${roomId}`);
+  deleteRoom(roomId: string): Observable<string> {
+    return this.http.delete<string>(`${this.API_URL}delete/${roomId}`,{ responseType: 'text' as 'json' });
   }
 
   getRoomById(roomId: string): Observable<Room> {
     return this.http.get<Room>(`${this.API_URL}load/${roomId}`);
   }
 
-  createRoom(roomId: String): Observable<String> {
+  createRoom(roomId: String): Observable<string> {
     console.log('Create room with ID: ');
-    return this.http.post<String>(`${this.API_URL}create`, { roomId });
+    return this.http.post<string>(`${this.API_URL}create`, roomId, { responseType: 'text' as 'json' });
   }
 
 }

@@ -26,7 +26,7 @@ public class RoomController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createRoom(@RequestParam String roomId) {
+    public ResponseEntity<String> createRoom(@RequestBody String roomId) {
         try {
             Room room = roomService.createRoom(roomId);
             return ResponseEntity.ok("Room created successfully.");

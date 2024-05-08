@@ -23,6 +23,6 @@
 </p-table>
 </div>
 <p-dialog header="Create Room" [(visible)]="displayCreateDialog" [modal]="true" [style]="{width: '50vw'}" [closable]="true">
-  <input [(ngModel)]="newRoomId" placeholder="Enter Room ID">
+  <input id="roomId" type="text" pInputText [(ngModel)]="newRoomId" required>
   <button (click)="createRoom()">Create Room</button>
 </p-dialog>

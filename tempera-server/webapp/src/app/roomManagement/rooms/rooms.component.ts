@@ -54,28 +54,32 @@ export class RoomsComponent {
       next: (response) => {
         console.log('Room deleted successfully:', response);
         this.loadRooms();
+        this.messages = [{ severity: 'success', summary: 'Success', detail: 'Room deleted successfully' }];
       },
       error: (error) => console.error('Error deleting room:', error)
     });
     this.loadRooms();
   }
-  
+
   createRoomDialog():void {
     this.displayCreateDialog = true;
   }
 
   createRoom(): void {
+    console.log(this.newRoomId);
     this.roomService.createRoom(this.newRoomId).subscribe({
       next: (response) => {
         console.log('Room created successfully:', response);
         this.loadRooms();
+        this.displayCreateDialog = false;
+        this.messages = [{ severity: 'success', summary: 'Success', detail: 'Room created successfully' }];
       },
       error: (error) => console.error('Error creating room:', error)
     });
   }
 
   applyFilter($event: Event) {
-    
-    
+
+
   }
 }
