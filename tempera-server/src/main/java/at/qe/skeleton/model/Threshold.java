@@ -4,10 +4,11 @@ import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.ThresholdType;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-public class Threshold {
+public class Threshold implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
