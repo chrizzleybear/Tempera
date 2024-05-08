@@ -1,3 +1,8 @@
+# Documentation
+
+As is customary for python projects, [read the docs](https://about.readthedocs.com/?ref=readthedocs.com)
+style documentation is provided for this package.
+
 # Running the python components with docker
 
 (In the project root directory) it is as simple as typing

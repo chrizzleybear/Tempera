@@ -1,9 +1,8 @@
-Package
-=======
+Tempera API docs
+================
 
 .. toctree::
     :maxdepth: 3
-    :caption: Package
 
     package/api
     package/bleclient
