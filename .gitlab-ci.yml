@@ -59,7 +59,7 @@ python-build-job:
 
 pages:
   stage: build
-  image: python:3.11.8-alpine
+  image: sphinxdoc/sphinx
   script:
     - pip install -U sphinx
     - cd tempera-accesspoint/docs
