@@ -1,0 +1,6 @@
+<svg width="800" height="600">
+  <g *ngFor="let room of rooms; let i = index">
+    <rect [attr.x]="room.x" [attr.y]="room.y" width="100" height="100" [attr.fill]="room.fillColor" (click)="changeColor(i)" />
+    <text [attr.x]="room.x + 10" [attr.y]="room.y + 50">{{room.name}}</text>
+  </g>
+</svg>

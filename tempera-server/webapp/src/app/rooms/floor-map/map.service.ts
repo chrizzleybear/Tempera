@@ -1,10 +1,6 @@
 import { Injectable } from '@angular/core';
+import { FeatureCollection, Geometry } from 'geojson';
 
-export class FeatureCollection {
-  type!: string;
-
-  features!: Feature[];
-}
 
 export class Feature {
   type!: string;
@@ -66,6 +62,7 @@ const buildingData: FeatureCollection = {
           [10, -74],
         ]],
       },
+      properties: null
     },
   ],
 };
@@ -137,7 +134,9 @@ const roomsData: FeatureCollection = {
   ],
 };
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class MapService {
   getBuildingData(): FeatureCollection {
     return buildingData;

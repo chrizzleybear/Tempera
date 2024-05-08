@@ -1,15 +1,3 @@
-<dx-vector-map id="vector-map" [projection]="projection">
-  <dxi-layer
-    [hoverEnabled]="false"
-    [dataSource]="buildingData"
-    name="building"
-  ></dxi-layer>
-  <dxi-layer
-    color="transparent"
-    [dataSource]="roomsData"
-    name="rooms"
-    [borderWidth]="1"
-  >
-    <dxo-label [enabled]="true" dataField="name"></dxo-label>
-  </dxi-layer>
-</dx-vector-map>
+<div class="map-container">
+  <div id="map" style="height: 100%; width: 100%;"></div>
+</div>
