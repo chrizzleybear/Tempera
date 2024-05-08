@@ -3,9 +3,6 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Room} from "../models/room.model";
 
-class List<T> {
-}
-
 @Injectable({
   providedIn: 'root',
 })
