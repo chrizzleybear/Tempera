@@ -21,6 +21,15 @@ def _create_time_record(
     work_mode: Mode,
     auto_update: bool,
 ) -> TimeRecord:
+    """
+
+    :param session:
+    :param tempera_station:
+    :param elapsed_time:
+    :param work_mode:
+    :param auto_update:
+    :return:
+    """
     now = datetime.now(tz=timezone.utc)
     start_time = now - timedelta(milliseconds=elapsed_time)
     record = TimeRecord(
@@ -40,6 +49,11 @@ async def elapsed_time_handler(
     _characteristic,
     data: bytearray,
 ):
+    """
+
+    :param _characteristic:
+    :param data:
+    """
     work_mode_map = {
         2: Mode.DEEP_WORK,
         3: Mode.IN_MEETING,
@@ -116,6 +130,11 @@ async def measurements_handler(
     client: BleakClient,
     characteristics: List[BleakGATTCharacteristic],
 ):
+    """
+
+    :param client:
+    :param characteristics:
+    """
     temperature, irradiance, humidity, nmvoc = None, None, None, None
     for characteristic in characteristics:
         if "2a6e" in characteristic.uuid:
@@ -188,6 +207,12 @@ async def measurements_handler(
 async def filter_uuid(
     provider: BleakClient | BleakGATTService, uuid: str
 ) -> BleakGATTService | BleakGATTCharacteristic:
+    """
+
+    :param provider:
+    :param uuid:
+    :return:
+    """
     if isinstance(provider, BleakClient):
         return list(filter(lambda service: uuid in service.uuid, provider.services))[0]
     elif isinstance(provider, BleakGATTService):
