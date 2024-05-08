@@ -8,7 +8,6 @@ import { UsersComponent } from './userManagement/users/users.component';
 import { UserDetailsComponent } from './userManagement/user-details/user-details.component';
 import { ValidationComponent } from './validation/validation.component';
 import {RoomsComponent} from "./roomManagement/rooms/rooms.component";
-import {FloorMapComponent} from "./rooms/floor-map/floor-map.component";
 import {FloorPlanComponent} from "./rooms/floor-plan/floor-plan.component";
 import {RoomDetailsComponent} from "./roomManagement/room-details/room-details.component";
 
@@ -22,7 +21,6 @@ export const routes: Routes = [
           { path: 'user/:id', component: UserDetailsComponent },
           { path: 'rooms', component: RoomsComponent},
           { path: 'room/:id', component: RoomDetailsComponent},
-          { path: 'map', component: FloorMapComponent},
           { path: 'plan', component: FloorPlanComponent },
         ],
       },

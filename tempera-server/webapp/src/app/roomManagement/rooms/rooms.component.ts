@@ -9,6 +9,7 @@ import {NgIf} from "@angular/common";
 import {DialogModule} from "primeng/dialog";
 import {UserCreateComponent} from "../../userManagement/user-create/user-create.component";
 import {FormsModule} from "@angular/forms";
+import {FloorPlanComponent} from "../../rooms/floor-plan/floor-plan.component";
 
 @Component({
   selector: 'app-rooms',
@@ -21,7 +22,8 @@ import {FormsModule} from "@angular/forms";
     NgIf,
     DialogModule,
     UserCreateComponent,
-    FormsModule
+    FormsModule,
+    FloorPlanComponent
   ],
   templateUrl: './rooms.component.html',
   styleUrl: './rooms.component.css'

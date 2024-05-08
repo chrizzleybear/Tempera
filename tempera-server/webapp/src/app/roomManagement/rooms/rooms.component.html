@@ -1,4 +1,6 @@
 <p-messages [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
+<div class="container">
+  <div>
 <div *ngIf="!displayCreateDialog">
   <div class="mb-4">
     <input type="text" pInputText placeholder="Search" (input)="applyFilter($event)" class="mr-2">
@@ -26,3 +28,9 @@
   <input id="roomId" type="text" pInputText [(ngModel)]="newRoomId" required>
   <button (click)="createRoom()">Create Room</button>
 </p-dialog>
+  </div>
+  <div>
+    <app-floor-plan></app-floor-plan>
+  </div>
+</div>
+

@@ -21,13 +21,13 @@ interface Room {
 export class FloorPlanComponent {
   fillColor = 'rgb(255, 0, 0)';
   rooms: Room[] = [
-    { x: 0, y: 0, roomId: 'room_1', fillColor: 'grey', shape: 'rectangle'},
-    { x: 130, y: 0, roomId: 'room_2', fillColor: 'grey', shape: 'rectangle'},
-    { x: 0, y: 100, roomId: 'Room 3', fillColor: 'grey', shape: 'rectangle'},
-    { x: 130, y: 100, roomId: 'Room 4', fillColor: 'grey', shape: 'rectangle'},
-    { x: 0, y: 200, roomId: 'Room 5', fillColor: 'grey', shape: 'rectangle'},
-    { x: 130, y: 200, roomId: 'Room 6', fillColor: 'grey', shape: 'rectangle'},
-    { x: 65, y: 300, roomId: 'Room 7', fillColor: 'grey', shape: 'rectangle'},
+    { x: 0, y: 0, roomId: 'room_1', fillColor: 'white', shape: 'rectangle'},
+    { x: 130, y: 0, roomId: 'room_2', fillColor: 'white', shape: 'rectangle'},
+    { x: 0, y: 100, roomId: 'room_3', fillColor: 'white', shape: 'rectangle'},
+    { x: 130, y: 100, roomId: 'room_4', fillColor: 'white', shape: 'rectangle'},
+    { x: 0, y: 200, roomId: 'room_5', fillColor: 'white', shape: 'rectangle'},
+    { x: 130, y: 200, roomId: 'room_6', fillColor: 'white', shape: 'rectangle'},
+    { x: 65, y: 300, roomId: 'room_7', fillColor: 'white', shape: 'rectangle'},
 
   ];
   doors: { x: number, y: number }[] = [
@@ -41,13 +41,6 @@ export class FloorPlanComponent {
   ];
 
   constructor(private router: Router) {
-  }
-  changeColor(index: number): void {
-    const r = Math.floor(Math.random() * 256);
-    const g = Math.floor(Math.random() * 256);
-    const b = Math.floor(Math.random() * 256);
-    this.fillColor = `rgb(${r}, ${g}, ${b})`;
-    this.rooms[index].fillColor = this.fillColor;
   }
 
   viewDetails(index: number): void {
