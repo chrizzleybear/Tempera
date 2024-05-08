@@ -105,7 +105,7 @@ async def get_active_station_ids(
 
     return {
         "access_point_allowed": True,
-        "stations_allowed": ["123e4567-e89b-12d3-a456-426614174001", "add2"],
+        "stations_allowed": ["tempera_station_1", "add2"],
     }
 
 

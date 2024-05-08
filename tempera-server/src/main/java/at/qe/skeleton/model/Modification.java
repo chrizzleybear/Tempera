@@ -2,10 +2,11 @@ package at.qe.skeleton.model;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-public class Modification {
+public class Modification implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

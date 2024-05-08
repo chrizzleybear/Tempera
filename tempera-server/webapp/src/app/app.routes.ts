@@ -15,6 +15,9 @@ import {GroupMembersComponent} from "./groupManagement/group-members/group-membe
 import {ProjectGroupsComponent} from "./projectManagement/project-groups/project-groups.component";
 import {GroupsGroupleadComponent} from "./grouplead/groups-grouplead.component";
 import {GroupProjectsComponent} from "./grouplead/group-projects/group-projects.component";
+import {RoomsComponent} from "./roomManagement/rooms/rooms.component";
+import {FloorPlanComponent} from "./rooms/floor-plan/floor-plan.component";
+import {RoomDetailsComponent} from "./roomManagement/room-details/room-details.component";
 
 export const routes: Routes = [
   {
@@ -24,6 +27,9 @@ export const routes: Routes = [
           { path: '', component: HomeComponent },
           { path: 'users', component: UsersComponent },
           { path: 'user/:id', component: UserDetailsComponent },
+          { path: 'rooms', component: RoomsComponent},
+          { path: 'room/:id', component: RoomDetailsComponent},
+          { path: 'plan', component: FloorPlanComponent },
           { path: 'groups', component: GroupsComponent },
           { path: 'group/:id', component: GroupDetailsComponent},
           { path: 'group/members/:id', component: GroupMembersComponent},
