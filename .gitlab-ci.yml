@@ -22,7 +22,7 @@ stages:
 # Unit tests #
 ##############
 java-unit-test-job:
-  extends: .before_script_template
+  extends: .java-setup
   stage: test
   script:
     - cd tempera-server
