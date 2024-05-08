@@ -3,13 +3,25 @@ import {RoomService} from "../../_services/room.service";
 import {Room} from "../../models/room.model";
 import {TableModule} from "primeng/table";
 import {ButtonModule} from "primeng/button";
+import {InputTextModule} from "primeng/inputtext";
+import {MessagesModule} from "primeng/messages";
+import {NgIf} from "@angular/common";
+import {DialogModule} from "primeng/dialog";
+import {UserCreateComponent} from "../../userManagement/user-create/user-create.component";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-rooms',
   standalone: true,
   imports: [
     TableModule,
-    ButtonModule
+    ButtonModule,
+    InputTextModule,
+    MessagesModule,
+    NgIf,
+    DialogModule,
+    UserCreateComponent,
+    FormsModule
   ],
   templateUrl: './rooms.component.html',
   styleUrl: './rooms.component.css'
@@ -18,6 +30,8 @@ export class RoomsComponent {
 
   rooms: Room[] = [];
   newRoomId: string = '';
+  displayCreateDialog: boolean = false;
+  messages: any;
 
   constructor(private roomService: RoomService) { }
 
@@ -45,6 +59,10 @@ export class RoomsComponent {
     });
     this.loadRooms();
   }
+  
+  createRoomDialog():void {
+    this.displayCreateDialog = true;
+  }
 
   createRoom(): void {
     this.roomService.createRoom(this.newRoomId).subscribe({
@@ -54,5 +72,10 @@ export class RoomsComponent {
       },
       error: (error) => console.error('Error creating room:', error)
     });
+  }
+
+  applyFilter($event: Event) {
+    
+    
   }
 }

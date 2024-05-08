@@ -45,7 +45,7 @@ public class RoomController {
         }
     }
 
-    @PostMapping("/{roomId}/addThreshold")
+    @PostMapping("/addThreshold/{roomId}")
     public ResponseEntity<String> addThresholdToRoom(@PathVariable String roomId, @RequestBody Threshold threshold) {
         try {
             boolean result = roomService.addThresholdToRoom(roomId, threshold);
@@ -56,7 +56,7 @@ public class RoomController {
         }
     }
 
-    @DeleteMapping("/{roomId}/removeThreshold")
+    @DeleteMapping("/removeThreshold/{roomId}")
     public ResponseEntity<String> removeThresholdFromRoom(@PathVariable String roomId, @RequestBody Threshold threshold) {
         try {
             boolean result = roomService.removeThresholdFromRoom(roomId, threshold);
