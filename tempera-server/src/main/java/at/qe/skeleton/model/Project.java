@@ -26,7 +26,7 @@ public class Project {
 
   public Project() {}
 
-  //    public List<SubordinateTimeRecord> getSubordinateTimeRecords() {
+  //    public List<InternalRecord> getSubordinateTimeRecords() {
   //        return subordinateTimeRecords;
   //    }
 

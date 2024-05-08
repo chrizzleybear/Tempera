@@ -1,9 +1,9 @@
 package at.qe.skeleton.rest.raspberry.controllers;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
-import at.qe.skeleton.model.SuperiorTimeRecord;
-import at.qe.skeleton.rest.raspberry.dtos.SuperiorTimeRecordDto;
-import at.qe.skeleton.rest.raspberry.mappers.SuperiorTimeRecordMapper;
+import at.qe.skeleton.model.ExternalRecord;
+import at.qe.skeleton.rest.raspberry.dtos.ExternalRecordDto;
+import at.qe.skeleton.rest.raspberry.mappers.ExternalRecordMapper;
 import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.TemperaStationService;
 import at.qe.skeleton.services.TimeRecordService;
@@ -18,14 +18,14 @@ import java.util.logging.Logger;
 @RequestMapping("/rasp/api/time_record")
 public class TimeRecordController {
   private final TimeRecordService timeRecordService;
-  private final SuperiorTimeRecordMapper timeRecordMapper;
+  private final ExternalRecordMapper timeRecordMapper;
   private final AccessPointService accessPointService;
   private final TemperaStationService temperaStationService;
   private final Logger logger = Logger.getLogger("TimeRecordControllerLogger");
 
   public TimeRecordController(
       TimeRecordService timeRecordService,
-      SuperiorTimeRecordMapper timeRecordMapper,
+      ExternalRecordMapper timeRecordMapper,
       AccessPointService accessPointService,
       TemperaStationService temperaStationService) {
     this.timeRecordService = timeRecordService;
@@ -35,25 +35,25 @@ public class TimeRecordController {
   }
 
   //  @GetMapping("/{id}")
-  //  private ResponseEntity<SuperiorTimeRecordDto> getTimeRecord(
+  //  private ResponseEntity<ExternalRecordDto> getTimeRecord(
   //      @PathVariable Long id, @RequestParam UUID accessPointId) {
   //    try {
   //      if (!accessPointService.isEnabled(accessPointId)) {
   //        throw new IllegalArgumentException(
   //            "accessPoint %s is not enabled".formatted(accessPointId));
   //      }
-  //      SuperiorTimeRecord entity = timeRecordService.findSuperiorTimeRecordById(id);
+  //      ExternalRecord entity = timeRecordService.findSuperiorTimeRecordById(id);
   //      return ResponseEntity.ok(timeRecordMapper.mapToDto(entity));
   //    } catch (Exception e) {
   //      logger.log(
-  //          Level.SEVERE, "Could not map SuperiorTimeRecordDto to SuperiorTimeRecord entity", e);
+  //          Level.SEVERE, "Could not map ExternalRecordDto to ExternalRecord entity", e);
   //      return ResponseEntity.badRequest().build();
   //    }
   //  }
 
   @PostMapping("")
-  private ResponseEntity<SuperiorTimeRecordDto> postTimeRecord(
-      @RequestBody SuperiorTimeRecordDto timeRecordDto) {
+  private ResponseEntity<ExternalRecordDto> postTimeRecord(
+      @RequestBody ExternalRecordDto timeRecordDto) {
     try {
       if (!accessPointService.isEnabled(timeRecordDto.access_point_id())) {
         throw new IllegalArgumentException(
@@ -64,7 +64,7 @@ public class TimeRecordController {
             "temperaStation %s is not enabled".formatted(timeRecordDto.tempera_station_id()));
       }
       logger.info("\nincoming time record: " + timeRecordDto + ":");
-      SuperiorTimeRecord entity =
+      ExternalRecord entity =
           timeRecordService.addRecord(timeRecordMapper.mapFromDto(timeRecordDto));
       return ResponseEntity.status(201).body(timeRecordMapper.mapToDto(entity));
     } catch (CouldNotFindEntityException e) {

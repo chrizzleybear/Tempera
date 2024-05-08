@@ -7,18 +7,18 @@ import java.time.LocalDateTime;
 /**
  * Basic unit to measure time serverside. We want to preserve the original timerecords measured by
  * the TemperaStation and at the same time allow Users to assign these subordinate timerecords to
- * projects and divide them in smaller subunits. As soon as a SuperiorTimeRecord has been initiated,
- * a Subordinate TimeRecord with exactly the same characteristics as the SuperiorTimeRecord is
- * initialized. The End will be set to null and updated as soon as the new SuperiorTimeRecord is
- * received from TemperaStation. While End equals null, SubordinateTimeRecord may not be further
+ * projects and divide them in smaller subunits. As soon as a ExternalRecord has been initiated,
+ * a Subordinate TimeRecord with exactly the same characteristics as the ExternalRecord is
+ * initialized. The End will be set to null and updated as soon as the new ExternalRecord is
+ * received from TemperaStation. While End equals null, InternalRecord may not be further
  * divided, meaning start and end stay as they are.
  *
- * <p>A SubordinateTimeRecord stores the Project and Group it is assigned to. But it does not have
+ * <p>A InternalRecord stores the Project and Group it is assigned to. But it does not have
  * to be assigned to a Project or a Group. Once a Group or Project gets deleted, all the TR that
  * were assigned to that Group or Project reference null as assigned Group/Project.
  */
 @Entity
-public class SubordinateTimeRecord {
+public class InternalRecord {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
@@ -49,7 +49,7 @@ public class SubordinateTimeRecord {
     return end;
   }
 
-  public SubordinateTimeRecord(LocalDateTime start) {
+  public InternalRecord(LocalDateTime start) {
     this.start = start;
     this.end = null;
   }
@@ -58,7 +58,7 @@ public class SubordinateTimeRecord {
     this.end = end;
   }
 
-  protected SubordinateTimeRecord() {}
+  protected InternalRecord() {}
   ;
 
   public Project getAssignedProject() {
@@ -87,7 +87,7 @@ public class SubordinateTimeRecord {
     if (o == null) {
       return false;
     }
-    if (!(o instanceof SubordinateTimeRecord other)) {
+    if (!(o instanceof InternalRecord other)) {
       return false;
     }
     return other.start.equals(this.start);
@@ -95,7 +95,7 @@ public class SubordinateTimeRecord {
 
   @Override
   public String toString() {
-    return "[SubordinateTimeRecord start: %s, end: %s, project: %s]"
+    return "[InternalRecord start: %s, end: %s, project: %s]"
         .formatted(
             start.toString(),
             end == null ? "null" : end,

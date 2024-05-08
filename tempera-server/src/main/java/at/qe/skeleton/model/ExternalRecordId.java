@@ -1,7 +1,6 @@
 package at.qe.skeleton.model;
 
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
@@ -10,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Embeddable
-public class SuperiorTimeRecordId implements Serializable {
+public class ExternalRecordId implements Serializable {
   @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime start;
 
@@ -20,12 +19,12 @@ public class SuperiorTimeRecordId implements Serializable {
     return start;
   }
 
-  public SuperiorTimeRecordId(LocalDateTime start, String userName) {
+  public ExternalRecordId(LocalDateTime start, String userName) {
     this.start = start;
     this.userName = userName;
   }
 
-  protected SuperiorTimeRecordId() {}
+  protected ExternalRecordId() {}
 
   public void setStart(LocalDateTime start) {
     this.start = start;
@@ -43,7 +42,7 @@ public class SuperiorTimeRecordId implements Serializable {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null) return false;
-    if (!(o instanceof SuperiorTimeRecordId other)) return false;
+    if (!(o instanceof ExternalRecordId other)) return false;
 
     if (!Objects.equals(start, other.start)) return false;
     return Objects.equals(userName, other.userName);

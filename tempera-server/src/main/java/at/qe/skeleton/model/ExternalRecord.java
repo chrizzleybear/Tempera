@@ -1,6 +1,6 @@
 package at.qe.skeleton.model;
 
-import at.qe.skeleton.exceptions.SubordinateTimeRecordOutOfBoundsException;
+import at.qe.skeleton.exceptions.InternalRecordOutOfBoundsException;
 import at.qe.skeleton.model.enums.State;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -15,13 +15,14 @@ import java.util.Objects;
 /**
  * The basic unit to measure Time Blocks in the TemperaStation. The End field remains null until
  * TemperaStation messages that a new TimeRecord has started. At this point the End will be filled
- * with a value and at the same time a SubordinateTimeRecord with the identical properties gets
+ * with a value and at the same time a InternalRecord with the identical properties gets
  * initialized.
  */
 @Entity
-public class SuperiorTimeRecord {
+public class ExternalRecord {
 
-  @EmbeddedId SuperiorTimeRecordId id;
+  @EmbeddedId
+  ExternalRecordId id;
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "time_end")
@@ -35,27 +36,27 @@ public class SuperiorTimeRecord {
 
   @OneToMany
   @Fetch(FetchMode.JOIN)
-  private List<SubordinateTimeRecord> subordinateRecords;
+  private List<InternalRecord> internalRecords;
 
   @Enumerated(EnumType.STRING)
   private State state;
 
-  protected SuperiorTimeRecord() {
-    subordinateRecords = new ArrayList<>();
+  protected ExternalRecord() {
+    internalRecords = new ArrayList<>();
   }
 
-  public SuperiorTimeRecord(
+  public ExternalRecord(
       @NotNull Userx user,
       @NotNull LocalDateTime start,
       long duration,
       LocalDateTime end,
       @NotNull State state) {
     this.user = Objects.requireNonNull(user);
-    this.id = new SuperiorTimeRecordId(start, user.getUsername());
+    this.id = new ExternalRecordId(start, user.getUsername());
     this.end = end;
     this.state = Objects.requireNonNull(state);
     this.duration = duration;
-    subordinateRecords = new ArrayList<>();
+    internalRecords = new ArrayList<>();
   }
 
   public long getDuration() {
@@ -86,26 +87,26 @@ public class SuperiorTimeRecord {
     this.end = end;
   }
 
-  public List<SubordinateTimeRecord> getSubordinateRecords() {
-    return subordinateRecords;
+  public List<InternalRecord> getInternalRecords() {
+    return internalRecords;
   }
 
-  public void addSubordinateTimeRecord(SubordinateTimeRecord subordinateTimeRecord) {
-    if (subordinateTimeRecord == null) {
-      throw new NullPointerException("SubordinateTimeRecord should not be null");
+  public void addSubordinateTimeRecord(InternalRecord internalRecord) {
+    if (internalRecord == null) {
+      throw new NullPointerException("InternalRecord should not be null");
     }
-    if (subordinateTimeRecord.getStart().isBefore(this.id.getStart())) {
-      throw new SubordinateTimeRecordOutOfBoundsException(
-          "subordinateTimeRecord should not start before its superiorTimeRecord.");
+    if (internalRecord.getStart().isBefore(this.id.getStart())) {
+      throw new InternalRecordOutOfBoundsException(
+          "internalRecord should not start before its superiorTimeRecord.");
     }
-    if (subordinateTimeRecord.getEnd() != null
-        && (subordinateTimeRecord.getEnd().isAfter(this.end)
-            || subordinateTimeRecord.getEnd().isAfter(LocalDateTime.now()))) {
-      throw new SubordinateTimeRecordOutOfBoundsException(
-          "subordinateTimeRecord should not end after its superiorTimeRecord. If SuperiorTimeRecord has not yet"
-              + "ended, SubordinateTimeRecord should not extend beyond now.");
+    if (internalRecord.getEnd() != null
+        && (internalRecord.getEnd().isAfter(this.end)
+            || internalRecord.getEnd().isAfter(LocalDateTime.now()))) {
+      throw new InternalRecordOutOfBoundsException(
+          "internalRecord should not end after its superiorTimeRecord. If ExternalRecord has not yet"
+              + "ended, InternalRecord should not extend beyond now.");
     }
-    this.subordinateRecords.add(subordinateTimeRecord);
+    this.internalRecords.add(internalRecord);
   }
 
   public State getState() {
@@ -116,7 +117,7 @@ public class SuperiorTimeRecord {
     this.state = state;
   }
 
-  public SuperiorTimeRecordId getId() {
+  public ExternalRecordId getId() {
     return id;
   }
 
@@ -130,19 +131,19 @@ public class SuperiorTimeRecord {
     if (o == null) {
       return false;
     }
-    if (!(o instanceof SuperiorTimeRecord other)) {
+    if (!(o instanceof ExternalRecord other)) {
       return false;
     }
     return other.id.equals(this.id);
   }
 
-  public void setId(SuperiorTimeRecordId id) {
+  public void setId(ExternalRecordId id) {
     this.id = id;
   }
 
   @Override
   public String toString() {
-    return "[SuperiorTimeRecord start: %s, end: %s, state: %s]"
+    return "[ExternalRecord start: %s, end: %s, state: %s]"
         .formatted(id.getStart().toString(), end == null ? "null" : end, state.toString());
   }
 }

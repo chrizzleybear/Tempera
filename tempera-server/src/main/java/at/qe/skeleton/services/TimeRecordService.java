@@ -1,12 +1,11 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
-import at.qe.skeleton.exceptions.InconsistentObjectRelationException;
-import at.qe.skeleton.exceptions.SubordinateTimeRecordOutOfBoundsException;
-import at.qe.skeleton.exceptions.SuperiorTimeRecordOutOfBoundsException;
+import at.qe.skeleton.exceptions.InternalRecordOutOfBoundsException;
+import at.qe.skeleton.exceptions.ExternalRecordOutOfBoundsException;
 import at.qe.skeleton.model.*;
-import at.qe.skeleton.repositories.SubordinateTimeRecordRepository;
-import at.qe.skeleton.repositories.SuperiorTimeRecordRepository;
+import at.qe.skeleton.repositories.InternalRecordRepository;
+import at.qe.skeleton.repositories.ExternalRecordRepository;
 import at.qe.skeleton.repositories.UserxRepository;
 
 import org.springframework.context.annotation.Scope;
@@ -24,137 +23,137 @@ import java.util.logging.Logger;
 public class TimeRecordService {
 
   private final Logger logger = Logger.getLogger("TimeRecordServiceLogger");
-  private final SubordinateTimeRecordRepository subordinateTimeRecordRepository;
-  private final SuperiorTimeRecordRepository superiorTimeRecordRepository;
+  private final InternalRecordRepository internalRecordRepository;
+  private final ExternalRecordRepository externalRecordRepository;
   private final UserxRepository userxRepository;
 
   public TimeRecordService(
-      SuperiorTimeRecordRepository superiorTimeRecordRepository,
-      SubordinateTimeRecordRepository subordinateTimeRecordRepository,
+      ExternalRecordRepository externalRecordRepository,
+      InternalRecordRepository internalRecordRepository,
       UserxRepository userxRepository) {
-    this.superiorTimeRecordRepository = superiorTimeRecordRepository;
-    this.subordinateTimeRecordRepository = subordinateTimeRecordRepository;
+    this.externalRecordRepository = externalRecordRepository;
+    this.internalRecordRepository = internalRecordRepository;
     this.userxRepository = userxRepository;
   }
 
-  public SuperiorTimeRecord findSuperiorTimeRecordByUserAndStart(Userx user, LocalDateTime start)
+  public ExternalRecord findSuperiorTimeRecordByUserAndStart(Userx user, LocalDateTime start)
       throws CouldNotFindEntityException {
-    SuperiorTimeRecordId id = new SuperiorTimeRecordId(start, user.getUsername());
-    return superiorTimeRecordRepository
+    ExternalRecordId id = new ExternalRecordId(start, user.getUsername());
+    return externalRecordRepository
         .findById(id)
-        .orElseThrow(() -> new CouldNotFindEntityException("SuperiorTimeRecord %s".formatted(id)));
+        .orElseThrow(() -> new CouldNotFindEntityException("ExternalRecord %s".formatted(id)));
   }
 
   /**
-   * this method saves a new SuperiorTimeRecord and adds the start-Time of the new TimeRecord minus
-   * 1sec as the End-Time to the SuperiorTimeRecord entity with the latest start datetime before the
-   * current one. Furthermore the method instantiates a SubordinateTimeRecord with the identical
+   * this method saves a new ExternalRecord and adds the start-Time of the new TimeRecord minus
+   * 1sec as the End-Time to the ExternalRecord entity with the latest start datetime before the
+   * current one. Furthermore the method instantiates a InternalRecord with the identical
    * properties and adds this to the list of Subordinate TimeRecords stored in the
-   * SuperiorTimeRecords. In case this is the first SuperiorTimeRecord that was saved for User of
-   * the stored TemperaStation, the method just saves the new SuperiorTimeRecord and its
-   * SubordinateTimeRecord to the database.
+   * SuperiorTimeRecords. In case this is the first ExternalRecord that was saved for User of
+   * the stored TemperaStation, the method just saves the new ExternalRecord and its
+   * InternalRecord to the database.
    *
-   * @param newSuperiorTimeRecord
-   * @return the SuperiorTimeRecord that was newly created.
+   * @param newExternalRecord
+   * @return the ExternalRecord that was newly created.
    */
   @Transactional(
       rollbackFor = {
-        SuperiorTimeRecordOutOfBoundsException.class,
+        ExternalRecordOutOfBoundsException.class,
         CouldNotFindEntityException.class
       })
-  public SuperiorTimeRecord addRecord(SuperiorTimeRecord newSuperiorTimeRecord)
+  public ExternalRecord addRecord(ExternalRecord newExternalRecord)
       throws CouldNotFindEntityException, IOException {
-    if (newSuperiorTimeRecord.getStart() == null) {
+    if (newExternalRecord.getStart() == null) {
       throw new NullPointerException(
-          "SuperiorTimeRecord must have a Start Time when being added to db.");
+          "ExternalRecord must have a Start Time when being added to db.");
     }
-    Userx user = newSuperiorTimeRecord.getUser();
-    finalizeOldTimeRecord(user, newSuperiorTimeRecord);
-    return saveNewTimeRecord(newSuperiorTimeRecord, user);
+    Userx user = newExternalRecord.getUser();
+    finalizeOldTimeRecord(user, newExternalRecord);
+    return saveNewTimeRecord(newExternalRecord, user);
   }
 
-  public SuperiorTimeRecord saveNewTimeRecord(SuperiorTimeRecord superiorTimeRecord, Userx user) {
-    SubordinateTimeRecord subordinateTimeRecord =
-        new SubordinateTimeRecord(superiorTimeRecord.getStart());
-    subordinateTimeRecord = subordinateTimeRecordRepository.save(subordinateTimeRecord);
-    logger.info("saved new %s".formatted(subordinateTimeRecord.toString()));
-    superiorTimeRecord.addSubordinateTimeRecord(subordinateTimeRecord);
-    logger.info("Added new %s to new %s".formatted(subordinateTimeRecord, superiorTimeRecord));
-    superiorTimeRecord = superiorTimeRecordRepository.save(superiorTimeRecord);
-    logger.info("saved new %s".formatted(superiorTimeRecord.toString()));
-    if (superiorTimeRecordRepository.findAllByUserAndEndIsNull(user).size() > 1) {
-      throw new SubordinateTimeRecordOutOfBoundsException(
+  public ExternalRecord saveNewTimeRecord(ExternalRecord externalRecord, Userx user) {
+    InternalRecord internalRecord =
+        new InternalRecord(externalRecord.getStart());
+    internalRecord = internalRecordRepository.save(internalRecord);
+    logger.info("saved new %s".formatted(internalRecord.toString()));
+    externalRecord.addSubordinateTimeRecord(internalRecord);
+    logger.info("Added new %s to new %s".formatted(internalRecord, externalRecord));
+    externalRecord = externalRecordRepository.save(externalRecord);
+    logger.info("saved new %s".formatted(externalRecord.toString()));
+    if (externalRecordRepository.findAllByUserAndEndIsNull(user).size() > 1) {
+      throw new InternalRecordOutOfBoundsException(
           "There are more than one SuperiorTimeRecords with no End for user %s".formatted(user));
     }
-    return superiorTimeRecord;
+    return externalRecord;
   }
 
   /**
-   * internal Method, that retrieves the SubordinateTimeRecord form the oldSuperiorTimeRecord and
-   * sets the End for both of them to one second before the start of the newSuperiorTimeRecord.
+   * internal Method, that retrieves the InternalRecord form the oldSuperiorTimeRecord and
+   * sets the End for both of them to one second before the start of the newExternalRecord.
    * After that it saves both old TimeRecord entities to the database.
    */
-  public void finalizeOldTimeRecord(Userx user, SuperiorTimeRecord newSuperiorTimeRecord)
+  public void finalizeOldTimeRecord(Userx user, ExternalRecord newExternalRecord)
       throws IOException {
-    Optional<SuperiorTimeRecord> oldSuperiorTimeRecordOptional =
-        findLatestSuperiorTimeRecordByUser(user);
-    if (oldSuperiorTimeRecordOptional.isEmpty()) {
-      logger.info("No old SuperiorTimeRecord found for user %s".formatted(user));
+    Optional<ExternalRecord> oldExternalRecordOptional =
+        findLatestExternalRecordByUser(user);
+    if (oldExternalRecordOptional.isEmpty()) {
+      logger.info("No old ExternalRecord found for user %s".formatted(user));
       return;
     }
-    SuperiorTimeRecord oldSuperiorTimeRecord = oldSuperiorTimeRecordOptional.get();
-    logger.info("found old SuperiorTimeRecord %s".formatted(oldSuperiorTimeRecord));
+    ExternalRecord oldExternalRecord = oldExternalRecordOptional.get();
+    logger.info("found old ExternalRecord %s".formatted(oldExternalRecord));
 
-    SuperiorTimeRecordId incomingId = newSuperiorTimeRecord.getId();
-    if (oldSuperiorTimeRecord.getId().equals(incomingId)) {
-      logger.info("incoming SuperiorTimeRecord is the same as the old one. No need to finalize");
+    ExternalRecordId incomingId = newExternalRecord.getId();
+    if (oldExternalRecord.getId().equals(incomingId)) {
+      logger.info("incoming ExternalRecord is the same as the old one. No need to finalize");
       return;
     }
 
     // fetch the subordinate Timerecord of this old superior TimeRecord
-    SubordinateTimeRecord oldSubordinateTimeRecord =
-        oldSuperiorTimeRecord.getSubordinateRecords().get(0);
-    LocalDateTime oldEnd = newSuperiorTimeRecord.getStart().minusSeconds(1);
-    if (ChronoUnit.SECONDS.between(oldEnd, newSuperiorTimeRecord.getStart()) != 1) {
+    InternalRecord oldInternalRecord =
+        oldExternalRecord.getInternalRecords().get(0);
+    LocalDateTime oldEnd = newExternalRecord.getStart().minusSeconds(1);
+    if (ChronoUnit.SECONDS.between(oldEnd, newExternalRecord.getStart()) != 1) {
       throw new RuntimeException(
           "End TimeStamp is not one second before the new TimeRecord starts.");
     }
-    LocalDateTime oldStart = oldSuperiorTimeRecord.getStart();
+    LocalDateTime oldStart = oldExternalRecord.getStart();
     long durationInSeconds = ChronoUnit.SECONDS.between(oldStart, oldEnd);
     if (durationInSeconds <= 0)
-      throw new SuperiorTimeRecordOutOfBoundsException(
+      throw new ExternalRecordOutOfBoundsException(
           "the new TimeRecord starts before the old one.");
 
     // time setting
-    oldSuperiorTimeRecord.setDuration(durationInSeconds);
-    oldSuperiorTimeRecord.setEnd(oldEnd);
-    oldSubordinateTimeRecord.setEnd(oldEnd);
+    oldExternalRecord.setDuration(durationInSeconds);
+    oldExternalRecord.setEnd(oldEnd);
+    oldInternalRecord.setEnd(oldEnd);
     logger.info(
         "set End TimeStamp for %s and %s to %s"
-            .formatted(oldSuperiorTimeRecord, oldSubordinateTimeRecord, oldEnd));
+            .formatted(oldExternalRecord, oldInternalRecord, oldEnd));
 
     // persisting the Entities
-    subordinateTimeRecordRepository.save(oldSubordinateTimeRecord);
-    logger.info("saved %s".formatted(oldSubordinateTimeRecord.toString()));
-    superiorTimeRecordRepository.save(oldSuperiorTimeRecord);
-    logger.info("saved %s".formatted(oldSuperiorTimeRecord.toString()));
+    internalRecordRepository.save(oldInternalRecord);
+    logger.info("saved %s".formatted(oldInternalRecord.toString()));
+    externalRecordRepository.save(oldExternalRecord);
+    logger.info("saved %s".formatted(oldExternalRecord.toString()));
   }
 
-  public void delete(SuperiorTimeRecord superiorTimeRecord) {
-    superiorTimeRecordRepository.delete(superiorTimeRecord);
+  public void delete(ExternalRecord externalRecord) {
+    externalRecordRepository.delete(externalRecord);
   }
 
-  private SubordinateTimeRecord saveSubordinateTimeRecord(
-      SubordinateTimeRecord subordinateTimeRecord) {
-    return this.subordinateTimeRecordRepository.save(subordinateTimeRecord);
+  private InternalRecord saveSubordinateTimeRecord(
+      InternalRecord internalRecord) {
+    return this.internalRecordRepository.save(internalRecord);
   }
 
-  public Optional<SuperiorTimeRecord> findLatestSuperiorTimeRecordByUser(Userx user) {
-    return superiorTimeRecordRepository.findFirstByUserAndEndIsNull(user);
+  public Optional<ExternalRecord> findLatestExternalRecordByUser(Userx user) {
+    return externalRecordRepository.findFirstByUserAndEndIsNull(user);
   }
 
-  public Optional<SuperiorTimeRecord> findSuperiorTimeRecordByStartAndUser(
+  public Optional<ExternalRecord> findExternalRecordByStartAndUser(
       LocalDateTime start, Userx user) {
-    return superiorTimeRecordRepository.findByUserAndId_Start(user, start);
+    return externalRecordRepository.findByUserAndId_Start(user, start);
   }
 }

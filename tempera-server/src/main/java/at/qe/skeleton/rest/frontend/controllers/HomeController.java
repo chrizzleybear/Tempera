@@ -37,4 +37,28 @@ public class HomeController {
             null,
             colleagueStates));
   }
+
+
+  @GetMapping("/homeData/realLogic")
+  @PreAuthorize("hasAuthority('USER') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
+  public ResponseEntity<HomeDataResponse> homeDataRealLogic() {
+    // colleagueStates könnte vor Allem interessant sein für Kollegen aus derselben Gruppe oder demselben Projekt
+    var colleagueStates =
+            List.of(
+                    new ColleagueStateDto("Max Mustermann", "Raum 1", State.DEEPWORK),
+                    new ColleagueStateDto("Jane Doe", "Raum 3", State.AVAILABLE),
+                    new ColleagueStateDto("Cooler Typ", "Raum 1", State.MEETING));
+
+    return ResponseEntity.ok(
+            new HomeDataResponse(
+                    25,
+                    50,
+                    100,
+                    500,
+                    Visibility.PUBLIC,
+                    State.AVAILABLE,
+                    LocalDateTime.now().toString(),
+                    null,
+                    colleagueStates));
+  }
 }
