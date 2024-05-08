@@ -28,14 +28,12 @@ public class ProjectController {
 
     @PutMapping("/update")
     public ResponseEntity<Project> updateProject(@RequestBody SimpleProjectDto projectData) {
-        System.out.println(projectData);
         Project updatedProject = projectService.updateProject(projectData.projectId(), projectData.name(), projectData.description(), projectData.manager());
         return ResponseEntity.ok(updatedProject);
     }
 
     @PostMapping("/create")
     public ResponseEntity<Project> createProject(@RequestBody SimpleProjectDto projectData) {
-        System.out.println(projectData);
         Project createdProject = projectService.createProject(projectData.name(), projectData.description(), projectData.manager());
         return ResponseEntity.ok(createdProject);
     }
