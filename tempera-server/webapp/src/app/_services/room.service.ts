@@ -28,9 +28,9 @@ export class RoomService {
     return this.http.get<Room>(`${this.API_URL}load/${roomId}`);
   }
 
-  createRoom(roomId: String): Observable<any> {
+  createRoom(roomId: String): Observable<String> {
     console.log('Create room with ID: ');
-    return this.http.post(`${this.API_URL}create`, { roomId });
+    return this.http.post<String>(`${this.API_URL}create`, { roomId });
   }
 
 }

@@ -26,12 +26,12 @@ public class RoomController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Room> createRoom(@RequestParam String roomId) {
+    public ResponseEntity<String> createRoom(@RequestParam String roomId) {
         try {
             Room room = roomService.createRoom(roomId);
-            return ResponseEntity.ok(room);
+            return ResponseEntity.ok("Room created successfully.");
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
