@@ -19,7 +19,7 @@ public class Group {
 
   @ManyToOne private Userx groupLead;
 
-  @ManyToMany private List<Userx> members;
+  @ManyToMany(cascade = CascadeType.PERSIST) private List<Userx> members;
 
   /**
    * For Creating Groups, this Constructor should be used.
@@ -79,9 +79,6 @@ public class Group {
     return members;
   }
 
-  public void setMembers(List<Userx> members) {
-    this.members = Objects.requireNonNull(members);
-  }
 
   /**
    * Adds a Member to the Group, if the Member is already in the Group, the Member will be updated.
@@ -89,16 +86,14 @@ public class Group {
    * @param member the Member to be added to the Group
    * @return true if member was not already in the group and false if member was updated.
    */
-  public boolean addMember(@NotNull Userx member) {
-    if (member == null) {
-      throw new IllegalArgumentException("Member must not be null");
-    }
-    if (!members.contains(member)) {
-      return members.add(member);
-    }
-    members.remove(member);
+  public void addMember(@NotNull Userx member) {
     members.add(member);
-    return false;
+    member.getGroups().add(this);
+  }
+
+  public void removeMember(@NotNull Userx member) {
+    members.remove(member);
+    member.getGroups().remove(this);
   }
 
   @Override

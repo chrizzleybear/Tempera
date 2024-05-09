@@ -45,6 +45,8 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   @JsonIgnore
   private LocalDateTime updateDate;
 
+  @ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "members")
+  private List<Group> groups;
   private String password;
 
   private String firstName;
@@ -66,6 +68,10 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     this.email = email;
     this.password = password;
     this.createDate = createDate;
+  }
+
+  public List<Group> getGroups() {
+    return groups;
   }
 
   public String getUsername() {

@@ -19,6 +19,7 @@ public class HomeController {
   @GetMapping("/homeData")
   @PreAuthorize("hasAuthority('USER') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<HomeDataResponse> homeData() {
+    // wir wollen alle Kollegen die im selben Team oder selben Group sind.
     var colleagueStates =
         List.of(
             new ColleagueStateDto("Max Mustermann", "Raum 1", State.DEEPWORK),
