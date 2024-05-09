@@ -1,13 +1,18 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
+import at.qe.skeleton.model.ExternalRecord;
 import at.qe.skeleton.model.TemperaStation;
+import at.qe.skeleton.model.enums.State;
+import at.qe.skeleton.repositories.ExternalRecordRepository;
+import at.qe.skeleton.rest.frontend.dtos.UserStateDto;
 import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.repositories.UserxRepository;
 import java.util.Collection;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +21,7 @@ import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,6 +42,7 @@ public class UserxService implements UserDetailsService {
   @Autowired private UserxRepository userRepository;
   @Autowired private PasswordEncoder passwordEncoder;
   @Autowired private TemperaStationService temperaStationService;
+  @Autowired private ExternalRecordRepository externalRecordRepository;
 
   /**
    * Returns a collection of all users.
@@ -199,5 +206,16 @@ public class UserxService implements UserDetailsService {
     user.setEnabled(true);
     // log "Enable user with username: " + username
     userRepository.save(user);
+  }
+
+  public List<UserStateDto> getUserWithStates(List<Userx> users) {
+    return externalRecordRepository.findUserStatesByUserList(users);
+  }
+
+  public State switchState(ExternalRecord record) {
+    Userx user = record.getUser();
+    State state = user.getState();
+    user.setState(state);
+    return state;
   }
 }

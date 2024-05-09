@@ -7,6 +7,7 @@ import at.qe.skeleton.rest.raspberry.mappers.ExternalRecordMapper;
 import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.TemperaStationService;
 import at.qe.skeleton.services.TimeRecordService;
+import at.qe.skeleton.services.UserxService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,35 +22,22 @@ public class TimeRecordController {
   private final ExternalRecordMapper timeRecordMapper;
   private final AccessPointService accessPointService;
   private final TemperaStationService temperaStationService;
+  private final UserxService userService;
   private final Logger logger = Logger.getLogger("TimeRecordControllerLogger");
+
 
   public TimeRecordController(
       TimeRecordService timeRecordService,
       ExternalRecordMapper timeRecordMapper,
       AccessPointService accessPointService,
-      TemperaStationService temperaStationService) {
+      TemperaStationService temperaStationService,
+      UserxService userService) {
     this.timeRecordService = timeRecordService;
     this.timeRecordMapper = timeRecordMapper;
     this.accessPointService = accessPointService;
     this.temperaStationService = temperaStationService;
+    this.userService = userService;
   }
-
-  //  @GetMapping("/{id}")
-  //  private ResponseEntity<ExternalRecordDto> getTimeRecord(
-  //      @PathVariable Long id, @RequestParam UUID accessPointId) {
-  //    try {
-  //      if (!accessPointService.isEnabled(accessPointId)) {
-  //        throw new IllegalArgumentException(
-  //            "accessPoint %s is not enabled".formatted(accessPointId));
-  //      }
-  //      ExternalRecord entity = timeRecordService.findSuperiorTimeRecordById(id);
-  //      return ResponseEntity.ok(timeRecordMapper.mapToDto(entity));
-  //    } catch (Exception e) {
-  //      logger.log(
-  //          Level.SEVERE, "Could not map ExternalRecordDto to ExternalRecord entity", e);
-  //      return ResponseEntity.badRequest().build();
-  //    }
-  //  }
 
   @PostMapping("")
   private ResponseEntity<ExternalRecordDto> postTimeRecord(
@@ -66,6 +54,7 @@ public class TimeRecordController {
       logger.info("\nincoming time record: " + timeRecordDto + ":");
       ExternalRecord entity =
           timeRecordService.addRecord(timeRecordMapper.mapFromDto(timeRecordDto));
+      userService.switchState(entity);
       return ResponseEntity.status(201).body(timeRecordMapper.mapToDto(entity));
     } catch (CouldNotFindEntityException e) {
       logger.info(e.getMessage());

@@ -5,6 +5,7 @@ import at.qe.skeleton.model.enums.Unit;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -16,6 +17,9 @@ public class Sensor {
   @MapsId("temperaId")
   @JoinColumn(name = "tempera_id")
   private TemperaStation temperaStation;
+
+  @OneToMany(mappedBy = "sensor", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, orphanRemoval = true)
+  List<Measurement> measurements;
 
   @Enumerated(EnumType.STRING) // necessary to store the enum as a string in the database
   private SensorType sensorType;
@@ -65,6 +69,24 @@ public class Sensor {
 
   public void setSensorType(@NotNull SensorType sensorType) {
     this.sensorType = Objects.requireNonNull(sensorType, "sensorType must not be null");
+  }
+
+  public void addMeasurement(Measurement measurement) {
+    this.measurements.add(measurement);
+    measurement.setSensor(this);
+  }
+
+  public void removeMeasurement(Measurement measurement) {
+    this.measurements.remove(measurement);
+    measurement.setSensor(null);
+  }
+
+  public List<Measurement> getMeasurements() {
+    return this.measurements;
+  }
+
+  public SensorId getSensorId() {
+    return sensorId;
   }
 
   public Unit getUnit() {

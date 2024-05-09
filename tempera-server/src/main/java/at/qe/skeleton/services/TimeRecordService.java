@@ -156,4 +156,5 @@ public class TimeRecordService {
       LocalDateTime start, Userx user) {
     return externalRecordRepository.findByUserAndId_Start(user, start);
   }
+
 }

@@ -4,6 +4,9 @@ import at.qe.skeleton.model.ExternalRecord;
 import at.qe.skeleton.model.ExternalRecordId;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.State;
+import at.qe.skeleton.rest.frontend.dtos.UserStateDto;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,6 +26,9 @@ public interface ExternalRecordRepository
   Optional<ExternalRecord> findFirstByUserAndEndIsNull(Userx user);
 
   Optional<ExternalRecord> findByUserAndId_Start(Userx user, LocalDateTime start);
+
+  @Query("SELECT DISTINCT e.user.username, e.state FROM ExternalRecord e WHERE e.user IN :users")
+  List<UserStateDto> findUserStatesByUserList(@Param("users") List<Userx> users);
 
   boolean existsByUserAndId_Start(Userx user, LocalDateTime start);
 }

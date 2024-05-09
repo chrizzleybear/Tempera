@@ -69,6 +69,10 @@ public class TemperaStationService {
     return temperaStationRepository.findFirstByUser(user);
   }
 
+  public Optional<TemperaStation> findByUsername(String username) {
+    return temperaStationRepository.findFirstByUser_Username(username);
+  }
+
   public TemperaStation save(TemperaStation temperaStation) {
     logger.info("saving temperaStation %s".formatted(temperaStation.toString()));
     return temperaStationRepository.save(temperaStation);

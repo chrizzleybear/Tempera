@@ -58,15 +58,22 @@ public class AccessPoint implements Persistable<UUID>, Serializable {
    * @throws TemperaStationIsNotEnabledException if this TemperaStation is not enabled, but still
    *     adds the accesspoint before
    */
-  public boolean addTemperaStation(@NotNull TemperaStation temperaStation)
-      throws TemperaStationIsNotEnabledException {
+  public boolean addTemperaStation(@NotNull TemperaStation temperaStation) {
     if (temperaStation == null)
       throw new IllegalArgumentException("temperaStation must not be null");
-    if (!this.enabled) {
-      this.temperaStations.add(temperaStation);
-      throw new TemperaStationIsNotEnabledException();
-    }
     return this.temperaStations.add(temperaStation);
+  }
+
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
+  public Room getRoom() {
+    return room;
+  }
+
+  public void setRoom(Room room) {
+    this.room = room;
   }
 
   public boolean isEnabled() {

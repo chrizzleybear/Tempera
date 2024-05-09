@@ -51,8 +51,12 @@ public class Measurement {
   }
 
 
-  public void setSensor(@NotNull Sensor sensor) {
-    this.sensor = Objects.requireNonNull(sensor, "sensor must not be null");
+  /**
+   * Sets the sensor of the measurement. To add a measurement to a sensor, use the addMeasurement in the sensor.
+   * @param sensor
+   */
+  public void setSensor(Sensor sensor) {
+    this.sensor = sensor;
   }
   public Sensor getSensor() {
     return sensor;

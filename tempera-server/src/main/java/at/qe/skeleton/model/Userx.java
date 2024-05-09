@@ -45,6 +45,8 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   @JsonIgnore
   private LocalDateTime updateDate;
 
+  @OneToOne (mappedBy = "user") private TemperaStation temperaStation;
+
   @ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "members")
   private List<Group> groups;
   private String password;
@@ -72,6 +74,22 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
 
   public List<Group> getGroups() {
     return groups;
+  }
+
+  public TemperaStation getTemperaStation() {
+    return temperaStation;
+  }
+
+  public void setTemperaStation(TemperaStation temperaStation) {
+    this.temperaStation = temperaStation;
+    temperaStation.setUser(this);
+  }
+
+  public void removeTemperaStation() {
+    if (this.temperaStation != null) {
+      this.temperaStation.setUser(null);
+      this.temperaStation = null;
+    }
   }
 
   public String getUsername() {
