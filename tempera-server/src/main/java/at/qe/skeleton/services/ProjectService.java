@@ -90,9 +90,10 @@ public class ProjectService {
         projectRepository.save(project);
     }
     public List<Project> getProjectsForGroups(Long groupId) {
-        groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException("Group not found"));
-        List<Project> projects = projectRepository.findByGroupId(groupId);
-        return projects;
+        if(groupRepository.findById(groupId).isEmpty()){
+            throw new IllegalArgumentException("Group not found");
+        }
+        return projectRepository.findByGroupId(groupId);
     }
 
     public void deleteContributor(Long projectId, String contributorId) {
