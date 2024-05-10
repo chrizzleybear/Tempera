@@ -24,23 +24,17 @@ import java.util.List;
 @RequestMapping("/api")
 public class HomeController {
 
-  private UserxService userService;
-  private TemperaStationService temperaService;
   private HomeDataMapper homeDataMapper;
+
+  public HomeController(HomeDataMapper homeDataMapper) {
+    this.homeDataMapper = homeDataMapper;
+  }
 
   @GetMapping("/homeData")
   @PreAuthorize("hasAuthority('USER') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   @Transactional
-  public ResponseEntity<HomeDataResponse> homeData(Principal principal) {
-    // wir wollen alle Kollegen die im selben Team oder selben Group sind.
-    //    var colleagueStates =
-    //        List.of(
-    //            new ColleagueStateDto("Max Mustermann", "Raum 1", State.DEEPWORK),
-    //            new ColleagueStateDto("Jane Doe", "Raum 3", State.AVAILABLE),
-    //            new ColleagueStateDto("Cooler Typ", "Raum 1", State.MEETING));
-
-    String username = principal.getName();
-    Userx user = userService.loadUser(username);
+  public ResponseEntity<HomeDataResponse> homeData(Userx user) {
+    // wir wollen alle Kollegen die in der selben Group sind.
 
     HomeDataResponse homeDataResponse = homeDataMapper.mapUserToHomeDataResponse(user);
     return ResponseEntity.ok(homeDataResponse);
