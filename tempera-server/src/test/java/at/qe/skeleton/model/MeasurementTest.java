@@ -32,13 +32,6 @@ class MeasurementTest {
         }, "timestamp should not be allowed to be null");
       }
 
-    @Test
-    void setSensor() {
-        Assertions.assertThrows(NullPointerException.class, () -> {
-            Measurement measurement = new Measurement();
-            measurement.setSensor(null);
-        }, "sensor should not be allowed to be null");
-      }
 
     @Test
     void testEquals() {

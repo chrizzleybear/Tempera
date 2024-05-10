@@ -51,7 +51,7 @@ public class TemperaStation implements Persistable<String> {
     this.enabled = enabled;
   }
 
-  protected TemperaStation() {}
+  public TemperaStation() {}
   ;
 
   public void setUser(Userx user) {
@@ -82,6 +82,10 @@ public class TemperaStation implements Persistable<String> {
   public void setAccessPoint(AccessPoint accessPoint) {
     this.accessPoint = accessPoint;
     accessPoint.addTemperaStation(this);
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 
   public boolean isEnabled() {
