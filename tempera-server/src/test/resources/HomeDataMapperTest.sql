@@ -28,3 +28,18 @@ VALUES
 INSERT INTO groupx_members (group_id, members_username) VALUES (1, 'johndoe'), (1, 'janedoe'), (1, 'bobjones');
 INSERT INTO groupx_members (group_id, members_username) VALUES (2, 'alicebrown'), (2, 'chriswilliams'), (2, 'johndoe');
 INSERT INTO groupx_members (group_id, members_username) VALUES (3, 'peterparker'), (3, 'tonystark');
+
+INSERT INTO tempera_station
+(enabled, user_username, id)
+VALUES
+    (TRUE, 'johndoe', 'TEMP123'),
+    (TRUE, 'janedoe', 'TEMP124'),
+    (TRUE, 'bobjones', 'TEMP125'),
+    (TRUE, 'alicebrown', 'TEMP126'),
+    (TRUE, 'chriswilliams', 'TEMP127'),
+    (TRUE, 'peterparker', 'TEMP128'),
+    (TRUE, 'tonystark', 'TEMP129'),
+    (TRUE, 'brucewayne', 'TEMP130');
+
+
+INSERT INTO access_point

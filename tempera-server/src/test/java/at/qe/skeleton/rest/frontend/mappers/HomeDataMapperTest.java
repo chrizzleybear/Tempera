@@ -37,7 +37,7 @@ class HomeDataMapperTest {
 
     @Test
     @Transactional
-    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:")
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:HomeDataMapper.sql")
     void mapUserToHomeDataResponse() {
         Userx user1 = userService.loadUser("user1");
 

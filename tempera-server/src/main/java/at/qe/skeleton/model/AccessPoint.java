@@ -31,7 +31,7 @@ public class AccessPoint implements Persistable<UUID>, Serializable {
   }
 
   @Id private UUID id;
-  @OneToMany private Set<TemperaStation> temperaStations;
+  @OneToMany(mappedBy = "accessPoint") private Set<TemperaStation> temperaStations;
   @ManyToOne private Room room;
   private boolean enabled;
 
