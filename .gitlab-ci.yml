@@ -109,7 +109,7 @@ pages:
   stage: build
   image: sphinxdoc/sphinx
   script:
-    - pip install sphinx_rtd_theme
+    - pip install ./tempera-accesspoint[docs]
     - cd ./tempera-accesspoint/docs
     - make html
     - mv ./build/html ./build/public
