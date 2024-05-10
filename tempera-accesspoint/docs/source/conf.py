@@ -1,8 +1,6 @@
 import sys
 from pathlib import Path
 
-import tempera
-
 sys.path.append(str((Path(__file__).parent.parent.parent.absolute() / "src")))
 
 # Configuration file for the Sphinx documentation builder.
@@ -16,6 +14,9 @@ sys.path.append(str((Path(__file__).parent.parent.parent.absolute() / "src")))
 project = "Tempera"
 copyright = "2024, Leonardo Pedri"
 author = "Leonardo Pedri"
+
+import tempera
+
 release = tempera.__version__
 
 # -- General configuration ---------------------------------------------------
