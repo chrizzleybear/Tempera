@@ -36,7 +36,9 @@ public class HomeDataMapper {
 
   private List<ColleagueStateDto> mapUserToColleagueStateDto(Userx user) {
     List<Group> groups = user.getGroups();
+    //todo: decide wether to show the whole crew here or just colleagues from same groups as user
     List<Userx> colleagues = groups.stream().map(Group::getMembers).flatMap(List::stream).toList();
+    //List<Userx> colleagues = userService.getAllUsers().stream().toList();
     List<UserStateDto> userStateDtos = userService.getUserWithStates(colleagues);
     var colleagueStates = new ArrayList<ColleagueStateDto>();
 
