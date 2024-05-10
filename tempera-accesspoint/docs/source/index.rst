@@ -5,7 +5,7 @@ Welcome to Tempera's documentation!
 :Date: |today|
 
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 3
     :caption: Contents
 
     documentation_pages/ble_app

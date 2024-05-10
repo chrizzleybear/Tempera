@@ -109,11 +109,11 @@ pages:
   stage: build
   image: sphinxdoc/sphinx
   script:
-    - cd tempera-accesspoint
-    - pip install .[docs]
-    - cd docs
+    - pip install sphinx_rtd_theme
+    - cd ./tempera-accesspoint/docs
     - make html
-    - mv build/html public
+    - mv ./build/html ./build/public
   artifacts:
     paths:
-      - tempera-accesspoint/docs/public
+      - tempera-accesspoint/docs/build/public
+  publish: "tempera-accesspoint/docs/build/public"
