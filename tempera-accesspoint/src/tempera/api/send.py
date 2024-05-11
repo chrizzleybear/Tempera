@@ -103,7 +103,7 @@ async def send_data(kind: DataType):
 
     logger.info(f"Sending {len(payloads)} {kind}(s).")
     async with TaskGroup() as tg:
-        for payload in payloads:
+        _ = [
             tg.create_task(
                 make_request(
                     "post",
@@ -112,6 +112,8 @@ async def send_data(kind: DataType):
                     json=payload,
                 )
             )
+            for payload in payloads
+        ]
 
     _safe_delete_data(data, kind=kind)
 
@@ -119,11 +121,12 @@ async def send_data(kind: DataType):
 def _safe_delete_data(
     data: Sequence[Measurement | TimeRecord], *, kind: DataType
 ) -> None:
-    # Remove the time_record with auto_update == True from the list of those to be deleted
-    # so that it keeps being updated at every etl cycle.
-    # ETL should ensure that only the very last time_record can have auto_update == True
+    # Don't delete the most recent time record.
+    # This is the only time record that isn't concluded (i.e., doesn't have an end).
+    # Note: it doesn't matter whether auto update is True or False for this measurement.
     if kind == "TimeRecord":
-        data = list(filter(lambda time_record: not time_record.auto_update, data))
+        # TODO: double check that the most recent time record is the last one in the list
+        data = data[:-1]
 
     with Session(shared.db_engine) as session:
         [session.delete(item) for item in data]
