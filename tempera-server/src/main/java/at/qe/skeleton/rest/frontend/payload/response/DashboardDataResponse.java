@@ -7,7 +7,7 @@ import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
 
 import java.util.List;
 
-public record HomeDataResponse(
+public record DashboardDataResponse(
     double temperature,
     double humidity,
     double irradiance,
