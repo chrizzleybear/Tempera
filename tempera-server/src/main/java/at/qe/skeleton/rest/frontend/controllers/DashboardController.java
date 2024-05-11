@@ -30,6 +30,9 @@ public class DashboardController {
     var colleague4 =
         new ColleagueStateDto(
             "Hans Wurst", "Raum 4", State.OUT_OF_OFFICE, true, List.of("Gruppe 3"));
+    var colleague5 =
+        new ColleagueStateDto(
+            "Peter Fröhlich", "Raum 1", State.OUT_OF_OFFICE, false, List.of("Gruppe 3"));
 
     var colleagueStates =
         List.of(
@@ -37,6 +40,7 @@ public class DashboardController {
             colleague2,
             colleague3,
             colleague4,
+            colleague5,
             colleague2,
             colleague1,
             colleague3,
