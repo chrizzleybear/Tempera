@@ -84,6 +84,8 @@ export class DashboardComponent implements OnInit {
           console.log(err);
         },
       });
+    } else {
+      this.messages = [{ severity: 'error', summary: 'Error', detail: 'Failed to load user' }];
     }
   }
 
