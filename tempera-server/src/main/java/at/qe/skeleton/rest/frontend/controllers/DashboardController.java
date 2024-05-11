@@ -18,7 +18,7 @@ public class DashboardController {
 
   @GetMapping("/dashboardData")
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
-  public ResponseEntity<DashboardDataResponse> dashboardData() {
+  public ResponseEntity<DashboardDataResponse> dashboardData(@RequestParam String username) {
     var colleague1 =
         new ColleagueStateDto(
             "Max Mustermann", "Raum 1", State.DEEPWORK, true, List.of("Gruppe 1"));
