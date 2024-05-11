@@ -9,13 +9,14 @@ import { AirQualityPipe } from '../_pipes/air-quality.pipe';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
-import { ColleagueStateDto, DashboardControllerService, DashboardDataResponse, UserxDto } from '../../api';
+import { ColleagueStateDto, DashboardControllerService, DashboardDataResponse, ProjectDto, UserxDto } from '../../api';
 import StateEnum = ColleagueStateDto.StateEnum;
 import VisibilityEnum = DashboardDataResponse.VisibilityEnum;
 import { StorageService } from '../_services/storage.service';
 import { ButtonModule } from 'primeng/button';
 import RolesEnum = UserxDto.RolesEnum;
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
@@ -33,20 +34,26 @@ import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
     InputTextModule,
     ButtonModule,
     WrapFnPipe,
+    ReactiveFormsModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent implements OnInit {
   public dashboardData?: DashboardDataResponse;
+
   public user?: User;
 
-  public filterFields: string[] = [];
+  public colleagueTableFilterFields: string[] = [];
 
-  // todo: delete when actual data is available
   public visibilityOptions: VisibilityEnum[] = Object.values(VisibilityEnum);
 
   protected readonly RolesEnum = RolesEnum;
+
+  public form = new FormGroup({
+    visibility: new FormControl<VisibilityEnum | undefined>(undefined),
+    project: new FormControl<ProjectDto | undefined>(undefined),
+  });
 
   constructor(private dashboardControllerService: DashboardControllerService, private storageService: StorageService) {
   }
@@ -58,7 +65,16 @@ export class DashboardComponent implements OnInit {
       this.dashboardControllerService.dashboardData(this.user.username).subscribe({
         next: data => {
           this.dashboardData = data;
-          this.filterFields = Object.keys(this.dashboardData?.colleagueStates?.[0] ?? []);
+          this.colleagueTableFilterFields = Object.keys(this.dashboardData?.colleagueStates?.[0] ?? []);
+
+          // set form values in case of existing data
+          this.form.controls.visibility.setValue(this.dashboardData.visibility);
+          if (this.user?.roles?.includes(RolesEnum.Admin)) {
+            this.form.controls.visibility.disable();
+          }
+          if (this.dashboardData?.defaultProject?.id) {
+            this.form.controls.project.setValue(this.dashboardData?.defaultProject);
+          }
         },
         error: err => {
           console.log(err);
@@ -67,6 +83,9 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  /**
+   * Get color of colleague state badges
+   */
   getSeverity(colleague: ColleagueStateDto) {
     if (!colleague.isVisible) {
       return 'primary';
@@ -85,6 +104,9 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  /**
+   * Get display text for colleague state
+   */
   showState(state: StateEnum | undefined) {
     switch (state) {
       case StateEnum.Available:
@@ -101,6 +123,9 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  /**
+   * Get display text for colleague state but also consider visibility
+   */
   showColleagueState(colleague: ColleagueStateDto | undefined) {
     if (!colleague?.isVisible) {
       return 'Hidden';
@@ -117,5 +142,9 @@ export class DashboardComponent implements OnInit {
       default:
         return 'Unknown';
     }
+  }
+
+  onSubmit() {
+
   }
 }

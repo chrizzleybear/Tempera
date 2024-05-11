@@ -1,6 +1,7 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
+import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.Visibility;
@@ -56,7 +57,8 @@ public class DashboardController {
             Visibility.PUBLIC,
             State.AVAILABLE,
             LocalDateTime.now().toString(),
-            null,
+            new ProjectDto(2L, "Projekt 2"),
+            List.of(new ProjectDto(1L, "Projekt 1"), new ProjectDto(2L, "Projekt 2")),
             colleagueStates));
   }
 }

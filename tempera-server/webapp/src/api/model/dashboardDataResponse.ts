@@ -21,7 +21,8 @@ export interface DashboardDataResponse {
     visibility?: DashboardDataResponse.VisibilityEnum;
     state?: DashboardDataResponse.StateEnum;
     stateTimestamp?: string;
-    project?: ProjectDto;
+    defaultProject?: ProjectDto;
+    availableProjects?: Array<ProjectDto>;
     colleagueStates?: Array<ColleagueStateDto>;
 }
 export namespace DashboardDataResponse {

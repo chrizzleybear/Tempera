@@ -16,5 +16,6 @@ public record DashboardDataResponse(
     State state,
     String stateTimestamp,
     // project can be null
-    ProjectDto project,
+    ProjectDto defaultProject,
+    List<ProjectDto> availableProjects,
     List<ColleagueStateDto> colleagueStates) {}
