@@ -2,9 +2,11 @@ package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
 import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
+import at.qe.skeleton.rest.frontend.payload.request.UpdateDashboardDataRequest;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.Visibility;
+import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +21,7 @@ public class DashboardController {
 
   @GetMapping("/dashboardData")
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
-  public ResponseEntity<DashboardDataResponse> dashboardData(@RequestParam String username) {
+  public ResponseEntity<DashboardDataResponse> getDashboardData(@RequestParam String username) {
     var colleague1 =
         new ColleagueStateDto(
             "Max Mustermann", "Raum 1", State.DEEPWORK, true, List.of("Gruppe 1"));
@@ -60,5 +62,12 @@ public class DashboardController {
             new ProjectDto(2L, "Projekt 2"),
             List.of(new ProjectDto(1L, "Projekt 1"), new ProjectDto(2L, "Projekt 2")),
             colleagueStates));
+  }
+
+  @PostMapping("/dashboardData")
+  @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
+  public ResponseEntity<MessageResponse> updateDashboardData(
+      @RequestBody UpdateDashboardDataRequest request) {
+    return ResponseEntity.ok(new MessageResponse("Dashboard data updated successfully!"));
   }
 }
