@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api", produces = "application/json")
 public class DashboardController {
 
-  private DashboardDataMapper dashboardDataMapper;
-  private UserxService userXService;
+  private final DashboardDataMapper dashboardDataMapper;
+  private final UserxService userXService;
 
-  public DashboardController(DashboardDataMapper dashboardDataMapper) {
+  public DashboardController(DashboardDataMapper dashboardDataMapper, UserxService userXService) {
+    this.userXService = userXService;
     this.dashboardDataMapper = dashboardDataMapper;
   }
 

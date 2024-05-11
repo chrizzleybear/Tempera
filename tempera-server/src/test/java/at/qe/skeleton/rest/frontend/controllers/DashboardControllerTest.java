@@ -6,6 +6,7 @@ import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
 import at.qe.skeleton.rest.frontend.mappers.DashboardDataMapper;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
+import at.qe.skeleton.services.UserxService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,10 +25,11 @@ class DashboardControllerTest {
 
   private DashboardController dashboardController;
   @Mock private DashboardDataMapper dashboardDataMapper;
+  @Mock private UserxService userXService;
 
   @BeforeEach
   void setUp() {
-    dashboardController = new DashboardController(dashboardDataMapper);
+    dashboardController = new DashboardController(dashboardDataMapper, userXService);
   }
 
   @AfterEach
@@ -35,8 +37,8 @@ class DashboardControllerTest {
 
   @Test
   void homeData() {
-    Userx user1 = new Userx();
-    user1.setUsername("johndoe");
+    Userx johnny = new Userx();
+    johnny.setUsername("johndoe");
     List<String> noGroups = new ArrayList<>();
     var colleagueStates =
         List.of(
@@ -55,12 +57,13 @@ class DashboardControllerTest {
             null,
             colleagueStates);
 
-    when(dashboardDataMapper.mapUserToHomeDataResponse(user1)).thenReturn(dashboardDataResponse);
+    when(dashboardDataMapper.mapUserToHomeDataResponse(johnny)).thenReturn(dashboardDataResponse);
+    when(userXService.loadUser(johnny.getUsername())).thenReturn(johnny);
 
-    ResponseEntity<DashboardDataResponse> returnValue = dashboardController.dashboardData(user1.getUsername());
+    ResponseEntity<DashboardDataResponse> returnValue = dashboardController.dashboardData(johnny.getUsername());
     DashboardDataResponse response = returnValue.getBody();
 
-    verify(dashboardDataMapper, times(1)).mapUserToHomeDataResponse(user1);
+    verify(dashboardDataMapper, times(1)).mapUserToHomeDataResponse(johnny);
     assertEquals(dashboardDataResponse, response);
   }
 }

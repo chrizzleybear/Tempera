@@ -45,7 +45,10 @@ public class DashboardDataMapper {
 
 
     //List<Userx> colleagues = groups.stream().map(Group::getMembers).flatMap(List::stream).filter(u -> u != user).toList();
-    List<Userx> colleagues = userService.getAllUsers().stream().toList();
+
+    // we dont want user to be displayed as his own colleague
+    List<Userx> colleagues = userService.getAllUsers().stream().filter(col -> !col.equals(user)).toList();
+
 
     var colleagueStates = new ArrayList<ColleagueStateDto>();
 
@@ -54,22 +57,6 @@ public class DashboardDataMapper {
     for (var colleague : colleagues) {
       State state = colleague.getState();
       String username = colleague.getUsername();
-
-      // for each colleague, check if the user is in one of the groups of the colleague
-      List<String> groupOverlap = new ArrayList<>();
-      colleague.getGroups().stream().forEach(
-              colGroup -> {
-                if(userGroups.contains(colGroup)){
-                  groupOverlap.add(colGroup.getName());
-                }
-              }
-      );
-
-      // calculating whether user gets to see colleague state or not
-      Visibility visibility = colleague.getStateVisibility();
-      boolean isVisible = true;
-      if(visibility == Visibility.HIDDEN) isVisible = false;
-      if(groupOverlap.isEmpty() && visibility == Visibility.PRIVATE) isVisible = false;
 
 
       String workplace;
@@ -82,9 +69,22 @@ public class DashboardDataMapper {
       if (temperaStation.isEnabled()){
         workplace = temperaStation.getAccessPoint().getRoom().toString();
 
+        // for each colleague, check if the user is in one of the groups of the colleague
+        List<String> groupOverlap = new ArrayList<>();
+        colleague.getGroups().stream().forEach(
+                colGroup -> {
+                  if(userGroups.contains(colGroup)){
+                    groupOverlap.add(colGroup.getName());
+                  }
+                }
+        );
+        // calculating whether user gets to see colleague state or not
+        Visibility visibility = colleague.getStateVisibility();
+        boolean isVisible = true;
+        if(visibility == Visibility.HIDDEN) isVisible = false;
+        if(groupOverlap.isEmpty() && visibility == Visibility.PRIVATE) isVisible = false;
 
-        new ColleagueStateDto(username, workplace, state, isVisible, groupOverlap);
-
+        colleagueStates.add(new ColleagueStateDto(username, workplace, state, isVisible, groupOverlap));
       }
     }
     return colleagueStates;
@@ -135,8 +135,7 @@ public class DashboardDataMapper {
     LocalDateTime timeRecordStart = externalRecord.getStart();
     String stateTimestamp = timeRecordStart.toString();
     // we can just grap the first one since the external and internal record should not be finished
-    // yet, therefor
-    // there should only exist one corresponding internalRecord.
+    // yet, therefor there should only exist one corresponding internalRecord.
     Project project = externalRecord.getInternalRecords().get(0).getAssignedProject();
     ProjectDto projectDto = new ProjectDto(project.getId(), project.getDescription());
 
