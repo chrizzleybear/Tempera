@@ -52,17 +52,19 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dashboardControllerService.dashboardData().subscribe({
-      next: data => {
-        this.dashboardData = data;
-        this.filterFields = Object.keys(this.dashboardData?.colleagueStates?.[0] ?? []);
-      },
-      error: err => {
-        console.log(err);
-      },
-    });
-
     this.user = this.storageService.getUser();
+
+    if (this.user) {
+      this.dashboardControllerService.dashboardData(this.user.username).subscribe({
+        next: data => {
+          this.dashboardData = data;
+          this.filterFields = Object.keys(this.dashboardData?.colleagueStates?.[0] ?? []);
+        },
+        error: err => {
+          console.log(err);
+        },
+      });
+    }
   }
 
   getSeverity(colleague: ColleagueStateDto) {
