@@ -19,10 +19,17 @@ public class HomeController {
   @GetMapping("/homeData")
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<HomeDataResponse> homeData() {
-    var colleague1 = new ColleagueStateDto("Max Mustermann", "Raum 1", State.DEEPWORK);
-    var colleague2 = new ColleagueStateDto("Jane Doe", "Raum 3", State.AVAILABLE);
-    var colleague3 = new ColleagueStateDto("Otto Normal", "Raum 2", State.MEETING);
-    var colleague4 = new ColleagueStateDto("Hans Wurst", "Raum 4", State.OUT_OF_OFFICE);
+    var colleague1 =
+        new ColleagueStateDto(
+            "Max Mustermann", "Raum 1", State.DEEPWORK, true, List.of("Gruppe 1"));
+    var colleague2 =
+        new ColleagueStateDto("Jane Doe", "Raum 3", State.AVAILABLE, true, List.of("Gruppe 2"));
+    var colleague3 =
+        new ColleagueStateDto(
+            "Otto Normal", "Raum 2", State.MEETING, true, List.of("Gruppe 1", "Gruppe 2"));
+    var colleague4 =
+        new ColleagueStateDto(
+            "Hans Wurst", "Raum 4", State.OUT_OF_OFFICE, true, List.of("Gruppe 3"));
 
     var colleagueStates =
         List.of(
