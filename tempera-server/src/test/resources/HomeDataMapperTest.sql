@@ -139,7 +139,6 @@ INSERT INTO external_record (duration, start, time_end, user_username, state) VA
 INSERT INTO project (id, name, description) VALUES
 (-1, 'Ausbeutung', 'This project beuts you aus');
 
---todo: find out why this does not need a reference to external_record...
 INSERT INTO internal_record (groupx_id, id, project_id, start, time_end, ext_rec_start, user_name) VALUES
 (null, -11, -1, '2024-05-10 09:30:00', null, '2024-05-10 09:30:00', 'johndoe');
 

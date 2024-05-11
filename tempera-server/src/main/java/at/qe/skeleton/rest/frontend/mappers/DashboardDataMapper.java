@@ -3,64 +3,88 @@ package at.qe.skeleton.rest.frontend.mappers;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.State;
-import at.qe.skeleton.repositories.ExternalRecordRepository;
+import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
 import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
-import at.qe.skeleton.rest.frontend.dtos.UserStateDto;
-import at.qe.skeleton.rest.frontend.payload.response.HomeDataResponse;
+import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
 import at.qe.skeleton.services.MeasurementService;
 import at.qe.skeleton.services.TemperaStationService;
 import at.qe.skeleton.services.TimeRecordService;
 import at.qe.skeleton.services.UserxService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
-public class HomeDataMapper {
-  private UserxService userService;
-  private TemperaStationService temperaService;
-  private MeasurementService measurementService;
-  private TimeRecordService timeRecordService;
+public class DashboardDataMapper {
 
-  public HomeDataMapper(
+  private final UserxService userService;
+  private final TemperaStationService temperaService;
+  private final MeasurementService measurementService;
+  private final TimeRecordService timeRecordService;
+
+  public DashboardDataMapper(
       UserxService userService,
       TemperaStationService temperaService,
       MeasurementService measurementService,
-      TimeRecordService timeRecordService) {
-    this.userService = userService;
+      TimeRecordService timeRecordService, UserxService userxService) {
     this.temperaService = temperaService;
     this.measurementService = measurementService;
     this.timeRecordService = timeRecordService;
+    this.userService = userxService;
   }
 
   private List<ColleagueStateDto> mapUserToColleagueStateDto(Userx user) {
-    List<Group> groups = user.getGroups();
-    // todo: decide wether to show the whole crew here or just colleagues from same groups as user
 
-    // we dont want the user itself to appear on that list so we filter him out
-    List<Userx> colleagues = groups.stream().map(Group::getMembers).flatMap(List::stream).filter(u -> u != user).toList();
-    // List<Userx> colleagues = userService.getAllUsers().stream().toList();
+    // using hashmap for faster compare algorithm
+    Collection<Group> groups = user.getGroups();
+    Set<Group> userGroups = new HashSet<>(groups);
 
-    //List<UserStateDto> userStateDtos = userService.getUserWithStates(colleagues);
+
+    //List<Userx> colleagues = groups.stream().map(Group::getMembers).flatMap(List::stream).filter(u -> u != user).toList();
+    List<Userx> colleagues = userService.getAllUsers().stream().toList();
+
     var colleagueStates = new ArrayList<ColleagueStateDto>();
 
+
+    // for each colleague, check if the user is in one of the groups of the colleague
     for (var colleague : colleagues) {
       State state = colleague.getState();
       String username = colleague.getUsername();
+
+      // for each colleague, check if the user is in one of the groups of the colleague
+      List<String> groupOverlap = new ArrayList<>();
+      colleague.getGroups().stream().forEach(
+              colGroup -> {
+                if(userGroups.contains(colGroup)){
+                  groupOverlap.add(colGroup.getName());
+                }
+              }
+      );
+
+      // calculating whether user gets to see colleague state or not
+      Visibility visibility = colleague.getStateVisibility();
+      boolean isVisible = true;
+      if(visibility == Visibility.HIDDEN) isVisible = false;
+      if(groupOverlap.isEmpty() && visibility == Visibility.PRIVATE) isVisible = false;
+
+
       String workplace;
       if (temperaService.findByUsername(username).isEmpty()) {
         throw new RuntimeException("User has no temperaStation assigned");
       }
       TemperaStation temperaStation =
           temperaService.findByUsername(username).get();
+
       if (temperaStation.isEnabled()){
         workplace = temperaStation.getAccessPoint().getRoom().toString();
-        colleagueStates.add(new ColleagueStateDto(username, workplace, state));
+
+
+        new ColleagueStateDto(username, workplace, state, isVisible, groupOverlap);
+
       }
     }
     return colleagueStates;
@@ -74,7 +98,7 @@ public class HomeDataMapper {
    * @return
    */
   @Transactional
-  public HomeDataResponse mapUserToHomeDataResponse(Userx user) {
+  public DashboardDataResponse mapUserToHomeDataResponse(Userx user) {
     var colleagueStateDtos = mapUserToColleagueStateDto(user);
     // next up: current measurements
     var sensors = user.getTemperaStation().getSensors();
@@ -116,8 +140,8 @@ public class HomeDataMapper {
     Project project = externalRecord.getInternalRecords().get(0).getAssignedProject();
     ProjectDto projectDto = new ProjectDto(project.getId(), project.getDescription());
 
-    HomeDataResponse homeDataResponse =
-        new HomeDataResponse(
+    return
+        new DashboardDataResponse(
             temperature,
             humidity,
             irradiance,
@@ -127,6 +151,5 @@ public class HomeDataMapper {
             stateTimestamp,
             projectDto,
             colleagueStateDtos);
-    return homeDataResponse;
   }
 }

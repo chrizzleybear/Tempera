@@ -67,6 +67,10 @@ public class Group {
     this.description = description;
   }
 
+  public Long getId() {
+    return id;
+  }
+
   public Userx getGroupLead() {
     return groupLead;
   }
