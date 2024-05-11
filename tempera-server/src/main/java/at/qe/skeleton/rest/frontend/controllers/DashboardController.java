@@ -7,6 +7,8 @@ import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,8 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api", produces = "application/json")
 public class DashboardController {
+
+  private static final Logger logger = LoggerFactory.getLogger(DashboardController.class);
 
   @GetMapping("/dashboardData")
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
@@ -52,10 +56,10 @@ public class DashboardController {
 
     return ResponseEntity.ok(
         new DashboardDataResponse(
-            25,
-            50,
-            100,
-            500,
+            25.0,
+            50.0,
+            100.0,
+            500.0,
             Visibility.PUBLIC,
             State.AVAILABLE,
             LocalDateTime.now().toString(),

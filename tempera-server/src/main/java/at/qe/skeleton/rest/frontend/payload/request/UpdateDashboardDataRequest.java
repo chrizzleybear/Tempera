@@ -2,7 +2,9 @@ package at.qe.skeleton.rest.frontend.payload.request;
 
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-public record UpdateDashboardDataRequest(
-    @NotBlank Visibility visibility, @NotBlank ProjectDto project) {}
+/**
+ * @param project may be null
+ */
+public record UpdateDashboardDataRequest(@NotNull Visibility visibility, ProjectDto project) {}

@@ -17,6 +17,7 @@ import { ButtonModule } from 'primeng/button';
 import RolesEnum = UserxDto.RolesEnum;
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MessagesModule } from 'primeng/messages';
 
 @Component({
   selector: 'app-dashboard',
@@ -35,6 +36,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
     ButtonModule,
     WrapFnPipe,
     ReactiveFormsModule,
+    MessagesModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -48,11 +50,13 @@ export class DashboardComponent implements OnInit {
 
   public visibilityOptions: VisibilityEnum[] = Object.values(VisibilityEnum);
 
+  public messages: any;
+
   protected readonly RolesEnum = RolesEnum;
 
   public form = new FormGroup({
-    visibility: new FormControl<VisibilityEnum | undefined>(undefined),
-    project: new FormControl<ProjectDto | undefined>(undefined),
+    visibility: new FormControl<VisibilityEnum>(VisibilityEnum.Public, { nonNullable: true }),
+    project: new FormControl<ProjectDto | undefined>(undefined, { nonNullable: true }),
   });
 
   constructor(private dashboardControllerService: DashboardControllerService, private storageService: StorageService) {
@@ -62,7 +66,7 @@ export class DashboardComponent implements OnInit {
     this.user = this.storageService.getUser();
 
     if (this.user) {
-      this.dashboardControllerService.dashboardData(this.user.username).subscribe({
+      this.dashboardControllerService.getDashboardData(this.user.username).subscribe({
         next: data => {
           this.dashboardData = data;
           this.colleagueTableFilterFields = Object.keys(this.dashboardData?.colleagueStates?.[0] ?? []);
@@ -145,6 +149,17 @@ export class DashboardComponent implements OnInit {
   }
 
   onSubmit() {
-
+    this.dashboardControllerService.updateDashboardData({
+      visibility: this.form.controls.visibility.value,
+      project: this.form.controls.project.value,
+    }).subscribe({
+      next: data => {
+        this.messages = [{ severity: 'success', summary: 'Success', detail: 'Dashboard data updated successfully' }];
+      },
+      error: err => {
+        console.log(err);
+        this.messages = [{ severity: 'error', summary: 'Error', detail: 'Failed to update dashboard data' }];
+      },
+    });
   }
 }
