@@ -49,7 +49,7 @@ unsigned long lastTimeUpdate = millis();
 unsigned long lastRoomClimateUpdate = millis();
 LED led;
 timedSession session;
-elapsedTimeCharacteristicUnion currentElapsedTime = {0, 0, 0, 0, (uint8_t) 1, 0};
+elapsedTimeCharacteristicUnion currentElapsedTime = {0, 0, 0, 0, (uint8_t) 1, (uint8_t) 7};
 Adafruit_BME680 bme; // get an I2C-Instance
 
 
