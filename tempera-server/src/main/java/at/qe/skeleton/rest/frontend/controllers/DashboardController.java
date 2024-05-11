@@ -1,7 +1,7 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
-import at.qe.skeleton.rest.frontend.payload.response.HomeDataResponse;
+import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.Visibility;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +14,11 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 @RestController
 @RequestMapping(value = "/api", produces = "application/json")
-public class HomeController {
+public class DashboardController {
 
-  @GetMapping("/homeData")
+  @GetMapping("/dashboardData")
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
-  public ResponseEntity<HomeDataResponse> homeData() {
+  public ResponseEntity<DashboardDataResponse> dashboardData() {
     var colleague1 =
         new ColleagueStateDto(
             "Max Mustermann", "Raum 1", State.DEEPWORK, true, List.of("Gruppe 1"));
@@ -44,7 +44,7 @@ public class HomeController {
             colleague4);
 
     return ResponseEntity.ok(
-        new HomeDataResponse(
+        new DashboardDataResponse(
             25,
             50,
             100,

@@ -15,6 +15,8 @@ export interface ColleagueStateDto {
     name?: string;
     workplace?: string;
     state?: ColleagueStateDto.StateEnum;
+    isVisible?: boolean;
+    groupOverlap?: Array<string>;
 }
 export namespace ColleagueStateDto {
     export type StateEnum = 'AVAILABLE' | 'MEETING' | 'OUT_OF_OFFICE' | 'DEEPWORK';

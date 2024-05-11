@@ -9,9 +9,9 @@ import { AirQualityPipe } from '../_pipes/air-quality.pipe';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
-import { ColleagueStateDto, HomeControllerService, HomeDataResponse, UserxDto } from '../../api';
+import { ColleagueStateDto, DashboardControllerService, DashboardDataResponse, UserxDto } from '../../api';
 import StateEnum = ColleagueStateDto.StateEnum;
-import VisibilityEnum = HomeDataResponse.VisibilityEnum;
+import VisibilityEnum = DashboardDataResponse.VisibilityEnum;
 import { StorageService } from '../_services/storage.service';
 import { ButtonModule } from 'primeng/button';
 import RolesEnum = UserxDto.RolesEnum;
@@ -32,11 +32,11 @@ import RolesEnum = UserxDto.RolesEnum;
     InputTextModule,
     ButtonModule,
   ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css',
+  templateUrl: './dashboard.component.html',
+  styleUrl: './dashboard.component.css',
 })
-export class HomeComponent implements OnInit {
-  public homeData?: HomeDataResponse;
+export class DashboardComponent implements OnInit {
+  public homeData?: DashboardDataResponse;
   public user?: User;
 
   public filterFields: string[] = [];
@@ -46,11 +46,11 @@ export class HomeComponent implements OnInit {
 
   protected readonly RolesEnum = RolesEnum;
 
-  constructor(private homeService: HomeControllerService, private storageService: StorageService) {
+  constructor(private dashboardControllerService: DashboardControllerService, private storageService: StorageService) {
   }
 
   ngOnInit(): void {
-    this.homeService.homeData().subscribe({
+    this.dashboardControllerService.dashboardData().subscribe({
       next: data => {
         this.homeData = data;
         this.filterFields = Object.keys(this.homeData?.colleagueStates?.[0] ?? []);

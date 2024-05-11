@@ -1,6 +1,6 @@
 export * from './accessPointDto';
 export * from './colleagueStateDto';
-export * from './homeDataResponse';
+export * from './dashboardDataResponse';
 export * from './loginRequest';
 export * from './measurementDto';
 export * from './projectDto';

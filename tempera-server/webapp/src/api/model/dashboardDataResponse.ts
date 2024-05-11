@@ -13,18 +13,18 @@ import { ProjectDto } from './projectDto';
 import { ColleagueStateDto } from './colleagueStateDto';
 
 
-export interface HomeDataResponse { 
+export interface DashboardDataResponse { 
     temperature?: number;
     humidity?: number;
     irradiance?: number;
     nmvoc?: number;
-    visibility?: HomeDataResponse.VisibilityEnum;
-    state?: HomeDataResponse.StateEnum;
+    visibility?: DashboardDataResponse.VisibilityEnum;
+    state?: DashboardDataResponse.StateEnum;
     stateTimestamp?: string;
     project?: ProjectDto;
     colleagueStates?: Array<ColleagueStateDto>;
 }
-export namespace HomeDataResponse {
+export namespace DashboardDataResponse {
     export type VisibilityEnum = 'PUBLIC' | 'PRIVATE' | 'HIDDEN';
     export const VisibilityEnum = {
         Public: 'PUBLIC' as VisibilityEnum,
