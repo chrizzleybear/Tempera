@@ -4,15 +4,15 @@ INSERT INTO groupx (id, group_lead_username, description, name) VALUES (2,'admin
 INSERT INTO groupx (id, group_lead_username, description, name) VALUES (3,'admin', 'this is also just for testing', 'outsiderGroup');
 -- add some more members to fill the groups
 
--- these are in the same groups as the user
+-- these are in the same groups as the user (5 people)
 INSERT INTO userx
 (enabled, state, state_visibility, create_date, update_date, create_user_username, update_user_username, username, email, first_name, last_name, password)
 VALUES
     (TRUE, 'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin', 'johndoe', 'johndoe@example.com', 'John', 'Doe', 'hashed_password123'),
     (FALSE, 'OUT_OF_OFFICE', 'PRIVATE', '2024-05-09T09:00:00', '2024-05-09T10:15:00', 'admin', 'admin', 'janedoe', 'janedoe@example.com', 'Jane', 'Doe', 'hashed_password456'),
-    (TRUE, 'MEETING', 'PUBLIC', '2024-05-10T10:00:00', '2024-05-10T11:45:00', 'moderator', 'admin', 'bobjones', 'bobjones@example.com', 'Bob', 'Jones', 'hashed_password789'),
+    (TRUE, 'MEETING', 'PUBLIC', '2024-05-10T10:00:00', '2024-05-10T11:45:00', 'bobjones', 'admin', 'bobjones', 'bobjones@example.com', 'Bob', 'Jones', 'hashed_password789'),
     (TRUE, 'OUT_OF_OFFICE', 'HIDDEN', '2024-05-08T15:30:00', '2024-05-08T17:00:00', 'admin', 'admin', 'alicebrown', 'alicebrown@example.com', 'Alice', 'Brown', 'hashed_password321'),
-    (FALSE, 'DEEPWORK', 'PRIVATE', '2024-05-07T14:00:00', '2024-05-07T16:30:00', 'moderator', 'admin', 'chriswilliams', 'chriswilliams@example.com', 'Chris', 'Williams', 'hashed_password654');
+    (FALSE, 'DEEPWORK', 'PRIVATE', '2024-05-07T14:00:00', '2024-05-07T16:30:00', 'chriswilliams', 'admin', 'chriswilliams', 'chriswilliams@example.com', 'Chris', 'Williams', 'hashed_password654');
 
 -- these are not inside any same group as the user in question
 INSERT INTO userx
@@ -22,11 +22,14 @@ VALUES
     (FALSE, 'OUT_OF_OFFICE', 'PRIVATE', '2024-05-11T13:00:00', '2024-05-11T14:15:00', 'admin', 'admin', 'tonystark', 'tonystark@example.com', 'Tony', 'Stark', 'hashed_password852'),
     (TRUE, 'DEEPWORK', 'HIDDEN', '2024-05-10T15:30:00', '2024-05-10T17:00:00', 'admin', 'admin', 'brucewayne', 'brucewayne@example.com', 'Bruce', 'Wayne', 'hashed_password753');
 
+-- this one is in the same group but his temperastation is not enabled
+INSERT INTO userx (enabled, state, state_visibility, create_date, update_date, create_user_username, update_user_username, username, email, first_name, last_name, password)
+VALUES (TRUE, 'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin', 'clarkkent', 'clarkkent@webmail.com', 'Clark', 'Kent', 'hashed_password123');
 
--- add the members to the groups
+-- add the members to the groups (all in all 5 people in the same groups as johndoe but only 4 have enabled temperastations)
 
 INSERT INTO groupx_members (groups_id, members_username) VALUES (1, 'johndoe'), (1, 'janedoe'), (1, 'bobjones');
-INSERT INTO groupx_members (groups_id, members_username) VALUES (2, 'alicebrown'), (2, 'chriswilliams'), (2, 'johndoe');
+INSERT INTO groupx_members (groups_id, members_username) VALUES (2, 'alicebrown'), (2, 'chriswilliams'), (2, 'johndoe'), (2, 'clarkkent');
 INSERT INTO groupx_members (groups_id, members_username) VALUES (3, 'peterparker'), (3, 'tonystark');
 
 INSERT INTO room (room_id) VALUES ('room_10');
@@ -47,8 +50,10 @@ VALUES
     (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'chriswilliams', 'TEMP127'),
     (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'peterparker', 'TEMP128'),
     (TRUE, '333e4567-e89b-12d3-a456-426614174001', 'tonystark', 'TEMP129'),
-    (TRUE, '333e4567-e89b-12d3-a456-426614174001', 'brucewayne', 'TEMP130');
+    (TRUE, '333e4567-e89b-12d3-a456-426614174001', 'brucewayne', 'TEMP130'),
+    (FALSE, '333e4567-e89b-12d3-a456-426614174001', 'clarkkent', 'TEMP131');
 
+-- realized this is not necessary for all the colleagues for the tests but we can use it later
 INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES ('TEMPERATURE', -10, 'TEMP123', 'CELSIUS'),
 ('TEMPERATURE', -10, 'TEMP124', 'CELSIUS'),
 ('TEMPERATURE', -10, 'TEMP125', 'CELSIUS'),
@@ -65,7 +70,6 @@ INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES ('IRRADIANC
 ('IRRADIANCE', -11, 'TEMP128', 'LUX'),
 ('IRRADIANCE', -11, 'TEMP129', 'LUX'),
 ('IRRADIANCE', -11, 'TEMP130', 'LUX');
-
 INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES ('HUMIDITY', -12, 'TEMP123', 'PERCENT'),
 ('HUMIDITY', -12, 'TEMP124', 'PERCENT'),
 ('HUMIDITY', -12, 'TEMP125', 'PERCENT'),
@@ -83,42 +87,60 @@ INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES ('NMVOC', -
 ('NMVOC', -13, 'TEMP129', 'OHM'),
 ('NMVOC', -13, 'TEMP130', 'OHM');
 
--- fill in measurements for all the temperature sensors
-INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES (20.0, -10, '2016-01-01 00:00:00', 'TEMP123'),
-(20.0, -10, '2016-01-01 00:00:00', 'TEMP124'),
-(25.9, -10, '2016-01-01 00:00:00', 'TEMP125'),
-(22.0, -10, '2016-01-01 00:00:00', 'TEMP126'),
-(24.0, -10, '2016-01-01 00:00:00', 'TEMP127'),
-(30.0, -10, '2016-01-01 00:00:00', 'TEMP128'),
-(17.0, -10, '2016-01-01 00:00:00', 'TEMP129'),
-(24.1, -10, '2016-01-01 00:00:00', 'TEMP130');
+-- fill in measurements for all the temperature sensors (also not necessary for HomeDataMapperTest but can be used later)
+-- user of interest is johndoe (TEMP123)
+INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES
+(20.0, -10, '2024-05-10T08:30:00', 'TEMP123'),
+(20.0, -10, '2024-05-10T09:45:00', 'TEMP124'),
+(25.9, -10, '2024-05-11T10:15:00', 'TEMP125'),
+(22.0, -10, '2024-05-11T11:30:00', 'TEMP126'),
+(24.0, -10, '2024-05-12T12:00:00', 'TEMP127'),
+(30.0, -10, '2024-05-12T13:15:00', 'TEMP128'),
+(17.0, -10, '2024-05-10T14:30:00', 'TEMP129'),
+(24.1, -10, '2024-05-11T15:45:00', 'TEMP130');
 
 -- fill in measurements for all the irradiance sensors
-INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES (1000.0, -11, '2016-01-01 00:00:00', 'TEMP123'),
-(1000.0, -11, '2016-01-01 00:00:00', 'TEMP124'),
-(1100.0, -11, '2016-01-01 00:00:00', 'TEMP125'),
-(1200.0, -11, '2016-01-01 00:00:00', 'TEMP126'),
-(1240.0, -11, '2016-01:01 00:00:00', 'TEMP127'),
-(1900.0, -11, '2016-01-01 00:00:00', 'TEMP128'),
-(9000.0, -11, '2016-01-01 00:00:00', 'TEMP129'),
-(8900.0, -11, '2016-01-01 00:00:00', 'TEMP130');
+INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES
+(1000.0, -11, '2024-05-10T08:30:00', 'TEMP123'),
+(1000.0, -11, '2024-05-10T09:45:00', 'TEMP124'),
+(1100.0, -11, '2024-05-11T10:15:00', 'TEMP125'),
+(1200.0, -11, '2024-05-11T11:30:00', 'TEMP126'),
+(1240.0, -11, '2024-05-12T12:00:00', 'TEMP127'),
+(1900.0, -11, '2024-05-12T13:15:00', 'TEMP128'),
+(9000.0, -11, '2024-05-10T14:30:00', 'TEMP129'),
+(8900.0, -11, '2024-05-11T15:45:00', 'TEMP130');
 
 -- fill in measurements for all the humidity sensors
-INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES (50.0, -12, '2016-01-01 00:00:00', 'TEMP123'),
-(50.0, -12, '2016-01:01 00:00:00', 'TEMP124'),
-(55.0, -12, '2016-01-01 00:00:00', 'TEMP125'),
-(60.0, -12, '2016-01-01 00:00:00', 'TEMP126'),
-(65.0, -12, '2016-01-01 00:00:00', 'TEMP127'),
-(70.0, -12, '2016-01-01 00:00:00', 'TEMP128'),
-(75.0, -12, '2016-01-01 00:00:00', 'TEMP129'),
-(80.0, -12, '2016-01-01 00:00:00', 'TEMP130');
+INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES
+(50.0, -12, '2024-05-10T08:30:00', 'TEMP123'),
+(50.0, -12, '2024-05-10T09:45:00', 'TEMP124'),
+(55.0, -12, '2024-05-11T10:15:00', 'TEMP125'),
+(60.0, -12, '2024-05-11T11:30:00', 'TEMP126'),
+(65.0, -12, '2024-05-12T12:00:00', 'TEMP127'),
+(70.0, -12, '2024-05-12T13:15:00', 'TEMP128'),
+(75.0, -12, '2024-05-10T14:30:00', 'TEMP129'),
+(80.0, -12, '2024-05-11T15:45:00', 'TEMP130');
 
 -- fill in measurements for all the nmvoc sensors
-INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES (100.0, -13, '2016-01-01 00:00:00', 'TEMP123'),
-(100.0, -13, '2016-01:01 00:00:00', 'TEMP124'),
-(110.0, -13, '2016-01-01 00:00:00', 'TEMP125'),
-(120.0, -13, '2016-01:01 00:00:00', 'TEMP126'),
-(130.0, -13, '2016-01-01 00:00:00', 'TEMP127'),
-(140.0, -13, '2016-01:01 00:00:00', 'TEMP128'),
-(150.0, -13, '2016-01:01 00:00:00', 'TEMP129'),
-(160.0, -13, '2016-01:01 00:00:00', 'TEMP130');
+INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES
+(100.0, -13, '2024-05-10T08:30:00', 'TEMP123'),
+(100.0, -13, '2024-05-10T09:45:00', 'TEMP124'),
+(110.0, -13, '2024-05-11T10:15:00', 'TEMP125'),
+(120.0, -13, '2024-05-11T11:30:00', 'TEMP126'),
+(124.0, -13, '2024-05-12T12:00:00', 'TEMP127'),
+(190.0, -13, '2024-05-12T13:15:00', 'TEMP128'),
+(900.0, -13, '2024-05-10T14:30:00', 'TEMP129'),
+(890.0, -13, '2024-05-11T15:45:00', 'TEMP130');
+
+-- Timerecord (needed for timestamp)
+INSERT INTO external_record (duration, start, time_end, user_username, state) VALUES
+(3400, '2024-05-10 09:30:00', null, 'johndoe', 'DEEPWORK');
+
+INSERT INTO project (id, name, description) VALUES
+(-1, 'Ausbeutung', 'This project beuts you aus');
+
+--todo: find out why this does not need a reference to external_record...
+INSERT INTO internal_record (groupx_id, id, project_id, start, time_end, ext_rec_start, user_name) VALUES
+(null, -11, -1, '2024-05-10 09:30:00', null, '2024-05-10 09:30:00', 'johndoe');
+
+-- possibly add older data

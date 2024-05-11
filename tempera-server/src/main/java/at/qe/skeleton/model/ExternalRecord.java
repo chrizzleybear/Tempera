@@ -34,7 +34,7 @@ public class ExternalRecord {
 
   private long duration;
 
-  @OneToMany
+  @OneToMany(mappedBy = "externalRecord", cascade = CascadeType.PERSIST, orphanRemoval = true)
   @Fetch(FetchMode.JOIN)
   private List<InternalRecord> internalRecords;
 

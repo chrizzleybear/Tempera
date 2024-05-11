@@ -55,7 +55,9 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   private String lastName;
   private String email;
   boolean enabled;
+  @Enumerated(EnumType.STRING)
   private State state;
+  @Enumerated(EnumType.STRING)
   private Visibility stateVisibility;
 
   @ElementCollection(targetClass = UserxRole.class, fetch = FetchType.EAGER)

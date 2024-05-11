@@ -41,14 +41,17 @@ public class HomeDataMapper {
   private List<ColleagueStateDto> mapUserToColleagueStateDto(Userx user) {
     List<Group> groups = user.getGroups();
     // todo: decide wether to show the whole crew here or just colleagues from same groups as user
-    List<Userx> colleagues = groups.stream().map(Group::getMembers).flatMap(List::stream).toList();
+
+    // we dont want the user itself to appear on that list so we filter him out
+    List<Userx> colleagues = groups.stream().map(Group::getMembers).flatMap(List::stream).filter(u -> u != user).toList();
     // List<Userx> colleagues = userService.getAllUsers().stream().toList();
-    List<UserStateDto> userStateDtos = userService.getUserWithStates(colleagues);
+
+    //List<UserStateDto> userStateDtos = userService.getUserWithStates(colleagues);
     var colleagueStates = new ArrayList<ColleagueStateDto>();
 
-    for (var colleague : userStateDtos) {
-      State state = colleague.state();
-      String username = colleague.username();
+    for (var colleague : colleagues) {
+      State state = colleague.getState();
+      String username = colleague.getUsername();
       String workplace;
       if (temperaService.findByUsername(username).isEmpty()) {
         throw new RuntimeException("User has no temperaStation assigned");

@@ -41,6 +41,13 @@ public class InternalRecord {
   @JoinColumn(name = "groupx_id")
   private Group assignedGroup;
 
+@ManyToOne
+@JoinColumns({
+    @JoinColumn(name = "userName", referencedColumnName = "user_username"),
+    @JoinColumn(name = "ext_rec_start", referencedColumnName = "start")
+})
+private ExternalRecord externalRecord;
+
   public LocalDateTime getStart() {
     return start;
   }
