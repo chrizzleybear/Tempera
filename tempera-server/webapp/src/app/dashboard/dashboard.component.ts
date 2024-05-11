@@ -17,7 +17,7 @@ import { ButtonModule } from 'primeng/button';
 import RolesEnum = UserxDto.RolesEnum;
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-dashboard',
   standalone: true,
   imports: [
     NgIf,
@@ -36,7 +36,7 @@ import RolesEnum = UserxDto.RolesEnum;
   styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent implements OnInit {
-  public homeData?: DashboardDataResponse;
+  public dashboardData?: DashboardDataResponse;
   public user?: User;
 
   public filterFields: string[] = [];
@@ -52,8 +52,8 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.dashboardControllerService.dashboardData().subscribe({
       next: data => {
-        this.homeData = data;
-        this.filterFields = Object.keys(this.homeData?.colleagueStates?.[0] ?? []);
+        this.dashboardData = data;
+        this.filterFields = Object.keys(this.dashboardData?.colleagueStates?.[0] ?? []);
       },
       error: err => {
         console.log(err);
