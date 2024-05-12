@@ -7,10 +7,7 @@ import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
 import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
-import at.qe.skeleton.services.MeasurementService;
-import at.qe.skeleton.services.TemperaStationService;
-import at.qe.skeleton.services.TimeRecordService;
-import at.qe.skeleton.services.UserxService;
+import at.qe.skeleton.services.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,16 +22,19 @@ public class DashboardDataMapper {
   private final TemperaStationService temperaService;
   private final MeasurementService measurementService;
   private final TimeRecordService timeRecordService;
+  private final ProjectService projectService;
 
   public DashboardDataMapper(
       UserxService userService,
       TemperaStationService temperaService,
       MeasurementService measurementService,
-      TimeRecordService timeRecordService, UserxService userxService) {
+      TimeRecordService timeRecordService, UserxService userxService,
+      ProjectService projectService) {
     this.temperaService = temperaService;
     this.measurementService = measurementService;
     this.timeRecordService = timeRecordService;
     this.userService = userxService;
+    this.projectService = projectService;
   }
 
   private List<ColleagueStateDto> mapUserToColleagueStateDto(Userx user) {
@@ -43,12 +43,8 @@ public class DashboardDataMapper {
     Collection<Group> groups = user.getGroups();
     Set<Group> userGroups = new HashSet<>(groups);
 
-
-    //List<Userx> colleagues = groups.stream().map(Group::getMembers).flatMap(List::stream).filter(u -> u != user).toList();
-
     // we dont want user to be displayed as his own colleague
     List<Userx> colleagues = userService.getAllUsers().stream().filter(col -> !col.equals(user)).toList();
-
 
     var colleagueStates = new ArrayList<ColleagueStateDto>();
 
@@ -134,10 +130,14 @@ public class DashboardDataMapper {
     ExternalRecord externalRecord = timeRecordService.findLatestExternalRecordByUser(user).get();
     LocalDateTime timeRecordStart = externalRecord.getStart();
     String stateTimestamp = timeRecordStart.toString();
-    // we can just grap the first one since the external and internal record should not be finished
-    // yet, therefor there should only exist one corresponding internalRecord.
-    Project project = externalRecord.getInternalRecords().get(0).getAssignedProject();
-    ProjectDto projectDto = new ProjectDto(project.getId(), project.getDescription());
+
+    Project defaultProject = user.getDefaultProject();
+    ProjectDto defaultProjectDto = new ProjectDto(defaultProject.getId(), defaultProject.getDescription());
+
+    List<ProjectDto> projects =
+        projectService.getProjectsByContributor(user.getUsername()).stream()
+            .map(p -> new ProjectDto(p.getId(), p.getName()))
+            .toList();
 
     return
         new DashboardDataResponse(
@@ -148,7 +148,8 @@ public class DashboardDataMapper {
             user.getStateVisibility(),
             user.getState(),
             stateTimestamp,
-            projectDto,
+            defaultProjectDto,
+            projects,
             colleagueStateDtos);
   }
 }

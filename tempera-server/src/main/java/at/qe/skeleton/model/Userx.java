@@ -59,6 +59,8 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   private State state;
   @Enumerated(EnumType.STRING)
   private Visibility stateVisibility;
+  @OneToOne
+  private Project defaultProject;
 
   @ElementCollection(targetClass = UserxRole.class, fetch = FetchType.EAGER)
   @CollectionTable(name = "Userx_UserxRole")
@@ -148,6 +150,14 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
 
   public void setRoles(Set<UserxRole> roles) {
     this.roles = roles;
+  }
+
+  public Project getDefaultProject() {
+    return defaultProject;
+  }
+
+  public void setDefaultProject(Project defaultProject) {
+    this.defaultProject = defaultProject;
   }
 
   public Userx getCreateUser() {
