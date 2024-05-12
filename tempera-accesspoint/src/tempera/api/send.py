@@ -2,6 +2,7 @@ import logging
 from asyncio import TaskGroup
 from typing import Dict, Any, Sequence, Tuple, Literal
 
+import requests
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -36,13 +37,13 @@ def _get_from_database(
                 result = session.scalars(
                     select(TimeRecord)
                     .where(TimeRecord.tempera_station_id == shared.current_station_id)
-                    .order_by(TimeRecord.start.desc())
+                    .order_by(TimeRecord.start.asc())
                 ).all()
             case "Measurement":
                 result = session.scalars(
                     select(Measurement)
                     .where(Measurement.tempera_station_id == shared.current_station_id)
-                    .order_by(Measurement.timestamp.desc())
+                    .order_by(Measurement.timestamp.asc())
                 ).all()
         if not result:
             logger.warning(
@@ -103,17 +104,23 @@ async def send_data(kind: DataType):
 
     logger.info(f"Sending {len(payloads)} {kind}(s).")
     async with TaskGroup() as tg:
-        _ = [
-            tg.create_task(
-                make_request(
-                    "post",
-                    f"{shared.config['webserver_address']}/rasp/api/{endpoint}",
-                    auth=shared.header,
-                    json=payload,
+        for payload in payloads:
+            try:
+                tg.create_task(
+                    make_request(
+                        "post",
+                        f"{shared.config['webserver_address']}/rasp/api/{endpoint}",
+                        auth=shared.header,
+                        json=payload,
+                    )
                 )
-            )
-            for payload in payloads
-        ]
+            except requests.exceptions.ConnectionError:
+                logger.error(
+                    f"Failed to send data to the {endpoint} API endpoint. "
+                    "Couldn't establish a connection to the web server "
+                    f"at {shared.config['webserver_address']}."
+                )
+                raise ConnectionError
 
     _safe_delete_data(data, kind=kind)
 
@@ -126,7 +133,10 @@ def _safe_delete_data(
     # Note: it doesn't matter whether auto update is True or False for this measurement.
     if kind == "TimeRecord":
         # TODO: double check that the most recent time record is the last one in the list
+        if len(data) > 0:
+            logger.info(f"Keeping {data[-1].start, data[-1].auto_update}.")
         data = data[:-1]
+        logger.info(f"Deleting{[(item.start, item.auto_update) for item in data]}.")
 
     with Session(shared.db_engine) as session:
         [session.delete(item) for item in data]
