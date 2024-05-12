@@ -77,11 +77,11 @@ async def elapsed_time_handler(
         if auto_update:
             if current_record:
                 # Update current time record
-                current_record.duration += elapsed_time
-                current_record.auto_update = True
                 logger.info(
                     f"Updating record: adding {elapsed_time} ms to the duration of {current_record}"
                 )
+                current_record.duration += elapsed_time
+                current_record.auto_update = True
             elif not current_record:
                 # Time record with auto update == True but without corresponding open record in the database.
                 # Note: only the very last record saved can even come in to question for an update, all others
@@ -89,11 +89,11 @@ async def elapsed_time_handler(
                 # Create a new time record as if auto update == False
                 # (this corrects the mistake to throw fewer erros in the web server)
                 record = _create_time_record(
-                    session, tempera_station, elapsed_time, work_mode, auto_update
+                    session, tempera_station, elapsed_time, work_mode, False
                 )
                 logger.warning(
                     "Received a time record with auto update == True "
-                    "but no corresponding record was found to update."
+                    "but no corresponding record was found to update. "
                     f"Creating new time record: {record} with auto update == False."
                 )
         elif not auto_update:
