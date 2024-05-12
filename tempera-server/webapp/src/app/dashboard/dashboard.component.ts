@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { State, User } from '../models/user.model';
 import { DatePipe, NgIf } from '@angular/common';
 import { MessageModule } from 'primeng/message';
@@ -18,6 +18,8 @@ import RolesEnum = UserxDto.RolesEnum;
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MessagesModule } from 'primeng/messages';
+import { map, Observable, switchMap, timer } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-dashboard',
@@ -52,6 +54,17 @@ export class DashboardComponent implements OnInit {
 
   public messages: any;
 
+  /**
+   * This observable handles fetching the dashboard data every minute
+   */
+  private getData$(username: string): Observable<DashboardDataResponse> {
+    return timer(0, 1000 * 60).pipe(
+      switchMap(() => {
+        return this.dashboardControllerService.getDashboardData(username);
+      }),
+    );
+  }
+
   protected readonly RolesEnum = RolesEnum;
 
   public form = new FormGroup({
@@ -59,14 +72,14 @@ export class DashboardComponent implements OnInit {
     project: new FormControl<ProjectDto | undefined>(undefined, { nonNullable: true }),
   });
 
-  constructor(private dashboardControllerService: DashboardControllerService, private storageService: StorageService) {
+  constructor(private dashboardControllerService: DashboardControllerService, private storageService: StorageService, private destroyRef: DestroyRef) {
   }
 
   ngOnInit(): void {
     this.user = this.storageService.getUser();
 
     if (this.user) {
-      this.dashboardControllerService.getDashboardData(this.user.username).subscribe({
+      this.getData$(this.user.username).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: data => {
           this.dashboardData = data;
           this.colleagueTableFilterFields = Object.keys(this.dashboardData?.colleagueStates?.[0] ?? []);
