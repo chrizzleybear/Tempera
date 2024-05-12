@@ -1,6 +1,5 @@
 import asyncio
 import logging
-import os
 from typing import List, Tuple
 
 import bleak.exc
@@ -35,12 +34,7 @@ async def get_tempera_stations() -> List[BLEDevice] | None:
     try:
         devices = await scanner.discover(timeout=SCANNING_TIMEOUT)
     except bleak.exc.BleakError:
-        logger.critical("Bluetooth is not activated. Turn on Bluetooth :)")
-        # sys.exit() raises a SystemExitException and with async prints a really long
-        # stack trace that is more confusing than helpful. Calling os._exit() uses the
-        # os directly to exit without any exception swallowing the stack trace and
-        # leaving the critical logging message as the last thing on the screen.
-        os._exit(0)
+        raise bleak.exc.BleakError from None
 
     logger.info(f"Found devices: {devices}")
 
