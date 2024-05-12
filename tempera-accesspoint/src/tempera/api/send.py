@@ -134,11 +134,7 @@ def _safe_delete_data(
     # This is the only time record that isn't concluded (i.e., doesn't have an end).
     # Note: it doesn't matter whether auto update is True or False for this measurement.
     if kind == "TimeRecord":
-        # TODO: double check that the most recent time record is the last one in the list
-        if len(data) > 0:
-            logger.info(f"Keeping {data[-1].start, data[-1].auto_update}.")
         data = data[:-1]
-        logger.info(f"Deleting{[(item.start, item.auto_update) for item in data]}.")
 
     with Session(shared.db_engine) as session:
         [session.delete(item) for item in data]
