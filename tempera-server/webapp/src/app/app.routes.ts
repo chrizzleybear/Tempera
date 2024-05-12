@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
-import { HomeComponent } from './home/home.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { AppLayoutComponent } from './layout/app.layout.component';
 import { isLoggedInGuard } from './_guards/is-logged-in.guard';
 import { isNotLoggedInGuard } from './_guards/is-not-logged-in.guard';
@@ -13,7 +13,7 @@ export const routes: Routes = [
     path: '', component: AppLayoutComponent, children: [
       {
         path: '', canActivate: [isLoggedInGuard], children: [
-          { path: '', component: HomeComponent },
+          { path: '', component: DashboardComponent },
           { path: 'users', component: UsersComponent },
           { path: 'user/:id', component: UserDetailsComponent },
         ],
