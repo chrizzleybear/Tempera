@@ -59,7 +59,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   private State state;
   @Enumerated(EnumType.STRING)
   private Visibility stateVisibility;
-  @OneToOne
+  @ManyToOne()
   private Project defaultProject;
 
   @ElementCollection(targetClass = UserxRole.class, fetch = FetchType.EAGER)
