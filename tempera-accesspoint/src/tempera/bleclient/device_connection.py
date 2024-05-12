@@ -1,7 +1,9 @@
 import asyncio
 import logging
+import os
 from typing import List, Tuple
 
+import bleak.exc
 import requests
 from bleak import BLEDevice, BleakScanner, BleakClient
 from sqlalchemy import select
@@ -30,7 +32,16 @@ async def detection_callback(device, advertisement_data) -> None:
 async def get_tempera_stations() -> List[BLEDevice] | None:
     logger.info("Scanning for BLE devices...")
     scanner = BleakScanner(detection_callback)
-    devices = await scanner.discover(timeout=SCANNING_TIMEOUT)
+    try:
+        devices = await scanner.discover(timeout=SCANNING_TIMEOUT)
+    except bleak.exc.BleakError:
+        logger.critical("Bluetooth is not activated. Turn on Bluetooth :)")
+        # sys.exit() raises a SystemExitException and with async prints a really long
+        # stack trace that is more confusing than helpful. Calling os._exit() uses the
+        # os directly to exit without any exception swallowing the stack trace and
+        # leaving the critical logging message as the last thing on the screen.
+        os._exit(0)
+
     logger.info(f"Found devices: {devices}")
 
     tempera_stations = []
