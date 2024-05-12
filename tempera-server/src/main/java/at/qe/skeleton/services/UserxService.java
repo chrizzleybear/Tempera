@@ -149,10 +149,9 @@ public class UserxService implements UserDetailsService {
     Optional<Userx> userx = userRepository.findById(id);
     if (userx.isPresent()){
       Userx user = userx.get();
-      user.getTemperaStation().setUser(null);
       user.getGroups().forEach(g -> g.removeMember(user));
+      user.removeTemperaStation();
       //todo: still other bidirectinoal rel?
-
     }
     userx.ifPresent(value -> userRepository.delete(value));
   }
