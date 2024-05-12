@@ -74,6 +74,7 @@ async def elapsed_time_handler(
             select(TimeRecord).order_by(TimeRecord.start.desc()).limit(1)
         ).first()
 
+        # TODO: finalize time record logic
         if not current_record:
             # Create the new time record
             record = _create_time_record(

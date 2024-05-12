@@ -14,14 +14,15 @@ import { ColleagueStateDto } from './colleagueStateDto';
 
 
 export interface DashboardDataResponse { 
-    temperature?: number;
-    humidity?: number;
-    irradiance?: number;
-    nmvoc?: number;
-    visibility?: DashboardDataResponse.VisibilityEnum;
+    temperature: number;
+    humidity: number;
+    irradiance: number;
+    nmvoc: number;
+    visibility: DashboardDataResponse.VisibilityEnum;
     state?: DashboardDataResponse.StateEnum;
     stateTimestamp?: string;
-    project?: ProjectDto;
+    defaultProject?: ProjectDto;
+    availableProjects?: Array<ProjectDto>;
     colleagueStates?: Array<ColleagueStateDto>;
 }
 export namespace DashboardDataResponse {

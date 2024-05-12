@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 README.md
 api.module.ts
 api/api.ts
@@ -18,11 +17,13 @@ model/colleagueStateDto.ts
 model/dashboardDataResponse.ts
 model/loginRequest.ts
 model/measurementDto.ts
+model/messageResponse.ts
 model/models.ts
 model/projectDto.ts
 model/scanOrderDto.ts
 model/signupRequest.ts
 model/superiorTimeRecordDto.ts
+model/updateDashboardDataRequest.ts
 model/userxDto.ts
 param.ts
 variables.ts
