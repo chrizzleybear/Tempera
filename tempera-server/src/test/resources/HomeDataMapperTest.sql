@@ -72,8 +72,6 @@ INSERT INTO groupx (id, group_lead_username, description, name) VALUES (4,'manag
 -- 9 of them have active temperastations
 -- one of them is john doe himself
 -- so 8 people should be displayed as colleagues
-
-
 INSERT INTO groupx_members (groups_id, members_username) VALUES (1, 'johndoe'), (2, 'johndoe');
 INSERT INTO groupx_members (groups_id, members_username) VALUES (1, 'alicebrown'), (3, 'alicebrown'), (4, 'alicebrown');
 INSERT INTO groupx_members (groups_id, members_username) VALUES (1, 'chriswilliams'), (2, 'chriswilliams'), (3, 'chriswilliams'), (4, 'chriswilliams');
@@ -207,8 +205,6 @@ INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_
 -- Timerecord (needed for timestamp)
 INSERT INTO external_record (duration, start, time_end, user_username, state) VALUES
 (3400, '2024-05-10 09:30:00', null, 'johndoe', 'DEEPWORK');
-
-
 
 INSERT INTO internal_record (groupx_id, id, project_id, start, time_end, ext_rec_start, user_name) VALUES
 (null, -11, -1, '2024-05-10 09:30:00', null, '2024-05-10 09:30:00', 'johndoe');
