@@ -39,18 +39,18 @@ INSERT INTO userx_userx_role (userx_username, roles) VALUES ('johndoe', 'EMPLOYE
 INSERT INTO userx_userx_role (userx_username, roles) VALUES ('brucewayne', 'MANAGER');
 
 INSERT INTO project_contributors (project_id, contributors_username) VALUES
-                                                                         (-1, 'admin'), (-1, 'manager'), (-1, 'johndoe'), (-1, 'alicebrown'), (-1, 'brucewayne'), (-1, 'clarkkent'),
-                                                                         (-2, 'admin'), (-2, 'manager'), (-2, 'johndoe'), (-2, 'alicebrown'), (-2, 'brucewayne'), (-2, 'clarkkent'),
-                                                                         (-3, 'admin'), (-3, 'manager'), (-3, 'johndoe'), (-3, 'alicebrown'), (-3, 'brucewayne'), (-3, 'clarkkent'),
-                                                                         (-4, 'admin'), (-4, 'manager'), (-4, 'johndoe'), (-4, 'alicebrown'), (-4, 'brucewayne'), (-4, 'clarkkent'),
-                                                                         (-5, 'admin'), (-5, 'manager'), (-5, 'johndoe'), (-5, 'alicebrown'), (-5, 'brucewayne'), (-5, 'clarkkent'),
-                                                                         (-6, 'admin'), (-6, 'manager'), (-6, 'johndoe'), (-6, 'alicebrown'), (-6, 'brucewayne'), (-6, 'clarkkent'),
-                                                                         (-7, 'admin'), (-7, 'manager'), (-7, 'johndoe'), (-7, 'alicebrown'), (-7, 'brucewayne'), (-7, 'clarkkent'),
-                                                                         (-8, 'admin'), (-8, 'manager'), (-8, 'johndoe'), (-8, 'alicebrown'), (-8, 'brucewayne'), (-8, 'clarkkent'),
-                                                                         (-9, 'admin'), (-9, 'manager'), (-9, 'johndoe'), (-9, 'alicebrown'), (-9, 'brucewayne'), (-9, 'clarkkent'),
-                                                                         (-10, 'admin'), (-10, 'manager'), (-10, 'johndoe'), (-10, 'alicebrown'), (-10, 'brucewayne'), (-10, 'clarkkent'),
-                                                                         (-11, 'admin'), (-11, 'manager'), (-11, 'johndoe'), (-11, 'alicebrown'), (-11, 'brucewayne'), (-11, 'clarkkent'),
-                                                                         (-12, 'admin'), (-12, 'manager'), (-12, 'johndoe'), (-12, 'alicebrown'), (-12, 'brucewayne'), (-12, 'clarkkent');
+                                                                         (-1, 'admin'), (-1, 'bobjones'), (-1, 'johndoe'), (-1, 'alicebrown'), (-1, 'brucewayne'), (-1, 'clarkkent'),
+                                                                         (-2, 'admin'), (-2, 'bobjones'), (-2, 'johndoe'), (-2, 'alicebrown'), (-2, 'brucewayne'), (-2, 'clarkkent'),
+                                                                         (-3, 'admin'), (-3, 'bobjones'), (-3, 'johndoe'), (-3, 'alicebrown'), (-3, 'brucewayne'), (-3, 'clarkkent'),
+                                                                         (-4, 'admin'), (-4, 'bobjones'), (-4, 'johndoe'), (-4, 'alicebrown'), (-4, 'brucewayne'), (-4, 'clarkkent'),
+                                                                         (-5, 'admin'), (-5, 'bobjones'), (-5, 'johndoe'), (-5, 'alicebrown'), (-5, 'brucewayne'), (-5, 'clarkkent'),
+                                                                         (-6, 'admin'), (-6, 'bobjones'), (-6, 'johndoe'), (-6, 'alicebrown'), (-6, 'brucewayne'), (-6, 'clarkkent'),
+                                                                         (-7, 'admin'), (-7, 'bobjones'), (-7, 'johndoe'), (-7, 'alicebrown'), (-7, 'brucewayne'), (-7, 'clarkkent'),
+                                                                         (-8, 'admin'), (-8, 'bobjones'), (-8, 'johndoe'), (-8, 'alicebrown'), (-8, 'brucewayne'), (-8, 'clarkkent'),
+                                                                         (-9, 'admin'), (-9, 'bobjones'), (-9, 'johndoe'), (-9, 'alicebrown'), (-9, 'brucewayne'), (-9, 'clarkkent'),
+                                                                         (-10, 'admin'), (-10, 'bobjones'), (-10, 'johndoe'), (-10, 'alicebrown'), (-10, 'brucewayne'), (-10, 'clarkkent'),
+                                                                         (-11, 'admin'), (-11, 'bobjones'), (-11, 'johndoe'), (-11, 'alicebrown'), (-11, 'brucewayne'), (-11, 'clarkkent'),
+                                                                         (-12, 'admin'), (-12, 'bobjones'), (-12, 'johndoe'), (-12, 'alicebrown'), (-12, 'brucewayne'), (-12, 'clarkkent');
 
 -- add some Groups to test db
 INSERT INTO groupx (id, group_lead_username, description, name) VALUES (1,'brucewayne', 'this is just for testing', 'testGroup1');
@@ -91,120 +91,102 @@ INSERT INTO tempera_station
 (enabled, access_point_id, user_username, id)
 VALUES
     (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'johndoe', 'TEMP123'),
-    (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'admin', 'TEMP124'),
     (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'bobjones', 'TEMP125'),
     (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'alicebrown', 'TEMP126'),
     (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'chriswilliams', 'TEMP127'),
     (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'peterparker', 'TEMP128'),
     (TRUE, '333e4567-e89b-12d3-a456-426614174001', 'tonystark', 'TEMP129'),
     (TRUE, '333e4567-e89b-12d3-a456-426614174001', 'brucewayne', 'TEMP130'),
-    (FALSE, '333e4567-e89b-12d3-a456-426614174001', 'clarkkent', 'TEMP131'),
-    (TRUE, '333e4567-e89b-12d3-a456-426614174001', 'brucewayne', 'TEMP132');
-
+    (FALSE, '333e4567-e89b-12d3-a456-426614174001', 'clarkkent', 'TEMP131');
 
 INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES
                                                                      ('TEMPERATURE', -1, 'tempera_station_1', 'CELSIUS'),
                                                                      ('TEMPERATURE', -10, 'TEMP123', 'CELSIUS'),
-                                                                     ('TEMPERATURE', -10, 'TEMP124', 'CELSIUS'),
                                                                      ('TEMPERATURE', -10, 'TEMP125', 'CELSIUS'),
                                                                      ('TEMPERATURE', -10, 'TEMP126', 'CELSIUS'),
                                                                      ('TEMPERATURE', -10, 'TEMP127', 'CELSIUS'),
                                                                      ('TEMPERATURE', -10, 'TEMP128', 'CELSIUS'),
                                                                      ('TEMPERATURE', -10, 'TEMP129', 'CELSIUS'),
                                                                      ('TEMPERATURE', -10, 'TEMP130', 'CELSIUS'),
-                                                                     ('TEMPERATURE', -10, 'TEMP131', 'CELSIUS'),
-                                                                     ('TEMPERATURE', -10, 'TEMP132', 'CELSIUS');
+                                                                     ('TEMPERATURE', -10, 'TEMP131', 'CELSIUS');
+
 INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES
                                                                      ('IRRADIANCE', -2, 'tempera_station_1', 'LUX'),
                                                                      ('IRRADIANCE', -11, 'TEMP123', 'LUX'),
-                                                                     ('IRRADIANCE', -11, 'TEMP124', 'LUX'),
                                                                      ('IRRADIANCE', -11, 'TEMP125', 'LUX'),
                                                                      ('IRRADIANCE', -11, 'TEMP126', 'LUX'),
                                                                      ('IRRADIANCE', -11, 'TEMP127', 'LUX'),
                                                                      ('IRRADIANCE', -11, 'TEMP128', 'LUX'),
                                                                      ('IRRADIANCE', -11, 'TEMP129', 'LUX'),
                                                                      ('IRRADIANCE', -11, 'TEMP130', 'LUX'),
-                                                                     ('IRRADIANCE', -11, 'TEMP131', 'LUX'),
-                                                                     ('IRRADIANCE', -11, 'TEMP132', 'LUX');
+                                                                     ('IRRADIANCE', -11, 'TEMP131', 'LUX');
+
 INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES
                                                                      ('HUMIDITY', -3, 'tempera_station_1', 'PERCENT'),
                                                                      ('HUMIDITY', -12, 'TEMP123', 'PERCENT'),
-                                                                     ('HUMIDITY', -12, 'TEMP124', 'PERCENT'),
                                                                      ('HUMIDITY', -12, 'TEMP125', 'PERCENT'),
                                                                      ('HUMIDITY', -12, 'TEMP126', 'PERCENT'),
                                                                      ('HUMIDITY', -12, 'TEMP127', 'PERCENT'),
                                                                      ('HUMIDITY', -12, 'TEMP128', 'PERCENT'),
                                                                      ('HUMIDITY', -12, 'TEMP129', 'PERCENT'),
                                                                      ('HUMIDITY', -12, 'TEMP130', 'PERCENT'),
-                                                                     ('HUMIDITY', -12, 'TEMP131', 'PERCENT'),
-                                                                     ('HUMIDITY', -12, 'TEMP132', 'PERCENT');
+                                                                     ('HUMIDITY', -12, 'TEMP131', 'PERCENT');
+
 INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES
                                                                      ('NMVOC', -4, 'tempera_station_1', 'OHM'),
                                                                      ('NMVOC', -13, 'TEMP123', 'OHM'),
-                                                                     ('NMVOC', -13, 'TEMP124', 'OHM'),
                                                                      ('NMVOC', -13, 'TEMP125', 'OHM'),
                                                                      ('NMVOC', -13, 'TEMP126', 'OHM'),
                                                                      ('NMVOC', -13, 'TEMP127', 'OHM'),
                                                                      ('NMVOC', -13, 'TEMP128', 'OHM'),
                                                                      ('NMVOC', -13, 'TEMP129', 'OHM'),
                                                                      ('NMVOC', -13, 'TEMP130', 'OHM'),
-                                                                     ('NMVOC', -13, 'TEMP131', 'OHM'),
-                                                                     ('NMVOC', -13, 'TEMP132', 'OHM');
+                                                                     ('NMVOC', -13, 'TEMP131', 'OHM');
 
 -- fill in measurements for all the temperature sensors (also not necessary for HomeDataMapperTest but can be used later)
 -- user of interest is johndoe (TEMP123)
 INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES
                                                                                                  (20.0, -1, '2016-01-01 00:00:00', 'tempera_station_1'),
                                                                                                  (20.0, -10, '2024-05-10T08:30:00', 'TEMP123'),
-                                                                                                 (20.0, -10, '2024-05-10T09:45:00', 'TEMP124'),
                                                                                                  (25.9, -10, '2024-05-11T10:15:00', 'TEMP125'),
                                                                                                  (22.0, -10, '2024-05-11T11:30:00', 'TEMP126'),
                                                                                                  (24.0, -10, '2024-05-12T12:00:00', 'TEMP127'),
                                                                                                  (30.0, -10, '2024-05-12T13:15:00', 'TEMP128'),
                                                                                                  (17.0, -10, '2024-05-10T14:30:00', 'TEMP129'),
                                                                                                  (24.1, -10, '2024-05-11T15:45:00', 'TEMP130'),
-                                                                                                 (24.1, -10, '2024-05-11T15:45:00', 'TEMP131'),
-                                                                                                 (24.1, -10, '2024-05-11T15:45:00', 'TEMP132');
+                                                                                                 (24.1, -10, '2024-05-11T15:45:00', 'TEMP131');
 
 -- fill in measurements for all the irradiance sensors
 INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES
                                                                                                  (1000.0, -11, '2024-05-10T08:30:00', 'TEMP123'),
-                                                                                                 (1000.0, -11, '2024-05-10T09:45:00', 'TEMP124'),
                                                                                                  (1100.0, -11, '2024-05-11T10:15:00', 'TEMP125'),
                                                                                                  (1200.0, -11, '2024-05-11T11:30:00', 'TEMP126'),
                                                                                                  (1240.0, -11, '2024-05-12T12:00:00', 'TEMP127'),
                                                                                                  (1900.0, -11, '2024-05-12T13:15:00', 'TEMP128'),
                                                                                                  (9000.0, -11, '2024-05-10T14:30:00', 'TEMP129'),
                                                                                                  (8900.0, -11, '2024-05-11T15:45:00', 'TEMP130'),
-                                                                                                 (8900.0, -11, '2024-05-11T15:45:00', 'TEMP131'),
-                                                                                                 (8900.0, -11, '2024-05-11T15:45:00', 'TEMP132');
+                                                                                                 (8900.0, -11, '2024-05-11T15:45:00', 'TEMP131');
 
 -- fill in measurements for all the humidity sensors
 INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES
                                                                                                  (50.0, -12, '2024-05-10T08:30:00', 'TEMP123'),
-                                                                                                 (50.0, -12, '2024-05-10T09:45:00', 'TEMP124'),
                                                                                                  (55.0, -12, '2024-05-11T10:15:00', 'TEMP125'),
                                                                                                  (60.0, -12, '2024-05-11T11:30:00', 'TEMP126'),
                                                                                                  (65.0, -12, '2024-05-12T12:00:00', 'TEMP127'),
                                                                                                  (70.0, -12, '2024-05-12T13:15:00', 'TEMP128'),
                                                                                                  (75.0, -12, '2024-05-10T14:30:00', 'TEMP129'),
                                                                                                  (80.0, -12, '2024-05-11T15:45:00', 'TEMP130'),
-                                                                                                 (80.0, -12, '2024-05-11T15:45:00', 'TEMP131'),
-                                                                                                 (80.0, -12, '2024-05-11T15:45:00', 'TEMP132');
-
+                                                                                                 (80.0, -12, '2024-05-11T15:45:00', 'TEMP131');
 -- fill in measurements for all the nmvoc sensors
 INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES
                                                                                                  (100.0, -13, '2024-05-10T08:30:00', 'TEMP123'),
-                                                                                                 (100.0, -13, '2024-05-10T09:45:00', 'TEMP124'),
                                                                                                  (110.0, -13, '2024-05-11T10:15:00', 'TEMP125'),
                                                                                                  (120.0, -13, '2024-05-11T11:30:00', 'TEMP126'),
                                                                                                  (124.0, -13, '2024-05-12T12:00:00', 'TEMP127'),
                                                                                                  (190.0, -13, '2024-05-12T13:15:00', 'TEMP128'),
                                                                                                  (900.0, -13, '2024-05-10T14:30:00', 'TEMP129'),
                                                                                                  (890.0, -13, '2024-05-11T15:45:00', 'TEMP130'),
-                                                                                                 (890.0, -13, '2024-05-11T15:45:00', 'TEMP131'),
-                                                                                                 (890.0, -13, '2024-05-11T15:45:00', 'TEMP132');
-
+                                                                                                 (890.0, -13, '2024-05-11T15:45:00', 'TEMP131');
 
 -- Testdata for TimeRecordService
 INSERT INTO external_record (duration, start, time_end, user_username, state) VALUES (30, '2016-01-01 00:00:00', null, 'admin', 'DEEPWORK'), (3400, '2024-05-10 09:30:00', null, 'johndoe', 'DEEPWORK');
