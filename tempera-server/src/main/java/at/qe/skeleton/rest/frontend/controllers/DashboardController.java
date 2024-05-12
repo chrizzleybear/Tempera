@@ -29,21 +29,8 @@ public class DashboardController {
 
   @GetMapping("/dashboardData")
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
-  public ResponseEntity<DashboardDataResponse> dashboardData(String username) {
-//    var colleague1 =
-//        new ColleagueStateDto(
-//            "Max Mustermann", "Raum 1", State.DEEPWORK, true, List.of("Gruppe 1"));
-//    var colleague2 =
-//        new ColleagueStateDto("Jane Doe", "Raum 3", State.AVAILABLE, true, List.of("Gruppe 2"));
-//    var colleague3 =
-//        new ColleagueStateDto(
-//            "Otto Normal", "Raum 2", State.MEETING, true, List.of("Gruppe 1", "Gruppe 2"));
-//    var colleague4 =
-//        new ColleagueStateDto(
-//            "Hans Wurst", "Raum 4", State.OUT_OF_OFFICE, true, List.of("Gruppe 3"));
-
+  public ResponseEntity<DashboardDataResponse> getDashboardData(@RequestParam String username) {
     Userx user = userXService.loadUser(username);
-
     DashboardDataResponse homeDataResponse = dashboardDataMapper.mapUserToHomeDataResponse(user);
     return ResponseEntity.ok(homeDataResponse);
   }
