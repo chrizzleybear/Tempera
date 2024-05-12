@@ -67,7 +67,7 @@ class DashboardControllerTest {
     when(userXService.loadUser(johnny.getUsername())).thenReturn(johnny);
 
 
-    ResponseEntity<DashboardDataResponse> returnValue = dashboardController.dashboardData(johnny.getUsername());
+    ResponseEntity<DashboardDataResponse> returnValue = dashboardController.getDashboardData(johnny.getUsername());
     DashboardDataResponse response = returnValue.getBody();
 
     verify(dashboardDataMapper, times(1)).mapUserToHomeDataResponse(johnny);
