@@ -2,6 +2,7 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.services.UserxService;
+import org.hibernate.annotations.processing.SQL;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.util.collections.Sets;
@@ -12,6 +13,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import at.qe.skeleton.model.Userx;
@@ -33,6 +35,8 @@ public class UserxServiceTest {
     UserxService userxService;
 
     @Test
+    @DirtiesContext
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:")
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testDatainitialization() {
         Assertions.assertEquals(4, userxService.getAllUsers().size(), "Insufficient amount of users initialized for test data source");
