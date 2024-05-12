@@ -83,7 +83,8 @@ async def validate_station(
         )
     except requests.exceptions.ConnectionError:
         logger.error(
-            "Request failed. Couldn't establish a connection to the web server."
+            "Request failed. Couldn't establish a connection to the web server "
+            f"at {shared.config['webserver_address']}."
         )
         raise ConnectionError
 
@@ -174,6 +175,7 @@ async def save_station(station_id: str) -> None:
 # @retry(wait=wait_fixed(60))
 async def discovery_loop() -> BLEDevice:
     tempera_stations = await get_tempera_stations()
+
     if not tempera_stations:
         logger.error("No tempera stations found.")
         raise ValueError
@@ -202,7 +204,8 @@ async def get_scan_order() -> bool:
         )
     except requests.exceptions.ConnectionError:
         logger.error(
-            "Request failed. Couldn't establish a connection to the web server."
+            "Request failed. Couldn't establish a connection to the web server "
+            f"at {shared.config['webserver_address']}."
         )
         raise ConnectionError
 
