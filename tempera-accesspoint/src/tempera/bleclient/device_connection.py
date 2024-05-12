@@ -80,7 +80,7 @@ async def validate_station(
             "Request failed. Couldn't establish a connection to the web server "
             f"at {shared.config['webserver_address']}."
         )
-        raise ConnectionError
+        raise ConnectionError from None
 
     if not response["access_point_allowed"]:
         logger.warning(
@@ -201,6 +201,6 @@ async def get_scan_order() -> bool:
             "Request failed. Couldn't establish a connection to the web server "
             f"at {shared.config['webserver_address']}."
         )
-        raise ConnectionError
+        raise ConnectionError from None
 
     return response["scan"]

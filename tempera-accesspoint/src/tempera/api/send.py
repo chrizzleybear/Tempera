@@ -103,9 +103,9 @@ async def send_data(kind: DataType):
     payloads = [_build_payload(tempera_station, item, kind=kind) for item in data]
 
     logger.info(f"Sending {len(payloads)} {kind}(s).")
-    async with TaskGroup() as tg:
-        for payload in payloads:
-            try:
+    try:
+        async with TaskGroup() as tg:
+            _ = [
                 tg.create_task(
                     make_request(
                         "post",
@@ -114,13 +114,15 @@ async def send_data(kind: DataType):
                         json=payload,
                     )
                 )
-            except requests.exceptions.ConnectionError:
-                logger.error(
-                    f"Failed to send data to the {endpoint} API endpoint. "
-                    "Couldn't establish a connection to the web server "
-                    f"at {shared.config['webserver_address']}."
-                )
-                raise ConnectionError
+                for payload in payloads
+            ]
+    except* requests.exceptions.ConnectionError:
+        logger.error(
+            f"Failed to send data to the {endpoint} API endpoint. "
+            "Couldn't establish a connection to the web server "
+            f"at {shared.config['webserver_address']}."
+        )
+        raise ConnectionError from None
 
     _safe_delete_data(data, kind=kind)
 
