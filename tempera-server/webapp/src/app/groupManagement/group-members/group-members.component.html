@@ -4,7 +4,7 @@
 
   <button type="button" pButton label="Add New Member" icon="pi pi-plus" (click)="addMemberDialog()" class="mr-2"></button>
 </div>
-<p-table [value]="filteredMembers" [paginator]="true" [rows]="10" responsiveLayout="scroll" [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']">
+<p-table [value]="filteredMembers" [paginator]="true" [rows]="10" responsiveLayout="scroll" [globalFilterFields]="['username', 'firstName', 'lastName']">
   <ng-template pTemplate="header">
     <tr>
       <th scope="col" pSortableColumn="username">Benutzername

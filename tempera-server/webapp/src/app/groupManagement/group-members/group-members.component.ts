@@ -10,6 +10,9 @@ import {UsersService} from "../../_services/users.service";
 import {DialogModule} from "primeng/dialog";
 import {MessagesModule} from "primeng/messages";
 import {GroupMemberDTO} from "../../models/groupDtos";
+import { from } from 'rxjs';
+import { concatMap } from 'rxjs/operators';
+
 @Component({
   selector: 'app-group-members',
   standalone: true,
@@ -94,35 +97,28 @@ export class GroupMembersComponent implements OnInit{
     this.loadMembersAndUsers(this.groupId!);
     this.displayAddDialog = true;
   }
-
+  addMembers() {
+    from(this.selectedUsers.map(user => user.username))
+      .pipe(concatMap(userId => this.addMember(userId)))
+      .subscribe({
+        next: response => {
+          console.log("Member added successfully:", response);
+          this.loadMembersAndUsers(this.groupId!);
+          this.messages = [{severity:'success', summary:'Success', detail:'Members added successfully'}];
+        },
+        error: err => console.error("Error adding member:", err)
+      });
+    this.displayAddDialog = false;
+    this.selectedUsers = [];
+  }
   private addMember(userId: string) {
     const dto: GroupMemberDTO = {
       groupId: this.groupId!,
       memberId: userId
     };
-    //wait for the members to be added to avoid async issues
-    setTimeout(() => {}, 500);
-    this.groupService.addGroupMember(dto).subscribe({
-      next: response => {
-        console.log("Member added successfully:", response);
-      },
-      error: err => console.error("Error adding member:", err)
-    });
-    }
 
-  addMembers() {
-    this.selectedUsers.forEach(user => {
-      this.addMember(user.username);
-    });
-    this.selectedUsers = [];
-    this.displayAddDialog = false;
-    //wait for the members to be added to avoid async issues
-    setTimeout(() => {
-      this.loadMembersAndUsers(this.groupId!);
-      this.messages = [{severity:'success', summary:'Success', detail:'Members added successfully'}];
-    }, 200);
+    return this.groupService.addGroupMember(dto);
   }
-
     deleteMember(userId: string) {
     this.groupService.deleteGroupMember(this.groupId!, userId).subscribe({
       next: response => {
