@@ -16,16 +16,9 @@ export class UsersService {
     return this.http.get<User[]>(this.API_URL + 'all');
   }
 
-  deleteUser(userId: string): void {
+  deleteUser(userId: string): Observable<any> {
     console.log('Delete user with ID: ', userId);
-    this.http.delete(`${this.API_URL}delete/${userId}`).subscribe({
-      next: (response) => {
-        console.log('User deleted successfully:', response);
-      },
-      error: (error) => {
-        console.error('Error deleting user:', error);
-      },
-    });
+    return this.http.delete(`${this.API_URL}delete/${userId}`);
   }
 
   updateUser(userData: User): Observable<User> {
