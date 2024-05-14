@@ -67,15 +67,17 @@ public class ProjectController {
     }
 
     @PostMapping("/addContributor")
-    public ResponseEntity<Void> addContributor(@RequestBody ContributorAssignmentDto contributorAssignmentDto) {
+    public ResponseEntity<Project> addContributor(@RequestBody ContributorAssignmentDto contributorAssignmentDto) {
         projectService.addContributor(contributorAssignmentDto.projectId(), contributorAssignmentDto.contributorId());
-        return ResponseEntity.ok().build();
+        Project project = projectService.loadProject(String.valueOf(contributorAssignmentDto.projectId()));
+        return ResponseEntity.ok(project);
     }
 
     @DeleteMapping("/deleteContributor/{projectId}/{contributorId}")
-    public ResponseEntity<Void> removeContributor(@PathVariable String projectId, @PathVariable String contributorId) {
+    public ResponseEntity<Project> removeContributor(@PathVariable String projectId, @PathVariable String contributorId) {
         projectService.deleteContributor(Long.parseLong(projectId),contributorId);
-        return ResponseEntity.ok().build();
+        Project project = projectService.loadProject(projectId);
+        return ResponseEntity.ok(project);
     }
 
     @GetMapping("/allOfGroup/{groupId}")

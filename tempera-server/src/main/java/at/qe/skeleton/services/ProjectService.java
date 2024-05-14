@@ -26,9 +26,15 @@ public class ProjectService {
     private GroupRepository groupRepository;
 
 
+    private static final String USER_NOT_FOUND = "User not found";
+    private static final String PROJECT_NOT_FOUND = "Project not found";
+    private static final String GROUP_NOT_FOUND = "Group not found";
+
+
+
     @Transactional
     public Project createProject(String name, String description, String manager) {
-        Userx managerUser = userxRepository.findById(manager).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Userx managerUser = userxRepository.findById(manager).orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND));
         Project project = new Project();
         project.setName(name);
         project.setDescription(description);
@@ -51,7 +57,7 @@ public class ProjectService {
         Project project = projectRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Project with ID " + id + " not found"));
         project.setName(name);
         project.setDescription(description);
-        project.setManager(userxRepository.findById(manager).orElseThrow(() -> new IllegalArgumentException("User not found")));
+        project.setManager(userxRepository.findById(manager).orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND)));
         return projectRepository.save(project);
     }
 
@@ -60,8 +66,8 @@ public class ProjectService {
         if (groupId == null) {
             throw new NullPointerException("Contributor can not be null");
         }
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException("Project not found"));
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException("Group not found"));
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException(PROJECT_NOT_FOUND));
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException(GROUP_NOT_FOUND));
         project.addGroup(group);
         projectRepository.save(project);
     }
@@ -77,28 +83,33 @@ public class ProjectService {
     }
 
     public void deleteGroup(Long groupId, Long projectId) {
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException("Project not found"));
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException("Group not found"));
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException(PROJECT_NOT_FOUND));
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException(GROUP_NOT_FOUND));
         project.removeGroup(group);
         projectRepository.save(project);
     }
 
+    @Transactional
     public void addContributor(Long projectId, String contributorId) {
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException("Project not found"));
-        Userx contributor = userxRepository.findById(contributorId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException(PROJECT_NOT_FOUND));
+        Userx contributor = userxRepository.findById(contributorId).orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND));
+        if(project.getContributors().contains(contributor)){
+            throw new IllegalArgumentException("User is already a contributor");
+        }
         project.addContributor(contributor);
         projectRepository.save(project);
     }
     public List<Project> getProjectsForGroups(Long groupId) {
         if(groupRepository.findById(groupId).isEmpty()){
-            throw new IllegalArgumentException("Group not found");
+            throw new IllegalArgumentException(GROUP_NOT_FOUND);
         }
         return projectRepository.findByGroupId(groupId);
     }
 
+    @Transactional
     public void deleteContributor(Long projectId, String contributorId) {
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException("Project not found"));
-        Userx contributor = userxRepository.findById(contributorId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException(PROJECT_NOT_FOUND));
+        Userx contributor = userxRepository.findById(contributorId).orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND));
         project.removeContributor(contributor);
         projectRepository.save(project);
     }
