@@ -1,5 +1,7 @@
 # Documentation
 
+[![pipeline](https://git.uibk.ac.at/informatik/qe/swess24/group4/g4t1/-/tree/main/pipeline.svg)](https://git.uibk.ac.at/informatik/qe/swess24/group4/g4t1/-/commits/main/)
+
 As is customary for python projects, [read the docs](https://about.readthedocs.com/?ref=readthedocs.com)
 style documentation is provided for this package.
 
