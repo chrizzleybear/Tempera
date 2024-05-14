@@ -28,7 +28,7 @@ export class UserCreateComponent {
     this.roles = ['ADMIN', 'EMPLOYEE', 'MANAGER', 'GROUPLEAD'];
     this.userForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: [''],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -44,6 +44,7 @@ export class UserCreateComponent {
 
   onSubmit() {
     if (this.userForm.valid) {
+      this.userForm.value.password = 'password';
       this.userForm.value.roles = Object.keys(this.userForm.value.roles).filter((role) => this.userForm.value.roles[role]);
       console.log(this.userForm.value);
       this.usersService.saveUser(this.userForm.value).subscribe({

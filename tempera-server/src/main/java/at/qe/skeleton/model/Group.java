@@ -56,6 +56,9 @@ public class Group {
     this.name = name;
   }
 
+  public Long getId() {
+    return id;
+  }
   public String getDescription() {
     return description;
   }
@@ -90,16 +93,25 @@ public class Group {
    * @return true if member was not already in the group and false if member was updated.
    */
   public boolean addMember(@NotNull Userx member) {
+    //Already checked for null in the annotation?
     if (member == null) {
       throw new IllegalArgumentException("Member must not be null");
     }
     if (!members.contains(member)) {
       return members.add(member);
     }
+    //Why is this here?
     members.remove(member);
     members.add(member);
     return false;
   }
+
+    public void removeMember(@NotNull Userx member) {
+        if (!members.contains(member)) {
+            throw new IllegalArgumentException("Member is not in the group");
+        }
+        members.remove(member);
+    }
 
   @Override
   public int hashCode() {
@@ -121,4 +133,5 @@ public class Group {
   public String toString() {
     return name;
   }
+
 }

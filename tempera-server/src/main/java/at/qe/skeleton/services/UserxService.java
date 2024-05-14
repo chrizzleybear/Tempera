@@ -2,6 +2,7 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.TemperaStation;
+import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.Visibility;
@@ -143,42 +144,42 @@ public class UserxService implements UserDetailsService {
 
   @PreAuthorize("hasAuthority('ADMIN')")
   public Userx updateUser(UserxDto userxDTO) {
-    Userx user = userRepository.findFirstByUsername(userxDTO.getUsername());
+    Userx user = userRepository.findFirstByUsername(userxDTO.username());
     if (user == null) {
       throw new IllegalArgumentException("User not found");
     }
-    user.setFirstName(userxDTO.getFirstName());
-    user.setLastName(userxDTO.getLastName());
-    user.setPassword(passwordEncoder.encode(userxDTO.getPassword()));
-    user.setEmail(userxDTO.getEmail());
-    user.setRoles(userxDTO.getRoles());
-    user.setEnabled(userxDTO.isEnabled());
+    user.setFirstName(userxDTO.firstName());
+    user.setLastName(userxDTO.lastName());
+    if(!userxDTO.password().equals(user.getPassword())){
+    user.setPassword(passwordEncoder.encode(userxDTO.password()));}
+    user.setEmail(userxDTO.email());
+    user.setRoles(userxDTO.roles());
+    user.setEnabled(userxDTO.enabled());
     user.setUpdateDate(LocalDateTime.now());
     user.setUpdateUser(getAuthenticatedUser());
     return userRepository.save(user);
   }
 
   public UserxDto convertToDTO(Userx user) {
-    UserxDto userxDTO = new UserxDto();
-    userxDTO.setUsername(user.getUsername());
-    userxDTO.setFirstName(user.getFirstName());
-    userxDTO.setLastName(user.getLastName());
-    userxDTO.setPassword(user.getPassword());
-    userxDTO.setEmail(user.getEmail());
-    userxDTO.setEnabled(user.isEnabled());
-    userxDTO.setRoles(user.getRoles());
-    return userxDTO;
+    return new UserxDto(
+            user.getUsername(),
+            user.getFirstName(),
+            user.getLastName(),
+            user.getEmail(),
+            user.getPassword(),
+            user.isEnabled(),
+            user.getRoles());
   }
 
   public Userx convertToEntity(UserxDto userxDTO) {
     Userx user = new Userx();
-    user.setUsername(userxDTO.getUsername());
-    user.setFirstName(userxDTO.getFirstName());
-    user.setLastName(userxDTO.getLastName());
-    user.setPassword(userxDTO.getPassword());
-    user.setEmail(userxDTO.getEmail());
-    user.setEnabled(userxDTO.isEnabled());
-    user.setRoles(userxDTO.getRoles());
+    user.setUsername(userxDTO.username());
+    user.setFirstName(userxDTO.firstName());
+    user.setLastName(userxDTO.lastName());
+    user.setEmail(userxDTO.email());
+    user.setPassword(passwordEncoder.encode(userxDTO.password()));
+    user.setEnabled(userxDTO.enabled());
+    user.setRoles(userxDTO.roles());
     return user;
   }
 
@@ -199,5 +200,9 @@ public class UserxService implements UserDetailsService {
     user.setEnabled(true);
     // log "Enable user with username: " + username
     userRepository.save(user);
+  }
+
+  public Collection<Userx> getManagers() {
+    return userRepository.findByRole(UserxRole.MANAGER);
   }
 }

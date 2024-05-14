@@ -2,6 +2,8 @@ package at.qe.skeleton.repositories;
 
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.UserxRole;
+
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,4 +33,5 @@ public interface UserxRepository extends AbstractRepository<Userx, String> {
 
   @Query("SELECT u FROM Userx u WHERE :role MEMBER OF u.roles")
   List<Userx> findByRole(@Param("role") UserxRole role);
+
 }

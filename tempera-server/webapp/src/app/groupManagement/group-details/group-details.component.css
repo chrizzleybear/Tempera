@@ -1,0 +1,37 @@
+.group-details-card {
+  max-width: 100%;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.group-info p, .manager-details p {
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.manager-details {
+  border-top: 1px solid #ccc;
+  padding-top: 20px;
+}
+
+.members-section {
+  border-top: 1px solid #ccc;
+  padding-top: 20px;
+  margin-top: 20px;
+}
+
+.members-table th {
+  background-color: #f4f4f4;
+  text-align: left;
+}
+
+.members-table td {
+  padding: 8px;
+}
+
+@media (max-width: 768px) {
+  .group-details-card {
+    padding: 10px;
+  }
+}

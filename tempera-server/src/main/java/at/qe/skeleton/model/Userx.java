@@ -139,6 +139,13 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     this.roles = roles;
   }
 
+  public void addRole(UserxRole role) {
+    if (this.roles.contains(role)) {
+      return;
+    }
+    this.roles.add(role);
+  }
+
   public Userx getCreateUser() {
     return createUser;
   }
