@@ -2,6 +2,7 @@ import asyncio
 import logging
 from typing import List, Tuple
 
+import bleak.exc
 import requests
 from bleak import BLEDevice, BleakScanner, BleakClient
 from sqlalchemy import select
@@ -40,7 +41,11 @@ async def get_tempera_stations() -> List[BLEDevice] | None:
     """
     logger.info("Scanning for BLE devices...")
     scanner = BleakScanner(detection_callback)
-    devices = await scanner.discover(timeout=SCANNING_TIMEOUT)
+    try:
+        devices = await scanner.discover(timeout=SCANNING_TIMEOUT)
+    except bleak.exc.BleakError:
+        raise bleak.exc.BleakError from None
+
     logger.info(f"Found devices: {devices}")
 
     tempera_stations = []
@@ -82,9 +87,10 @@ async def validate_station(
         )
     except requests.exceptions.ConnectionError:
         logger.error(
-            "Request failed. Couldn't establish a connection to the web server."
+            "Request failed. Couldn't establish a connection to the web server "
+            f"at {shared.config['webserver_address']}."
         )
-        raise ConnectionError
+        raise ConnectionError from None
 
     if not response["access_point_allowed"]:
         logger.warning(
@@ -197,6 +203,7 @@ async def discovery_loop() -> BLEDevice:
     :return:
     """
     tempera_stations = await get_tempera_stations()
+
     if not tempera_stations:
         logger.error("No tempera stations found.")
         raise ValueError
@@ -229,8 +236,9 @@ async def get_scan_order() -> bool:
         )
     except requests.exceptions.ConnectionError:
         logger.error(
-            "Request failed. Couldn't establish a connection to the web server."
+            "Request failed. Couldn't establish a connection to the web server "
+            f"at {shared.config['webserver_address']}."
         )
-        raise ConnectionError
+        raise ConnectionError from None
 
     return response["scan"]

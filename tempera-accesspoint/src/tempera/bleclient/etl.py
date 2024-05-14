@@ -88,40 +88,41 @@ async def elapsed_time_handler(
             select(TimeRecord).order_by(TimeRecord.start.desc()).limit(1)
         ).first()
 
-        # TODO: finalize time record logic
-        if not current_record:
-            # Create the new time record
-            record = _create_time_record(
-                session, tempera_station, elapsed_time, work_mode, auto_update
-            )
-            logger.info(f"Creating time record: {record}.")
-        else:
-            if not auto_update:
-                # Conclude the last time record
-                current_record.auto_update = False
-                logger.info(f"Concluding the previous time record: {current_record}.")
-
-                # Create the new time record
-                # auto_update is False forces the conclusion of the old measurement and the creation of a new one.
-                # The new one should not be deleted after being sent, as the next auto update must add on to it.
-                # Thus, auto update is set to True when it is created, even if it was not an automatic update.
-                # (auto update is both determining the creation of a new time record, and whether existing ones
-                # are deleted after being sent. From a software design perspective, it would be better to separate
-                # the functionality into 2 variables to split the responsibility. It would make things a little
-                # easier to understand but here a corner is being cut a little for convenience.)
-                record = _create_time_record(
-                    session, tempera_station, elapsed_time, work_mode, True
-                )
-                logger.info(f"Creating time record: {record}")
-
-            elif auto_update:
-                current_record.duration += elapsed_time
-                # set auto_update to True, that way the initial auto_update = False is overwritten with the automatic
-                # update
-                current_record.auto_update = True
+        if auto_update:
+            if current_record:
+                # Update current time record
                 logger.info(
                     f"Updating record: adding {elapsed_time} ms to the duration of {current_record}"
                 )
+                current_record.duration += elapsed_time
+                current_record.auto_update = True
+            elif not current_record:
+                # Time record with auto update == True but without corresponding open record in the database.
+                # Note: only the very last record saved can even come in to question for an update, all others
+                #       must already have been concluded.
+                # Create a new time record as if auto update == False
+                # (this corrects the mistake to throw fewer erros in the web server)
+                record = _create_time_record(
+                    session, tempera_station, elapsed_time, work_mode, False
+                )
+                logger.warning(
+                    "Received a time record with auto update == True "
+                    "but no corresponding record was found to update. "
+                    f"Creating new time record: {record} with auto update == False."
+                )
+        elif not auto_update:
+            if current_record:
+                # Close currently open time record before creating a new one
+                current_record.auto_update = False
+                logger.info(
+                    f"Concluding the currently open time record: {current_record}."
+                )
+
+            # Create new time record
+            record = _create_time_record(
+                session, tempera_station, elapsed_time, work_mode, auto_update
+            )
+            logger.info(f"Creating new time record: {record}")
 
         session.commit()
 
