@@ -2,6 +2,7 @@ import asyncio
 import logging.config
 import sys
 
+import bleak
 import requests.exceptions
 from bleak import BleakClient
 from tenacity import retry, wait_fixed, retry_if_exception_type
@@ -75,6 +76,7 @@ async def send_connection_status(status: bool) -> None:
 # which aren't critical for the functionality of the access point.)
 @retry(
     retry=retry_if_exception_type(BluetoothConnectionLostException)
+    | retry_if_exception_type(bleak.exc.BleakDBusError)
     | retry_if_exception_type(RuntimeError),
     wait=wait_fixed(10),
 )
@@ -89,6 +91,9 @@ async def main():
     except* BluetoothOffException:
         logger.critical("Bluetooth is off. Turn on Bluetooth and try again :)")
         sys.exit(0)
+    except* RuntimeError:
+        logger.info("Falling back to device discovery.")
+        raise
 
     tempera_station = tempera_station.result()
     async with BleakClient(tempera_station) as client:
@@ -100,7 +105,7 @@ async def main():
         )
 
         async with asyncio.TaskGroup() as tg:
-            _ = tg.create_task(send_connection_status(status=True))
+            # _ = tg.create_task(send_connection_status(status=True))
             _ = tg.create_task(get_notifications(client))
 
         while True:
@@ -134,8 +139,11 @@ async def main():
 
                 await send_data()
             except* BluetoothConnectionLostException:
-                _ = tg.create_task(send_connection_status(status=False))
+                # _ = tg.create_task(send_connection_status(status=False))
                 raise BluetoothConnectionLostException from None
+            except* bleak.exc.BleakDBusError:
+                logger.info("Falling back to device discovery.")
+                raise
 
 
 if __name__ == "__main__":

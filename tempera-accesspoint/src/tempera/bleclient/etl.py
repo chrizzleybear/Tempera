@@ -2,11 +2,13 @@ import logging
 from datetime import datetime, timezone, timedelta
 from typing import List
 
+import bleak.exc
 import sqlalchemy.orm
 from bleak import BleakClient, BleakGATTCharacteristic
 from bleak.backends.service import BleakGATTService
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from tenacity import retry, retry_if_exception_type, stop_after_attempt
 
 from tempera.database.entities import Mode, TimeRecord, TemperaStation, Measurement
 from tempera.utils import shared
@@ -127,6 +129,9 @@ async def elapsed_time_handler(
         session.commit()
 
 
+@retry(
+    retry=retry_if_exception_type(bleak.exc.BleakDBusError), stop=stop_after_attempt(5)
+)
 async def measurements_handler(
     client: BleakClient,
     characteristics: List[BleakGATTCharacteristic],
@@ -138,39 +143,43 @@ async def measurements_handler(
     """
     temperature, irradiance, humidity, nmvoc = None, None, None, None
     for characteristic in characteristics:
-        if "2a6e" in characteristic.uuid:
-            temperature = (
-                int.from_bytes(
-                    await client.read_gatt_char(characteristic), byteorder="little"
+        try:
+            if "2a6e" in characteristic.uuid:
+                temperature = (
+                    int.from_bytes(
+                        await client.read_gatt_char(characteristic), byteorder="little"
+                    )
+                    / 100
                 )
-                / 100
-            )
-        elif "2a77" in characteristic.uuid:
-            irradiance = (
-                int.from_bytes(
-                    await client.read_gatt_char(characteristic), byteorder="little"
+            elif "2a77" in characteristic.uuid:
+                irradiance = (
+                    int.from_bytes(
+                        await client.read_gatt_char(characteristic), byteorder="little"
+                    )
+                    / 10
                 )
-                / 10
-            )
-        elif "2a6f" in characteristic.uuid:
-            humidity = (
-                int.from_bytes(
-                    await client.read_gatt_char(characteristic), byteorder="little"
+            elif "2a6f" in characteristic.uuid:
+                humidity = (
+                    int.from_bytes(
+                        await client.read_gatt_char(characteristic), byteorder="little"
+                    )
+                    / 100
                 )
-                / 100
-            )
-        elif "2bd3" in characteristic.uuid:
-            nmvoc = float(
-                int.from_bytes(
-                    await client.read_gatt_char(characteristic), byteorder="little"
+            elif "2bd3" in characteristic.uuid:
+                nmvoc = float(
+                    int.from_bytes(
+                        await client.read_gatt_char(characteristic), byteorder="little"
+                    )
+                    * 100
                 )
-                * 100
-            )
-        else:
-            logger.warning(
-                f"UUID {characteristic} doesn't match any supported "
-                "characteristic in the environmental sensing service."
-            )
+            else:
+                logger.warning(
+                    f"UUID {characteristic} doesn't match any supported "
+                    "characteristic in the environmental sensing service."
+                )
+        except bleak.exc.BleakDBusError:
+            logger.error("Failed to read measurement.")
+            raise
 
     with Session(shared.db_engine) as session:
         tempera_station = session.scalars(
