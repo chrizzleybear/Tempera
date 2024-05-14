@@ -7,6 +7,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { UsersService } from '../../_services/users.service';
 import { User } from '../../models/user.model';
 import {ProjectCreateDTO} from "../../models/projectDtos";
+import {MessageModule} from "primeng/message";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-project-create',
@@ -15,7 +17,9 @@ import {ProjectCreateDTO} from "../../models/projectDtos";
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,
-    DropdownModule
+    DropdownModule,
+    MessageModule,
+    NgIf
   ],
   templateUrl: './project-create.component.html',
   styleUrls: ['./project-create.component.css']
@@ -57,6 +61,7 @@ export class ProjectCreateComponent {
       };
       this.projectService.createProject(dto).subscribe({
         next: () => {
+          this.projectForm.reset();
           console.log('Project created successfully');
           this.createComplete.emit(true);
         },

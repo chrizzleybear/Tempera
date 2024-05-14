@@ -7,6 +7,8 @@ import {GroupService} from '../../_services/group.service';
 import {UsersService} from '../../_services/users.service';
 import {DropdownOptionUser, User} from '../../models/user.model';
 import {GroupCreateDTO} from "../../models/groupDtos";
+import {MessageModule} from "primeng/message";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-group-create',
@@ -16,6 +18,8 @@ import {GroupCreateDTO} from "../../models/groupDtos";
     ButtonModule,
     InputTextModule,
     DropdownModule,
+    MessageModule,
+    NgIf,
   ],
   templateUrl: './group-create.component.html',
   styleUrl: './group-create.component.css'

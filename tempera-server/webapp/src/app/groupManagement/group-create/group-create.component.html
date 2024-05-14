@@ -1,5 +1,14 @@
 <div>
     <form [formGroup]="groupForm" (ngSubmit)="onSubmit()">
+      <!-- Validator messages -->
+      <div class="mb-2">
+        <p-message *ngIf="groupForm.controls['name'].errors?.['required'] && groupForm.controls['name'].touched"
+                   severity="error" text="Group Name is required." styleClass="mr-2"></p-message>
+        <p-message *ngIf="groupForm.controls['description'].errors?.['required'] && groupForm.controls['description'].touched"
+                   severity="error" text="Description is required." styleClass="mr-2"></p-message>
+        <p-message *ngIf="groupForm.controls['groupLead'].errors?.['required'] && groupForm.controls['groupLead'].touched"
+                   severity="error" text="Group Lead is required." styleClass="mr-2"></p-message>
+      </div>
         <div class="p-field">
             <label for="name">Group Name: </label>
             <input id="name" type="text" pInputText formControlName="name">
@@ -24,6 +33,6 @@
                         id="groupLead"></p-dropdown>
         </div>
         <br>
-        <button pButton type="submit" label="Create Group"></button>
+        <button pButton type="submit" label="Create Group" [disabled]="!groupForm.valid"></button>
     </form>
 </div>
