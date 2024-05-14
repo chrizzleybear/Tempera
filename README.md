@@ -1,6 +1,8 @@
 TEMPERA - next generation time tracking
 =======================================
 
+[![pipeline](https://git.uibk.ac.at/informatik/qe/swess24/group4/g4t1/badges/main/pipeline.svg)](https://git.uibk.ac.at/informatik/qe/swess24/group4/g4t1/-/commits/main/)
+
 # Running the components (Web-Server & Raspberry)
 
 ---
