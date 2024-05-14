@@ -1,55 +1,102 @@
-image: alpine:3.17
-
 stages:
   - test
   - sonarCheck
   - format
   - build
 
+.java-setup:
+  image: alpine:3.17
+  script:
+    - apk add --update maven
+
+.python-setup:
+  image: python:3.11.8-alpine
+
+.sonar-cli-setup:
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [ "" ]
+
+
+##############
+# Unit tests #
+##############
+java-unit-test-job:
+  extends: .java-setup
+  stage: test
+  script:
+    # with extends, the current job's script key overwrites the .java-setup script key.
+    # therefore, mvn won't be available here without explicitly referencing the .java-setup script key.
+    - !reference [.java-setup, script]
+    - cd tempera-server
+    - mvn test
+  allow_failure: true
+
+###################
+# Sonarqube check #
+###################
 # shared variables between all sonarCheck jobs
 variables:
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/code/.sonar"
   GIT_DEPTH: "0"
 
-.before_script_template:
-  before_script:
-    - apk add --update maven
-
-unit-test-job:
-  extends: .before_script_template
-  stage: test
-  script:
-    - cd tempera-server
-    - echo "Running unit tests..."
-    - mvn test
-  allow_failure: true
-
 java-sonarqube-check:
-  extends: .before_script_template
+  extends: .java-setup
   stage: sonarCheck
   script:
+    - !reference [.java-setup, script]
     - cd tempera-server
-    - echo Running sonar analysis for ${SONAR_PROJECT_KEY}
     - mvn -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} backend ${GITLAB_USER_NAME}" --fail-at-end verify sonar:sonar
   allow_failure: true
 
+python-sonarqube-check:
+  extends: .sonar-cli-setup
+  stage: sonarCheck
+  script:
+    - sonar-scanner -Dsonar.login=${SONAR_ACCESSPOINT_TOKEN} -Dsonar.sources=tempera-accesspoint/src -Dsonar.projectKey=${SONAR_ACCESSPOINT_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} access point ${GITLAB_USER_NAME}" -Dsonar.python.version=3.11.8
+  allow_failure: true
+
+typescript-sonarqube-check:
+  extends: .sonar-cli-setup
+  stage: sonarCheck
+  script:
+    - sonar-scanner -Dsonar.login=${SONAR_FRONTEND_TOKEN} -Dsonar.sources=tempera-server/webapp -Dsonar.projectKey=${SONAR_FRONTEND_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} frontend ${GITLAB_USER_NAME}"
+  allow_failure: true
+
+
+##############
+# Formatting #
+##############
 python-format-job:
   # make the pipeline fail if python project files are not formatted properly with black
+  extends: .python-setup
   stage: format
-  image:
-    python:3.11.8-alpine
   script:
     - pip install black>=24.3.0
     - black tempera-accesspoint/ --check --verbose --diff --color
   allow_failure: true
 
-python-build-job:
+##############
+# Deployment #
+##############
+java-build-job:
+  extends: .java-setup
   stage: build
-  image: python:3.11.8-alpine
   script:
-    - python --version ; pip --version
-    - python -m venv venv
-    - source venv/bin/activate
+    - !reference [.java-setup, script]
+    - cd tempera-server
+    - mvn -Dmaven.test.skip package
+  artifacts:
+    paths:
+      # the application is built as a .war and not as a .jar file
+      # (was configured like this in the skeleton pom.xml)
+      - tempera-server/target/skeleton-1.0.7.war
+    expire_in: 2 days
+
+python-build-job:
+  extends: .python-setup
+  stage: build
+  script:
     - pip install build
     - python -m build tempera-accesspoint/
   artifacts:
@@ -57,22 +104,16 @@ python-build-job:
       - tempera-accesspoint/dist/*
     expire_in: 2 days
 
-python-sonarqube-check:
-  image:
-    name: sonarsource/sonar-scanner-cli:latest
-    entrypoint: [ "" ]
-  stage: sonarCheck
+# deploys the python docs
+pages:
+  stage: build
+  image: sphinxdoc/sphinx
   script:
-    - echo Running sonar analysis of the Raspberry code for ${SONAR_PROJECT_KEY}
-    - sonar-scanner -Dsonar.login=${SONAR_ACCESSPOINT_TOKEN} -Dsonar.sources=tempera-accesspoint/src -Dsonar.projectKey=${SONAR_ACCESSPOINT_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} access point ${GITLAB_USER_NAME}" -Dsonar.python.version=3.11.8
-  allow_failure: true
-
-typescript-sonarqube-check:
-  image:
-    name: sonarsource/sonar-scanner-cli:latest
-    entrypoint: [ "" ]
-  stage: sonarCheck
-  script:
-    - echo Running sonar analysis of the front end code for ${SONAR_PROJECT_KEY}
-    - sonar-scanner -Dsonar.login=${SONAR_FRONTEND_TOKEN} -Dsonar.sources=tempera-server/webapp -Dsonar.projectKey=${SONAR_FRONTEND_PROJECT_KEY} -Dsonar.projectName="${CI_PROJECT_NAME} frontend ${GITLAB_USER_NAME}"
-  allow_failure: true
+    - pip install ./tempera-accesspoint[docs]
+    - cd ./tempera-accesspoint/docs
+    - make html
+    - mv ./build/html ./build/public
+  artifacts:
+    paths:
+      - tempera-accesspoint/docs/build/public
+  publish: "tempera-accesspoint/docs/build/public"
