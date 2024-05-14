@@ -44,13 +44,13 @@ public class ProjectController {
         return ResponseEntity.ok("Project deleted");
     }
     @GetMapping("/load/{id}")
-    public ResponseEntity<Project> getProject(@PathVariable String id) {
+    public ResponseEntity<Project> getProject(@PathVariable Long id) {
         Project project = projectService.loadProject(id);
         return ResponseEntity.ok(project);
     }
 
     @GetMapping("/getGroups/{id}")
-    public ResponseEntity<List<Group>> getGroups(@PathVariable String id) {
+    public ResponseEntity<List<Group>> getGroups(@PathVariable Long id) {
         List<Group> groups = projectService.loadProject(id).getGroups();
         return ResponseEntity.ok(groups);
     }
@@ -69,14 +69,14 @@ public class ProjectController {
     @PostMapping("/addContributor")
     public ResponseEntity<Project> addContributor(@RequestBody ContributorAssignmentDto contributorAssignmentDto) {
         projectService.addContributor(contributorAssignmentDto.projectId(), contributorAssignmentDto.contributorId());
-        Project project = projectService.loadProject(String.valueOf(contributorAssignmentDto.projectId()));
+        Project project = projectService.loadProject(contributorAssignmentDto.projectId());
         return ResponseEntity.ok(project);
     }
 
     @DeleteMapping("/deleteContributor/{projectId}/{contributorId}")
     public ResponseEntity<Project> removeContributor(@PathVariable String projectId, @PathVariable String contributorId) {
         projectService.deleteContributor(Long.parseLong(projectId),contributorId);
-        Project project = projectService.loadProject(projectId);
+        Project project = projectService.loadProject(Long.parseLong(projectId));
         return ResponseEntity.ok(project);
     }
 

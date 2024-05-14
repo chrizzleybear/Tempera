@@ -72,9 +72,8 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
-    public Project loadProject(String id) {
-        Long idNumber = Long.parseLong(id);
-        return projectRepository.findFirstById(idNumber);
+    public Project loadProject(Long projectId) {
+        return projectRepository.findFirstById(projectId);
     }
 
     public void deleteProject(Long projectId) {
