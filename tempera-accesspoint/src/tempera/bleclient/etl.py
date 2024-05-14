@@ -171,20 +171,6 @@ async def measurements_handler(
                 f"UUID {characteristic} doesn't match any supported "
                 "characteristic in the environmental sensing service."
             )
-            raise RuntimeError
-
-    if not temperature:
-        logger.warning("Received no value for measurement: temperature.")
-        raise ValueError
-    elif not irradiance:
-        logger.warning("Received no value for measurement: irradiance.")
-        raise ValueError
-    elif not humidity:
-        logger.warning("Received no value for measurement: humidity.")
-        raise ValueError
-    elif not nmvoc:
-        logger.warning("Received no value for measurement: nmvoc.")
-        raise ValueError
 
     with Session(shared.db_engine) as session:
         tempera_station = session.scalars(

@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import sys
 from typing import List, Tuple
 
 import bleak.exc
@@ -7,9 +8,11 @@ import requests
 from bleak import BLEDevice, BleakScanner, BleakClient
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from tenacity import retry, retry_if_exception_type, wait_fixed
 
 from tempera.bleclient.etl import filter_uuid
 from tempera.database.entities import TemperaStation
+from tempera.exceptions import BluetoothOffException, BluetoothConnectionLostException
 from tempera.utils import shared
 from tempera.utils.request_utils import make_request
 
@@ -44,7 +47,7 @@ async def get_tempera_stations() -> List[BLEDevice] | None:
     try:
         devices = await scanner.discover(timeout=SCANNING_TIMEOUT)
     except bleak.exc.BleakError:
-        raise bleak.exc.BleakError from None
+        raise BluetoothOffException
 
     logger.info(f"Found devices: {devices}")
 
@@ -61,21 +64,31 @@ async def get_tempera_stations() -> List[BLEDevice] | None:
             "No devices found with 'G4T1' in their name.\n"
             "Make sure 'G4T1' is part of the tempera station's name you are trying to connect."
         )
-        # TODO: send error log to back end
         return None
 
     return tempera_stations
 
 
+@retry(
+    retry=retry_if_exception_type(requests.exceptions.ConnectionError),
+    wait=wait_fixed(10),
+)
 async def validate_station(
     tempera_station: BLEDevice, client: BleakClient
 ) -> BLEDevice | None:
     """
     Returns the first valid tempera station. Valid means that its ID corresponds to one stored in the webapp back end.
 
+    This function isn't retried with tenacity after a connection loss, so that the access point isn't stuck trying
+    to connect to a station that is offline e.g., when you want to exchange one station for another.
+    If the connection is lost and the same station should be connected again, this will happen in the discovery
+    loop if possible, without further measures.
+
     :param client:
     :param tempera_station:
     :return:
+
+    :raises: BluetoothConnectionLostException if the established connection to the tempera station is disrupted.
     """
     logger.info(f"Trying to validate stations: {tempera_station}")
     try:
@@ -88,21 +101,29 @@ async def validate_station(
     except requests.exceptions.ConnectionError:
         logger.error(
             "Request failed. Couldn't establish a connection to the web server "
-            f"at {shared.config['webserver_address']}."
+            f"at {shared.config['webserver_address']}. Can't validate stations. Trying again in 10 seconds"
         )
-        raise ConnectionError from None
+        raise requests.exceptions.ConnectionError from None
 
     if not response["access_point_allowed"]:
-        logger.warning(
-            "This access point is not registered in the web app server. It can't transmit any data."
+        logger.critical(
+            f"Access point not approved or enabled! "
+            f"Ensure that this access point ({shared.config['access_point_id']}) "
+            f"is registered and enabled in the web server."
         )
-        raise RuntimeError
+        sys.exit(0)
 
     allowed_stations = response["stations_allowed"]
 
-    async with asyncio.TaskGroup() as tg:
-        id_ok = tg.create_task(validate_id(client, allowed_stations))
-        missing_characteristics = tg.create_task(validate_characteristics(client))
+    try:
+        async with asyncio.TaskGroup() as tg:
+            id_ok = tg.create_task(validate_id(client, allowed_stations))
+            missing_characteristics = tg.create_task(validate_characteristics(client))
+    except* bleak.exc.BleakError:
+        logger.error(
+            f"Lost connection to {client.address}, going back to device discovery."
+        )
+        raise BluetoothConnectionLostException
 
     id_ok, station_id = id_ok.result()
     missing_characteristics = missing_characteristics.result()
@@ -112,7 +133,13 @@ async def validate_station(
         logger.info(
             f"Station[name: {tempera_station.name}; address: {tempera_station.address}] is valid."
         )
-        shared.current_station_id = await get_station_id(client)
+        try:
+            shared.current_station_id = await get_station_id(client)
+        except bleak.exc.BleakError:
+            logger.error(
+                f"Lost connection to {client.address}, going back to device discovery."
+            )
+            raise BluetoothConnectionLostException
         return tempera_station
     elif id_ok and missing_characteristics is not None:
         logger.info(
@@ -150,7 +177,7 @@ async def validate_id(client: BleakClient, valid_ids: List[str]) -> Tuple[bool, 
     station_id = await get_station_id(client)
     if station_id == "":
         logger.error(f"No station ID found for station {client.address}")
-        raise ValueError
+        raise RuntimeError
 
     logger.info(f"Checking station ID '{station_id}' against web app server data.")
 
@@ -206,22 +233,29 @@ async def discovery_loop() -> BLEDevice:
 
     if not tempera_stations:
         logger.error("No tempera stations found.")
-        raise ValueError
+        raise RuntimeError
 
     for station in tempera_stations:
         async with BleakClient(station) as client:
-            tempera_station = await validate_station(station, client)
+            try:
+                tempera_station = await validate_station(station, client)
+            except bleak.exc.BleakError:
+                logger.info(f"Can't connect to {client.address}. Skipping validation.")
 
         if tempera_station:
             break
 
     if not tempera_station:
         logger.error("No tempera station found.")
-        raise ValueError
+        raise RuntimeError
 
     return tempera_station
 
 
+@retry(
+    retry=retry_if_exception_type(requests.exceptions.ConnectionError),
+    wait=wait_fixed(10),
+)
 async def get_scan_order() -> bool:
     """
 
@@ -239,6 +273,6 @@ async def get_scan_order() -> bool:
             "Request failed. Couldn't establish a connection to the web server "
             f"at {shared.config['webserver_address']}."
         )
-        raise ConnectionError from None
+        raise requests.exceptions.ConnectionError from None
 
     return response["scan"]

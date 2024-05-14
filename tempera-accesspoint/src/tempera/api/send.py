@@ -1,10 +1,12 @@
 import logging
+import sys
 from asyncio import TaskGroup
 from typing import Dict, Any, Sequence, Tuple, Literal
 
 import requests
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from tenacity import retry, retry_if_exception_type, wait_fixed
 
 from tempera.database.entities import TemperaStation, Measurement, TimeRecord
 from tempera.utils import shared, make_request
@@ -35,7 +37,7 @@ def _get_from_database(
                 f"Currently connected station {shared.current_station_id} not found in the database. "
                 "The station should have been saved upon first connection. Check the logs for possible errors."
             )
-            raise ValueError
+            sys.exit(0)
 
         result = None
         match kind:
@@ -98,6 +100,10 @@ def _build_payload(
             }
 
 
+@retry(
+    retry=retry_if_exception_type(requests.exceptions.ConnectionError),
+    wait=wait_fixed(10),
+)
 async def send_data(*, kind: DataType):
     """
 
@@ -111,12 +117,9 @@ async def send_data(*, kind: DataType):
             endpoint = "time_record"
         case _:
             logger.critical(f"Can't handle data of the {kind} type.")
-            raise ValueError
+            sys.exit(0)
 
     data, tempera_station = _get_from_database(kind=kind)
-
-    if not data:
-        logger.warning(f"No measurements found for station {tempera_station.id}")
 
     payloads = [_build_payload(tempera_station, item, kind=kind) for item in data]
 
@@ -140,7 +143,7 @@ async def send_data(*, kind: DataType):
             "Couldn't establish a connection to the web server "
             f"at {shared.config['webserver_address']}."
         )
-        raise ConnectionError from None
+        raise requests.exceptions.ConnectionError from None
 
     _safe_delete_data(data, kind=kind)
 
