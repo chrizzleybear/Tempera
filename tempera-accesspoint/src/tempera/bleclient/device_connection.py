@@ -22,6 +22,12 @@ SCANNING_TIMEOUT = 5
 
 
 async def detection_callback(device, advertisement_data) -> None:
+    """
+
+    :param device:
+    :param advertisement_data:
+    :return:
+    """
     logger.info(
         f"Device[name:{device.name};address:{device.address};signal_strength(RSSI):{advertisement_data.rssi};"
         f"ad_data:{advertisement_data}]"
@@ -29,6 +35,10 @@ async def detection_callback(device, advertisement_data) -> None:
 
 
 async def get_tempera_stations() -> List[BLEDevice] | None:
+    """
+
+    :return:
+    """
     logger.info("Scanning for BLE devices...")
     scanner = BleakScanner(detection_callback)
     try:
@@ -119,6 +129,11 @@ async def validate_station(
 
 
 async def get_station_id(client: BleakClient) -> str:
+    """
+
+    :param client:
+    :return:
+    """
     device_info_service = await filter_uuid(client, "180a")
     serial_number_characteristic = await filter_uuid(device_info_service, "2a25")
     station_id = await client.read_gatt_char(serial_number_characteristic.uuid)
@@ -126,6 +141,12 @@ async def get_station_id(client: BleakClient) -> str:
 
 
 async def validate_id(client: BleakClient, valid_ids: List[str]) -> Tuple[bool, str]:
+    """
+
+    :param client:
+    :param valid_ids:
+    :return:
+    """
     station_id = await get_station_id(client)
     if station_id == "":
         logger.error(f"No station ID found for station {client.address}")
@@ -137,6 +158,11 @@ async def validate_id(client: BleakClient, valid_ids: List[str]) -> Tuple[bool, 
 
 
 async def validate_characteristics(client: BleakClient) -> List[str]:
+    """
+
+    :param client:
+    :return:
+    """
     missing_characteristics = REQUIRED_CHARACTERISTICS
     for service in client.services:
         for characteristic in service.characteristics:
@@ -148,6 +174,10 @@ async def validate_characteristics(client: BleakClient) -> List[str]:
 
 
 async def save_station(station_id: str) -> None:
+    """
+
+    :param station_id:
+    """
     with Session(shared.db_engine) as session:
         station = session.scalars(
             select(TemperaStation).where(TemperaStation.id == station_id)
@@ -168,6 +198,10 @@ async def save_station(station_id: str) -> None:
 # this strategy might be preferable
 # @retry(wait=wait_fixed(60))
 async def discovery_loop() -> BLEDevice:
+    """
+
+    :return:
+    """
     tempera_stations = await get_tempera_stations()
 
     if not tempera_stations:
@@ -189,6 +223,10 @@ async def discovery_loop() -> BLEDevice:
 
 
 async def get_scan_order() -> bool:
+    """
+
+    :return:
+    """
     try:
         response = await make_request(
             "get",

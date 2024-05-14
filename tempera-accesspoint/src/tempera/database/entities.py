@@ -14,10 +14,17 @@ class Mode(StrEnum):
 
 
 class Base(DeclarativeBase):
+    """
+    Base class for defining entities with SQLAlchemy. All entities must inherit from this base class.
+    This class shouldn't contain any implementation.
+    """
+
     pass
 
 
 class TemperaStation(Base):
+    """"""
+
     __tablename__ = "tempera_station"
 
     id: Mapped[str] = mapped_column(primary_key=True)
@@ -33,6 +40,8 @@ class TemperaStation(Base):
 
 
 class TimeRecord(Base):
+    """"""
+
     __tablename__ = "time_record"
 
     tempera_station_id: Mapped[int] = mapped_column(
@@ -58,6 +67,8 @@ class TimeRecord(Base):
 
 
 class Measurement(Base):
+    """"""
+
     __tablename__ = "measurement"
 
     tempera_station_id: Mapped[int] = mapped_column(
