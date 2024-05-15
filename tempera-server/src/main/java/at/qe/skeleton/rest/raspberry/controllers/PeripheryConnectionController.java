@@ -8,9 +8,6 @@ import at.qe.skeleton.rest.raspberry.dtos.ScanOrderDto;
 import at.qe.skeleton.rest.raspberry.mappers.AccessPointMapper;
 import at.qe.skeleton.services.AccessPointService;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.swagger.v3.core.util.Json;
 import org.primefaces.shaded.json.JSONObject;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -66,17 +63,33 @@ public class PeripheryConnectionController {
       @RequestParam("access_point_id") UUID access_point_id,
       @RequestParam("station_id") String station_id,
       @RequestBody JsonNode payload) {
-    boolean connection_status = payload.get("connection_status").asBoolean();
+    JSONObject response = new JSONObject();
 
+    boolean connectionStatus;
     try{
-      TemperaStation temperaStation = accessPointService.updateStationConnectionStatus(station_id, connection_status);
-      return ResponseEntity.ok().body("Update successful. Updated station info: " + temperaStation);
+      connectionStatus = payload.get("connection_status").asBoolean();
+    }
+    catch (NullPointerException e){
+      response.put("error", e.getCause());
+      return ResponseEntity.badRequest().body(response.toString());
+    }
+
+    String loggingMessage =
+            "Received order to set the status of station '%s' to %s by access point %s"
+                    .formatted(station_id, connectionStatus, access_point_id);
+    logger.info(loggingMessage);
+    try{
+      TemperaStation temperaStation = accessPointService.updateStationConnectionStatus(station_id, connectionStatus);
+      response.put("response", "Update successful. Updated station info: " + temperaStation);
+      return ResponseEntity.ok().body(response.toString());
     } catch (CouldNotFindEntityException e) {
+      response.put("error message", "No tempera station found under the %s ID".formatted(station_id));
       return ResponseEntity.badRequest()
-          .body(
-              "{message: "
-                  + "No tempera station found under the %s ID".formatted(station_id)
-                  + "}");
+          .body(response.toString());
+    }
+    catch (Exception e){
+      response.put("error message", e.getCause());
+      return ResponseEntity.internalServerError().body(response.toString());
     }
   }
 }
