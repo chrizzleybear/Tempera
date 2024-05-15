@@ -117,10 +117,10 @@ class TimeRecordServiceTest {
 
 
   @Test
-  @WithMockUser(
-      username = "admin",
-      roles = {"ADMIN"})
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:addRecordWithOlderRecordsRealRepositoryTest.sql")
+  @WithMockUser(
+          username = "admin",
+          roles = {"ADMIN"})
   public void addRecordWithOlderRecordsRealRepository() throws Exception {
 
  LocalDateTime startNew = LocalDateTime.now();
