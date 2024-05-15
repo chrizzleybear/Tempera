@@ -8,7 +8,7 @@ from bleak import BleakClient, BleakGATTCharacteristic
 from bleak.backends.service import BleakGATTService
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from tenacity import retry, retry_if_exception_type, stop_after_attempt
+from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_fixed
 
 from tempera.database.entities import Mode, TimeRecord, TemperaStation, Measurement
 from tempera.utils import shared
@@ -130,7 +130,9 @@ async def elapsed_time_handler(
 
 
 @retry(
-    retry=retry_if_exception_type(bleak.exc.BleakDBusError), stop=stop_after_attempt(5)
+    retry=retry_if_exception_type(bleak.exc.BleakDBusError),
+    wait=wait_fixed(10),
+    stop=stop_after_attempt(10),
 )
 async def measurements_handler(
     client: BleakClient,

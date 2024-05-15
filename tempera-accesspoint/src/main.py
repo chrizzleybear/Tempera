@@ -54,17 +54,18 @@ async def send_connection_status(status: bool) -> None:
     :param status:
     :return:
     """
+    logger.info(f"Sending tempera station connection status={status} to web server.")
     try:
         await make_request(
-            "post",
-            f"{shared.config['webserver_address']}/rasp/api/connection_status",
+            "put",
+            f"{shared.config['webserver_address']}/rasp/api/tempera_status",
             auth=shared.header,
             params={
                 "access_point_id": shared.config["access_point_id"],
                 "station_id": shared.current_station_id,
             },
             json={
-                "connected": status,
+                "connection_status": status,
             },
         )
     except requests.exceptions.ConnectionError:
@@ -95,7 +96,7 @@ async def main():
         logger.critical("Bluetooth is off. Turn on Bluetooth and try again :)")
         sys.exit(0)
     except* RuntimeError:
-        logger.info("Falling back to device discovery.")
+        logger.info("Returning to device discovery.")
         raise
 
     tempera_station = tempera_station.result()
@@ -108,8 +109,8 @@ async def main():
         )
 
         async with asyncio.TaskGroup() as tg:
-            # _ = tg.create_task(send_connection_status(status=True))
-            _ = tg.create_task(get_notifications(client))
+            _send_status = tg.create_task(send_connection_status(status=True))
+            _get_notifications = tg.create_task(get_notifications(client))
 
         while True:
             try:
@@ -142,9 +143,11 @@ async def main():
 
                 await send_data()
             except* BluetoothConnectionLostException:
-                # _ = tg.create_task(send_connection_status(status=False))
+                await send_connection_status(status=False)
+                logger.info("Falling back to device discovery.")
                 raise BluetoothConnectionLostException from None
             except* bleak.exc.BleakDBusError:
+                await send_connection_status(status=False)
                 logger.info("Falling back to device discovery.")
                 raise
 

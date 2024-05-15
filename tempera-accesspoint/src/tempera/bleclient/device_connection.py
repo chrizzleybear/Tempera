@@ -176,8 +176,8 @@ async def validate_id(client: BleakClient, valid_ids: List[str]) -> Tuple[bool, 
     """
     station_id = await get_station_id(client)
     if station_id == "":
-        logger.error(f"No station ID found for station {client.address}")
-        raise RuntimeError
+        logger.info(f"No station ID found for station {client.address}")
+        return False, station_id
 
     logger.info(f"Checking station ID '{station_id}' against web app server data.")
 
@@ -220,10 +220,7 @@ async def save_station(station_id: str) -> None:
             session.commit()
 
 
-# Keep scanning for stations every 60 seconds until one is found.
-# Usually a stop after n attempts would probably be better, but with headless raspberry pi
-# this strategy might be preferable
-# @retry(wait=wait_fixed(60))
+@retry(retry=retry_if_exception_type(RuntimeWarning), wait=wait_fixed(60))
 async def discovery_loop() -> BLEDevice:
     """
 
@@ -232,8 +229,8 @@ async def discovery_loop() -> BLEDevice:
     tempera_stations = await get_tempera_stations()
 
     if not tempera_stations:
-        logger.error("No tempera stations found.")
-        raise RuntimeError
+        logger.warning("No tempera stations found.")
+        raise RuntimeWarning
 
     for station in tempera_stations:
         async with BleakClient(station) as client:
@@ -246,8 +243,8 @@ async def discovery_loop() -> BLEDevice:
             break
 
     if not tempera_station:
-        logger.error("No tempera station found.")
-        raise RuntimeError
+        logger.warning("No valid tempera station found.")
+        raise RuntimeWarning
 
     return tempera_station
 

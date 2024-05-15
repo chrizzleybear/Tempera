@@ -9,7 +9,7 @@ from tempera.utils import shared
 logger = logging.getLogger(f"tempera.{__name__}")
 
 
-async def make_request(kind: Literal["get", "post"], url: str, **kwargs) -> Dict:
+async def make_request(kind: Literal["get", "post", "put"], url: str, **kwargs) -> Dict:
     """
     Wrapper around a request to handle common response scenarios.
     Ensures the request returns a non-empty response or a RuntimeError is raised.
@@ -21,6 +21,8 @@ async def make_request(kind: Literal["get", "post"], url: str, **kwargs) -> Dict
             response = requests.get(url, **kwargs)
         case "post":
             response = requests.post(url, **kwargs)
+        case "put":
+            response = requests.put(url, **kwargs)
         case _:
             logger.warning("REST operation not supported. Use one of 'get' or 'post'.")
             sys.exit(0)
