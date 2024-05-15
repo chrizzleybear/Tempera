@@ -106,20 +106,8 @@ public class UserxService implements UserDetailsService {
    *
    * @param user the user to delete
    */
-  @PreAuthorize("hasAuthority('ADMIN')")
-  public void deleteUser(Userx user) throws CouldNotFindEntityException {
-    TemperaStation temperaStation =
-        temperaStationService
-            .findByUser(user)
-            .orElseThrow(
-                () ->
-                    new CouldNotFindEntityException(
-                        "Could not find Temperastation assigned to User %s".formatted(user)));
-    temperaStation.setUser(null);
-    temperaStationService.save(temperaStation);
-    userRepository.delete(user);
-    // :TODO: write some audit log stating who and when this user was permanently deleated.
-  }
+
+
 
   private Userx getAuthenticatedUser() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -157,6 +145,7 @@ public class UserxService implements UserDetailsService {
    * @param id
    */
   @Transactional
+  @PreAuthorize("hasAuthority('ADMIN')")
   public void deleteUser(String id) {
 
     Optional<Userx> userx = userRepository.findById(id);
@@ -168,7 +157,6 @@ public class UserxService implements UserDetailsService {
       if (user.getRoles().contains(UserxRole.MANAGER)
           || user.getRoles().contains(UserxRole.GROUPLEAD)) {
         List<Project> projects = projectService.getProjectsByManager(user.getUsername());
-
         for (var project : projects) {
           project.setManager(null);
           projectService.saveProject(project);
