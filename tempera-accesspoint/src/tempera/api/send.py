@@ -99,7 +99,7 @@ def _build_payload(
             }
 
 
-async def send_data(*, kind: DataType):
+async def send_data(*, kind: DataType) -> None:
     """
 
     :param kind:
@@ -138,6 +138,7 @@ async def send_data(*, kind: DataType):
             "Couldn't establish a connection to the web server "
             f"at {shared.config['webserver_address']}."
         )
+        raise requests.exceptions.ConnectionError
 
     _safe_delete_data(data, kind=kind)
 
@@ -168,5 +169,8 @@ async def send_measurements_and_time_records():
 
     :return:
     """
-    await send_data(kind="Measurement")
-    await send_data(kind="TimeRecord")
+    for kind in ["Measurement", "TimeRecord"]:
+        try:
+            await send_data(kind=kind)
+        except requests.exceptions.ConnectionError:
+            pass
