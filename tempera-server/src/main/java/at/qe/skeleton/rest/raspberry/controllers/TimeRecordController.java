@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 // code was written with workshop 5 code as template
 @RestController
-@RequestMapping("/rasp/api/timerecord")
+@RequestMapping("/rasp/api/timer_record")
 public class TimeRecordController {
   private final TimeRecordService timeRecordService;
   private final SuperiorTimeRecordMapper timeRecordMapper;
