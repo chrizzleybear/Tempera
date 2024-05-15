@@ -56,7 +56,7 @@ public class AccessPointService {
     return accessPoint.isEnabled();
   }
 
-  @Transactional
+
   public void delete(AccessPoint accessPoint) {
     var tempStations = accessPoint.getTemperaStations();
     tempStations.stream().forEach(t -> t.setAccessPoint(null));

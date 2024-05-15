@@ -80,9 +80,15 @@ public class TemperaStation implements Persistable<String> {
   public List<Sensor> getSensors() {
     return sensors;
   }
+
+
+  /**
+   * Beware of bidirectional relationship between AccessPoint and TemperaStation.
+   * Best to use the addTemperaStation in AccessPoint Entity..
+   * @param accessPoint
+   */
   public void setAccessPoint(AccessPoint accessPoint) {
     this.accessPoint = accessPoint;
-    accessPoint.addTemperaStation(this);
   }
 
   public void setId(String id) {
