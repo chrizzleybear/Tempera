@@ -34,8 +34,7 @@ public class ExternalRecord {
 
   private long duration;
 
-  @OneToMany(mappedBy = "externalRecord", cascade = CascadeType.PERSIST, orphanRemoval = true)
-  @Fetch(FetchMode.JOIN)
+  @OneToMany(mappedBy = "externalRecord", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   private List<InternalRecord> internalRecords;
 
   @Enumerated(EnumType.STRING)
@@ -91,7 +90,12 @@ public class ExternalRecord {
     return internalRecords;
   }
 
-  public void addSubordinateTimeRecord(InternalRecord internalRecord) {
+  /**
+   * adds the given InternalRecord to the list of InternalRecords. At the same time
+   * InternalRecord's externalRecord field will be set to this ExternalRecord.
+   * @param internalRecord
+   */
+  public void addInternalRecord(InternalRecord internalRecord) {
     if (internalRecord == null) {
       throw new NullPointerException("InternalRecord should not be null");
     }
@@ -99,14 +103,13 @@ public class ExternalRecord {
       throw new InternalRecordOutOfBoundsException(
           "internalRecord should not start before its superiorTimeRecord.");
     }
-    if (internalRecord.getEnd() != null
-        && (internalRecord.getEnd().isAfter(this.end)
-            || internalRecord.getEnd().isAfter(LocalDateTime.now()))) {
-      throw new InternalRecordOutOfBoundsException(
-          "internalRecord should not end after its superiorTimeRecord. If ExternalRecord has not yet"
-              + "ended, InternalRecord should not extend beyond now.");
-    }
     this.internalRecords.add(internalRecord);
+    internalRecord.setExternalRecord(this);
+  }
+
+  public void removeInternalRecord(InternalRecord internalRecord) {
+    this.internalRecords.remove(internalRecord);
+    internalRecord.setExternalRecord(null);
   }
 
   public State getState() {

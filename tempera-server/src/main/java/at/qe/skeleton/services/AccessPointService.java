@@ -7,6 +7,7 @@ import at.qe.skeleton.repositories.AccessPointRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -53,5 +54,12 @@ public class AccessPointService {
   public boolean isEnabled(UUID id) throws CouldNotFindEntityException {
     AccessPoint accessPoint = this.getAccessPointById(id);
     return accessPoint.isEnabled();
+  }
+
+  @Transactional
+  public void delete(AccessPoint accessPoint) {
+    var tempStations = accessPoint.getTemperaStations();
+    tempStations.stream().forEach(t -> t.setAccessPoint(null));
+    accessPointRepository.delete(accessPoint);
   }
 }

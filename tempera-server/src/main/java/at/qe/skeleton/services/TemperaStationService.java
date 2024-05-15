@@ -1,6 +1,7 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
+import at.qe.skeleton.model.AccessPoint;
 import at.qe.skeleton.model.Sensor;
 import at.qe.skeleton.model.TemperaStation;
 import at.qe.skeleton.model.Userx;
@@ -79,8 +80,15 @@ public class TemperaStationService {
 
   }
 
+/**
+ *  Deletes a TemperaStation and removes it from its corresponding AccessPoint.
+ *  Be careful as this will also delete all corresponding sensors and with them all the
+ *  Measurements associated with that sensor and Temperastation.
+ */
   public void delete(TemperaStation temperaStation) {
     logger.info("deleting temperaStation %s".formatted(temperaStation.toString()));
+    AccessPoint accessPoint = temperaStation.getAccessPoint();
+    accessPoint.getTemperaStations().remove(temperaStation);
     temperaStationRepository.delete(temperaStation);
   }
 

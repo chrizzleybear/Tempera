@@ -32,6 +32,10 @@ public class SensorService {
     return sensorRepository.save(sensor);
   }
 
+  /**
+   * deletes the Sensor. Should not be called by itself, but only when deleting a whole TemperaStation.
+   * @param sensor
+   */
   public void deleteSensor(Sensor sensor) {
     sensorRepository.delete(sensor);
   }

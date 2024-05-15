@@ -80,7 +80,7 @@ class TimeRecordServiceTest {
     ExternalRecord oldExternalRecord =
         new ExternalRecord(admin, startOld, duration, null, State.OUT_OF_OFFICE);
     InternalRecord oldInternalRecord = new InternalRecord(startOld);
-    oldExternalRecord.addSubordinateTimeRecord(oldInternalRecord);
+    oldExternalRecord.addInternalRecord(oldInternalRecord);
 
     // method will call findLatestExternalRecordByUser which will call this method:
     when(externalRecordRepositoryMock.findFirstByUserAndEndIsNull(admin))

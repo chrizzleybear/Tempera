@@ -45,22 +45,18 @@ public class TimeRecordService {
   }
 
   /**
-   * this method saves a new ExternalRecord and adds the start-Time of the new TimeRecord minus
-   * 1sec as the End-Time to the ExternalRecord entity with the latest start datetime before the
-   * current one. Furthermore the method instantiates a InternalRecord with the identical
-   * properties and adds this to the list of Subordinate TimeRecords stored in the
-   * SuperiorTimeRecords. In case this is the first ExternalRecord that was saved for User of
-   * the stored TemperaStation, the method just saves the new ExternalRecord and its
-   * InternalRecord to the database.
+   * this method saves a new ExternalRecord and adds the start-Time of the new TimeRecord minus 1sec
+   * as the End-Time to the ExternalRecord entity with the latest start datetime before the current
+   * one. Furthermore the method instantiates a InternalRecord with the identical properties and
+   * adds this to the list of Subordinate TimeRecords stored in the SuperiorTimeRecords. In case
+   * this is the first ExternalRecord that was saved for User of the stored TemperaStation, the
+   * method just saves the new ExternalRecord and its InternalRecord to the database.
    *
    * @param newExternalRecord
    * @return the ExternalRecord that was newly created.
    */
   @Transactional(
-      rollbackFor = {
-        ExternalRecordOutOfBoundsException.class,
-        CouldNotFindEntityException.class
-      })
+      rollbackFor = {ExternalRecordOutOfBoundsException.class, CouldNotFindEntityException.class})
   public ExternalRecord addRecord(ExternalRecord newExternalRecord)
       throws CouldNotFindEntityException, IOException {
     if (newExternalRecord.getStart() == null) {
@@ -73,14 +69,21 @@ public class TimeRecordService {
   }
 
   public ExternalRecord saveNewTimeRecord(ExternalRecord externalRecord, Userx user) {
-    InternalRecord internalRecord =
-        new InternalRecord(externalRecord.getStart());
-    internalRecord = internalRecordRepository.save(internalRecord);
-    logger.info("saved new %s".formatted(internalRecord.toString()));
-    externalRecord.addSubordinateTimeRecord(internalRecord);
-    logger.info("Added new %s to new %s".formatted(internalRecord, externalRecord));
+    InternalRecord internalRecord = new InternalRecord(externalRecord.getStart());
+
+    // setting the externalRecord for the internalRecord and vice versa.
+    // if the record already exists in the db we should not save it again.
+    if (findInternalRecordByStartAndUser(internalRecord.getStart(), user).isPresent()) {
+      externalRecord.addInternalRecord(
+          findInternalRecordByStartAndUser(internalRecord.getStart(), user).get());
+    } else {
+      externalRecord.addInternalRecord(internalRecord);
+    }
+    // saving only the external Record is sufficient since it cascades to the internalRecord
     externalRecord = externalRecordRepository.save(externalRecord);
-    logger.info("saved new %s".formatted(externalRecord.toString()));
+    logger.info("saved  %s and %s".formatted(externalRecord.toString(), internalRecord.toString()));
+
+    externalRecordRepository.findById(externalRecord.getId());
     if (externalRecordRepository.findAllByUserAndEndIsNull(user).size() > 1) {
       throw new InternalRecordOutOfBoundsException(
           "There are more than one SuperiorTimeRecords with no End for user %s".formatted(user));
@@ -89,16 +92,15 @@ public class TimeRecordService {
   }
 
   /**
-   * internal Method, that retrieves the InternalRecord form the oldSuperiorTimeRecord and
-   * sets the End for both of them to one second before the start of the newExternalRecord.
-   * After that it saves both old TimeRecord entities to the database.
+   * internal Method, that retrieves the InternalRecord form the oldSuperiorTimeRecord and sets the
+   * End for both of them to one second before the start of the newExternalRecord. After that it
+   * saves both old TimeRecord entities to the database.
    */
   public void finalizeOldTimeRecord(Userx user, ExternalRecord newExternalRecord)
       throws IOException {
-    Optional<ExternalRecord> oldExternalRecordOptional =
-        findLatestExternalRecordByUser(user);
+    Optional<ExternalRecord> oldExternalRecordOptional = findLatestExternalRecordByUser(user);
     if (oldExternalRecordOptional.isEmpty()) {
-      logger.info("No old ExternalRecord found for user %s".formatted(user));
+      logger.info("No old ExternalRecord with null End found for user %s".formatted(user));
       return;
     }
     ExternalRecord oldExternalRecord = oldExternalRecordOptional.get();
@@ -111,18 +113,12 @@ public class TimeRecordService {
     }
 
     // fetch the subordinate Timerecord of this old superior TimeRecord
-    InternalRecord oldInternalRecord =
-        oldExternalRecord.getInternalRecords().get(0);
+    InternalRecord oldInternalRecord = oldExternalRecord.getInternalRecords().get(0);
     LocalDateTime oldEnd = newExternalRecord.getStart().minusSeconds(1);
-    if (ChronoUnit.SECONDS.between(oldEnd, newExternalRecord.getStart()) != 1) {
-      throw new RuntimeException(
-          "End TimeStamp is not one second before the new TimeRecord starts.");
-    }
     LocalDateTime oldStart = oldExternalRecord.getStart();
     long durationInSeconds = ChronoUnit.SECONDS.between(oldStart, oldEnd);
     if (durationInSeconds <= 0)
-      throw new ExternalRecordOutOfBoundsException(
-          "the new TimeRecord starts before the old one.");
+      throw new ExternalRecordOutOfBoundsException("the new TimeRecord starts before the old one.");
 
     // time setting
     oldExternalRecord.setDuration(durationInSeconds);
@@ -143,8 +139,7 @@ public class TimeRecordService {
     externalRecordRepository.delete(externalRecord);
   }
 
-  private InternalRecord saveSubordinateTimeRecord(
-      InternalRecord internalRecord) {
+  private InternalRecord saveInternalRecord(InternalRecord internalRecord) {
     return this.internalRecordRepository.save(internalRecord);
   }
 
@@ -157,4 +152,8 @@ public class TimeRecordService {
     return externalRecordRepository.findByUserAndId_Start(user, start);
   }
 
+  public Optional<InternalRecord> findInternalRecordByStartAndUser(
+      LocalDateTime start, Userx user) {
+    return internalRecordRepository.findByStartAndExternalRecordUser(start, user);
+  }
 }

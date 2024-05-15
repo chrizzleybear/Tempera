@@ -49,11 +49,9 @@ public class DashboardDataMapper {
     var colleagueStates = new ArrayList<ColleagueStateDto>();
 
 
-    // for each colleague, check if the user is in one of the groups of the colleague
     for (var colleague : colleagues) {
       State state = colleague.getState();
       String username = colleague.getUsername();
-
 
       String workplace;
       if (temperaService.findByUsername(username).isEmpty()) {
@@ -67,7 +65,7 @@ public class DashboardDataMapper {
 
         // for each colleague, check if the user is in one of the groups of the colleague
         List<String> groupOverlap = new ArrayList<>();
-        colleague.getGroups().stream().forEach(
+        colleague.getGroups().forEach(
                 colGroup -> {
                   if(userGroups.contains(colGroup)){
                     groupOverlap.add(colGroup.getName());

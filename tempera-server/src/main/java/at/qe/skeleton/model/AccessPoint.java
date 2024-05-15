@@ -51,7 +51,8 @@ public class AccessPoint implements Persistable<UUID>, Serializable {
   }
 
   /**
-   * returns true if TemperaStation was not already part of the Set
+   * returns true if TemperaStation was not already part of the Set. also sets this Accesspoint
+   * as AccessPoint on the provided TemperaStation (bidirectional Relationship)
    *
    * @param temperaStation to be added to this AccessPoint
    * @return true if this accesspoint did not already contain the specified temperaStation
@@ -61,6 +62,7 @@ public class AccessPoint implements Persistable<UUID>, Serializable {
   public boolean addTemperaStation(@NotNull TemperaStation temperaStation) {
     if (temperaStation == null)
       throw new IllegalArgumentException("temperaStation must not be null");
+    temperaStation.setAccessPoint(this);
     return this.temperaStations.add(temperaStation);
   }
 

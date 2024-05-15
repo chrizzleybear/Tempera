@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+
 @Entity
 public class TemperaStation implements Persistable<String> {
 
@@ -18,7 +19,7 @@ public class TemperaStation implements Persistable<String> {
   private boolean enabled;
 
   @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY) private AccessPoint accessPoint;
-  @OneToMany(mappedBy = "temperaStation", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY) private List<Sensor> sensors;
+  @OneToMany(mappedBy = "temperaStation", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, orphanRemoval = true) private List<Sensor> sensors;
 
   // We need to implement Persistable since we set Id manually
   // the following strategy for the isNew Method comes from spring documentation:
