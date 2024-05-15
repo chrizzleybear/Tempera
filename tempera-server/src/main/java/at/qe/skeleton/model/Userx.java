@@ -67,6 +67,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   @Enumerated(EnumType.STRING)
   private Set<UserxRole> roles;
 
+
   public Userx() {}
 
   public Userx(String username, String email, String password, LocalDateTime createDate) {

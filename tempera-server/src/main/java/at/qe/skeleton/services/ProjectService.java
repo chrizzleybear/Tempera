@@ -32,7 +32,7 @@ public ProjectService(ProjectRepository projectRepository) {
         projectRepository.delete(project);
     }
 
-    @PreAuthorize("hasAuthority('MANAGER')")
+    @PreAuthorize("isAuthenticated()")
     public void saveProject(Project project) {
         projectRepository.save(project);
     }

@@ -1,15 +1,17 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
-import at.qe.skeleton.model.ExternalRecord;
-import at.qe.skeleton.model.TemperaStation;
+import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.State;
+import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.repositories.ExternalRecordRepository;
+import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.rest.frontend.dtos.UserStateDto;
 import at.qe.skeleton.rest.frontend.dtos.UserxDto;
-import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.repositories.UserxRepository;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,15 +45,18 @@ public class UserxService implements UserDetailsService {
   @Autowired private PasswordEncoder passwordEncoder;
   @Autowired private TemperaStationService temperaStationService;
   @Autowired private ExternalRecordRepository externalRecordRepository;
+  @Autowired private GroupRepository groupRepository;
+  @Autowired private ProjectService projectService;
 
   /**
    * Returns a collection of all users.
    *
    * @return
    */
-  //todo: we cant preAuthorize this method because we need to get all users to display them in the
-    // dashboard... or is there another way?
-   @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EMPLOYEE') or hasAuthority('MANAGER') or hasAuthority('GROUPLEAD')")
+  // todo: we cant preAuthorize this method because we need to get all users to display them in the
+  // dashboard... or is there another way?
+  @PreAuthorize(
+      "hasAuthority('ADMIN') or hasAuthority('EMPLOYEE') or hasAuthority('MANAGER') or hasAuthority('GROUPLEAD')")
   public Collection<Userx> getAllUsers() {
     return userRepository.findAll();
   }
@@ -145,15 +150,50 @@ public class UserxService implements UserDetailsService {
     return convertToDTO(user);
   }
 
+  /**
+   * Warning: This will delete all external and Internal Records of that user. Also you cant delete
+   * an admin.
+   *
+   * @param id
+   */
+  @Transactional
   public void deleteUser(String id) {
+
     Optional<Userx> userx = userRepository.findById(id);
-    if (userx.isPresent()){
+    if (userx.isPresent()) {
       Userx user = userx.get();
-      user.getGroups().forEach(g -> g.removeMember(user));
+      if (user.getRoles().contains(UserxRole.ADMIN)) {
+        return;
+      }
+      if (user.getRoles().contains(UserxRole.MANAGER)
+          || user.getRoles().contains(UserxRole.GROUPLEAD)) {
+        List<Project> projects = projectService.getProjectsByManager(user.getUsername());
+
+        for (var project : projects) {
+          project.setManager(null);
+          projectService.saveProject(project);
+        }
+        List<Group> groups = groupRepository.findAllByGroupLead(user);
+        for (var group : groups) {
+          group.setGroupLead(null);
+          groupRepository.save(group);
+        }
+      }
+
+      List<Project> projects = projectService.getProjectsByContributor(user.getUsername());
+      for (var project : projects) {
+        project.getContributors().remove(user);
+        projectService.saveProject(project);
+      }
+      List <Group> groupsAsMember = groupRepository.findAllByMembersContains(user);
+      for (var group : groupsAsMember) {
+        group.getMembers().remove(user);
+        groupRepository.save(group);
+      }
+      externalRecordRepository.deleteAllByUser(user);
       user.removeTemperaStation();
-      //todo: still other bidirectinoal rel?
+      userx.ifPresent(value -> userRepository.delete(value));
     }
-    userx.ifPresent(value -> userRepository.delete(value));
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")

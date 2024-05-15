@@ -31,4 +31,6 @@ public interface ExternalRecordRepository
   List<UserStateDto> findUserStatesByUserList(@Param("users") List<Userx> users);
 
   boolean existsByUserAndId_Start(Userx user, LocalDateTime start);
+
+  void deleteAllByUser(Userx userx);
 }
