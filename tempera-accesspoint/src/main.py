@@ -59,8 +59,11 @@ async def send_connection_status(status: bool) -> None:
             "post",
             f"{shared.config['webserver_address']}/rasp/api/connection_status",
             auth=shared.header,
-            json={
+            params={
                 "access_point_id": shared.config["access_point_id"],
+                "station_id": shared.current_station_id,
+            },
+            json={
                 "connected": status,
             },
         )
