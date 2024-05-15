@@ -12,8 +12,15 @@ Request utils
 Global variables
 ================
 
-.. autodata:: tempera.utils.shared.project_root
-.. autodata:: tempera.utils.shared.db_engine
-.. autodata:: tempera.utils.shared.config
-.. autodata:: tempera.utils.shared.header
-.. autodata:: tempera.utils.shared.current_station_id
+High level function to initialize all global variables
+""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. autofunction:: tempera.utils.shared.init_globals
+
+
+Low level functions to initialize individual global variables
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. autofunction:: tempera.utils.shared.init_config
+.. autofunction:: tempera.utils.shared.init_header
+.. autofunction:: tempera.utils.shared.init_engine

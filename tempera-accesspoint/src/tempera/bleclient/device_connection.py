@@ -69,20 +69,28 @@ async def get_tempera_stations() -> List[BLEDevice] | None:
     return tempera_stations
 
 
-@retry(
-    retry=retry_if_exception_type(requests.exceptions.ConnectionError),
-    wait=wait_fixed(10),
-)
 async def validate_station(
     tempera_station: BLEDevice, client: BleakClient
 ) -> BLEDevice | None:
     """
-    Returns the first valid tempera station. Valid means that its ID corresponds to one stored in the webapp back end.
+    Returns the first valid tempera station. Valid means that its ID corresponds to one stored in the webapp back end
+    and the station implements the required GATT services and characteristics.
 
     This function isn't retried with tenacity after a connection loss, so that the access point isn't stuck trying
     to connect to a station that is offline e.g., when you want to exchange one station for another.
     If the connection is lost and the same station should be connected again, this will happen in the discovery
     loop if possible, without further measures.
+
+    **Note:** if the connection to the web server is lost, all stations are considered valid that implement the
+    required services and have G4T1 in their name. This leads to two scenarios:
+
+    * The bluetooth connection was already established and then lost. Here, the measurements and time records are read
+      and saved until the connection to the web server can be restored and the data is transferred (before the transfer
+      validation will occur again).
+    * No bluetooth connection was established prior to the web server connection disruption
+      (can only happen at startup). In this scenario, data of an unauthorized/deactivated station may be read and
+      stored in some unlikely scenarios, but once the connection is established again,
+      it won't be sent to the server because the validation will fail so no harm no fault.
 
     :param client:
     :param tempera_station:
@@ -249,10 +257,6 @@ async def discovery_loop() -> BLEDevice:
     return tempera_station
 
 
-@retry(
-    retry=retry_if_exception_type(requests.exceptions.ConnectionError),
-    wait=wait_fixed(10),
-)
 async def get_scan_order() -> bool:
     """
 
@@ -270,6 +274,6 @@ async def get_scan_order() -> bool:
             "Request failed. Couldn't establish a connection to the web server "
             f"at {shared.config['webserver_address']}."
         )
-        raise requests.exceptions.ConnectionError from None
+        return False
 
     return response["scan"]

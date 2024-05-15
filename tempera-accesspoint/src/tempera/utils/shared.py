@@ -35,6 +35,10 @@ async def init_globals() -> None:
 
 
 async def init_config() -> Dict[str, Any]:
+    """
+
+    :return:
+    """
     config_file = project_root / "src" / "conf.yaml"
 
     if not config_file.is_file():
@@ -84,6 +88,10 @@ async def init_header(conf: Dict[str, Any]) -> HTTPBasicAuth:
 
 
 async def init_engine() -> sqlalchemy.Engine:
+    """
+
+    :return:
+    """
     database = project_root / "src" / "tempera" / "database" / "data.sqlite"
 
     if not Path(database).is_file():
