@@ -5,11 +5,12 @@ DELETE FROM sensor;
 DELETE FROM tempera_station;
 DELETE FROM access_point;
 DELETE FROM room;
+DELETE FROM groupx_members;
+DELETE FROM groupx;
+DELETE FROM project_contributors;
 DELETE FROM userx_userx_role;
 DELETE FROM userx;
-DELETE FROM groupx;
-DELETE FROM groupx_members;
-DELETE From project;
+DELETE FROM project;
 
 --Todo: add this data to the db for real frontend testing
 
@@ -206,7 +207,7 @@ INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_
 INSERT INTO external_record (duration, start, time_end, user_username, state) VALUES
 (3400, '2024-05-10 09:30:00', null, 'johndoe', 'DEEPWORK');
 
-INSERT INTO internal_record (groupx_id, id, project_id, start, time_end, ext_rec_start, user_name) VALUES
-(null, -11, -1, '2024-05-10 09:30:00', null, '2024-05-10 09:30:00', 'johndoe');
+INSERT INTO internal_record (groupx_id, project_id, start, time_end, ext_rec_start, user_name) VALUES
+(null, -1, '2024-05-10 09:30:00', null, '2024-05-10 09:30:00', 'johndoe');
 
 -- possibly add older data

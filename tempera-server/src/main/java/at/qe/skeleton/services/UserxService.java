@@ -51,7 +51,7 @@ public class UserxService implements UserDetailsService {
    */
   //todo: we cant preAuthorize this method because we need to get all users to display them in the
     // dashboard... or is there another way?
- //  @PreAuthorize("hasAuthority('ADMIN')")
+   @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EMPLOYEE') or hasAuthority('MANAGER') or hasAuthority('GROUPLEAD')")
   public Collection<Userx> getAllUsers() {
     return userRepository.findAll();
   }

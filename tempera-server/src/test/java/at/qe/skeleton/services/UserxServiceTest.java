@@ -36,7 +36,7 @@ public class UserxServiceTest {
 
     @Test
     @DirtiesContext
-    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:")
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:userxServiceTest.sql")
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testDatainitialization() {
         Assertions.assertEquals(4, userxService.getAllUsers().size(), "Insufficient amount of users initialized for test data source");
@@ -73,6 +73,7 @@ public class UserxServiceTest {
 
     @DirtiesContext
     @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:userxServiceTest.sql")
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testDeleteUser() throws CouldNotFindEntityException {
         String username = "user1";
@@ -94,6 +95,7 @@ public class UserxServiceTest {
 
     @DirtiesContext
     @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:userxServiceTest.sql")
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testUpdateUser() {
         String username = "user1";
@@ -118,6 +120,7 @@ public class UserxServiceTest {
 
     @DirtiesContext
     @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:userxServiceTest.sql")
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testCreateUser() {
         Userx adminUser = userxService.loadUser("admin");
@@ -158,6 +161,7 @@ public class UserxServiceTest {
     }
 
     @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:userxServiceTest.sql")
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testExceptionForEmptyUsername() {
         Assertions.assertThrows(JpaSystemException.class, () -> {
@@ -182,16 +186,7 @@ public class UserxServiceTest {
     }
 
     @Test
-    @WithMockUser(username = "user", authorities = {"EMPLOYEE"})
-    public void testUnauthorizedLoadUsers() {
-        Assertions.assertThrows(AccessDeniedException.class, () -> {
-            for (Userx user : userxService.getAllUsers()) {
-                Assertions.fail("Call to userService.getAllUsers should not work without proper authorization");
-            }
-        });
-    }
-
-    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:userxServiceTest.sql")
     @WithMockUser(username = "user1", authorities = {"EMPLOYEE"})
     public void testUnauthorizedLoadUser() {
         Assertions.assertThrows(AccessDeniedException.class, () -> {
@@ -200,6 +195,8 @@ public class UserxServiceTest {
         });
     }
 
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:userxServiceTest.sql")
     @WithMockUser(username = "user1", authorities = {"EMPLOYEE"})
     public void testAuthorizedLoadUser() {
         String username = "user1";
@@ -208,6 +205,7 @@ public class UserxServiceTest {
     }
 
     @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:userxServiceTest.sql")
     @WithMockUser(username = "user1", authorities = {"EMPLOYEE"})
     public void testUnauthorizedSaveUser() {
         Assertions.assertThrows(AccessDeniedException.class, () -> {
@@ -220,6 +218,7 @@ public class UserxServiceTest {
 
     @Test
     @WithMockUser(username = "user1", authorities = {"EMPLOYEE"})
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:userxServiceTest.sql")
     public void testUnauthorizedDeleteUser() {
         Assertions.assertThrows(AccessDeniedException.class, () -> {
             Userx user = userxService.loadUser("user1");

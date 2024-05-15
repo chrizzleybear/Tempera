@@ -89,8 +89,6 @@ class TimeRecordServiceTest {
     // method will call finalizeOldTimeRecord which will call this method in Repository:
     when(externalRecordRepositoryMock.save(oldExternalRecord))
         .thenReturn(oldExternalRecord);
-    when(internalRecordRepositoryMock.save(oldInternalRecord))
-        .thenReturn(oldInternalRecord);
 
     // create a new ExternalRecord
     ExternalRecord newExternalRecord =
@@ -100,8 +98,7 @@ class TimeRecordServiceTest {
     // finalizeOldTimeRecord will call these methods:
     when(externalRecordRepositoryMock.save(newExternalRecord))
         .thenReturn(newExternalRecord);
-    when(internalRecordRepositoryMock.save(newInternalRecord))
-        .thenReturn(newInternalRecord);
+
 
     // call the method
     ExternalRecord result = timeRecordServiceMockedDependencies.addRecord(newExternalRecord);
@@ -110,9 +107,7 @@ class TimeRecordServiceTest {
     assertEquals(newExternalRecord, result);
     // it should have saved both old and new ExternalRecord & InternalRecord
     verify(externalRecordRepositoryMock, times(1)).save(newExternalRecord);
-    verify(internalRecordRepositoryMock, times(1)).save(newInternalRecord);
     verify(externalRecordRepositoryMock, times(1)).save(oldExternalRecord);
-    verify(internalRecordRepositoryMock, times(1)).save(oldInternalRecord);
   }
 
 

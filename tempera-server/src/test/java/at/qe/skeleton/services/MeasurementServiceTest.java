@@ -88,17 +88,20 @@ class MeasurementServiceTest {
 
   @Test
   @DirtiesContext
+  @Sql(
+          executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+          scripts = "classpath:measurementServiceTest.sql")
   void deleteMeasurement() {
     assertEquals(
-        1,
+        4,
         measurementRepository.findAll().size(),
-        "before deleting, the db should hold exactly 1 measurement");
+        "before deleting, the db should hold exactly 4 measurements");
     Measurement measurement = measurementRepository.findAll().get(0);
     measurementService.deleteMeasurement(measurement);
     assertEquals(
-        0,
+        3,
         measurementRepository.findAll().size(),
-        "after deleting, the db should hold exactly 0 measurements");
+        "after deleting, the db should hold exactly 3 measurements");
   }
 
   @Test

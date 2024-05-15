@@ -5,8 +5,12 @@ DELETE FROM sensor;
 DELETE FROM tempera_station;
 DELETE FROM access_point;
 DELETE FROM room;
+DELETE FROM groupx_members;
+DELETE FROM groupx;
+DELETE FROM project_contributors;
 DELETE FROM userx_userx_role;
 DELETE FROM userx;
+DELETE FROM project;
 
 INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE) VALUES(TRUE, 'Admin', 'Istrator', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'admin', 'admin', '2016-01-01 00:00:00');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('admin', 'ADMIN');
@@ -19,3 +23,7 @@ INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('user2', 'EMPLOYEE'
 INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE) VALUES(TRUE, 'Elvis', 'The King', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'elvis', 'elvis', '2016-01-01 00:00:00');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('elvis', 'ADMIN');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('elvis', 'EMPLOYEE');
+
+INSERT INTO room (room_id) VALUES ( 'Room1');
+INSERT INTO access_point (enabled, id, room_room_id) VALUES (true, '123e4567-e89b-12d3-a456-426614174001', 'Room1');
+INSERT INTO tempera_station (enabled, access_point_id, user_username, id) VALUES (true,'123e4567-e89b-12d3-a456-426614174001', 'user1', 'tempera_station1');

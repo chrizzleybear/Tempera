@@ -42,7 +42,7 @@ class DashboardDataMapperTest {
     @Test
     @Transactional
     @WithMockUser(username = "johndoe", authorities = "EMPLOYEE")
-    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:HomeDataMapperTest.sql")
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:DashboardDataMapper.sql")
     void mapUserToHomeDataResponse() {
         Userx johndoe = userService.loadUser("johndoe");
         DashboardDataResponse homeDataResponse = dashboardDataMapper.mapUserToHomeDataResponse(johndoe);
