@@ -6,7 +6,6 @@ from typing import Dict, Any, Sequence, Tuple, Literal
 import requests
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from tenacity import retry, retry_if_exception_type, wait_fixed
 
 from tempera.database.entities import TemperaStation, Measurement, TimeRecord
 from tempera.utils import shared, make_request
@@ -100,10 +99,6 @@ def _build_payload(
             }
 
 
-@retry(
-    retry=retry_if_exception_type(requests.exceptions.ConnectionError),
-    wait=wait_fixed(10),
-)
 async def send_data(*, kind: DataType):
     """
 
@@ -143,7 +138,6 @@ async def send_data(*, kind: DataType):
             "Couldn't establish a connection to the web server "
             f"at {shared.config['webserver_address']}."
         )
-        raise requests.exceptions.ConnectionError from None
 
     _safe_delete_data(data, kind=kind)
 

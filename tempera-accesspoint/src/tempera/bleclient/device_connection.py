@@ -111,7 +111,7 @@ async def validate_station(
             "Request failed. Couldn't establish a connection to the web server "
             f"at {shared.config['webserver_address']}. Can't validate stations. Trying again in 10 seconds"
         )
-        raise requests.exceptions.ConnectionError from None
+        return tempera_station
 
     if not response["access_point_allowed"]:
         logger.critical(
