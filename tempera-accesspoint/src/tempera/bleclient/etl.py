@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_fixed
 
 from tempera.database.entities import Mode, TimeRecord, TemperaStation, Measurement
+from tempera.exceptions import BluetoothConnectionLostException
 from tempera.utils import shared
 
 logger = logging.getLogger(f"tempera.{__name__}")
@@ -182,6 +183,9 @@ async def measurements_handler(
         except bleak.exc.BleakDBusError:
             logger.error("Failed to read measurement.")
             raise
+        except bleak.exc.BleakError:
+            logger.error("Connection to tempera station lost.")
+            raise BluetoothConnectionLostException
 
     with Session(shared.db_engine) as session:
         tempera_station = session.scalars(

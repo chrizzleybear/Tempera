@@ -72,7 +72,13 @@ async def send_connection_status(status: bool) -> None:
         logger.error(
             f"Failed to send tempera station connection status to web server at {shared.config['webserver_address']}"
         )
-        raise requests.exceptions.ConnectionError from None
+    except AttributeError:
+        logger.error(
+            "Can't connect to the web server. "
+            "Since this station was never approved since the start of the program, the connection to it is refused. "
+            "Returning to device discovery."
+        )
+        raise AttributeError
 
 
 # Make the main function restart if the established bluetooth connection to a station is lost
@@ -108,9 +114,12 @@ async def main():
             f"{utils.shared.config['sending_interval']} seconds, as configured."
         )
 
-        async with asyncio.TaskGroup() as tg:
-            _send_status = tg.create_task(send_connection_status(status=True))
-            _get_notifications = tg.create_task(get_notifications(client))
+        try:
+            async with asyncio.TaskGroup() as tg:
+                _send_status = tg.create_task(send_connection_status(status=True))
+                _get_notifications = tg.create_task(get_notifications(client))
+        except* AttributeError:
+            raise RuntimeError
 
         while True:
             try:

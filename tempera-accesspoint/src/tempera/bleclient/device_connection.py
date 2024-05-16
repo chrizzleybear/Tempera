@@ -108,8 +108,8 @@ async def validate_station(
         )
     except requests.exceptions.ConnectionError:
         logger.error(
-            "Request failed. Couldn't establish a connection to the web server "
-            f"at {shared.config['webserver_address']}. Can't validate stations."
+            "Can't get valid stations. Couldn't establish a connection to the web server "
+            f"at {shared.config['webserver_address']}. Device validation failed."
         )
         return tempera_station
 
@@ -228,7 +228,7 @@ async def save_station(station_id: str) -> None:
             session.commit()
 
 
-@retry(retry=retry_if_exception_type(RuntimeWarning), wait=wait_fixed(60))
+@retry(retry=retry_if_exception_type(RuntimeWarning), wait=wait_fixed(30))
 async def discovery_loop() -> BLEDevice:
     """
 
@@ -271,7 +271,7 @@ async def get_scan_order() -> bool:
         )
     except requests.exceptions.ConnectionError:
         logger.error(
-            "Request failed. Couldn't establish a connection to the web server "
+            "Couldn't get scan order. Couldn't establish a connection to the web server "
             f"at {shared.config['webserver_address']}."
         )
         return False
