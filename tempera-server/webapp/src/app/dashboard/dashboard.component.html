@@ -75,7 +75,7 @@
               <td>{{ colleague.workplace }}</td>
               <td>
                 <p-tag [value]="DisplayHelper.showColleagueState | wrapFn: colleague"
-                       [severity]="DisplayHelper.getSeverity | wrapFn : colleague"></p-tag>
+                       [severity]="DisplayHelper.getColleagueStateSeverity | wrapFn : colleague"></p-tag>
               </td>
             </tr>
           </ng-template>

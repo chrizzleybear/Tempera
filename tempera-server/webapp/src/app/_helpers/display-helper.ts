@@ -6,7 +6,25 @@ export class DisplayHelper {
   /**
    * Get color of colleague state badges
    */
-  public static getSeverity(colleague: ColleagueStateDto) {
+  public static getStateSeverity(state: StateEnum) {
+    switch (state) {
+      case State.AVAILABLE:
+        return 'success';
+      case State.MEETING:
+        return 'warning';
+      case State.DEEPWORK:
+        return 'info';
+      case State.OUT_OF_OFFICE:
+        return 'danger';
+      default:
+        return 'primary';
+    }
+  }
+
+  /**
+   * Get color of colleague state badges
+   */
+  public static getColleagueStateSeverity(colleague: ColleagueStateDto) {
     if (!colleague.isVisible) {
       return 'primary';
     }
