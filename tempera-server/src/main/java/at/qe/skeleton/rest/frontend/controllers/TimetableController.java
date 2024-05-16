@@ -28,7 +28,7 @@ public class TimetableController {
             1L,
             "2024-05-12T08:00:00",
             "2024-05-12T09:00:00",
-            new ProjectDto(1L, "Project 1"),
+            null,
             State.AVAILABLE,
             "I did a lot of work today.");
     var entry2 =
@@ -42,7 +42,6 @@ public class TimetableController {
     return ResponseEntity.ok(
         new GetTimetableDataResponse(
             List.of(entry1, entry2),
-            new ProjectDto(1L, "Default Project"),
             List.of(new ProjectDto(1L, "Project 1"), new ProjectDto(2L, "Project 2"))));
   }
 

@@ -7,17 +7,18 @@ import { isNotLoggedInGuard } from './_guards/is-not-logged-in.guard';
 import { UsersComponent } from './userManagement/users/users.component';
 import { UserDetailsComponent } from './userManagement/user-details/user-details.component';
 import { ValidationComponent } from './validation/validation.component';
-import {ProjectsComponent} from "./projectManagement/projects/projects.component";
-import {ProjectDetailsComponent} from "./projectManagement/project-details/project-details.component";
-import {GroupsComponent} from "./groupManagement/groups/groups.component";
-import {GroupDetailsComponent} from "./groupManagement/group-details/group-details.component";
-import {GroupMembersComponent} from "./groupManagement/group-members/group-members.component";
-import {ProjectGroupsComponent} from "./projectManagement/project-groups/project-groups.component";
-import {GroupsGroupleadComponent} from "./grouplead/groups-grouplead.component";
-import {GroupProjectsComponent} from "./grouplead/group-projects/group-projects.component";
-import {RoomsComponent} from "./roomManagement/rooms/rooms.component";
-import {FloorPlanComponent} from "./rooms/floor-plan/floor-plan.component";
-import {RoomDetailsComponent} from "./roomManagement/room-details/room-details.component";
+import { ProjectsComponent } from './projectManagement/projects/projects.component';
+import { ProjectDetailsComponent } from './projectManagement/project-details/project-details.component';
+import { GroupsComponent } from './groupManagement/groups/groups.component';
+import { GroupDetailsComponent } from './groupManagement/group-details/group-details.component';
+import { GroupMembersComponent } from './groupManagement/group-members/group-members.component';
+import { ProjectGroupsComponent } from './projectManagement/project-groups/project-groups.component';
+import { GroupsGroupleadComponent } from './grouplead/groups-grouplead.component';
+import { GroupProjectsComponent } from './grouplead/group-projects/group-projects.component';
+import { RoomsComponent } from './roomManagement/rooms/rooms.component';
+import { FloorPlanComponent } from './rooms/floor-plan/floor-plan.component';
+import { RoomDetailsComponent } from './roomManagement/room-details/room-details.component';
+import { TimetableComponent } from './timetable/timetable.component';
 
 export const routes: Routes = [
   {
@@ -27,17 +28,18 @@ export const routes: Routes = [
           { path: '', component: DashboardComponent },
           { path: 'users', component: UsersComponent },
           { path: 'user/:id', component: UserDetailsComponent },
-          { path: 'rooms', component: RoomsComponent},
-          { path: 'room/:id', component: RoomDetailsComponent},
+          { path: 'rooms', component: RoomsComponent },
+          { path: 'room/:id', component: RoomDetailsComponent },
           { path: 'plan', component: FloorPlanComponent },
           { path: 'groups', component: GroupsComponent },
-          { path: 'group/:id', component: GroupDetailsComponent},
-          { path: 'group/members/:id', component: GroupMembersComponent},
-          { path: 'project/groups/:id', component: ProjectGroupsComponent},
-          { path: 'projects', component: ProjectsComponent},
-          { path: 'project/:id', component: ProjectDetailsComponent},
-          { path: 'myGroups', component: GroupsGroupleadComponent},
-          { path: 'group/projects/:id', component: GroupProjectsComponent},
+          { path: 'group/:id', component: GroupDetailsComponent },
+          { path: 'group/members/:id', component: GroupMembersComponent },
+          { path: 'project/groups/:id', component: ProjectGroupsComponent },
+          { path: 'projects', component: ProjectsComponent },
+          { path: 'project/:id', component: ProjectDetailsComponent },
+          { path: 'myGroups', component: GroupsGroupleadComponent },
+          { path: 'group/projects/:id', component: GroupProjectsComponent },
+          { path: 'timetable', component: TimetableComponent },
         ],
       },
     ],

@@ -1,0 +1,37 @@
+<p-table #table [value]="timetableData?.tableEntries ?? []" [globalFilterFields]="filterFields">
+  <ng-template pTemplate="caption">
+    <div class="flex">
+      <input class="ml-auto" pInputText type="text" (input)="table.filterGlobal($any($event.target).value, 'contains')"
+             placeholder="Search keyword">
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Date</th>
+      <th>Start</th>
+      <th>End</th>
+      <th>Project</th>
+      <th>State</th>
+      <th>Description</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-timeEntry let-rowIndex="rowIndex">
+    <tr>
+      <td>{{ timeEntry.startTimestamp | date: 'fullDate' }}</td>
+      <td>{{ timeEntry.startTimestamp | date: 'HH:mm' }}</td>
+      <td>{{ timeEntry.endTimestamp | date: 'HH:mm' }}</td>
+      <td>
+        <p-dropdown [options]="timetableData?.availableProjects" [(ngModel)]="timeEntry.assignedProject"
+                    (onChange)="updateProject($event.value, timeEntry.id)"
+                    optionLabel="name"
+                    placeholder="Select project"
+                    appendTo="body"></p-dropdown>
+      </td>
+      <td>
+        <p-tag [value]="DisplayHelper.showState | wrapFn: timeEntry.state"
+               [severity]="DisplayHelper.getStateSeverity | wrapFn: timeEntry.state"></p-tag>
+      </td>
+      <td>{{ timeEntry.description }}</td>
+    </tr>
+  </ng-template>
+</p-table>
