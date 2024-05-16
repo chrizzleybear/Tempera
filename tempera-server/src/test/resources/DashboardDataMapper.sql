@@ -47,7 +47,7 @@ VALUES
 -- this one is in the same group but his temperastation is not enabled
     (TRUE, -4, 'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin', 'clarkkent', 'clarkkent@webmail.com', 'Clark', 'Kent', 'hashed_password123');
 
-INSERT INTO project_contributors (project_id, contributors_username) VALUES
+INSERT INTO project_contributors (project_id, username) VALUES
                                                                          (-1, 'admin'), (-1, 'manager'), (-1, 'johndoe'), (-1, 'alicebrown'), (-1, 'brucewayne'), (-1, 'clarkkent'),
                                                                          (-2, 'admin'), (-2, 'manager'), (-2, 'johndoe'), (-2, 'alicebrown'), (-2, 'brucewayne'), (-2, 'clarkkent'),
                                                                          (-3, 'admin'), (-3, 'manager'), (-3, 'johndoe'), (-3, 'alicebrown'), (-3, 'brucewayne'), (-3, 'clarkkent'),
