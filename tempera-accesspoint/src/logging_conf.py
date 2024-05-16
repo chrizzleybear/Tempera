@@ -5,14 +5,14 @@ config = {
         "simple": {
             "format": "%(asctime)s - %(name)s - %(levelname)s: %(message)s",
             "datefmt": "%Y-%m-%d %H:%M:%S%z",
-        }
+        },
+        "rich": {"format": "%(message)s", "datefmt": "[%X]"},
     },
     "handlers": {
         "stdout": {
-            "class": "logging.StreamHandler",
+            "class": "rich.logging.RichHandler",
             "level": "INFO",
-            "formatter": "simple",
-            "stream": "ext://sys.stdout",
+            "formatter": "rich",
         },
         "file": {
             "class": "logging.handlers.RotatingFileHandler",
