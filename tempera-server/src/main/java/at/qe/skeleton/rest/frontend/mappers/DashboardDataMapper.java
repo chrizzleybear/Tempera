@@ -14,9 +14,7 @@ import at.qe.skeleton.services.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class DashboardDataMapper {
@@ -170,7 +168,7 @@ public class DashboardDataMapper {
   }
 
 
-  public MessageResponse mapUpdateDashboardDataRequestToMessageResponse (UpdateDashboardDataRequest request, Userx user) throws CouldNotFindEntityException{
+  public MessageResponse updateUserVisibilityAndTimeStampProject(UpdateDashboardDataRequest request, Userx user) throws CouldNotFindEntityException{
     Project project = projectService.getProjectById(request.project().id()).orElseThrow(() -> new CouldNotFindEntityException("No project found for id"));
     InternalRecord record = timeRecordService.findLatestInternalRecordByUser(user).orElseThrow(()-> new CouldNotFindEntityException("No external record found for user"));
     record.setAssignedProject(project);
