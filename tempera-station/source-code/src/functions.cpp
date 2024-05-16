@@ -16,7 +16,10 @@
 
 // ############### FUNCTIONS ###############
 
-// Checks if one of the four buttons is currently pressed and returns the pressed one or 0 
+/**
+ * @brief Checks if one of the four buttons is currently pressed and returns the pressed one or 0.
+ * @return The pin number of the pressed button (DW, MT, OO, PT) or 0 if no button is pressed.
+ */
 pin_size_t whichButtonPressed() {
   if (!digitalRead(DW)) {
     return DW;
@@ -31,7 +34,11 @@ pin_size_t whichButtonPressed() {
   }
 };
 
-// Returns the corresponding color for each button
+/**
+ * @brief Finds the color mapped to the specified button.
+ * @param button The pin number / work mode of the button for which to find the color.
+ * @return The color associated with the specified button.
+ */
 struct color findButtonColor(pin_size_t button) {
   switch (button) {
   case PT: 
@@ -52,16 +59,29 @@ struct color findButtonColor(pin_size_t button) {
   }
 };
 
-// Function used to handle a time overflow of the internal Arduino clock
+/**
+ * @brief Fixes a time overflow of the internal clock which may occur if the 
+ *        Arduino is not rebooted for more than ~50 days.
+ * @param session The timed session structure containing the start time.
+ * @return The remaining time until the unsigned long overflow in milliseconds.
+ */
 int fixTimeOverflow(timedSession session) {
   // ULONG_MAX
   return 4294967295 - session.startTime + millis();
 };
 
+/**
+ * @brief Switches the built-in LED on or off.
+ * @param state The state of the LED (LOW for off, HIGH for on).
+ */
 void switchBuiltInLED(unsigned state) {
     digitalWrite(LED_BUILTIN, (state ? HIGH : LOW) );
 };
 
+/**
+ * @brief Prints the information of a timed session to the serial output.
+ * @param session The timed session structure containing the updated information.
+ */
 void printSessionUpdate(timedSession session) {
   Serial.println("Tempera > [INFO] Session Info has been updated:");
   Serial.print("Tempera > [INFO]    Current work mode: ");
@@ -72,6 +92,10 @@ void printSessionUpdate(timedSession session) {
   Serial.println(session.lastSessionDuration);
 };
 
+/**
+ * @brief Prints the updated color of the main RGB-LED.
+ * @param led The LED object containing the updated state.
+ */
 void printLEDUpdate(LED led) {
   Serial.println("Tempera > [INFO] LED state has been updated:");
   Serial.print("Tempera > [INFO]    Color (R-G-B): ");
@@ -82,6 +106,10 @@ void printLEDUpdate(LED led) {
   Serial.println(led.color.blue);
 };
 
+/**
+ * @brief Prints the updated room climate data.
+ * @param roomClimateData The room climate union structure containing the updated data.
+ */
 void printRoomClimateDataUpdate(roomClimateUnionStructure roomClimateData) {
   Serial.println("Tempera > [INFO] Room climate data has been updated:");
   Serial.print("Tempera > [INFO]    Temperature: ");
