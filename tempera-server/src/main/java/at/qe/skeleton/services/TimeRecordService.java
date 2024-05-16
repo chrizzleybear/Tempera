@@ -18,6 +18,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+import static at.qe.skeleton.services.TimestampToolkit.timeStampClipper;
+
 @Component
 @Scope("application")
 public class TimeRecordService {
@@ -69,13 +71,16 @@ public class TimeRecordService {
   }
 
   public ExternalRecord saveNewTimeRecord(ExternalRecord externalRecord, Userx user) {
-    InternalRecord internalRecord = new InternalRecord(externalRecord.getStart());
+    LocalDateTime start = timeStampClipper(externalRecord.getStart());
+
+    externalRecord.getId().setStart(start);
+    InternalRecord internalRecord = new InternalRecord(start);
 
     // setting the externalRecord for the internalRecord and vice versa.
     // if the record already exists in the db we should not save it again.
-    if (findInternalRecordByStartAndUser(internalRecord.getStart(), user).isPresent()) {
+    if (findInternalRecordByStartAndUser(start, user).isPresent()) {
       externalRecord.addInternalRecord(
-          findInternalRecordByStartAndUser(internalRecord.getStart(), user).get());
+          findInternalRecordByStartAndUser(start, user).get());
     } else {
       externalRecord.addInternalRecord(internalRecord);
     }
@@ -114,8 +119,8 @@ public class TimeRecordService {
 
     // fetch the subordinate Timerecord of this old superior TimeRecord
     InternalRecord oldInternalRecord = oldExternalRecord.getInternalRecords().get(0);
-    LocalDateTime oldEnd = newExternalRecord.getStart().minusSeconds(1);
-    LocalDateTime oldStart = oldExternalRecord.getStart();
+    LocalDateTime oldEnd = timeStampClipper(newExternalRecord.getStart()).minusSeconds(1);
+    LocalDateTime oldStart = timeStampClipper(oldExternalRecord.getStart());
     long durationInSeconds = ChronoUnit.SECONDS.between(oldStart, oldEnd);
     if (durationInSeconds <= 0)
       throw new ExternalRecordOutOfBoundsException("the new TimeRecord starts before the old one.");
