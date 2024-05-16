@@ -78,6 +78,7 @@ public class Project {
             throw new NullPointerException("Contributor should not be null when added to Project");
         }
         this.contributors.add(contributor);
+        contributor.getProjects().add(this);
     }
 
     public void removeContributor(Userx contributor) {
@@ -85,6 +86,7 @@ public class Project {
             throw new NullPointerException("Contributor should not be null when removed from Project");
         }
         this.contributors.remove(contributor);
+        contributor.getProjects().remove(this);
     }
 
     public String getName() {
