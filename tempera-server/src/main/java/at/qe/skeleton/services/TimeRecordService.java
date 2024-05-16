@@ -144,12 +144,16 @@ public class TimeRecordService {
     externalRecordRepository.delete(externalRecord);
   }
 
-  private InternalRecord saveInternalRecord(InternalRecord internalRecord) {
+  public InternalRecord saveInternalRecord(InternalRecord internalRecord) {
     return this.internalRecordRepository.save(internalRecord);
   }
 
   public Optional<ExternalRecord> findLatestExternalRecordByUser(Userx user) {
     return externalRecordRepository.findFirstByUserAndEndIsNull(user);
+  }
+
+  public Optional<InternalRecord> findLatestInternalRecordByUser(Userx user) {
+    return internalRecordRepository.findByExternalRecord_EndIsNullAndExternalRecord_User(user);
   }
 
   public Optional<ExternalRecord> findExternalRecordByStartAndUser(

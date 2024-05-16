@@ -1,12 +1,15 @@
 package at.qe.skeleton.rest.frontend.mappers;
 
+import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
 import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
+import at.qe.skeleton.rest.frontend.payload.request.UpdateDashboardDataRequest;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
+import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
 import at.qe.skeleton.services.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -164,5 +167,17 @@ public class DashboardDataMapper {
             defaultProjectDto,
             projects,
             colleagueStateDtos);
+  }
+
+
+  public MessageResponse mapUpdateDashboardDataRequestToMessageResponse (UpdateDashboardDataRequest request, Userx user) throws CouldNotFindEntityException{
+    Project project = projectService.getProjectById(request.project().id()).orElseThrow(() -> new CouldNotFindEntityException("No project found for id"));
+    InternalRecord record = timeRecordService.findLatestInternalRecordByUser(user).orElseThrow(()-> new CouldNotFindEntityException("No external record found for user"));
+    record.setAssignedProject(project);
+    user.setStateVisibility(request.visibility());
+    userService.saveUser(user);
+    timeRecordService.saveInternalRecord(record);
+
+    return new MessageResponse("Dashboard data updated successfully!");
   }
 }

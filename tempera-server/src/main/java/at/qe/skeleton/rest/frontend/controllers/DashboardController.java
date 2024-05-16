@@ -40,6 +40,14 @@ public class DashboardController {
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<MessageResponse> updateDashboardData(
       @RequestBody UpdateDashboardDataRequest request) {
+    try{
+    String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+    Userx user = userXService.loadUser(userName);
+    MessageResponse response = dashboardDataMapper.mapUpdateDashboardDataRequestToMessageResponse(request, user);
+    } catch (Exception e) {
+      logger.error("Error updating dashboard data: " + e.getMessage());
+      return ResponseEntity.badRequest().body(new MessageResponse("Error updating dashboard data: " + e.getMessage()));
+    }
     return ResponseEntity.ok(new MessageResponse("Dashboard data updated successfully!"));
   }
 }
