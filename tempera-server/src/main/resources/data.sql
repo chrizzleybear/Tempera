@@ -38,7 +38,7 @@ INSERT INTO userx (enabled, default_project_id, state, state_visibility, create_
 INSERT INTO userx_userx_role (userx_username, roles) VALUES ('johndoe', 'EMPLOYEE'), ('bobjones', 'EMPLOYEE'), ('alicebrown', 'EMPLOYEE'), ('chriswilliams', 'EMPLOYEE'), ('peterparker', 'EMPLOYEE'), ('tonystark', 'EMPLOYEE'), ('brucewayne', 'EMPLOYEE'), ('clarkkent', 'EMPLOYEE');
 INSERT INTO userx_userx_role (userx_username, roles) VALUES ('brucewayne', 'MANAGER');
 
-INSERT INTO project_contributors (project_id, contributors_username) VALUES
+INSERT INTO project_contributors (project_id, username) VALUES
                                                                          (-1, 'admin'), (-1, 'bobjones'), (-1, 'johndoe'), (-1, 'alicebrown'), (-1, 'brucewayne'), (-1, 'clarkkent'),
                                                                          (-2, 'admin'), (-2, 'bobjones'), (-2, 'johndoe'), (-2, 'alicebrown'), (-2, 'brucewayne'), (-2, 'clarkkent'),
                                                                          (-3, 'admin'), (-3, 'bobjones'), (-3, 'johndoe'), (-3, 'alicebrown'), (-3, 'brucewayne'), (-3, 'clarkkent'),
