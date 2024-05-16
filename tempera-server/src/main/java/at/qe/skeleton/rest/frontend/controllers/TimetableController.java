@@ -39,7 +39,11 @@ public class TimetableController {
             new ProjectDto(2L, "Project 2"),
             State.DEEPWORK,
             "This project is nice.");
-    return ResponseEntity.ok(new GetTimetableDataResponse(List.of(entry1, entry2)));
+    return ResponseEntity.ok(
+        new GetTimetableDataResponse(
+            List.of(entry1, entry2),
+            new ProjectDto(1L, "Default Project"),
+            List.of(new ProjectDto(1L, "Project 1"), new ProjectDto(2L, "Project 2"))));
   }
 
   @PostMapping("/update")
