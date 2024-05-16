@@ -13,4 +13,5 @@ public interface InternalRecordRepository
     Optional<InternalRecord> findByStartAndExternalRecordUser(LocalDateTime start, Userx user);
 
     Optional<InternalRecord> findByExternalRecord_EndIsNullAndExternalRecord_User(Userx user);
+
 }
