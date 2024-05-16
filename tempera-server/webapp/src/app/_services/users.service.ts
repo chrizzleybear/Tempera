@@ -16,30 +16,23 @@ export class UsersService {
     return this.http.get<User[]>(this.API_URL + 'all');
   }
 
-  deleteUser(userId: string): void {
+  deleteUser(userId: string): Observable<any> {
     console.log('Delete user with ID: ', userId);
-    this.http.delete(`${this.API_URL}delete/${userId}`).subscribe({
-      next: (response) => {
-        console.log('User deleted successfully:', response);
-      },
-      error: (error) => {
-        console.error('Error deleting user:', error);
-      },
-    });
+    return this.http.delete(`${this.API_URL}delete/${userId}`);
   }
 
-  updateUser(userData: User): Observable<any> {
+  updateUser(userData: User): Observable<User> {
     console.log('Update user with ID: ');
-    return this.http.put(`${this.API_URL}update`, userData);
+    return this.http.put<User>(`${this.API_URL}update`, userData);
   }
 
   getUserById(userId: string): Observable<User> {
     return this.http.get<User>(`${this.API_URL}load/${userId}`);
   }
 
-  saveUser(userData: User): Observable<any> {
+  saveUser(userData: User): Observable<User> {
     console.log('Create user with ID: ');
-    return this.http.post(`${this.API_URL}create`, userData);
+    return this.http.post<User>(`${this.API_URL}create`, userData);
   }
 
   validateUser(username: string, password: string): Observable<User> {
@@ -50,5 +43,9 @@ export class UsersService {
   enableUser(username: string, password: string): Observable<Object> {
     console.log('Enable user with ID: ', username);
     return this.http.post(`http://localhost:8080/api/users/enable`, { username, password });
+  }
+
+  getAllManagers(): Observable<User[]> {
+    return this.http.get<User[]>(this.API_URL + 'managers');
   }
 }

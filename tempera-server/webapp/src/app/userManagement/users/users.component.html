@@ -40,7 +40,7 @@
           <p-button label="Edit" (onClick)="editUser(user); $event.stopPropagation()" icon="pi pi-pencil"></p-button>
         </td>
         <td>
-          <p-button label="Delete" (onClick)="deleteSelectedUsers(user.username); $event.stopPropagation()"
+          <p-button label="Delete" (onClick)="deleteSelectedUser(user.username); $event.stopPropagation()"
                     icon="pi pi-trash"></p-button>
         </td>
       </tr>
@@ -50,13 +50,11 @@
 <p-dialog header="Edit User" [(visible)]="displayEditDialog" [modal]="true" [style]="{width: '50vw'}" [closable]="true">
   <div *ngIf="selectedUser">
     <app-user-edit [user]="selectedUser" (editCompleted)="onEditCompleted($event)"></app-user-edit>
-    <button type="button" pButton label="Back" icon="pi pi-arrow-left" (click)="displayEditDialog = false"></button>
   </div>
 </p-dialog>
 <p-dialog header="Create User" [(visible)]="displayCreateDialog" [modal]="true" [style]="{width: '50vw'}"
           [closable]="true">
   <app-user-create (creatComplete)="onCreateCompleted($event)"></app-user-create>
-  <button type="button" pButton label="Back" icon="pi pi-arrow-left" (click)="displayCreateDialog = false"></button>
 </p-dialog>
 
 

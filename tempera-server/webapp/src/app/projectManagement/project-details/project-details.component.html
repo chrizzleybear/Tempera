@@ -1,0 +1,63 @@
+<div *ngIf="project">
+  <p-card header="Project Details" class="project-details-card">
+  <div class="project-info">
+    <p><strong>Name:</strong> {{ project.name }}</p>
+    <p><strong>Description:</strong> {{ project.description }}</p>
+  </div>
+
+  <div class="manager-details">
+    <h3><strong>Manager Details</strong></h3>
+    <br>
+    <p><strong>Username:</strong> {{ project.manager.username }}</p>
+    <p><strong>Name:</strong> {{ project.manager.firstName }} {{ project.manager.lastName }}</p>
+    <p><strong>Email:</strong> {{ project.manager.email }}</p>
+  </div>
+
+  <div class="groups-section">
+    <h3><strong>Groups</strong></h3>
+    <br>
+    <p-table [value]="project.groups!" [paginator]="true" [rows]="10" responsiveLayout="scroll" class="groups-table">
+      <ng-template pTemplate="header">
+        <tr>
+          <th scope="col">Group Name</th>
+          <th scope="col">Group Leader</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-group>
+        <tr>
+          <td>{{ group.name }}</td>
+          <td>{{ group.groupLead.firstName }} {{ group.groupLead.lastName }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+    <div class="members-section">
+      <h3><strong>Contributors</strong></h3>
+      <br>
+      <p-table [value]="project.contributors!" [paginator]="true" [rows]="10" responsiveLayout="scroll" class="members-table">
+        <ng-template pTemplate="header">
+          <tr>
+            <th scope="col" pSortableColumn="username">Benutzername
+              <p-sortIcon field="username"></p-sortIcon>
+            </th>
+            <th scope="col" pSortableColumn="firstName">Vorname
+              <p-sortIcon field="firstName"></p-sortIcon>
+            </th>
+            <th scope="col" pSortableColumn="lastName">Nachname
+              <p-sortIcon field="lastName"></p-sortIcon>
+            </th>
+            <!-- Responsive design may not require these empty headers if properly styled -->
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-user>
+          <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.firstName }}</td>
+            <td>{{ user.lastName }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </p-card>
+</div>

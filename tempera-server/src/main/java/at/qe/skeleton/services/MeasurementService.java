@@ -11,6 +11,7 @@ import at.qe.skeleton.repositories.TemperaStationRepository;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,11 +28,21 @@ public class MeasurementService {
     this.measurementRepository = measurementRepository;
   }
 
+  public Measurement loadMeasurementByIdComponents(String temperaId, Long sensorId, LocalDateTime timestamp) throws CouldNotFindEntityException {
+    MeasurementId id = new MeasurementId();
+    id.setSensorId(new SensorId(temperaId, sensorId));
+    id.setTimestamp(timestamp);
+
+    return measurementRepository
+        .findById(id)
+        .orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id));
+  }
   public Measurement loadMeasurement(MeasurementId id) throws CouldNotFindEntityException {
     return measurementRepository
         .findById(id)
         .orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id));
   }
+
 
   public Measurement saveMeasurement(Measurement measurement) {
     return measurementRepository.save(measurement);

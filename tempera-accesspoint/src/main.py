@@ -1,6 +1,8 @@
 import asyncio
 import logging.config
+import sys
 
+import bleak.exc
 from bleak import BleakClient
 
 from logging_conf import config
@@ -41,9 +43,13 @@ async def send_data() -> None:
 
 # @retry()
 async def main():
-    async with asyncio.TaskGroup() as tg:
-        _ = tg.create_task(utils.init_globals())
-        tempera_station = tg.create_task(bleclient.discovery_loop())
+    try:
+        async with asyncio.TaskGroup() as tg:
+            _ = tg.create_task(utils.init_globals())
+            tempera_station = tg.create_task(bleclient.discovery_loop())
+    except* bleak.exc.BleakError:
+        logger.critical("Bluetooth is off. Turn on Bluetooth and try again :)")
+        sys.exit(0)
 
     tempera_station = tempera_station.result()
     async with BleakClient(tempera_station) as client:

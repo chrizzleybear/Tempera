@@ -8,14 +8,22 @@ import java.util.List;
 @Entity
 public class Project {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-
-  private String name;
-  private String description;
-  @ManyToOne private Userx manager;
-  @ManyToMany private List<Userx> contributors;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private String name;
+    private String description;
+    @ManyToOne
+    private Userx manager;
+    @ManyToMany
+    private List<Userx> contributors;
+    @ManyToMany
+    @JoinTable(
+            name = "project_group",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id")
+    )
+    private List<Group> groups;
 
   public Project(String name, String description, Userx manager) {
     this.name = name;
@@ -26,21 +34,19 @@ public class Project {
 
   public Project() {}
 
-  //    public List<InternalRecord> getSubordinateTimeRecords() {
-  //        return subordinateTimeRecords;
-  //    }
-
-  public Userx getManager() {
-    return manager;
-  }
+    public Userx getManager() {
+        return manager;
+    }
 
   public List<Userx> getContributors() {
     return contributors;
   }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public List<Group> getGroups() { return groups; }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
   public void setDescription(String description) {
     this.description = description;
@@ -53,42 +59,62 @@ public class Project {
     this.manager = manager;
   }
 
-  public void addContributor(Userx contributor) {
-    if (contributor == null) {
-      throw new NullPointerException("Contributor should not be null when added to Project");
+    public void addGroup(Group contributor) {
+        if(contributor == null){
+            throw new NullPointerException("Contributor should not be null when added to Project");
+        }
+        this.groups.add(contributor);
     }
-    this.contributors.add(contributor);
-  }
-  public Long getId() {
-    return id;
-  }
 
-  public String getName() {
-    return name;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  @Override
-  public int hashCode() {
-    return name.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
+    public void removeGroup(Group contributor) {
+        if(contributor == null){
+            throw new NullPointerException("Contributor should not be null when removed from Project");
+        }
+        this.groups.remove(contributor);
     }
-    if (!(obj instanceof Project other)) {
-      return false;
-    }
-    return other.name.equals(this.name);
-  }
 
-  @Override
-  public String toString() {
-    return name;
-  }
+    public void addContributor(Userx contributor) {
+        if(contributor == null){
+            throw new NullPointerException("Contributor should not be null when added to Project");
+        }
+        this.contributors.add(contributor);
+    }
+
+    public void removeContributor(Userx contributor) {
+        if(contributor == null){
+            throw new NullPointerException("Contributor should not be null when removed from Project");
+        }
+        this.contributors.remove(contributor);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Long getId() { return id; }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Project other)) {
+            return false;
+        }
+        return other.name.equals(this.name);
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

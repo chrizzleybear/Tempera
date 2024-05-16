@@ -32,27 +32,24 @@ class MeasurementServiceTest {
 
   @DirtiesContext
   @Test
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:measurementServiceTest.sql")
   void loadMeasurement() throws CouldNotFindEntityException {
-    // loads a measurement Entity from the database (testdata in data.sql)
-    MeasurementId measurementId = new MeasurementId();
-    measurementId.setTimestamp(LocalDateTime.of(2016, 1, 1, 0, 0, 0));
-    SensorId sensorId = new SensorId();
-    sensorId.setTemperaId("tempera_station_1");
-    sensorId.setSensorId(-1L);
-    measurementId.setSensorId(sensorId);
-    Measurement measurement = measurementService.loadMeasurement(measurementId);
+    // loads a measurement Entity from the database
+    LocalDateTime timestamp = LocalDateTime.of(2024, 5, 10, 8, 30, 0);
+    String temperaId = "TEMP123";
+    Long sensorId = -10L;
+    Measurement measurement = measurementService.loadMeasurementByIdComponents(temperaId, sensorId, timestamp);
 
-    assertEquals(measurementId, measurement.getId(), "Measurement ID should be 1");
-    assertEquals(-1L, measurement.getSensor().getId().getSensorId(), "Sensor Id should be 1");
+    assertEquals(-10L, measurement.getSensor().getId().getSensorId(), "Sensor Id should be 1");
     assertEquals(20.0, measurement.getValue(), "Measurement value should be 20.0");
     assertEquals(
-        LocalDateTime.of(2016, 1, 1, 0, 0, 0),
+        LocalDateTime.of(2024, 5, 10, 8, 30, 0),
         measurement.getId().getTimestamp(),
-        "Measurement timestamp should be 2016-01-01 00:00:00");
+        "Measurement timestamp should be 2024-05-10 08:30:00");
     assertEquals(
-        "tempera_station_1",
+        "TEMP123",
         measurement.getSensor().getId().getTemperaId(),
-        "Tempera Station Id should be tempera_station_1");
+        "Tempera Station Id should be TEMP123");
   }
 
   @DirtiesContext

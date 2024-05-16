@@ -2,6 +2,7 @@ import logging
 from asyncio import TaskGroup
 from typing import Dict, Any, Sequence, Tuple, Literal
 
+import requests
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -9,6 +10,7 @@ from tempera.database.entities import TemperaStation, Measurement, TimeRecord
 from tempera.utils import shared, make_request
 
 logger = logging.getLogger(f"tempera.{__name__}")
+
 
 # Explanation of the func(*, kwarg) notation i.e., how to force kwarg only input.
 # https://www.youtube.com/watch?v=R8-oAqCgHag
@@ -19,6 +21,11 @@ DataType = Literal["TimeRecord", "Measurement"]
 def _get_from_database(
     *, kind: DataType
 ) -> Tuple[Sequence[TimeRecord | Measurement], TemperaStation]:
+    """
+
+    :param kind:
+    :return:
+    """
     with Session(shared.db_engine) as session:
         tempera_station = session.scalars(
             select(TemperaStation).where(TemperaStation.id == shared.current_station_id)
@@ -36,13 +43,13 @@ def _get_from_database(
                 result = session.scalars(
                     select(TimeRecord)
                     .where(TimeRecord.tempera_station_id == shared.current_station_id)
-                    .order_by(TimeRecord.start.desc())
+                    .order_by(TimeRecord.start.asc())
                 ).all()
             case "Measurement":
                 result = session.scalars(
                     select(Measurement)
                     .where(Measurement.tempera_station_id == shared.current_station_id)
-                    .order_by(Measurement.timestamp.desc())
+                    .order_by(Measurement.timestamp.asc())
                 ).all()
         if not result:
             logger.warning(
@@ -58,6 +65,13 @@ def _build_payload(
     *,
     kind: DataType,
 ) -> Dict[str, Any]:
+    """
+
+    :param tempera_station:
+    :param data:
+    :param kind:
+    :return:
+    """
     match kind:
         case "Measurement":
             return {
@@ -84,7 +98,12 @@ def _build_payload(
             }
 
 
-async def send_data(kind: DataType):
+async def send_data(*, kind: DataType):
+    """
+
+    :param kind:
+    :return:
+    """
     match kind:
         case "Measurement":
             endpoint = "measurement"
@@ -102,16 +121,26 @@ async def send_data(kind: DataType):
     payloads = [_build_payload(tempera_station, item, kind=kind) for item in data]
 
     logger.info(f"Sending {len(payloads)} {kind}(s).")
-    async with TaskGroup() as tg:
-        for payload in payloads:
-            tg.create_task(
-                make_request(
-                    "post",
-                    f"{shared.config['webserver_address']}/rasp/api/{endpoint}",
-                    auth=shared.header,
-                    json=payload,
+    try:
+        async with TaskGroup() as tg:
+            _ = [
+                tg.create_task(
+                    make_request(
+                        "post",
+                        f"{shared.config['webserver_address']}/rasp/api/{endpoint}",
+                        auth=shared.header,
+                        json=payload,
+                    )
                 )
-            )
+                for payload in payloads
+            ]
+    except* requests.exceptions.ConnectionError:
+        logger.error(
+            f"Failed to send data to the {endpoint} API endpoint. "
+            "Couldn't establish a connection to the web server "
+            f"at {shared.config['webserver_address']}."
+        )
+        raise ConnectionError from None
 
     _safe_delete_data(data, kind=kind)
 
@@ -119,11 +148,17 @@ async def send_data(kind: DataType):
 def _safe_delete_data(
     data: Sequence[Measurement | TimeRecord], *, kind: DataType
 ) -> None:
-    # Remove the time_record with auto_update == True from the list of those to be deleted
-    # so that it keeps being updated at every etl cycle.
-    # ETL should ensure that only the very last time_record can have auto_update == True
+    """
+
+    :param data:
+    :param kind:
+    :return:
+    """
+    # Don't delete the most recent time record.
+    # This is the only time record that isn't concluded (i.e., doesn't have an end).
+    # Note: it doesn't matter whether auto update is True or False for this measurement.
     if kind == "TimeRecord":
-        data = list(filter(lambda time_record: not time_record.auto_update, data))
+        data = data[:-1]
 
     with Session(shared.db_engine) as session:
         [session.delete(item) for item in data]
@@ -131,5 +166,10 @@ def _safe_delete_data(
 
 
 async def send_measurements_and_time_records():
-    await send_data("Measurement")
-    await send_data("TimeRecord")
+    """
+    Wrapper around :func:`~send_data` to send measurements and time records with one function call.
+
+    :return:
+    """
+    await send_data(kind="Measurement")
+    await send_data(kind="TimeRecord")

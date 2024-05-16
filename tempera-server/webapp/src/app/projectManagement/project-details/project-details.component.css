@@ -1,0 +1,44 @@
+.project-details-card {
+  max-width: 100%;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.project-info p, .manager-details p, .groups-section li p {
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.manager-details, .groups-section {
+  border-top: 1px solid #ccc;
+  padding-top: 20px;
+  margin-top: 20px;
+}
+
+.groups-section ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.groups-section li {
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+@media (max-width: 768px) {
+  .project-details-card {
+    padding: 10px;
+  }
+}
+
+.groups-table th {
+  background-color: #f4f4f4;
+  text-align: left;
+}
+
+.groups-table td {
+  padding: 8px;
+}
+

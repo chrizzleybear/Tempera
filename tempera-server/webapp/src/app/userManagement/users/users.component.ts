@@ -58,18 +58,24 @@ export class UsersComponent implements OnInit {
     }
   }
 
-  deleteSelectedUsers(userId: string): void {
+  deleteSelectedUser(userId: string): void {
     console.log('Delete user with ID: ', userId);
-    this.usersService.deleteUser(userId);
-    this.messages = [{ severity: 'success', summary: 'Success', detail: 'User deleted successfully' }];
-    this.loadUsers();
+    this.usersService.deleteUser(userId).subscribe({
+      next: (response) => {
+        this.messages = [{ severity: 'success', summary: 'Success', detail: 'User deleted successfully' }];
+        this.loadUsers();
+      },
+      error: (error) => {
+        console.error('Error deleting user:', error);
+        this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error deleting user' }];
+      },
+    });
   }
 
   loadUsers() {
     this.usersService.getAllUsers().subscribe(users => {
       this.users = users;
       this.filteredUsers = users;
-      console.log('update');
     });
   }
 
@@ -108,7 +114,6 @@ export class UsersComponent implements OnInit {
 
   viewUserDetails(userId: string) {
     this.router.navigate(['/user', userId]);
-    console.log(userId);
   }
 
 }

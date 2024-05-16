@@ -22,6 +22,11 @@ public class SensorId implements Serializable {
 
   private String temperaId;
 
+  public SensorId(String temperaId, Long sensorId) {
+    this.sensorId = sensorId;
+    this.temperaId = temperaId;
+  }
+
   public SensorId() {}
 
   public Long getSensorId() {

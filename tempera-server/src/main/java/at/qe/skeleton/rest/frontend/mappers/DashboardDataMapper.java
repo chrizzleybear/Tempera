@@ -37,6 +37,7 @@ public class DashboardDataMapper {
     this.projectService = projectService;
   }
 
+
   private List<ColleagueStateDto> mapUserToColleagueStateDto(Userx user) {
 
     // using hashmap for faster compare algorithm
@@ -88,8 +89,12 @@ public class DashboardDataMapper {
    * Maps a user to a HomeDataResponse object. This object contains all the data needed to display the
    * home screen of the frontend. This includes the current measurements, the current state of the user
    * itself and the states of the colleagues (if they are visible and their temperaStation is enabled).
+   *
+   *
    * @param user
-   * @return
+   * @return DashboardDataResponse If there are no existing measurements for this user, it will return null as values. If there is no existing
+   *    * TimeRecord for this user, it will return null as stateTimeStamp. If there is no default project assigned to this user,
+   *    * it will return null as defaultProject. If there are no projects assigned to this user, it will return an empty list as projects.
    */
   @Transactional
   public DashboardDataResponse mapUserToHomeDataResponse(Userx user) {
@@ -117,20 +122,30 @@ public class DashboardDataMapper {
             .findFirst()
             .get();
 
-    double temperature =
-        measurementService.findLatestMeasurementBySensor(temperatureSensor).get().getValue();
-    double humidity =
-        measurementService.findLatestMeasurementBySensor(humiditySensor).get().getValue();
-    double irradiance =
-        measurementService.findLatestMeasurementBySensor(irradianceSensor).get().getValue();
-    double nmvoc = measurementService.findLatestMeasurementBySensor(nmvocSensor).get().getValue();
 
-    ExternalRecord externalRecord = timeRecordService.findLatestExternalRecordByUser(user).get();
-    LocalDateTime timeRecordStart = externalRecord.getStart();
-    String stateTimestamp = timeRecordStart.toString();
+    Optional<Measurement> temperatureMeasurement = measurementService.findLatestMeasurementBySensor(temperatureSensor);
+    Optional<Measurement> humidityMeasurement = measurementService.findLatestMeasurementBySensor(humiditySensor);
+    Optional<Measurement> irradianceMeasurement = measurementService.findLatestMeasurementBySensor(irradianceSensor);
+    Optional<Measurement> nmvocMeasurement = measurementService.findLatestMeasurementBySensor(nmvocSensor);
+
+    Double temperature = temperatureMeasurement.map(Measurement::getValue).orElse(null);
+    Double humidity = humidityMeasurement.map(Measurement::getValue).orElse(null);
+    Double irradiance = irradianceMeasurement.map(Measurement::getValue).orElse(null);
+    Double nmvoc = nmvocMeasurement.map(Measurement::getValue).orElse(null);
+
+
+    Optional<ExternalRecord> externalRecordOptional = timeRecordService.findLatestExternalRecordByUser(user);
+    String stateTimeStamp = externalRecordOptional.map(externalRecord -> externalRecord.getStart().toString()).orElse(null);
 
     Project defaultProject = user.getDefaultProject();
-    ProjectDto defaultProjectDto = new ProjectDto(defaultProject.getId(), defaultProject.getDescription());
+    ProjectDto defaultProjectDto;
+    if (defaultProject == null) {
+      defaultProjectDto = new ProjectDto(null, "No default project assigned");
+    }
+    else {
+      defaultProjectDto = new ProjectDto(defaultProject.getId(), defaultProject.getName());
+    }
+
 
     List<ProjectDto> projects =
         projectService.getProjectsByContributor(user.getUsername()).stream()
@@ -145,7 +160,7 @@ public class DashboardDataMapper {
             nmvoc,
             user.getStateVisibility(),
             user.getState(),
-            stateTimestamp,
+            stateTimeStamp,
             defaultProjectDto,
             projects,
             colleagueStateDtos);

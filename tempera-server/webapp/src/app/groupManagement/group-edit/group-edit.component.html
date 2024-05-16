@@ -1,0 +1,31 @@
+<form [formGroup]="groupForm" (ngSubmit)="onSubmit()">
+  <div class="p-field">
+    <label for="name">Name: </label>
+    <input id="name" type="text" pInputText formControlName="name">
+  </div>
+  <br>
+  <div class="p-field">
+    <label for="description">Description: </label>
+    <input id="description" type="text" pInputText formControlName="description">
+  </div>
+  <br>
+  <div class="p-field">
+    <label for="groupLead">Manager: </label>
+    <p-dropdown [options]="groupLeads "
+                [editable]="true"
+                [filter]="true"
+                [virtualScroll]="true"
+                [virtualScrollItemSize]="38"
+                appendTo="body"
+                optionLabel="label"
+                formControlName="groupLead"
+                placeholder="Select a Group Lead"
+                id="groupLead"></p-dropdown>
+  </div>
+  <br>
+  <div class="p-col-12">
+    <button pButton type="submit" label="Save Changes" [disabled]="!groupForm.valid"
+            class="p-button-rounded p-button-success p-mr-2">
+    </button>
+  </div>
+</form>

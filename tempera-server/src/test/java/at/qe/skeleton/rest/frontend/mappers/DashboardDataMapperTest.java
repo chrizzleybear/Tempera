@@ -74,4 +74,38 @@ Optional<ColleagueStateDto> optionalColleague4= homeDataResponse.colleagueStates
         assertTrue(managerGroups.contains("testGroup2"), "manager should be in group2");
       }
 
+
+
+    @Test
+    @Transactional
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:DashboardDataMapper.sql")
+    @WithMockUser(username = "tonystark", authorities = "EMPLOYEE")
+    void mapUserToHomeDataResponseNullValues() {
+        Userx johndoe = userService.loadUser("tonystark");
+        DashboardDataResponse homeDataResponse = dashboardDataMapper.mapUserToHomeDataResponse(johndoe);
+        assertEquals(8, homeDataResponse.colleagueStates().size(), "ColleagueStates size should be 8, for reference look at DashboardDataMapper.sql");
+        assertNull(homeDataResponse.temperature(), "Temperature of johndoe should be 20");
+        assertNull(homeDataResponse.humidity(), "Humidity of johndoe should be 50.0");
+        assertNull( homeDataResponse.irradiance(), "Irradiance of johndoe should be 1000.0");
+        assertNull(homeDataResponse.nmvoc(), "NMVOC of johndoe should be 100.0");
+
+
+        Optional<ColleagueStateDto> optionalColleague2= homeDataResponse.colleagueStates().stream().filter(c -> c.name().equals("chriswilliams")).findAny();
+        assertTrue(optionalColleague2.isPresent(), "Colleague chriswilliams should be present in the list");
+        boolean chrisIsVisible = optionalColleague2.get().isVisible();
+        assertTrue(chrisIsVisible, "chriswilliams should be visible, since his Visibility is set to Private, but he is in one of john does Groups.");
+
+        Optional<ColleagueStateDto> optionalColleague3= homeDataResponse.colleagueStates().stream().filter(c -> c.name().equals("tonystark")).findAny();
+        assertFalse(optionalColleague3.isPresent(), "Colleague tonystark should not be present in the list");
+
+
+        Optional<ColleagueStateDto> optionalColleague4= homeDataResponse.colleagueStates().stream().filter(c -> c.name().equals("peterparker")).findAny();
+        assertTrue(optionalColleague4.isPresent(), "Colleague peterparker should be present in the list");
+        List<String> managerGroups = optionalColleague4.get().groupOverlap();
+        assertEquals(2, managerGroups.size(), "overlap should be two groups");
+        assertTrue(managerGroups.contains("outsiderGroup"), "peterparker should be in outsiderGroup");
+        assertTrue(managerGroups.contains("outsiderGroup2"), "peterparker should be in outsiderGroup2");
+    }
+
+
 }

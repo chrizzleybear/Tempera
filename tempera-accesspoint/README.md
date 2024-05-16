@@ -1,4 +1,29 @@
-# Running the python components with docker
+Tempera access point
+====================
+
+[![pipeline](https://git.uibk.ac.at/informatik/qe/swess24/group4/g4t1/badges/main/pipeline.svg)](https://git.uibk.ac.at/informatik/qe/swess24/group4/g4t1/-/commits/main/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+## Documentation
+
+As is customary for python projects, [read the docs](https://about.readthedocs.com/?ref=readthedocs.com)
+style documentation is provided for this package.
+
+To build and visualize the documentation pages
+
+```bash
+# Install the tempera access point python package "." i.e., the code in this directory
+# with the optional docs dependencies "[docs]".
+$ pip install .[docs]
+# Go to the docs directory where the documentation source is, and build it with the makefile
+# provided by sphinx.
+$ cd ./docs
+$ make html
+# The output is found in ./docs/build/html, just go to that directory and open the index.html
+# file with a browser or IDE of your choice.
+```
+
+## Running the python components with docker
 
 (In the project root directory) it is as simple as typing
 

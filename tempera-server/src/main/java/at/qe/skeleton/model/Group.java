@@ -83,6 +83,9 @@ public class Group {
     return members;
   }
 
+  public void setMembers(List<Userx> members) {
+    this.members = Objects.requireNonNull(members);
+  }
 
   /**
    * Adds a Member to the Group, if the Member is already in the Group, the Member will be updated.
@@ -96,6 +99,9 @@ public class Group {
   }
 
   public void removeMember(@NotNull Userx member) {
+      if (!members.contains(member)) {
+          throw new IllegalArgumentException("Member is not in the group");
+      }
     members.remove(member);
     member.getGroups().remove(this);
   }

@@ -5,10 +5,11 @@ import at.qe.skeleton.model.Userx;
 
 import java.util.List;
 
-public interface GroupRepository extends AbstractRepository<Group, Long>{
+public interface GroupRepository extends AbstractRepository<Group, Long> {
 
-    List<Group> findAllByGroupLead(Userx user);
+    List<Group> findAll();
+
+    List<Group> findByGroupLead(Userx groupLead);
 
     List<Group> findAllByMembersContains(Userx user);
-
 }

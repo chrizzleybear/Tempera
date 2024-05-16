@@ -12,15 +12,15 @@ INSERT INTO project (id, name, description) VALUES
                                                 (-11, 'Training and Development Program', 'This project focuses on providing training and development opportunities for employees to enhance their skills and performance.'),
                                                 (-12, 'Infrastructure Upgrade', 'This project involves upgrading the company''s IT infrastructure to improve efficiency and security.');
 
-INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE) VALUES(TRUE, 'Admin', 'Istrator', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'admin', 'admin', '2016-01-01 00:00:00');
+INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE, state, state_visibility) VALUES(TRUE, 'Admin', 'Istrator', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'admin', 'admin', '2016-01-01 00:00:00', 'DEEPWORK', 'PUBLIC');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('admin', 'ADMIN');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('admin', 'EMPLOYEE');
-INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE) VALUES(TRUE, 'Susi', 'Kaufgern', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'user1', 'admin', '2016-01-01 00:00:00');
+INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE, state, state_visibility) VALUES(TRUE, 'Susi', 'Kaufgern', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'user1', 'admin', '2016-01-01 00:00:00', 'DEEPWORK', 'PRIVATE');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('user1', 'MANAGER');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('user1', 'EMPLOYEE');
-INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE) VALUES(TRUE, 'Max', 'Mustermann', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'user2', 'admin', '2016-01-01 00:00:00');
+INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE, state, state_visibility) VALUES(TRUE, 'Max', 'Mustermann', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'user2', 'admin', '2016-01-01 00:00:00', 'OUT_OF_OFFICE', 'HIDDEN');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('user2', 'EMPLOYEE');
-INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE) VALUES(TRUE, 'Elvis', 'The King', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'elvis', 'elvis', '2016-01-01 00:00:00');
+INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE, state, state_visibility) VALUES(TRUE, 'Elvis', 'The King', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'elvis', 'elvis', '2016-01-01 00:00:00', 'OUT_OF_OFFICE', 'PUBLIC');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('elvis', 'ADMIN');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('elvis', 'EMPLOYEE');
 
@@ -146,7 +146,7 @@ INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES
 -- fill in measurements for all the temperature sensors (also not necessary for HomeDataMapperTest but can be used later)
 -- user of interest is johndoe (TEMP123)
 INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES
-                                                                                                 (20.0, -1, '2016-01-01 00:00:00', 'tempera_station_1'),
+                                                                                                 (20.0, -1, '2024-05-15 09:00:00', 'tempera_station_1'),
                                                                                                  (20.0, -10, '2024-05-10T08:30:00', 'TEMP123'),
                                                                                                  (25.9, -10, '2024-05-11T10:15:00', 'TEMP125'),
                                                                                                  (22.0, -10, '2024-05-11T11:30:00', 'TEMP126'),
@@ -158,6 +158,7 @@ INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_
 
 -- fill in measurements for all the irradiance sensors
 INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES
+                                                                                                 (999.8, -2, '2024-05-15 09:02:00', 'tempera_station_1'),
                                                                                                  (1000.0, -11, '2024-05-10T08:30:00', 'TEMP123'),
                                                                                                  (1100.0, -11, '2024-05-11T10:15:00', 'TEMP125'),
                                                                                                  (1200.0, -11, '2024-05-11T11:30:00', 'TEMP126'),
@@ -169,6 +170,7 @@ INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_
 
 -- fill in measurements for all the humidity sensors
 INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES
+                                                                                                 (40.8, -3, '2024-05-15 09:02:00', 'tempera_station_1'),
                                                                                                  (50.0, -12, '2024-05-10T08:30:00', 'TEMP123'),
                                                                                                  (55.0, -12, '2024-05-11T10:15:00', 'TEMP125'),
                                                                                                  (60.0, -12, '2024-05-11T11:30:00', 'TEMP126'),
@@ -179,6 +181,7 @@ INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_
                                                                                                  (80.0, -12, '2024-05-11T15:45:00', 'TEMP131');
 -- fill in measurements for all the nmvoc sensors
 INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES
+                                                                                                 (430.222, -4, '2024-05-15 09:02:00', 'tempera_station_1'),
                                                                                                  (100.0, -13, '2024-05-10T08:30:00', 'TEMP123'),
                                                                                                  (110.0, -13, '2024-05-11T10:15:00', 'TEMP125'),
                                                                                                  (120.0, -13, '2024-05-11T11:30:00', 'TEMP126'),
@@ -189,8 +192,8 @@ INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_
                                                                                                  (890.0, -13, '2024-05-11T15:45:00', 'TEMP131');
 
 -- Testdata for TimeRecordService
-INSERT INTO external_record (duration, start, time_end, user_username, state) VALUES (30, '2016-01-01 00:00:00', null, 'admin', 'DEEPWORK'), (3400, '2024-05-10 09:30:00', null, 'johndoe', 'DEEPWORK');
-INSERT INTO internal_record (groupx_id, project_id, start, time_end, ext_rec_start, user_name) VALUES (null, null, '2016-01-01 00:00:00', null, '2016-01-01 00:00:00', 'admin'), (null,  -1, '2024-05-10 09:30:00', null, '2024-05-10 09:30:00', 'johndoe');
+INSERT INTO external_record (duration, start, time_end, user_username, state) VALUES (30, '2024-05-16 12:00:00', null, 'admin', 'DEEPWORK'), (3400, '2024-05-10 09:30:00', null, 'johndoe', 'DEEPWORK');
+INSERT INTO internal_record (groupx_id, project_id, start, time_end, ext_rec_start, user_name) VALUES (null, null, '2024-05-16 12:00:00', null, '2024-05-16 12:00:00', 'admin'), (null,  -1, '2024-05-10 09:30:00', null, '2024-05-10 09:30:00', 'johndoe');
 
 
 
