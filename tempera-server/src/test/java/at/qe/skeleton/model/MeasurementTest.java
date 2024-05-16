@@ -13,13 +13,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
 class MeasurementTest {
 
-    @Test
-    void setId() {
-        Assertions.assertThrows(NullPointerException.class, () -> {
-            Measurement measurement = new Measurement();
-            measurement.setId(null);
-        }, "id should not be allowed to be null");
-      }
 
       @Test void measurementConstructor() {
         Assertions.assertThrows(NullPointerException.class, () -> {
@@ -35,22 +28,20 @@ class MeasurementTest {
     void setTimestamp() {
         Assertions.assertThrows(NullPointerException.class, () -> {
             Measurement measurement = new Measurement();
-            measurement.setTimestamp(null);
+            measurement.getId().setTimestamp(null);
         }, "timestamp should not be allowed to be null");
       }
 
-    @Test
-    void setSensor() {
-        Assertions.assertThrows(NullPointerException.class, () -> {
-            Measurement measurement = new Measurement();
-            measurement.setSensor(null);
-        }, "sensor should not be allowed to be null");
-      }
 
     @Test
     void testEquals() {
         LocalDateTime localDateTime = LocalDateTime.now();
+
+        SensorId sensorId = new SensorId();
+        sensorId.setSensorId(1L);
+        sensorId.setTemperaId("tempera_station_1");
         Sensor sensor = new Sensor();
+        sensor.setId(sensorId);
         Measurement measurement = new Measurement(11, localDateTime,sensor );
         Measurement measurement1 = new Measurement(11, localDateTime,sensor );
 

@@ -45,9 +45,12 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   @JsonIgnore
   private LocalDateTime updateDate;
 
-  // todo: what if user gets deleted? we should keep the timerecords in the aggregated
-  // team and project time calculation?
-  @OneToMany private List<SuperiorTimeRecord> superiorTimeRecords;
+  @OneToOne (mappedBy = "user") private TemperaStation temperaStation;
+
+  @ManyToMany(cascade = CascadeType.ALL, mappedBy = "members")
+  private List<Group> groups;
+  @ManyToMany(cascade = CascadeType.ALL, mappedBy = "contributors")
+  private List<Project> projects;
 
   private String password;
 
@@ -55,13 +58,18 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   private String lastName;
   private String email;
   boolean enabled;
+  @Enumerated(EnumType.STRING)
   private State state;
+  @Enumerated(EnumType.STRING)
   private Visibility stateVisibility;
+  @ManyToOne()
+  private Project defaultProject;
 
   @ElementCollection(targetClass = UserxRole.class, fetch = FetchType.EAGER)
   @CollectionTable(name = "Userx_UserxRole")
   @Enumerated(EnumType.STRING)
   private Set<UserxRole> roles;
+
 
   public Userx() {}
 
@@ -72,15 +80,24 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     this.createDate = createDate;
   }
 
-  public List<SuperiorTimeRecord> getSuperiorTimeRecords() {
-    return superiorTimeRecords;
+  public List<Group> getGroups() {
+    return groups;
   }
 
-  public void addSuperiorTimeRecord(SuperiorTimeRecord superiorTimeRecord) {
-    if (superiorTimeRecord == null) {
-      throw new NullPointerException("superiorTimeRecord should not be null");
+  public TemperaStation getTemperaStation() {
+    return temperaStation;
+  }
+
+  public void setTemperaStation(TemperaStation temperaStation) {
+    this.temperaStation = temperaStation;
+    temperaStation.setUser(this);
+  }
+
+  public void removeTemperaStation() {
+    if (this.temperaStation != null) {
+      this.temperaStation.setUser(null);
+      this.temperaStation = null;
     }
-    this.superiorTimeRecords.add(superiorTimeRecord);
   }
 
   public String getUsername() {
@@ -144,6 +161,26 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
       return;
     }
     this.roles.add(role);
+  }
+
+  public Project getDefaultProject() {
+    return defaultProject;
+  }
+
+  public void setGroups(List<Group> groups) {
+    this.groups = groups;
+  }
+
+  public List<Project> getProjects() {
+    return projects;
+  }
+
+  public void setProjects(List<Project> projects) {
+    this.projects = projects;
+  }
+
+  public void setDefaultProject(Project defaultProject) {
+    this.defaultProject = defaultProject;
   }
 
   public Userx getCreateUser() {

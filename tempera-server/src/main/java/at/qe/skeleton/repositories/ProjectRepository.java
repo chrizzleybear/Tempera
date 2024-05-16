@@ -16,4 +16,7 @@ public interface ProjectRepository extends AbstractRepository<Project, Long>{
     @Query("SELECT p FROM Project p JOIN p.groups g WHERE g.id = :groupId")
     List<Project> findByGroupId(Long groupId);
 
+    public List<Project> findAllByManager_Username(String username);
+
+    public List<Project> findAllByContributors_Username(String username);
 }

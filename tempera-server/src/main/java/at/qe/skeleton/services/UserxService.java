@@ -1,14 +1,23 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
+import at.qe.skeleton.model.*;
+import at.qe.skeleton.model.enums.State;
+import at.qe.skeleton.model.enums.UserxRole;
+import at.qe.skeleton.repositories.ExternalRecordRepository;
+import at.qe.skeleton.repositories.GroupRepository;
+import at.qe.skeleton.rest.frontend.dtos.UserStateDto;
 import at.qe.skeleton.model.TemperaStation;
 import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.repositories.UserxRepository;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +26,7 @@ import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -37,13 +47,19 @@ public class UserxService implements UserDetailsService {
   @Autowired private UserxRepository userRepository;
   @Autowired private PasswordEncoder passwordEncoder;
   @Autowired private TemperaStationService temperaStationService;
+  @Autowired private ExternalRecordRepository externalRecordRepository;
+  @Autowired private GroupRepository groupRepository;
+  @Autowired private ProjectService projectService;
 
   /**
    * Returns a collection of all users.
    *
    * @return
    */
-  @PreAuthorize("hasAuthority('ADMIN')")
+  // todo: we cant preAuthorize this method because we need to get all users to display them in the
+  // dashboard... or is there another way?
+  @PreAuthorize(
+      "hasAuthority('ADMIN') or hasAuthority('EMPLOYEE') or hasAuthority('MANAGER') or hasAuthority('GROUPLEAD')")
   public Collection<Userx> getAllUsers() {
     return userRepository.findAll();
   }
@@ -88,25 +104,7 @@ public class UserxService implements UserDetailsService {
     return userRepository.save(user);
   }
 
-  /**
-   * Deletes the user.
-   *
-   * @param user the user to delete
-   */
-  @PreAuthorize("hasAuthority('ADMIN')")
-  public void deleteUser(Userx user) throws CouldNotFindEntityException {
-    TemperaStation temperaStation =
-        temperaStationService
-            .findByUser(user)
-            .orElseThrow(
-                () ->
-                    new CouldNotFindEntityException(
-                        "Could not find Temperastation assigned to User %s".formatted(user)));
-    temperaStation.setUser(null);
-    temperaStationService.save(temperaStation);
-    userRepository.delete(user);
-    // :TODO: write some audit log stating who and when this user was permanently deleated.
-  }
+
 
   private Userx getAuthenticatedUser() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -137,9 +135,50 @@ public class UserxService implements UserDetailsService {
     return convertToDTO(user);
   }
 
+  /**
+   * Warning: This will delete all external and Internal Records of that user. Also you cant delete
+   * an admin.
+   *
+   * @param id
+   */
+  @Transactional
+  @PreAuthorize("hasAuthority('ADMIN')")
   public void deleteUser(String id) {
+
     Optional<Userx> userx = userRepository.findById(id);
-    userx.ifPresent(value -> userRepository.delete(value));
+    if (userx.isPresent()) {
+      Userx user = userx.get();
+      if (user.getRoles().contains(UserxRole.ADMIN)) {
+        return;
+      }
+      if (user.getRoles().contains(UserxRole.MANAGER)
+          || user.getRoles().contains(UserxRole.GROUPLEAD)) {
+        List<Project> projects = projectService.getProjectsByManager(user.getUsername());
+        for (var project : projects) {
+          project.setManager(null);
+          projectService.saveProject(project);
+        }
+        List<Group> groups = groupRepository.findByGroupLead(user);
+        for (var group : groups) {
+          group.setGroupLead(null);
+          groupRepository.save(group);
+        }
+      }
+
+      List<Project> projects = projectService.getProjectsByContributor(user.getUsername());
+      for (var project : projects) {
+        project.getContributors().remove(user);
+        projectService.saveProject(project);
+      }
+      List <Group> groupsAsMember = groupRepository.findAllByMembersContains(user);
+      for (var group : groupsAsMember) {
+        group.getMembers().remove(user);
+        groupRepository.save(group);
+      }
+      externalRecordRepository.deleteAllByUser(user);
+      user.removeTemperaStation();
+      userx.ifPresent(value -> userRepository.delete(value));
+    }
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
@@ -204,5 +243,16 @@ public class UserxService implements UserDetailsService {
 
   public Collection<Userx> getManagers() {
     return userRepository.findByRole(UserxRole.MANAGER);
+  }
+
+  public List<UserStateDto> getUserWithStates(List<Userx> users) {
+    return externalRecordRepository.findUserStatesByUserList(users);
+  }
+
+  public State switchState(ExternalRecord record) {
+    Userx user = record.getUser();
+    State state = user.getState();
+    user.setState(state);
+    return state;
   }
 }

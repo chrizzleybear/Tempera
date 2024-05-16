@@ -65,9 +65,9 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
         accessPoint = accessPointService.getAccessPointByTemperaStationId(temperaStation.getId());
       }
       if (timestamp == null) {
-        timestamp = entity.getTimestamp();
+        timestamp = entity.getId().getTimestamp();
       }
-      if (!timestamp.equals(entity.getTimestamp())) {
+      if (!timestamp.equals(entity.getId().getTimestamp())) {
         throw new InconsistentObjectRelationException(
             "All measurements must have the same timestamp.");
       }

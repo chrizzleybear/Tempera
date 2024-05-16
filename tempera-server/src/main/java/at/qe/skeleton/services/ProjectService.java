@@ -7,6 +7,7 @@ import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.ProjectRepository;
 import at.qe.skeleton.repositories.UserxRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -105,6 +106,14 @@ public class ProjectService {
         return projectRepository.findByGroupId(groupId);
     }
 
+    public List<Project> getProjectsByManager(String username) {
+        return projectRepository.findAllByManager_Username(username);
+    }
+
+    public List<Project> getProjectsByContributor(String username) {
+        return projectRepository.findAllByContributors_Username(username);
+    }
+
     @Transactional
     public void deleteContributor(Long projectId, String contributorId) {
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException(PROJECT_NOT_FOUND));
@@ -112,4 +121,15 @@ public class ProjectService {
         project.removeContributor(contributor);
         projectRepository.save(project);
     }
+
+    @PreAuthorize("hasAuthority('MANAGER')")
+    public void deleteProject(Project project) {
+        projectRepository.delete(project);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    public void saveProject(Project project) {
+        projectRepository.save(project);
+    }
+
 }

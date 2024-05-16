@@ -1,6 +1,7 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
+import at.qe.skeleton.model.AccessPoint;
 import at.qe.skeleton.model.Sensor;
 import at.qe.skeleton.model.TemperaStation;
 import at.qe.skeleton.model.Userx;
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
 @Scope("application")
 public class TemperaStationService {
 
-  private final Logger logger = Logger.getLogger("logger");
+  private final Logger logger = Logger.getLogger("TemperaStationServiceLogger");
 
   private final TemperaStationRepository temperaStationRepository;
   private final SensorService sensorService;
@@ -40,7 +41,7 @@ public class TemperaStationService {
    * @return the newly created TemperaStation
    */
   public TemperaStation createTemperaStation(String id, boolean enabled, Userx user) {
-    logger.info("trying to create new TemperaStation");
+    logger.info("creating new Temperastation with id %s".formatted(id));
     TemperaStation temperaStation = new TemperaStation(id, enabled, user);
     save(temperaStation);
 
@@ -60,24 +61,35 @@ public class TemperaStationService {
   }
 
   public TemperaStation findById(String id) throws CouldNotFindEntityException {
-    logger.info("trying to find TemperaStation with Id: %s".formatted(id));
     return temperaStationRepository
         .findById(id)
         .orElseThrow(() -> new CouldNotFindEntityException("TemperaStation %s".formatted(id)));
   }
 
   public Optional<TemperaStation> findByUser(Userx user) {
-    logger.info("trying to find Temperastation of User %s".formatted(user));
     return temperaStationRepository.findFirstByUser(user);
   }
 
-  public TemperaStation save(TemperaStation temperaStation) {
-    logger.info("trying to save temperastation %s".formatted(temperaStation.toString()));
-    return temperaStationRepository.save(temperaStation);
+  public Optional<TemperaStation> findByUsername(String username) {
+    return temperaStationRepository.findFirstByUser_Username(username);
   }
 
+  public TemperaStation save(TemperaStation temperaStation) {
+    logger.info("saving temperaStation %s".formatted(temperaStation.toString()));
+    return temperaStationRepository.save(temperaStation);
+
+  }
+
+/**
+ *  Deletes a TemperaStation and removes it from its corresponding AccessPoint.
+ *  Be careful as this will also delete all corresponding sensors and with them all the
+ *  Measurements associated with that sensor and Temperastation.
+ */
   public void delete(TemperaStation temperaStation) {
-    logger.info("trying to delete temperaStation %s".formatted(temperaStation.toString()));
+    logger.info("deleting temperaStation %s".formatted(temperaStation.toString()));
+    AccessPoint accessPoint = temperaStation.getAccessPoint();
+    accessPoint.getTemperaStations().remove(temperaStation);
+    temperaStationRepository.delete(temperaStation);
   }
 
   /**

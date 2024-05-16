@@ -5,17 +5,21 @@ import at.qe.skeleton.model.enums.Unit;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 public class Sensor {
 
-  @EmbeddedId private SensorTemperaCompositeId sensorTemperaCompositeId;
+  @EmbeddedId private SensorId sensorId;
 
   @ManyToOne(optional = false)
-  @MapsId("temperaStationId")
-  @JoinColumn(name = "tempera_station_id")
+  @MapsId("temperaId")
+  @JoinColumn(name = "tempera_id")
   private TemperaStation temperaStation;
+
+  @OneToMany(mappedBy = "sensor", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, orphanRemoval = true)
+  List<Measurement> measurements;
 
   @Enumerated(EnumType.STRING) // necessary to store the enum as a string in the database
   private SensorType sensorType;
@@ -36,27 +40,27 @@ public class Sensor {
     this.sensorType = Objects.requireNonNull(sensorType, "sensorType must not be null");
     this.unit = Objects.requireNonNull(unit, "unit must not be null");
     this.temperaStation = Objects.requireNonNull(temperaStation, "temperaStation must not be null");
-    SensorTemperaCompositeId compositeId = new SensorTemperaCompositeId();
-    compositeId.setTemperaStationId(temperaStation.getId());
-    this.sensorTemperaCompositeId = compositeId;
+    SensorId compositeId = new SensorId();
+    compositeId.setTemperaId(temperaStation.getId());
+    this.sensorId = compositeId;
   }
 
   public void setTemperaStation(@NotNull TemperaStation temperaStation) {
     this.temperaStation = Objects.requireNonNull(temperaStation, "temperaStation must not be null");
   }
 
-  public void setId(@NotNull Long sensorId) {
-    sensorTemperaCompositeId.setSensorId(sensorId);
-  }
-
   protected Sensor() {}
+
+  public void setId(SensorId sensorId) {
+    this.sensorId = sensorId;
+  }
 
   public TemperaStation getTemperaStation() {
     return temperaStation;
   }
 
-  public SensorTemperaCompositeId getId() {
-    return sensorTemperaCompositeId;
+  public SensorId getId() {
+    return sensorId;
   }
 
   public SensorType getSensorType() {
@@ -65,6 +69,24 @@ public class Sensor {
 
   public void setSensorType(@NotNull SensorType sensorType) {
     this.sensorType = Objects.requireNonNull(sensorType, "sensorType must not be null");
+  }
+
+  public void addMeasurement(Measurement measurement) {
+    this.measurements.add(measurement);
+    measurement.setSensor(this);
+  }
+
+  public void removeMeasurement(Measurement measurement) {
+    this.measurements.remove(measurement);
+    measurement.setSensor(null);
+  }
+
+  public List<Measurement> getMeasurements() {
+    return this.measurements;
+  }
+
+  public SensorId getSensorId() {
+    return sensorId;
   }
 
   public Unit getUnit() {
@@ -79,17 +101,17 @@ public class Sensor {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof Sensor other)) return false;
-    return sensorTemperaCompositeId.equals(other.sensorTemperaCompositeId);
+    return sensorId.equals(other.sensorId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(sensorTemperaCompositeId);
+    return Objects.hash(sensorId);
   }
 
   @Override
   public String toString() {
     return "Sensor{compositeId: %s sensorType: %s} \n"
-        .formatted(sensorTemperaCompositeId, sensorType);
+        .formatted(sensorId, sensorType);
   }
 }

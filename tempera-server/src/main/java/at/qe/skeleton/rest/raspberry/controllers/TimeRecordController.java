@@ -1,73 +1,66 @@
 package at.qe.skeleton.rest.raspberry.controllers;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
-import at.qe.skeleton.model.SuperiorTimeRecord;
-import at.qe.skeleton.rest.raspberry.dtos.SuperiorTimeRecordDto;
-import at.qe.skeleton.rest.raspberry.mappers.SuperiorTimeRecordMapper;
+import at.qe.skeleton.model.ExternalRecord;
+import at.qe.skeleton.rest.raspberry.dtos.ExternalRecordDto;
+import at.qe.skeleton.rest.raspberry.mappers.ExternalRecordMapper;
 import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.TemperaStationService;
 import at.qe.skeleton.services.TimeRecordService;
+import at.qe.skeleton.services.UserxService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-import java.util.logging.Level;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 // code was written with workshop 5 code as template
 @RestController
-@RequestMapping("/rasp/api/timerecord")
+@RequestMapping("/rasp/api/time_record")
 public class TimeRecordController {
   private final TimeRecordService timeRecordService;
-  private final SuperiorTimeRecordMapper timeRecordMapper;
+  private final ExternalRecordMapper timeRecordMapper;
   private final AccessPointService accessPointService;
   private final TemperaStationService temperaStationService;
+  private final UserxService userService;
   private final Logger logger = Logger.getLogger("TimeRecordControllerLogger");
+
 
   public TimeRecordController(
       TimeRecordService timeRecordService,
-      SuperiorTimeRecordMapper timeRecordMapper,
+      ExternalRecordMapper timeRecordMapper,
       AccessPointService accessPointService,
-      TemperaStationService temperaStationService) {
+      TemperaStationService temperaStationService,
+      UserxService userService) {
     this.timeRecordService = timeRecordService;
     this.timeRecordMapper = timeRecordMapper;
     this.accessPointService = accessPointService;
     this.temperaStationService = temperaStationService;
+    this.userService = userService;
   }
 
-  @GetMapping("/{id}")
-  private ResponseEntity<SuperiorTimeRecordDto> getTimeRecord(
-      @PathVariable Long id, @RequestParam UUID accessPointId) {
+  @PostMapping("")
+  private ResponseEntity<ExternalRecordDto> postTimeRecord(
+      @RequestBody ExternalRecordDto timeRecordDto) {
     try {
-      if (!accessPointService.isEnabled(accessPointId)) {
+      if (!accessPointService.isEnabled(timeRecordDto.access_point_id())) {
         throw new IllegalArgumentException(
-            "accessPoint %s is not enabled".formatted(accessPointId));
+            "accessPoint %s is not enabled".formatted(timeRecordDto.access_point_id()));
       }
-      SuperiorTimeRecord entity = timeRecordService.findSuperiorTimeRecordById(id);
-      return ResponseEntity.ok(timeRecordMapper.mapToDto(entity));
-    } catch (Exception e) {
-      logger.log(
-          Level.SEVERE, "Could not map SuperiorTimeRecordDto to SuperiorTimeRecord entity", e);
-      return ResponseEntity.badRequest().build();
-    }
-  }
-
-  @PostMapping("/create")
-  private ResponseEntity<SuperiorTimeRecordDto> postTimeRecord(
-      @RequestBody SuperiorTimeRecordDto timeRecordDto) {
-    try {
-      if (!accessPointService.isEnabled(timeRecordDto.accessPointId())) {
+      if (!temperaStationService.isEnabled(timeRecordDto.tempera_station_id())) {
         throw new IllegalArgumentException(
-            "accessPoint %s is not enabled".formatted(timeRecordDto.accessPointId()));
+            "temperaStation %s is not enabled".formatted(timeRecordDto.tempera_station_id()));
       }
-      if (!temperaStationService.isEnabled(timeRecordDto.stationId())) {
-        throw new IllegalArgumentException(
-            "temperaStation %s is not enabled".formatted(timeRecordDto.stationId()));
-      }
-      SuperiorTimeRecord entity =
+      logger.info("\nincoming time record: " + timeRecordDto + ":");
+      ExternalRecord entity =
           timeRecordService.addRecord(timeRecordMapper.mapFromDto(timeRecordDto));
+      userService.switchState(entity);
       return ResponseEntity.status(201).body(timeRecordMapper.mapToDto(entity));
     } catch (CouldNotFindEntityException e) {
+      logger.info(e.getMessage());
+      return ResponseEntity.badRequest().build();
+    } catch (IOException e) {
+      logger.info(e.getMessage());
       return ResponseEntity.badRequest().build();
     }
   }

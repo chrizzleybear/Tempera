@@ -19,7 +19,7 @@ public class Group {
 
   @ManyToOne private Userx groupLead;
 
-  @ManyToMany private List<Userx> members;
+  @ManyToMany(cascade = CascadeType.PERSIST) private List<Userx> members;
 
   /**
    * For Creating Groups, this Constructor should be used.
@@ -56,9 +56,6 @@ public class Group {
     this.name = name;
   }
 
-  public Long getId() {
-    return id;
-  }
   public String getDescription() {
     return description;
   }
@@ -68,6 +65,10 @@ public class Group {
       throw new IllegalArgumentException("Description must not be null or empty");
     }
     this.description = description;
+  }
+
+  public Long getId() {
+    return id;
   }
 
   public Userx getGroupLead() {
@@ -92,26 +93,18 @@ public class Group {
    * @param member the Member to be added to the Group
    * @return true if member was not already in the group and false if member was updated.
    */
-  public boolean addMember(@NotNull Userx member) {
-    //Already checked for null in the annotation?
-    if (member == null) {
-      throw new IllegalArgumentException("Member must not be null");
-    }
-    if (!members.contains(member)) {
-      return members.add(member);
-    }
-    //Why is this here?
-    members.remove(member);
+  public void addMember(@NotNull Userx member) {
     members.add(member);
-    return false;
+    member.getGroups().add(this);
   }
 
-    public void removeMember(@NotNull Userx member) {
-        if (!members.contains(member)) {
-            throw new IllegalArgumentException("Member is not in the group");
-        }
-        members.remove(member);
-    }
+  public void removeMember(@NotNull Userx member) {
+      if (!members.contains(member)) {
+          throw new IllegalArgumentException("Member is not in the group");
+      }
+    members.remove(member);
+    member.getGroups().remove(this);
+  }
 
   @Override
   public int hashCode() {
@@ -133,5 +126,4 @@ public class Group {
   public String toString() {
     return name;
   }
-
 }

@@ -1,6 +1,5 @@
 package at.qe.skeleton.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,25 +15,30 @@ import java.util.Objects;
  * same sensorId.
  */
 @Embeddable
-public class SensorTemperaCompositeId implements Serializable {
+public class SensorId implements Serializable {
 
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long sensorId;
 
-  private String temperaStationId;
+  private String temperaId;
 
-  public SensorTemperaCompositeId() {}
+  public SensorId(String temperaId, Long sensorId) {
+    this.sensorId = sensorId;
+    this.temperaId = temperaId;
+  }
+
+  public SensorId() {}
 
   public Long getSensorId() {
     return sensorId;
   }
 
-  public String getTemperaStationId() {
-    return temperaStationId;
+  public String getTemperaId() {
+    return temperaId;
   }
 
-  public void setTemperaStationId(String temperaStationId) {
-    this.temperaStationId = temperaStationId;
+  public void setTemperaId(String temperaStationId) {
+    this.temperaId = temperaStationId;
   }
 
   public void setSensorId(Long sensorId) {
@@ -44,12 +48,12 @@ public class SensorTemperaCompositeId implements Serializable {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof SensorTemperaCompositeId other)) return false;
-    return sensorId.equals(other.sensorId) && temperaStationId.equals(other.temperaStationId);
+    if (!(o instanceof SensorId other)) return false;
+    return sensorId.equals(other.sensorId) && temperaId.equals(other.temperaId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(sensorId, temperaStationId);
+    return Objects.hash(sensorId, temperaId);
   }
 }

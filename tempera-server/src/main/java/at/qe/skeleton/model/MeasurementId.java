@@ -1,45 +1,48 @@
 package at.qe.skeleton.model;
 
-import at.qe.skeleton.services.TimeRecordService;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Embeddable
 public class MeasurementId implements Serializable {
 
-  private SensorTemperaCompositeId sensorTemperaCompositeId;
-  private LocalDateTime timeStamp;
+  private SensorId sensorId;
+  @Column(nullable = false)
+  @Temporal(TemporalType.TIMESTAMP)
+  private LocalDateTime timestamp;
 
-  public SensorTemperaCompositeId getSensorTemperaCompositeId() {
-    return sensorTemperaCompositeId;
+  public SensorId getSensorId() {
+    return sensorId;
   }
 
-  public void setSensorTemperaCompositeId(SensorTemperaCompositeId sensorTemperaCompositeId) {
-    this.sensorTemperaCompositeId = sensorTemperaCompositeId;
+  public void setSensorId(SensorId sensorId) {
+    this.sensorId = sensorId;
   }
 
-  public LocalDateTime getTimeStamp() {
-    return timeStamp;
+  public LocalDateTime getTimestamp() {
+    return timestamp;
   }
 
-  public void setTimeStamp(LocalDateTime timeStamp) {
-    this.timeStamp = timeStamp;
+  public void setTimestamp(LocalDateTime timeStamp) {
+    this.timestamp = timeStamp;
   }
 
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof MeasurementId other)) return false;
-    return sensorTemperaCompositeId.equals(other.sensorTemperaCompositeId)
-        && timeStamp.equals(other.timeStamp);
+    return sensorId.equals(other.sensorId)
+        && timestamp.equals(other.timestamp);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(sensorTemperaCompositeId, timeStamp);
+    return Objects.hash(sensorId, timestamp);
   }
 }

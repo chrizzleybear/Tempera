@@ -11,4 +11,5 @@ public interface GroupRepository extends AbstractRepository<Group, Long> {
 
     List<Group> findByGroupLead(Userx groupLead);
 
+    List<Group> findAllByMembersContains(Userx user);
 }
