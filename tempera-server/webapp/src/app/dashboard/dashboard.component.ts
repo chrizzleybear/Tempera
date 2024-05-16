@@ -1,5 +1,5 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
-import { State, User } from '../models/user.model';
+import { User } from '../models/user.model';
 import { DatePipe, NgIf } from '@angular/common';
 import { MessageModule } from 'primeng/message';
 import { DropdownModule } from 'primeng/dropdown';
@@ -9,8 +9,7 @@ import { AirQualityPipe } from '../_pipes/air-quality.pipe';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
-import { ColleagueStateDto, DashboardControllerService, DashboardDataResponse, ProjectDto, UserxDto } from '../../api';
-import StateEnum = ColleagueStateDto.StateEnum;
+import { DashboardControllerService, DashboardDataResponse, ProjectDto, UserxDto } from '../../api';
 import VisibilityEnum = DashboardDataResponse.VisibilityEnum;
 import { StorageService } from '../_services/storage.service';
 import { ButtonModule } from 'primeng/button';
@@ -18,8 +17,9 @@ import RolesEnum = UserxDto.RolesEnum;
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MessagesModule } from 'primeng/messages';
-import { map, Observable, switchMap, timer } from 'rxjs';
+import { Observable, switchMap, timer } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DisplayHelper } from '../_helpers/display-helper';
 
 @Component({
   selector: 'app-dashboard',
@@ -65,7 +65,7 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-  protected readonly RolesEnum = RolesEnum;
+  protected readonly DisplayHelper = DisplayHelper;
 
   public form = new FormGroup({
     visibility: new FormControl<VisibilityEnum>(VisibilityEnum.Public, { nonNullable: true }),
@@ -99,67 +99,6 @@ export class DashboardComponent implements OnInit {
       });
     } else {
       this.messages = [{ severity: 'error', summary: 'Error', detail: 'Failed to load user' }];
-    }
-  }
-
-  /**
-   * Get color of colleague state badges
-   */
-  getSeverity(colleague: ColleagueStateDto) {
-    if (!colleague.isVisible) {
-      return 'primary';
-    }
-    switch (colleague.state) {
-      case State.AVAILABLE:
-        return 'success';
-      case State.MEETING:
-        return 'warning';
-      case State.DEEPWORK:
-        return 'info';
-      case State.OUT_OF_OFFICE:
-        return 'danger';
-      default:
-        return 'primary';
-    }
-  }
-
-  /**
-   * Get display text for colleague state
-   */
-  showState(state: StateEnum | undefined) {
-    switch (state) {
-      case StateEnum.Available:
-        return 'Available';
-      case StateEnum.Meeting:
-        return 'In a meeting';
-      case StateEnum.Deepwork:
-        return 'Deep work';
-      case StateEnum.OutOfOffice:
-        return 'Out of office';
-      default:
-        return 'Unknown';
-
-    }
-  }
-
-  /**
-   * Get display text for colleague state but also consider visibility
-   */
-  showColleagueState(colleague: ColleagueStateDto | undefined) {
-    if (!colleague?.isVisible) {
-      return 'Hidden';
-    }
-    switch (colleague.state) {
-      case StateEnum.Available:
-        return 'Available';
-      case StateEnum.Meeting:
-        return 'In a meeting';
-      case StateEnum.Deepwork:
-        return 'Deep work';
-      case StateEnum.OutOfOffice:
-        return 'Out of office';
-      default:
-        return 'Unknown';
     }
   }
 
