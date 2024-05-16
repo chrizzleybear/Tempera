@@ -11,4 +11,7 @@ public interface InternalRecordRepository
     extends AbstractRepository<InternalRecord, InternalRecordId> {
 
     Optional<InternalRecord> findByStartAndExternalRecordUser(LocalDateTime start, Userx user);
+
+    Optional<InternalRecord> findByExternalRecord_EndIsNullAndExternalRecord_User(Userx user);
+
 }

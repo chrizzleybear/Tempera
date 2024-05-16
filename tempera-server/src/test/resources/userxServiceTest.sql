@@ -203,7 +203,7 @@ INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_
                                                                                                  (890.0, -13, '2024-05-11T15:45:00', 'TEMP131');
 
 -- Testdata for TimeRecordService
-INSERT INTO external_record (duration, start, time_end, user_username, state) VALUES (30, '2016-01-01 00:00:00', null, 'admin', 'DEEPWORK'), (3400, '2024-05-10 09:30:00', null, 'johndoe', 'DEEPWORK');
+INSERT INTO external_record (duration, start, time_end, user_username, state) VALUES (30, '2016-01-01 00:00:00', null, 'admin', 'DEEPWORK'), (3400, '2024-05-10 09:30:00', null, 'johndoe', 'DEEPWORK'), (3400, '2024-05-10 09:30:00', null, 'brucewayne', 'DEEPWORK');
 INSERT INTO internal_record (groupx_id, project_id, start, time_end, ext_rec_start, user_name) VALUES (null, null, '2016-01-01 00:00:00', null, '2016-01-01 00:00:00', 'admin'), (null,  -1, '2024-05-10 09:30:00', null, '2024-05-10 09:30:00', 'johndoe');
 
 

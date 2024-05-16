@@ -1,12 +1,15 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
+import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
 import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
 import at.qe.skeleton.rest.frontend.mappers.DashboardDataMapper;
+import at.qe.skeleton.rest.frontend.payload.request.UpdateDashboardDataRequest;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
+import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
 import at.qe.skeleton.services.UserxService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,13 +17,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
@@ -32,8 +38,11 @@ class DashboardControllerTest {
 
   @BeforeEach
   void setUp() {
+    TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken("johndoe", null);
+    SecurityContextHolder.getContext().setAuthentication(testingAuthenticationToken);
     dashboardController = new DashboardController(dashboardDataMapper, userXService);
   }
+
 
   @AfterEach
   void tearDown() {}
@@ -73,4 +82,19 @@ class DashboardControllerTest {
     verify(dashboardDataMapper, times(1)).mapUserToHomeDataResponse(johnny);
     assertEquals(dashboardDataResponse, response);
   }
+
+
+    @Test
+  void updateDashboardData() throws CouldNotFindEntityException {
+    Userx userx = new Userx();
+    MessageResponse messageResponse = new MessageResponse("Dashboard data updated successfully!");
+    when(userXService.loadUser("johndoe")).thenReturn(userx);
+    when(dashboardDataMapper.updateUserVisibilityAndTimeStampProject(any(), any())).thenReturn(messageResponse);
+
+    ResponseEntity<MessageResponse> response = dashboardController.updateDashboardData(new UpdateDashboardDataRequest(Visibility.HIDDEN, new ProjectDto(1L, "Projekt 1")));
+    assertEquals(messageResponse, response.getBody());
+    verify(userXService, times(1)).loadUser("johndoe");
+    verify(dashboardDataMapper, times(1)).updateUserVisibilityAndTimeStampProject(any(), any());
+  }
+
 }

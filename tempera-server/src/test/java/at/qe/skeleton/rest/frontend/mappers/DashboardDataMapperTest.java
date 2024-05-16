@@ -1,12 +1,14 @@
 package at.qe.skeleton.rest.frontend.mappers;
 
+import at.qe.skeleton.exceptions.CouldNotFindEntityException;
+import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
+import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
+import at.qe.skeleton.rest.frontend.payload.request.UpdateDashboardDataRequest;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
-import at.qe.skeleton.services.MeasurementService;
-import at.qe.skeleton.services.TemperaStationService;
-import at.qe.skeleton.services.TimeRecordService;
-import at.qe.skeleton.services.UserxService;
+import at.qe.skeleton.services.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +32,7 @@ class DashboardDataMapperTest {
     @Autowired private MeasurementService measurementService;
     @Autowired private TimeRecordService timeRecordService;
     @Autowired private DashboardDataMapper dashboardDataMapper;
+    @Autowired private ProjectService projectService;
 
     @BeforeEach
     void setUp() {
@@ -105,6 +108,25 @@ Optional<ColleagueStateDto> optionalColleague4= homeDataResponse.colleagueStates
         assertEquals(2, managerGroups.size(), "overlap should be two groups");
         assertTrue(managerGroups.contains("outsiderGroup"), "peterparker should be in outsiderGroup");
         assertTrue(managerGroups.contains("outsiderGroup2"), "peterparker should be in outsiderGroup2");
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:DashboardDataMapper.sql")
+    @WithMockUser(username = "johndoe", authorities = "EMPLOYEE")
+    void mapUserToHomeDataResponseNoMeasurements() throws CouldNotFindEntityException {
+        Userx johndoe = userService.loadUser("johndoe");
+        assertEquals(Visibility.PUBLIC, johndoe.getStateVisibility(), "Visibility of johndoe should be PUBLIC before the update");
+        Project projectBefore = timeRecordService.findLatestInternalRecordByUser(johndoe).get().getAssignedProject();
+        assertNull(projectBefore, "Project of johndoe should be null before the update");
+
+        // choose another visibility and project that John Doe is a member of
+        Visibility visibilityUpdate = Visibility.HIDDEN;
+        ProjectDto projectUpdate = new ProjectDto(-12L, "Infrastructure Upgrade");
+        UpdateDashboardDataRequest request = new UpdateDashboardDataRequest(visibilityUpdate, projectUpdate);
+        dashboardDataMapper.updateUserVisibilityAndTimeStampProject(request, johndoe);
+        assertEquals(Visibility.HIDDEN, johndoe.getStateVisibility(), "Visibility of johndoe should be HIDDEN after the update");
+        Project projectAfter = timeRecordService.findLatestInternalRecordByUser(johndoe).get().getAssignedProject();
+        assertEquals("Infrastructure Upgrade", projectAfter.getName(), "Project of johndoe should be Infrastructure Upgrade after the update");
     }
 
 
