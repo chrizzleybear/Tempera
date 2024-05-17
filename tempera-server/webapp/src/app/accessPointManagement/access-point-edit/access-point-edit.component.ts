@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AccessPoint} from "../../models/accesspoint.model";
+import {AccessPoint} from "../../models/accessPoint.model";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {AccessPointService} from "../../_services/access-point.service";
 import {RoomService} from "../../_services/room.service";

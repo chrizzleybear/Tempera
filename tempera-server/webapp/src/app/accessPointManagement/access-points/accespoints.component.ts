@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {AccessPointService} from "../../_services/access-point.service";
-import {AccessPoint} from "../../models/accesspoint.model";
+import {AccessPoint} from "../../models/accessPoint.model";
 import {NgIf} from "@angular/common";
 import {CardModule} from "primeng/card";
 import {Message} from "primeng/api";
@@ -74,7 +74,7 @@ export class AccesspointsComponent implements OnInit{
   applyFilter(event: any): void {
     const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
     this.filteredAccessPoints = this.accessPoints!.filter(accessPoint =>
-      accessPoint.room.roomId.toLowerCase().includes(filterValue)
+      accessPoint.room.id.toLowerCase().includes(filterValue)
     );
   }
 

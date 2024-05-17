@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AccessPoint} from "../../models/accesspoint.model";
+import {AccessPoint} from "../../models/accessPoint.model";
 import {ActivatedRoute} from "@angular/router";
 import {AccessPointService} from "../../_services/access-point.service";
 import {NgIf} from "@angular/common";

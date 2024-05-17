@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {Observable} from "rxjs";
-import {AccessPoint} from "../models/accesspoint.model";
+import {AccessPoint} from "../models/accessPoint.model";
 import {AccessPointCreateDto, AccessPointEditDto} from "../models/AccessPointDtos";
 
 @Injectable({
