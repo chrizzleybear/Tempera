@@ -48,7 +48,7 @@ export class TimetableComponent implements OnInit {
   }
 
   updateProject(newProject: ProjectDto, timeEntryId: number) {
-    this.timetableControllerService.updateTimetableEntry({
+    this.timetableControllerService.updateProject1({
       entryId: timeEntryId,
       project: newProject,
     }).subscribe({
