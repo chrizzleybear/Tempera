@@ -81,4 +81,9 @@ public class RoomController {
         List<Room> rooms = roomService.getAvailableRooms();
         return ResponseEntity.ok(rooms);
     }
+
+    @PutMapping("/threshold/update")
+    public Threshold updateThreshold(@RequestBody Threshold threshold) {
+        return roomService.updateThreshold(threshold);
+    }
 }

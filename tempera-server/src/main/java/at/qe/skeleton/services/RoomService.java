@@ -173,4 +173,10 @@ public class RoomService {
         thresholds.add(nmvocLowWarning);
         return thresholds;
     }
+
+    public Threshold updateThreshold(Threshold threshold) {
+        Threshold updateThreshold = thresholdRepository.findById(threshold.getId()).orElseThrow(() -> new IllegalArgumentException("Threshold not found"));
+        updateThreshold.setValue(threshold.getValue());
+        return thresholdRepository.save(updateThreshold);
+    }
 }

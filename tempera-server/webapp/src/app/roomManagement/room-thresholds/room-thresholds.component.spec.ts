@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { RoomThresholdsComponent } from './room-thresholds.component';
+import {RoomThresholdsComponent} from './room-thresholds.component';
 
 describe('RoomThresholdsComponent', () => {
   let component: RoomThresholdsComponent;
@@ -10,8 +10,8 @@ describe('RoomThresholdsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [RoomThresholdsComponent]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(RoomThresholdsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

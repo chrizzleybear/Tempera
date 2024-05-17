@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {RoomService} from "../../_services/room.service";
 import {Room} from "../../models/room.model";
@@ -8,6 +8,9 @@ import {NgForOf, NgIf} from "@angular/common";
 import {ButtonModule} from "primeng/button";
 import {RippleModule} from "primeng/ripple";
 import {Threshold} from "../../models/threshold.model";
+import {DialogModule} from "primeng/dialog";
+import {FormsModule} from "@angular/forms";
+import {InputTextModule} from "primeng/inputtext";
 
 @Component({
   selector: 'app-room-details',
@@ -18,7 +21,10 @@ import {Threshold} from "../../models/threshold.model";
     NgForOf,
     NgIf,
     ButtonModule,
-    RippleModule
+    RippleModule,
+    DialogModule,
+    FormsModule,
+    InputTextModule
   ],
   templateUrl: './room-details.component.html',
   styleUrl: './room-details.component.css'
@@ -26,6 +32,7 @@ import {Threshold} from "../../models/threshold.model";
 export class RoomDetailsComponent {
   private roomId!: string;
   room: Room | undefined;
+  displayEditThresholdDialog = false;
   expandedRows: { [key: string]: boolean } = {};
 
   constructor(
@@ -59,8 +66,32 @@ export class RoomDetailsComponent {
     if (this.expandedRows[threshold.id]) {
       delete this.expandedRows[threshold.id];
     } else {
-      this.expandedRows = { [threshold.id]: true };
+      this.expandedRows = {[threshold.id]: true};
     }
     console.log('Expanded rows:', this.expandedRows);
+  }
+
+  editThresholdDialog(threshold: Threshold) {
+    console.log('Edit threshold dialog:', threshold);
+
+  }
+
+  onCellEditInit(threshold: Threshold) {
+    console.log('Cell edit init:', threshold);
+  }
+
+  onCellEditSave(threshold: Threshold) {
+    this.roomService.updateThreshold(threshold).subscribe({
+      next: (data) => {
+        console.log('Threshold updated: ', data);
+      },
+      error: (error) => {
+        console.error('Failed to update threshold:', error);
+      },
+    });
+  }
+
+  onCellEditCancel(threshold: Threshold, index: number) {
+    console.log('Cell edit cancel:', threshold, index);
   }
 }

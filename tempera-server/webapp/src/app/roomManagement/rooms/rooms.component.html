@@ -4,9 +4,11 @@
     <div *ngIf="!displayCreateDialog">
       <div class="mb-4">
         <input type="text" pInputText placeholder="Search" (input)="applyFilter($event)" class="mr-2">
-        <button type="button" pButton label="Add New Room" icon="pi pi-plus" (click)="createRoomDialog()" class="mr-2"></button>
+        <button type="button" pButton label="Add New Room" icon="pi pi-plus" (click)="createRoomDialog()"
+                class="mr-2"></button>
       </div>
-      <p-table [value]="rooms" dataKey="id" [paginator]="true" [rows]="10" responsiveLayout="scroll" [expandedRowKeys]="expandedRows">
+      <p-table [value]="rooms" dataKey="id" [paginator]="true" [rows]="10" responsiveLayout="scroll"
+               [expandedRowKeys]="expandedRows">
         <ng-template pTemplate="header">
           <tr>
             <th style="width: 5rem"></th>
@@ -17,7 +19,8 @@
         <ng-template pTemplate="body" let-room let-expanded="expanded">
           <tr>
             <td>
-              <p-button type="button" pRipple (click)="onRowToggle(room)" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></p-button>
+              <p-button type="button" pRipple (click)="onRowToggle(room)" [text]="true" [rounded]="true" [plain]="true"
+                        [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></p-button>
             </td>
             <td>{{ room.id }}</td>
             <td>
@@ -53,7 +56,8 @@
         </ng-template>
       </p-table>
     </div>
-    <p-dialog header="Create Room" [(visible)]="displayCreateDialog" [modal]="true" [style]="{ width: '50vw' }" [closable]="true">
+    <p-dialog header="Create Room" [(visible)]="displayCreateDialog" [modal]="true" [style]="{ width: '50vw' }"
+              [closable]="true">
       <input id="roomId" type="text" pInputText [(ngModel)]="newRoomId" required>
       <br>
       <br>

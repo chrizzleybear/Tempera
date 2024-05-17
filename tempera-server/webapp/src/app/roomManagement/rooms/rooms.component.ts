@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { RoomService } from "../../_services/room.service";
-import { Room } from "../../models/room.model";
-import { TableModule } from "primeng/table";
-import { ButtonModule } from "primeng/button";
-import { InputTextModule } from "primeng/inputtext";
-import { MessagesModule } from "primeng/messages";
-import { NgForOf, NgIf } from "@angular/common";
-import { DialogModule } from "primeng/dialog";
-import { UserCreateComponent } from "../../userManagement/user-create/user-create.component";
-import { FormsModule } from "@angular/forms";
-import { FloorPlanComponent } from "../../rooms/floor-plan/floor-plan.component";
-import { RippleModule } from "primeng/ripple";
+import {Component, OnInit} from '@angular/core';
+import {RoomService} from "../../_services/room.service";
+import {Room} from "../../models/room.model";
+import {TableModule} from "primeng/table";
+import {ButtonModule} from "primeng/button";
+import {InputTextModule} from "primeng/inputtext";
+import {MessagesModule} from "primeng/messages";
+import {NgForOf, NgIf} from "@angular/common";
+import {DialogModule} from "primeng/dialog";
+import {UserCreateComponent} from "../../userManagement/user-create/user-create.component";
+import {FormsModule} from "@angular/forms";
+import {FloorPlanComponent} from "../../rooms/floor-plan/floor-plan.component";
+import {RippleModule} from "primeng/ripple";
 
 @Component({
   selector: 'app-rooms',
@@ -38,7 +38,8 @@ export class RoomsComponent implements OnInit {
   messages: any;
   expandedRows: { [key: string]: boolean } = {};
 
-  constructor(private roomService: RoomService) { }
+  constructor(private roomService: RoomService) {
+  }
 
   ngOnInit(): void {
     this.loadRooms();
@@ -60,13 +61,13 @@ export class RoomsComponent implements OnInit {
       next: (response) => {
         console.log('Room deleted successfully:', response);
         this.loadRooms();
-        this.messages = [{ severity: 'success', summary: 'Success', detail: 'Room deleted successfully' }];
+        this.messages = [{severity: 'success', summary: 'Success', detail: 'Room deleted successfully'}];
       },
       error: (error) => {
         console.error('Error deleting room:', error)
         this.messages = [{severity: 'error', summary: 'Error', detail: 'Error deleting room'}];
       }
-      });
+    });
     this.loadRooms();
   }
 
@@ -81,7 +82,7 @@ export class RoomsComponent implements OnInit {
         console.log('Room created successfully:', response);
         this.loadRooms();
         this.displayCreateDialog = false;
-        this.messages = [{ severity: 'success', summary: 'Success', detail: 'Room created successfully' }];
+        this.messages = [{severity: 'success', summary: 'Success', detail: 'Room created successfully'}];
       },
       error: (error) => console.error('Error creating room:', error)
     });
@@ -97,7 +98,7 @@ export class RoomsComponent implements OnInit {
     if (this.expandedRows[room.id]) {
       delete this.expandedRows[room.id];
     } else {
-      this.expandedRows = { [room.id]: true };
+      this.expandedRows = {[room.id]: true};
     }
     console.log('Expanded rows:', this.expandedRows);
   }

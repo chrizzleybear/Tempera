@@ -24,7 +24,8 @@
         </p-table>
       </div>
       <p class="thresholds-title"><strong>Thresholds:</strong></p>
-      <p-table [value]="room.thresholds" dataKey="id" [paginator]="true" [rows]="5" class="thresholds-table" [expandedRowKeys]="expandedRows">
+      <p-table [value]="room.thresholds" dataKey="id" [paginator]="true" [rows]="5" class="thresholds-table"
+               [expandedRowKeys]="expandedRows">
         <ng-template pTemplate="header">
           <tr>
             <th style="width: 5rem"></th>
@@ -37,12 +38,27 @@
         <ng-template pTemplate="body" let-threshold let-expanded="expanded">
           <tr>
             <td>
-              <p-button type="button" pRipple (click)="onRowToggle(threshold)" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></p-button>
+              <p-button type="button" pRipple (click)="onRowToggle(threshold)" [text]="true" [rounded]="true"
+                        [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></p-button>
             </td>
             <td>{{ threshold.id }}</td>
             <td>{{ threshold.sensorType }}</td>
             <td>{{ threshold.thresholdType }}</td>
-            <td>{{ threshold.value }}</td>
+            <td [pEditableColumn]="threshold.value" pEditableColumnField="value">
+              <p-cellEditor>
+                <ng-template pTemplate="input">
+                  <input
+                    pInputText
+                    type="text"
+                    [(ngModel)]="threshold.value"
+                    (keydown.enter)="onCellEditSave(threshold)"
+                    required/>
+                </ng-template>
+                <ng-template pTemplate="output">
+                  {{ threshold.value }}
+                </ng-template>
+              </p-cellEditor>
+            </td>
           </tr>
         </ng-template>
         <ng-template pTemplate="rowexpansion" let-threshold>
