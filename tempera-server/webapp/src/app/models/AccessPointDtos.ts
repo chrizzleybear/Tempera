@@ -1,10 +1,12 @@
+import {Room} from "./room.model";
+
 export interface AccessPointCreateDto {
-  room: string;
+  room: Room;
   enabled: boolean;
 }
 
 export interface AccessPointEditDto {
   id: number;
-  room: string;
+  room: Room;
   enabled: boolean;
 }

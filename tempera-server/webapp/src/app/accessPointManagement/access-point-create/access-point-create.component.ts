@@ -31,7 +31,6 @@ export class AccessPointCreateComponent implements OnInit {
 
   accessPointForm: FormGroup;
   rooms: Room[] = [];
-  roomsDropdown: string[] = [];
 
   @Output() createComplete = new EventEmitter<boolean>();
 
@@ -50,7 +49,6 @@ export class AccessPointCreateComponent implements OnInit {
     this.roomService.getAvailableRooms().subscribe({
       next: (rooms) => {
         this.rooms = rooms;
-        this.roomsDropdown = rooms.map(room => room.roomId);
         console.log('Loaded rooms:', rooms);
       },
       error: (error) => {
@@ -64,6 +62,7 @@ export class AccessPointCreateComponent implements OnInit {
         room: this.accessPointForm.value.room,
         enabled: this.accessPointForm.value.enabled
       }
+      console.log('Creating access point:', dto)
       this.accessPointService.createAccesspoint(dto
       ).subscribe({
         next: (response) => {

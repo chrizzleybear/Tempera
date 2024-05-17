@@ -1,8 +1,17 @@
 <div>
   <form [formGroup]="accessPointForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="room">Room</label>
-      <input type="text" id="room" [(ngModel)]="accessPoint.room.roomId" name="room" class="form-control">
+    <div class="p-field">
+      <label for="room">Room: </label>
+      <p-dropdown [options]="rooms"
+                  [editable]="true"
+                  [filter]="true"
+                  [virtualScroll]="true"
+                  [virtualScrollItemSize]="38"
+                  appendTo="body"
+                  optionLabel="id"
+                  formControlName="room"
+                  placeholder="Select a Room"
+                  id="room"></p-dropdown>
     </div>
     <div class="form-group form-check">
       <input type="checkbox" id="enabled" [(ngModel)]="accessPoint.enabled" name="enabled" class="form-check-input">

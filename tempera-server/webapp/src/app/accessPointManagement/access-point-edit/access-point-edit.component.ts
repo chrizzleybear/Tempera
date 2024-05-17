@@ -1,17 +1,19 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AccessPoint} from "../../models/accesspoint.model";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {Room} from "../../models/room.model";
 import {AccessPointService} from "../../_services/access-point.service";
 import {RoomService} from "../../_services/room.service";
 import {AccessPointEditDto} from "../../models/AccessPointDtos";
+import {DropdownModule} from "primeng/dropdown";
+import {Room} from "../../models/room.model";
 
 @Component({
   selector: 'app-access-point-edit',
   standalone: true,
   imports: [
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DropdownModule
   ],
   templateUrl: './access-point-edit.component.html',
   styleUrl: './access-point-edit.component.css'
@@ -39,7 +41,7 @@ export class AccessPointEditComponent implements OnInit{
   }
 
   private fetchRooms() {
-    this.roomService.getAllRooms().subscribe({
+    this.roomService.getAvailableRooms().subscribe({
       next: (rooms) => {
         this.rooms = rooms;
         console.log('Loaded rooms:', rooms);
