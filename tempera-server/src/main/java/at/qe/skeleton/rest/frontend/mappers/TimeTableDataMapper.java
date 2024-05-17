@@ -10,7 +10,7 @@ public class TimeTableDataMapper {
     public GetTimetableDataResponse getTimetableData(Userx user){
 
 
-        TimetableEntryDto entry = new TimetableEntryDto()
+        //TimetableEntryDto entry = new TimetableEntryDto();
 
         return null;
     }

@@ -19,17 +19,14 @@ import java.util.Objects;
  * assigned to that Group or Project reference null as assigned Group/Project.
  */
 @Entity
-@IdClass(InternalRecordId.class)
 public class InternalRecord {
-  //  @Id
-  //  @GeneratedValue(strategy = GenerationType.AUTO)
-  //  private Long id;
-
   @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
+
   @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime start;
 
-  @Id
   @ManyToOne(optional = false)
   @JoinColumns({
     @JoinColumn(name = "userName", referencedColumnName = "user_username"),
