@@ -24,6 +24,9 @@ public class Threshold implements Serializable {
 
   @OneToOne private ThresholdTip tip;
 
+  public Long getId() {
+    return id;
+  }
   public SensorType getSensorType() {
     return sensorType;
   }

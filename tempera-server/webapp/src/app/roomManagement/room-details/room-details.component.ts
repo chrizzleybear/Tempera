@@ -5,6 +5,9 @@ import {Room} from "../../models/room.model";
 import {TableModule} from "primeng/table";
 import {CardModule} from "primeng/card";
 import {NgForOf, NgIf} from "@angular/common";
+import {ButtonModule} from "primeng/button";
+import {RippleModule} from "primeng/ripple";
+import {Threshold} from "../../models/threshold.model";
 
 @Component({
   selector: 'app-room-details',
@@ -13,7 +16,9 @@ import {NgForOf, NgIf} from "@angular/common";
     TableModule,
     CardModule,
     NgForOf,
-    NgIf
+    NgIf,
+    ButtonModule,
+    RippleModule
   ],
   templateUrl: './room-details.component.html',
   styleUrl: './room-details.component.css'
@@ -21,6 +26,7 @@ import {NgForOf, NgIf} from "@angular/common";
 export class RoomDetailsComponent {
   private roomId!: string;
   room: Room | undefined;
+  expandedRows: { [key: string]: boolean } = {};
 
   constructor(
     private route: ActivatedRoute,
@@ -40,10 +46,21 @@ export class RoomDetailsComponent {
       next: (data) => {
         console.log('Room details: ', data);
         this.room = data;
+        console.log('Room Threat: ', this.room.thresholds);
       },
       error: (error) => {
         console.error('Failed to load room details:', error);
       },
     });
+  }
+
+  onRowToggle(threshold: Threshold): void {
+    console.log('Row toggled:', threshold);
+    if (this.expandedRows[threshold.id]) {
+      delete this.expandedRows[threshold.id];
+    } else {
+      this.expandedRows = { [threshold.id]: true };
+    }
+    console.log('Expanded rows:', this.expandedRows);
   }
 }
