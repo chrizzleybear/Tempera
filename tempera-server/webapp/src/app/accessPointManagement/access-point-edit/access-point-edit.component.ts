@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {AccessPoint} from "../../models/accesspoint.model";
 
 @Component({
   selector: 'app-access-point-edit',
@@ -8,5 +9,7 @@ import { Component } from '@angular/core';
   styleUrl: './access-point-edit.component.css'
 })
 export class AccessPointEditComponent {
+  @Input() accessPoint!: AccessPoint;
+  @Output() editComplete = new EventEmitter<unknown>();
 
 }

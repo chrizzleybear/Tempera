@@ -11,6 +11,7 @@ import {ButtonModule} from "primeng/button";
 import {DialogModule} from "primeng/dialog";
 import {AccessPointCreateComponent} from "../access-point-create/access-point-create.component";
 import {AccessPointEditComponent} from "../access-point-edit/access-point-edit.component";
+import {InputTextModule} from "primeng/inputtext";
 
 
 @Component({
@@ -24,7 +25,8 @@ import {AccessPointEditComponent} from "../access-point-edit/access-point-edit.c
     ButtonModule,
     DialogModule,
     AccessPointCreateComponent,
-    AccessPointEditComponent
+    AccessPointEditComponent,
+    InputTextModule
   ],
   templateUrl: './accespoints.component.html',
   styleUrl: './accespoints.component.css'

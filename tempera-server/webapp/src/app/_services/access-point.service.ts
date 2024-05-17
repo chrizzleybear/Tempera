@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {Observable} from "rxjs";
 import {AccessPoint} from "../models/accesspoint.model";
+import {AccessPointCreateDto} from "../models/AccessPointDtos";
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class AccessPointService {
     return this.http.get<AccessPoint>(this.API_URL + 'load/' + accesspointId);
   }
 
-  createAccesspoint(dto: AccessPoint) {
+  createAccesspoint(dto: AccessPointCreateDto) {
     return this.http.post(this.API_URL + 'create', dto);
   }
 
