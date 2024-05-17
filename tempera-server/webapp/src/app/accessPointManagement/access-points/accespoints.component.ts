@@ -1,12 +1,16 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
-import {AccesspointService} from "../../_services/accesspoint.service";
+import {AccessPointService} from "../../_services/access-point.service";
 import {AccessPoint} from "../../models/accesspoint.model";
 import {NgIf} from "@angular/common";
 import {CardModule} from "primeng/card";
 import {Message} from "primeng/api";
 import {MessagesModule} from "primeng/messages";
 import {TableModule} from "primeng/table";
+import {ButtonModule} from "primeng/button";
+import {DialogModule} from "primeng/dialog";
+import {AccessPointCreateComponent} from "../access-point-create/access-point-create.component";
+import {AccessPointEditComponent} from "../access-point-edit/access-point-edit.component";
 
 
 @Component({
@@ -16,7 +20,11 @@ import {TableModule} from "primeng/table";
     NgIf,
     CardModule,
     MessagesModule,
-    TableModule
+    TableModule,
+    ButtonModule,
+    DialogModule,
+    AccessPointCreateComponent,
+    AccessPointEditComponent
   ],
   templateUrl: './accespoints.component.html',
   styleUrl: './accespoints.component.css'
@@ -30,7 +38,7 @@ export class AccesspointsComponent implements OnInit{
   displayEditDialog: boolean = false;
   messages: Message[] = [];
 
-  constructor(private accessPointService: AccesspointService, private router: Router) {}
+  constructor(private accessPointService: AccessPointService, private router: Router) {}
   ngOnInit(): void {
     this.loadAccessPoints();
   }
@@ -48,9 +56,8 @@ export class AccesspointsComponent implements OnInit{
       }
     });
   }
-  deleteAccesspoints() {
-    if (this.accessPoints) {
-      this.accessPoints.forEach(accessPoint => {
+  deleteAccesspoints(accessPoint: AccessPoint) {
+    if (accessPoint) {
         this.accessPointService.deleteAccesspoint(accessPoint.id).subscribe({
           next: () => {
             console.log(`Deleted access point with id: ${accessPoint.id}`);
@@ -59,7 +66,6 @@ export class AccesspointsComponent implements OnInit{
             console.error(`Error deleting access point with id: ${accessPoint.id}`, error);
           }
         });
-      });
     }
   }
 

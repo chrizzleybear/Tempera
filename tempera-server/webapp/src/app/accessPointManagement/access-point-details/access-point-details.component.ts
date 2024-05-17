@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AccessPoint} from "../../models/accesspoint.model";
 import {ActivatedRoute} from "@angular/router";
-import {AccesspointService} from "../../_services/accesspoint.service";
+import {AccessPointService} from "../../_services/access-point.service";
 import {NgIf} from "@angular/common";
 import {CardModule} from "primeng/card";
 import {TableModule} from "primeng/table";
@@ -23,7 +23,7 @@ export class AccessPointDetailsComponent implements OnInit{
 
   constructor(
     private route: ActivatedRoute,
-    private accessPointService: AccesspointService,
+    private accessPointService: AccessPointService,
   ) {}
 
   ngOnInit() {

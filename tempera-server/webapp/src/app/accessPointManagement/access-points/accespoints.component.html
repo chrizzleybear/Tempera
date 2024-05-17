@@ -16,13 +16,13 @@
   <ng-template pTemplate="body" let-accessPoint>
     <tr (click)="viewAccessPointDetails(accessPoint)">
       <td>{{ accessPoint.id }}</td>
-      <td>{{ accessPoint.room.name }}</td>
+      <td>{{ accessPoint.room.roomId }}</td>
       <td>{{ accessPoint.enabled ? 'Enabled' : 'Disabled' }}</td>
       <td>
         <p-button label="Edit" (onClick)="editAccessPoint(accessPoint); $event.stopPropagation()" icon="pi pi-pencil"></p-button>
       </td>
       <td>
-        <p-button label="Delete" icon="pi pi-trash" (onClick)="deleteAccessPoint(accessPoint.id); $event.stopPropagation()"></p-button>
+        <p-button label="Delete" icon="pi pi-trash" (onClick)="deleteAccesspoints(accessPoint); $event.stopPropagation()"></p-button>
       </td>
     </tr>
   </ng-template>

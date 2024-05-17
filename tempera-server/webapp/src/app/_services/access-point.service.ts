@@ -6,7 +6,7 @@ import {AccessPoint} from "../models/accesspoint.model";
 @Injectable({
   providedIn: 'root'
 })
-export class AccesspointService {
+export class AccessPointService {
   private API_URL = 'http://localhost:8080/api/accesspoint/';
 
   constructor(private http: HttpClient) { }
