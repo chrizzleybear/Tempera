@@ -28,7 +28,7 @@ public class RoomController {
     @PostMapping("/create")
     public ResponseEntity<String> createRoom(@RequestBody String roomId) {
         try {
-            Room room = roomService.createRoom(roomId);
+            roomService.createRoom(roomId);
             return ResponseEntity.ok("Room created successfully.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -74,5 +74,11 @@ public class RoomController {
             return ResponseEntity.ok(room.get());
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
+    @GetMapping("/available")
+    public ResponseEntity<List<Room>> getAvailableRooms() {
+        List<Room> rooms = roomService.getAvailableRooms();
+        return ResponseEntity.ok(rooms);
     }
 }

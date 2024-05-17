@@ -87,13 +87,13 @@ export class AccesspointsComponent implements OnInit{
     this.displayEditDialog = true;
   }
 
-  onCreateCompleted(event: any): void {
+  onCreateComplete(event: any): void {
     this.displayCreateDialog = false;
     this.loadAccessPoints();
     this.messages = [{ severity: 'success', summary: 'Success', detail: 'Access Point created successfully' }];
   }
 
-  onEditCompleted(event: any): void {
+  onEditComplete(event: any): void {
     this.displayEditDialog = false;
     this.loadAccessPoints();
     this.messages = [{ severity: 'success', summary: 'Success', detail: 'Access Point updated successfully' }];

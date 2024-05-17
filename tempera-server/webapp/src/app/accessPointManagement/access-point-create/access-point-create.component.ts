@@ -31,9 +31,9 @@ export class AccessPointCreateComponent implements OnInit {
 
   accessPointForm: FormGroup;
   rooms: Room[] = [];
+  roomsDropdown: string[] = [];
 
-  @Output() createCompleted = new EventEmitter<boolean>();
-
+  @Output() createComplete = new EventEmitter<boolean>();
 
   constructor(private formBuilder: FormBuilder, private accessPointService: AccessPointService, private roomService: RoomService) {
     this.accessPointForm = this.formBuilder.group({
@@ -46,23 +46,12 @@ export class AccessPointCreateComponent implements OnInit {
     this.fetchRooms();
   }
 
-  createAccessPoint(): void {
-    if (this.accessPointForm.valid) {
-      this.accessPointService.createAccesspoint(this.accessPointForm.value).subscribe({
-        next: () => {
-          console.log('Access point created successfully');
-        },
-        error: () => {
-          console.error('Error creating access point');
-        }
-      });
-    }
-  }
-
   private fetchRooms() {
-    this.roomService.getAllRooms().subscribe({
+    this.roomService.getAvailableRooms().subscribe({
       next: (rooms) => {
         this.rooms = rooms;
+        this.roomsDropdown = rooms.map(room => room.roomId);
+        console.log('Loaded rooms:', rooms);
       },
       error: (error) => {
         console.error('Error loading rooms:', error);
@@ -80,9 +69,12 @@ export class AccessPointCreateComponent implements OnInit {
         next: (response) => {
           console.log('Access point created:', response);
           this.accessPointForm.reset();
-          this.createCompleted.emit(true);
+          this.createComplete.emit(true);
         },
-        error: (error) => console.error('Error creating access point:', error)
+        error: (error) => {
+          console.error('Error creating access point:', error)
+          this.createComplete.emit(false);
+        }
       });
     }
   }

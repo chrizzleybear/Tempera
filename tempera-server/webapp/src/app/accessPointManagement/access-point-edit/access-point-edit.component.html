@@ -1,1 +1,13 @@
-<p>access-point-edit works!</p>
+<div>
+  <form [formGroup]="accessPointForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="room">Room</label>
+      <input type="text" id="room" [(ngModel)]="accessPoint.room.roomId" name="room" class="form-control">
+    </div>
+    <div class="form-group form-check">
+      <input type="checkbox" id="enabled" [(ngModel)]="accessPoint.enabled" name="enabled" class="form-check-input">
+      <label class="form-check-label" for="enabled">Enabled</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+  </form>
+</div>

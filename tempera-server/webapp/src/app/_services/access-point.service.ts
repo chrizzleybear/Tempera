@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {Observable} from "rxjs";
 import {AccessPoint} from "../models/accesspoint.model";
-import {AccessPointCreateDto} from "../models/AccessPointDtos";
+import {AccessPointCreateDto, AccessPointEditDto} from "../models/AccessPointDtos";
 
 @Injectable({
   providedIn: 'root'
@@ -20,12 +20,12 @@ export class AccessPointService {
     return this.http.get<AccessPoint>(this.API_URL + 'load/' + accesspointId);
   }
 
-  createAccesspoint(dto: AccessPointCreateDto) {
-    return this.http.post(this.API_URL + 'create', dto);
+  createAccesspoint(dto: AccessPointCreateDto): Observable<AccessPoint>{
+    return this.http.post<AccessPoint>(this.API_URL + 'create', dto);
   }
 
-  updateAccesspoint(dto: AccessPoint) {
-    return this.http.put(this.API_URL + 'update', dto);
+  updateAccesspoint(dto: AccessPointEditDto): Observable<AccessPoint> {
+    return this.http.put<AccessPoint>(this.API_URL + 'update', dto);
   }
 
   deleteAccesspoint(accesspointId: number) {

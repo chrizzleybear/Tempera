@@ -4,6 +4,7 @@ export interface AccessPointCreateDto {
 }
 
 export interface AccessPointEditDto {
+  id: number;
   room: string;
   enabled: boolean;
 }

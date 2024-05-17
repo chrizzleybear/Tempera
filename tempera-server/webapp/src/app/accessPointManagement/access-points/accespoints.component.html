@@ -28,10 +28,10 @@
   </ng-template>
 </p-table>
 <p-dialog header="Create Access Point" [(visible)]="displayCreateDialog" [modal]="true" [style]="{width: '50vw'}" [closable]="true">
-  <app-access-point-create (createCompleted)="onCreateCompleted($event)"></app-access-point-create>
+  <app-access-point-create (createComplete)="onCreateComplete($event)"></app-access-point-create>
 </p-dialog>
 <div *ngIf="selectedAccessPoint">
   <p-dialog header="Edit Access Point" [(visible)]="displayEditDialog" [modal]="true" [style]="{width: '50vw'}" [closable]="true">
-    <app-access-point-edit [accessPoint]="selectedAccessPoint" (editComplete)="onEditCompleted($event)"></app-access-point-edit>
+    <app-access-point-edit [accessPoint]="selectedAccessPoint" (editComplete)="onEditComplete($event)"></app-access-point-edit>
   </p-dialog>
 </div>
