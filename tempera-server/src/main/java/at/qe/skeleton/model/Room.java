@@ -105,4 +105,8 @@ public class Room implements Persistable<String>, Serializable {
   public void setAccessPoint(AccessPoint accessPoint) {
     this.accessPoint = accessPoint;
   }
+
+  public void setThresholds(Set<Threshold> thresholds) {
+    this.thresholds = thresholds;
+  }
 }

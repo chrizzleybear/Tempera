@@ -32,4 +32,12 @@ export class RoomService {
   getAvailableRooms(): Observable<Room[]>{
     return this.http.get<Room[]>(this.API_URL + 'available');
   }
+
+  addThreadhold(roomId: string, threshold: any): Observable<Room> {
+    return this.http.post<Room>(`${this.API_URL}addThreshold/${roomId}`, threshold);
+  }
+
+  deleteThreshold(roomId: string): Observable<Room> {
+    return this.http.delete<Room>(`${this.API_URL}deleteThreshold/${roomId}`);
+  }
 }
