@@ -34,6 +34,8 @@ public class InternalRecord {
   })
   private ExternalRecord externalRecord;
 
+  private String Description;
+
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "time_end")
   private LocalDateTime end;
@@ -80,8 +82,24 @@ public class InternalRecord {
     this.end = end;
   }
 
-  protected InternalRecord() {}
-  ;
+  protected InternalRecord() {
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public String getDescription() {
+    return Description;
+  }
+
+  public void setDescription(String description) {
+    Description = description;
+  }
 
   public Project getAssignedProject() {
     return assignedProject;

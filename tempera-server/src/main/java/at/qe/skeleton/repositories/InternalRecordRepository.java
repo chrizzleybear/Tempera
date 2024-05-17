@@ -2,14 +2,22 @@ package at.qe.skeleton.repositories;
 
 import at.qe.skeleton.model.InternalRecord;
 import at.qe.skeleton.model.Userx;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface InternalRecordRepository
-    extends AbstractRepository<InternalRecord, Long> {
+    extends AbstractRepository<InternalRecord, Long>, PagingAndSortingRepository<InternalRecord, Long> {
 
     Optional<InternalRecord> findByStartAndExternalRecordUser(LocalDateTime start, Userx user);
 
     Optional<InternalRecord> findById(Long id);
+
+    @Query("SELECT i FROM InternalRecord i JOIN ExternalRecord e WHERE e.user == :user ORDER BY i.start DESC")
+    Page<InternalRecord> findAllByUserAndPageTimeDesc(Userx user, Pageable pageable);
 }

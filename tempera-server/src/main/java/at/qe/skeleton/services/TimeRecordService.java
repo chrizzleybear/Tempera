@@ -9,12 +9,16 @@ import at.qe.skeleton.repositories.ExternalRecordRepository;
 import at.qe.skeleton.repositories.UserxRepository;
 
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -160,5 +164,11 @@ public class TimeRecordService {
   public Optional<InternalRecord> findInternalRecordByStartAndUser(
       LocalDateTime start, Userx user) {
     return internalRecordRepository.findByStartAndExternalRecordUser(start, user);
+  }
+
+  public List<InternalRecord> getPageOfInternalRecords(Userx user, int page, int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    Page<InternalRecord> records = internalRecordRepository.findAllByUserAndPageTimeDesc(user, pageable);
+    return records.getContent();
   }
 }
