@@ -2,29 +2,45 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {AccesspointService} from "../../_services/accesspoint.service";
 import {AccessPoint} from "../../models/accesspoint.model";
+import {NgIf} from "@angular/common";
+import {CardModule} from "primeng/card";
+import {Message} from "primeng/api";
+import {MessagesModule} from "primeng/messages";
+import {TableModule} from "primeng/table";
 
 
 @Component({
   selector: 'app-accespoints',
   standalone: true,
-  imports: [],
+  imports: [
+    NgIf,
+    CardModule,
+    MessagesModule,
+    TableModule
+  ],
   templateUrl: './accespoints.component.html',
   styleUrl: './accespoints.component.css'
 })
 export class AccesspointsComponent implements OnInit{
 
   accessPoints : AccessPoint[] | undefined ;
+  filteredAccessPoints: AccessPoint[] = [];
+  selectedAccessPoint: AccessPoint | null = null;
+  displayCreateDialog: boolean = false;
+  displayEditDialog: boolean = false;
+  messages: Message[] = [];
 
   constructor(private accessPointService: AccesspointService, private router: Router) {}
   ngOnInit(): void {
-    this.loadAccesspoints();
+    this.loadAccessPoints();
   }
 
 
-  private loadAccesspoints() {
+  private loadAccessPoints() {
     this.accessPointService.getAllAccesspoints().subscribe({
       next: (accessPoints) => {
-        this.accessPoints = accessPoints
+        this.accessPoints = accessPoints;
+        this.filteredAccessPoints = accessPoints;
         console.log("Loaded accesspoints:", accessPoints);
       },
       error: (error) => {
@@ -32,6 +48,51 @@ export class AccesspointsComponent implements OnInit{
       }
     });
   }
+  deleteAccesspoints() {
+    if (this.accessPoints) {
+      this.accessPoints.forEach(accessPoint => {
+        this.accessPointService.deleteAccesspoint(accessPoint.id).subscribe({
+          next: () => {
+            console.log(`Deleted access point with id: ${accessPoint.id}`);
+          },
+          error: (error) => {
+            console.error(`Error deleting access point with id: ${accessPoint.id}`, error);
+          }
+        });
+      });
+    }
+  }
 
+  applyFilter(event: any): void {
+    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
+    this.filteredAccessPoints = this.accessPoints!.filter(accessPoint =>
+      accessPoint.room.roomId.toLowerCase().includes(filterValue)
+    );
+  }
+
+  createAccessPoint(): void {
+    this.displayCreateDialog = true;
+  }
+
+  editAccessPoint(accessPoint: AccessPoint): void {
+    this.selectedAccessPoint = accessPoint;
+    this.displayEditDialog = true;
+  }
+
+  onCreateCompleted(event: any): void {
+    this.displayCreateDialog = false;
+    this.loadAccessPoints();
+    this.messages = [{ severity: 'success', summary: 'Success', detail: 'Access Point created successfully' }];
+  }
+
+  onEditCompleted(event: any): void {
+    this.displayEditDialog = false;
+    this.loadAccessPoints();
+    this.messages = [{ severity: 'success', summary: 'Success', detail: 'Access Point updated successfully' }];
+  }
+
+  viewAccessPointDetails(accessPoint: AccessPoint) {
+    this.router.navigate(['/accessPoint', accessPoint.id])
+  }
 }
 
