@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {UsersService} from "../../_services/users.service";
 import {RoomService} from "../../_services/room.service";
 import {Room} from "../../models/room.model";
 import {TableModule} from "primeng/table";
 import {CardModule} from "primeng/card";
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-room-details',
@@ -13,7 +12,8 @@ import {NgForOf} from "@angular/common";
   imports: [
     TableModule,
     CardModule,
-    NgForOf
+    NgForOf,
+    NgIf
   ],
   templateUrl: './room-details.component.html',
   styleUrl: './room-details.component.css'

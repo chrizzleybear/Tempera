@@ -1,3 +1,47 @@
-<p-card>
-  <h2 style="font-size: 24px; font-weight: bold;">Room Details: {{ room?.id }}</h2>
-</p-card>
+<div *ngIf="room" class="room-details">
+  <p-card header="Room Details" class="room-details-card">
+    <div class="room-info">
+      <p class="room-info-item"><strong>Id: </strong> {{ room.id }}</p>
+      <div *ngIf="room.accessPoint" class="access-point">
+        <p class="access-point-item"><strong>Access Point: </strong> {{ room.accessPoint.id }}</p>
+        <p-table [value]="room.accessPoint.temperaStations" [paginator]="true" [rows]="5" class="access-point-table">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Id</th>
+              <th>User</th>
+              <th>Enabled</th>
+              <th>Active</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-sensor>
+            <tr>
+              <td>{{ sensor.id }}</td>
+              <td>{{ sensor.user.username }}</td>
+              <td>{{ sensor.enabled }}</td>
+              <td>{{ sensor.active }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      <p class="thresholds-title"><strong>Thresholds:</strong></p>
+      <p-table [value]="room.thresholds" [paginator]="true" [rows]="5" class="thresholds-table">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Temperature</th>
+            <th>Humidity</th>
+            <th>Irradiance</th>
+            <th>NmVoc</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-threshold>
+          <tr>
+            <td>{{ threshold.temperature }}</td>
+            <td>{{ threshold.humidity }}</td>
+            <td>{{ threshold.irradiance }}</td>
+            <td>{{ threshold.nmvoc }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </p-card>
+</div>
