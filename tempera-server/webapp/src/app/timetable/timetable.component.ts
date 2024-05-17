@@ -8,6 +8,8 @@ import { DisplayHelper } from '../_helpers/display-helper';
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
+import { FilterMatchMode } from 'primeng/api';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @Component({
   selector: 'app-timetable',
@@ -20,6 +22,7 @@ import { FormsModule } from '@angular/forms';
     WrapFnPipe,
     DropdownModule,
     FormsModule,
+    MultiSelectModule,
   ],
   templateUrl: './timetable.component.html',
   styleUrl: './timetable.component.css',
@@ -57,4 +60,6 @@ export class TimetableComponent implements OnInit {
       },
     });
   }
+
+  protected readonly FilterMatchMode = FilterMatchMode;
 }

@@ -7,12 +7,34 @@
   </ng-template>
   <ng-template pTemplate="header">
     <tr>
-      <th>Date</th>
+      <th pSortableColumn="startTimestamp">Date
+        <p-sortIcon field="startTimestamp"></p-sortIcon>
+      </th>
       <th>Start</th>
       <th>End</th>
-      <th>Project</th>
-      <th>State</th>
+      <th pSortableColumn="assignedProject">Project
+        <p-sortIcon field="startTimestamp"></p-sortIcon>
+      </th>
+      <th pSortableColumn="state">State
+        <p-sortIcon field="startTimestamp"></p-sortIcon>
+      </th>
       <th>Description</th>
+    </tr>
+    <tr>
+      <th>
+        <p-columnFilter type="text" field="startTimestamp"></p-columnFilter>
+      </th>
+      <th></th>
+      <th></th>
+      <th>
+        <p-columnFilter field="assignedProject" [matchMode]="FilterMatchMode.EQUALS">
+          <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+            <p-dropdown
+              [(ngModel)]="value"
+              [options]="timetableData?.availableProjects" (onChange)="filter($event.value)"
+              optionLabel="name" appendTo="body"></p-dropdown>
+          </ng-template>
+        </p-columnFilter>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-timeEntry let-rowIndex="rowIndex">
