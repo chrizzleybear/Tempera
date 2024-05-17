@@ -62,8 +62,11 @@ export class RoomsComponent implements OnInit {
         this.loadRooms();
         this.messages = [{ severity: 'success', summary: 'Success', detail: 'Room deleted successfully' }];
       },
-      error: (error) => console.error('Error deleting room:', error)
-    });
+      error: (error) => {
+        console.error('Error deleting room:', error)
+        this.messages = [{severity: 'error', summary: 'Error', detail: 'Error deleting room'}];
+      }
+      });
     this.loadRooms();
   }
 
