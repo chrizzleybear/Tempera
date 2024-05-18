@@ -4,13 +4,15 @@ import {Router} from "@angular/router";
 import {TemperaStationService} from "../../_services/tempera-station.service";
 import {RoomService} from "../../_services/room.service";
 import {Subscription} from "rxjs";
+import {AccessPoint} from "../../models/accessPoint.model";
 
 interface Room {
   x: number;
   y: number;
   roomId: string;
   fillColor: string;
-  shape: 'rectangle' | 'triangle';
+  shape: 'rectangle';
+  accessPoint?: boolean | null;
 }
 @Component({
   selector: 'app-floor-plan',
@@ -27,7 +29,7 @@ export class FloorPlanComponent implements OnInit{
 
   temperaStation: any;
   roomIds: string[] = [];
-  fillColor = 'rgb(255, 0, 0)';
+  accesspoints: (boolean | null)[] = [];
   rooms: Room[] = [];
   doors: { x: number, y: number }[] = [
     { x: 90, y: 50 },
@@ -65,6 +67,7 @@ export class FloorPlanComponent implements OnInit{
       next: (data) => {
         this.roomIds = data.map((room) => room.id);
         this.createFloorPlan();
+        this.accesspoints = data.map((room) => room.accessPoint ? room.accessPoint.active : null);
       },
       error: (error) => {
         console.error('Failed to load rooms:', error);
@@ -86,13 +89,13 @@ export class FloorPlanComponent implements OnInit{
 
   createFloorPlan() {
     this.rooms = [
-      { x: 0, y: 0, roomId: this.roomIds[0] || '', fillColor: 'white', shape: 'rectangle'},
-      { x: 130, y: 0, roomId: this.roomIds[1] || '', fillColor: 'white', shape: 'rectangle'},
-      { x: 0, y: 100, roomId: this.roomIds[2] || '', fillColor: 'white', shape: 'rectangle'},
-      { x: 130, y: 100, roomId:this.roomIds[3] || '', fillColor: 'white', shape: 'rectangle'},
-      { x: 0, y: 200, roomId: this.roomIds[4] || '', fillColor: 'white', shape: 'rectangle'},
-      { x: 130, y: 200, roomId: this.roomIds[5] || '', fillColor: 'white', shape: 'rectangle'},
-      { x: 65, y: 300, roomId: this.roomIds[6] || '', fillColor: 'white', shape: 'rectangle'},
+      { x: 0, y: 0, roomId: this.roomIds[0] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[0]},
+      { x: 130, y: 0, roomId: this.roomIds[1] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[1]},
+      { x: 0, y: 100, roomId: this.roomIds[2] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[2]},
+      { x: 130, y: 100, roomId:this.roomIds[3] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[3]},
+      { x: 0, y: 200, roomId: this.roomIds[4] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[4]},
+      { x: 130, y: 200, roomId: this.roomIds[5] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[5]},
+      { x: 65, y: 300, roomId: this.roomIds[6] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[6]},
 
     ];
   }
