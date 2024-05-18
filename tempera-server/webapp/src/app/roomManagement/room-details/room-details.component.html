@@ -63,14 +63,21 @@
         </ng-template>
         <ng-template pTemplate="rowexpansion" let-threshold>
           <tr>
-            <td colspan="5">
-              <div class="p-3">
-                <h5>Tip for Threshold {{ threshold.id }}</h5>
-                <p>{{ threshold.tip.tip }}</p>
-                <br>
-                <p-button label="Edit" icon="pi pi-pencil" class="p-button-rounded p-button-text"
-                          (click)="editDialogThresholdTip(threshold)"></p-button>
-              </div>
+            <td [pEditableColumn]="threshold.tip.tip" pEditableColumnField="tip.tip">
+              <p-cellEditor>
+                <ng-template pTemplate="input">
+                  <input
+                    pInputText
+                    type="text"
+                    [(ngModel)]="threshold.tip.tip"
+                    (keydown.enter)="onCellEditSaveTip(threshold)"
+                    size="70"
+                    required/>
+                </ng-template>
+                <ng-template pTemplate="output">
+                  {{ threshold.tip.tip }}
+                </ng-template>
+              </p-cellEditor>
             </td>
           </tr>
         </ng-template>

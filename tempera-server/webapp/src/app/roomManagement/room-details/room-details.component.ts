@@ -76,10 +76,6 @@ export class RoomDetailsComponent {
     this.displayEditThresholdDialog = true;
     this.selectedThreshold = threshold;
   }
-  editDialogThresholdTip(threshold: Threshold) {
-    this.displayEditThresholdDialog = true;
-    this.selectedThreshold = threshold;
-  }
 
   editThreasholdSave() {
     if (this.selectedThreshold && this.reason !== '') {
@@ -100,7 +96,7 @@ export class RoomDetailsComponent {
       });
     }
   }
-  editDialogThresholdSave() {
+  editThresholdTipSave() {
     if (this.selectedThreshold) {
     const dto : ThresholdTipUpdateDto = {
       id: this.selectedThreshold.id,
@@ -118,5 +114,9 @@ export class RoomDetailsComponent {
       this.reason = '';
       this.displayEditThresholdDialog = false;
   }
+  }
+  onCellEditSaveTip(threshold: Threshold) {
+    this.selectedThreshold = threshold;
+    this.editThresholdTipSave();
   }
 }
