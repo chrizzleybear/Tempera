@@ -34,20 +34,20 @@ public class TimetableDataService {
     List<TimetableEntryDto> tableEntries =
         records.stream()
             .map(
-                ir ->
+                record ->
                     new TimetableEntryDto(
-                        ir.getId(),
-                        ir.getStart().toString(),
-                        ir.getEnd().toString(),
+                        record.getId(),
+                        record.getStart().toString(),
+                        record.getEnd().toString(),
                         new ProjectDto(
-                            ir.getAssignedProject().getId(), ir.getAssignedProject().getName()),
-                        ir.getExternalRecord().getState(),
-                        ir.getDescription()))
+                            Long.toString(record.getAssignedProject().getId()), record.getAssignedProject().getName()),
+                        record.getExternalRecord().getState(),
+                        record.getDescription()))
             .toList();
     // list all available Projects
 
     List<ProjectDto> availableProjects =
-        user.getProjects().stream().map(p -> new ProjectDto(p.getId(), p.getName())).toList();
+        user.getProjects().stream().map(p -> new ProjectDto(Long.toString(p.getId()), p.getName())).toList();
 
     return new GetTimetableDataResponse(tableEntries, availableProjects);
   }

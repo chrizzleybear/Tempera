@@ -20,11 +20,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/api/timetable", produces = "application/json")
 public class TimetableController {
-  private static final Logger timeTabeControllerLogger = LoggerFactory.getLogger(TimetableController.class);
+  private static final Logger timeTabeControllerLogger =
+      LoggerFactory.getLogger(TimetableController.class);
   private final TimetableDataService timeTableDataService;
   private final UserxService userService;
 
-  public TimetableController(TimetableDataService timeTableDataService, UserxService userService){
+  public TimetableController(TimetableDataService timeTableDataService, UserxService userService) {
     this.timeTableDataService = timeTableDataService;
     this.userService = userService;
   }
@@ -38,31 +39,49 @@ public class TimetableController {
     int page = 0;
     int size = 20;
     GetTimetableDataResponse response = timeTableDataService.getTimetableData(user, page, size);
-    timeTabeControllerLogger.info("created TimeTableDataResponse page %d with size %d".formatted(page, size));
+    timeTabeControllerLogger.info(
+        "created TimeTableDataResponse page %d with size %d".formatted(page, size));
     return ResponseEntity.ok(response);
   }
 
   @PostMapping("/update/project")
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<MessageResponse> updateProject(@RequestBody UpdateProjectRequest request) {
-    logger.info("New project set for time record: {}", request.project());
-    return ResponseEntity.ok(new MessageResponse("Project for timeRecord updated successfully."));
+    MessageResponse response;
+    try {
+      response = timeTableDataService.updateProject(request);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+    }
+    timeTabeControllerLogger.info(response.getMessage());
+    return ResponseEntity.ok(response);
   }
 
   @PostMapping("/update/description")
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<MessageResponse> updateDescription(
       @RequestBody UpdateDescriptionRequest request) {
-    logger.info("New description set for time record: {}", request.description());
-    return ResponseEntity.ok(
-        new MessageResponse("Description for timeRecord updated successfully."));
+    MessageResponse response;
+    try {
+      response = timeTableDataService.updateProjectDescription(request);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+    }
+    timeTabeControllerLogger.info(response.getMessage());
+    return ResponseEntity.ok(response);
   }
 
   @PostMapping("/split/time-record")
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<MessageResponse> splitTimeRecord(
       @RequestBody SplitTimeRecordRequest request) {
-    logger.info("Time record was split at: {}", request.splitTimestamp());
-    return ResponseEntity.ok(new MessageResponse("Time record was split successfully."));
+    MessageResponse response;
+    try {
+      response = timeTableDataService.splitTimeRecord(request);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+    }
+    timeTabeControllerLogger.info(response.getMessage());
+    return ResponseEntity.ok(response);
   }
 }
