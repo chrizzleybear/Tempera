@@ -13,7 +13,6 @@ import { DisplayHelper } from '../_helpers/display-helper';
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
-import { FilterMatchMode } from 'primeng/api';
 import { MultiSelectModule } from 'primeng/multiselect';
 import StateEnum = ColleagueStateDto.StateEnum;
 
@@ -68,6 +67,4 @@ export class TimetableComponent implements OnInit {
       },
     });
   }
-
-  protected readonly FilterMatchMode = FilterMatchMode;
 }

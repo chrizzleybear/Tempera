@@ -18,11 +18,12 @@
       <th></th>
       <th></th>
       <th>
-        <p-columnFilter field="assignedProject" [matchMode]="FilterMatchMode.STARTS_WITH" [showMenu]="false"
+        <p-columnFilter field="assignedProject.name" [showMenu]="false"
                         [showClearButton]="false">
           <ng-template pTemplate="filter" let-value let-filter="filterCallback">
             <p-dropdown
-              [options]="timetableData?.availableProjects ?? []" [showClear]="true" (onChange)="filter($event.value)"
+              [options]="timetableData?.availableProjects ?? []" [showClear]="true"
+              (onChange)="filter($event.value?.name)"
               optionLabel="name" appendTo="body" placeholder="Select one"></p-dropdown>
           </ng-template>
         </p-columnFilter>
