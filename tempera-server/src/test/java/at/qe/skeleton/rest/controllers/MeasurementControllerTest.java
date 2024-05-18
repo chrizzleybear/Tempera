@@ -65,7 +65,7 @@ class MeasurementControllerTest {
             new Sensor(
                 SensorType.HUMIDITY,
                 Unit.PERCENT,
-                new TemperaStation("tempera_station_id", true, new Userx())));
+                new TemperaStation("tempera_station_id", true, new Userx(), true)));
     List<Measurement> measurementList = List.of(measurement);
     when(accessPointService.isEnabled(measurementDto.access_point_id())).thenReturn(true);
     when(temperaStationService.isEnabled(measurementDto.tempera_station_id())).thenReturn(true);
@@ -99,7 +99,7 @@ class MeasurementControllerTest {
                       new Sensor(
                               SensorType.HUMIDITY,
                               Unit.PERCENT,
-                              new TemperaStation("tempera_station_id", false, new Userx())));
+                              new TemperaStation("tempera_station_id", false, new Userx(), true)));
       List<Measurement> measurementList = List.of(measurement);
       when(accessPointService.isEnabled(measurementDto.access_point_id())).thenReturn(true);
       when(temperaStationService.isEnabled(measurementDto.tempera_station_id())).thenReturn(false);
@@ -133,7 +133,7 @@ class MeasurementControllerTest {
                       new Sensor(
                               SensorType.HUMIDITY,
                               Unit.PERCENT,
-                              new TemperaStation("tempera_station_id", true, new Userx())));
+                              new TemperaStation("tempera_station_id", true, new Userx(), true)));
 
       List<Measurement> measurementList = List.of(measurement);
       when(accessPointService.isEnabled(measurementDto.access_point_id())).thenReturn(false);
