@@ -23,6 +23,7 @@ import {TemperaStationsComponent} from "./temperaManagement/tempera-stations/tem
 import {
   TemperaStationDetailsComponent
 } from "./temperaManagement/tempera-station-details/tempera-station-details.component";
+import {AccessPointDetailsComponent} from "./accessPointManagement/access-point-details/access-point-details.component";
 
 export const routes: Routes = [
   {
@@ -44,7 +45,7 @@ export const routes: Routes = [
           { path: 'myGroups', component: GroupsGroupleadComponent},
           { path: 'group/projects/:id', component: GroupProjectsComponent},
           { path: 'accessPoints', component: AccesspointsComponent},
-          { path: 'accessPoint/:id', component: FloorPlanComponent},
+          { path: 'accessPoint/:id', component: AccessPointDetailsComponent},
           { path: 'temperaStations', component: TemperaStationsComponent},
           { path: 'temperaStation/:id', component: TemperaStationDetailsComponent},
         ],
