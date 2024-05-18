@@ -3,6 +3,7 @@ package at.qe.skeleton.rest.frontend.mappersAndFrontendServices;
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.exceptions.InternalRecordOutOfBoundsException;
 import at.qe.skeleton.model.*;
+import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.TimetableEntryDto;
 import at.qe.skeleton.rest.frontend.payload.request.SplitTimeRecordRequest;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,26 +33,36 @@ public class TimetableDataService {
 
   public GetTimetableDataResponse getTimetableData(Userx user, int page, int size) {
     List<InternalRecord> records = timeRecordService.getPageOfInternalRecords(user, page, size);
-    List<TimetableEntryDto> tableEntries =
-        records.stream()
-            .map(
-                record ->
-                    new TimetableEntryDto(
-                        record.getId(),
-                        record.getStart().toString(),
-                        record.getEnd() == null ? null : record.getEnd().toString(),
-                        new ProjectDto(
-                            Long.toString(record.getAssignedProject().getId()), record.getAssignedProject().getName()),
-                        record.getExternalRecord().getState(),
-                        record.getDescription()))
-            .toList();
-    // list all available Projects
+    List<TimetableEntryDto> tableEntries = new ArrayList<>();
+    for (var record : records) {
+      Long id = record.getId();
+      String start = record.getStart().toString();
+      String end = record.getEnd() == null ? null : record.getEnd().toString();
+      String projectId;
+      String projectName;
+      if (record.getAssignedProject() == null){
+        projectId = null;
+        projectName = null;
+      }
+      else {
+        projectId = record.getAssignedProject().toString();
+        projectName = record.getAssignedProject().getName();
+      }
+      ProjectDto project = new ProjectDto(projectId, projectName);
+      State state = record.getExternalRecord().getState();
+      String description = record.getDescription();
+      tableEntries.add(new TimetableEntryDto(id, start, end, project, state, description));
+    }
+
+    //todo: somehow all the projects dont get displayed even though there should be some projects set in db.
 
     List<ProjectDto> availableProjects =
         user.getProjects().stream().map(p -> new ProjectDto(Long.toString(p.getId()), p.getName())).toList();
 
     return new GetTimetableDataResponse(tableEntries, availableProjects);
   }
+
+  //todo: we need to set group here as well.
 
   public MessageResponse updateProject(UpdateProjectRequest request)
       throws CouldNotFindEntityException {
