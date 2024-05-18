@@ -1,7 +1,7 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.model.Userx;
-import at.qe.skeleton.rest.frontend.mappers.DashboardDataMapper;
+import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.DashboardDataMapper;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateDashboardDataRequest;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
 import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")

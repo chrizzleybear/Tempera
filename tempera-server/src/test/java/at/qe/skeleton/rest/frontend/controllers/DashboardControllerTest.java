@@ -5,7 +5,7 @@ import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
 import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
-import at.qe.skeleton.rest.frontend.mappers.DashboardDataMapper;
+import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.DashboardDataMapper;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
 import at.qe.skeleton.services.UserxService;
 import org.junit.jupiter.api.AfterEach;
@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.ArrayList;

@@ -79,6 +79,9 @@ public class InternalRecord {
   }
 
   public void setEnd(LocalDateTime end) {
+    if (end.isBefore(this.start)) {
+      throw new IllegalArgumentException("InternalRecord start is before End");
+    }
     this.end = end;
   }
 

@@ -1,4 +1,4 @@
-package at.qe.skeleton.rest.frontend.mappers;
+package at.qe.skeleton.rest.frontend.mappersAndFrontendServices;
 
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.SensorType;
@@ -11,9 +11,7 @@ import at.qe.skeleton.services.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class DashboardDataMapper {

@@ -148,7 +148,7 @@ public class TimeRecordService {
     externalRecordRepository.delete(externalRecord);
   }
 
-  private InternalRecord saveInternalRecord(InternalRecord internalRecord) {
+  public InternalRecord saveInternalRecord(InternalRecord internalRecord) {
     return this.internalRecordRepository.save(internalRecord);
   }
 
@@ -170,5 +170,9 @@ public class TimeRecordService {
     Pageable pageable = PageRequest.of(page, size);
     Page<InternalRecord> records = internalRecordRepository.findAllByUserAndPageTimeDesc(user, pageable);
     return records.getContent();
+  }
+
+  public Optional<InternalRecord> findInternalRecordById(Long id){
+    return internalRecordRepository.findById(id);
   }
 }
