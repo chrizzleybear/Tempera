@@ -1,9 +1,6 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
-import at.qe.skeleton.model.Room;
-import at.qe.skeleton.model.TemperaStation;
-import at.qe.skeleton.model.Threshold;
-import at.qe.skeleton.model.ThresholdTip;
+import at.qe.skeleton.model.*;
 import at.qe.skeleton.rest.frontend.dtos.ThresholdUpdateDto;
 import at.qe.skeleton.services.RoomService;
 import at.qe.skeleton.services.TemperaStationService;
@@ -100,10 +97,11 @@ public class RoomController {
         ThresholdTip updatedThreshold = roomService.updateThresholdTip(dto);
             return ResponseEntity.ok(updatedThreshold);
     }
-
+  //dummy methods
     @GetMapping("/temperaStations")
     public ResponseEntity<List<TemperaStation>> getTemperaStations() {
         List<TemperaStation> temp1 = temp.getAllTemperaStations();
         return ResponseEntity.ok(temp1);
     }
+
 }

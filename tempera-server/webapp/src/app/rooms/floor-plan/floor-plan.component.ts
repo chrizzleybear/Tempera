@@ -12,7 +12,7 @@ interface Room {
   roomId: string;
   fillColor: string;
   shape: 'rectangle';
-  accessPoint?: boolean | null;
+  accessPoint?: string;
 }
 @Component({
   selector: 'app-floor-plan',
@@ -93,13 +93,13 @@ export class FloorPlanComponent implements OnInit{
 
   createFloorPlan() {
     this.rooms = [
-      { x: 0, y: 0, roomId: this.roomIds[0] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[0]},
-      { x: 130, y: 0, roomId: this.roomIds[1] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[1]},
-      { x: 0, y: 100, roomId: this.roomIds[2] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[2]},
-      { x: 130, y: 100, roomId:this.roomIds[3] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[3]},
-      { x: 0, y: 200, roomId: this.roomIds[4] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[4]},
-      { x: 130, y: 200, roomId: this.roomIds[5] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[5]},
-      { x: 65, y: 300, roomId: this.roomIds[6] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[6]},
+      { x: 0, y: 0, roomId: this.roomIds[0] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[0] ? 'green' : 'red'},
+      { x: 130, y: 0, roomId: this.roomIds[1] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[1] ? 'green' : 'red'},
+      { x: 0, y: 100, roomId: this.roomIds[2] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[2] ? 'green' : 'red'},
+      { x: 130, y: 100, roomId:this.roomIds[3] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[3] ? 'green' : 'red'},
+      { x: 0, y: 200, roomId: this.roomIds[4] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[4] ? 'green' : 'red'},
+      { x: 130, y: 200, roomId: this.roomIds[5] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[5] ? 'green' : 'red'},
+      { x: 65, y: 300, roomId: this.roomIds[6] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[6] ? 'green' : 'red'},
 
     ];
   }

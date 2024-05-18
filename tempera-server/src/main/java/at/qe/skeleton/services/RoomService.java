@@ -30,6 +30,7 @@ public class RoomService {
     private final ThresholdTipRepository thresholdTipRepository;
 
 
+
     @Autowired
     public RoomService(RoomRepository roomRepository, AccessPointRepository accessPointRepository, ThresholdRepository thresholdRepository, ThresholdTipRepository thresholdTipRepository) {
         this.roomRepository = roomRepository;

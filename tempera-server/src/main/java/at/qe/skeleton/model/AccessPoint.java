@@ -34,12 +34,14 @@ public class AccessPoint implements Persistable<UUID>, Serializable {
   @OneToMany private Set<TemperaStation> temperaStations;
   @OneToOne private Room room;
   private boolean enabled;
+  private boolean active;
 
-  public AccessPoint(@NotNull UUID id, @NotNull Room room, boolean enabled) {
+  public AccessPoint(@NotNull UUID id, @NotNull Room room, boolean enabled, boolean active) {
     this.id = Objects.requireNonNull(id, "id must not be null");
     this.room = Objects.requireNonNull(room, "room must not be null");
     this.temperaStations = new HashSet<>();
     this.enabled = enabled;
+    this.active = active;
   }
 
   public AccessPoint() {

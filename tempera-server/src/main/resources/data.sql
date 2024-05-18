@@ -14,8 +14,8 @@ INSERT INTO TEMPERA_STATION (ACTIVE, ENABLED, USER_USERNAME, ID) VALUES (FALSE, 
 INSERT INTO TEMPERA_STATION (ACTIVE, ENABLED, USER_USERNAME, ID) VALUES (FALSE ,FALSE, 'user1', 'tempera_station_disabled');
 INSERT INTO room (room_id) VALUES ('room_1');
 INSERT INTO room (room_id) VALUES ('room_2');
-INSERT INTO access_point (enabled, id, room_room_id) VALUES (TRUE, '123e4567-e89b-12d3-a456-426614174001', 'room_1');
-INSERT INTO access_point (enabled, id, room_room_id) VALUES (FALSE, '456e4567-e89b-12d3-a456-426614174001', 'room_2');
+INSERT INTO access_point (active, enabled, id, room_room_id) VALUES (TRUE, TRUE, '123e4567-e89b-12d3-a456-426614174001', 'room_1');
+INSERT INTO access_point (active, enabled, id, room_room_id) VALUES (FALSE, FALSE, '456e4567-e89b-12d3-a456-426614174001', 'room_2');
 INSERT INTO access_point_tempera_stations (access_point_id, tempera_stations_id)  VALUES ('123e4567-e89b-12d3-a456-426614174001', 'tempera_station_1');
 INSERT INTO access_point_tempera_stations (access_point_id, tempera_stations_id)  VALUES ('123e4567-e89b-12d3-a456-426614174001', 'tempera_station_disabled');
 INSERT INTO access_point_tempera_stations (access_point_id, tempera_stations_id)  VALUES ('456e4567-e89b-12d3-a456-426614174001', 'tempera_station_disabled_2');
