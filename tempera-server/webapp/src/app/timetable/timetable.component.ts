@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { GetTimetableDataResponse, ProjectDto, TimetableControllerService, TimetableEntryDto } from '../../api';
-import { TableModule } from 'primeng/table';
+import {
+  ColleagueStateDto,
+  GetTimetableDataResponse,
+  ProjectDto,
+  TimetableControllerService,
+} from '../../api';
+import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePipe } from '@angular/common';
 import { TagModule } from 'primeng/tag';
@@ -8,6 +13,9 @@ import { DisplayHelper } from '../_helpers/display-helper';
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
+import { MultiSelectModule } from 'primeng/multiselect';
+import StateEnum = ColleagueStateDto.StateEnum;
+import { FilterMetadata } from 'primeng/api';
 
 @Component({
   selector: 'app-timetable',
@@ -20,6 +28,7 @@ import { FormsModule } from '@angular/forms';
     WrapFnPipe,
     DropdownModule,
     FormsModule,
+    MultiSelectModule,
   ],
   templateUrl: './timetable.component.html',
   styleUrl: './timetable.component.css',
@@ -27,6 +36,8 @@ import { FormsModule } from '@angular/forms';
 export class TimetableComponent implements OnInit {
   public timetableData?: GetTimetableDataResponse;
   public filterFields: string[] = [];
+
+  public stateOptions: StateEnum[] = (Object.values(StateEnum) as StateEnum[]);
 
   protected readonly DisplayHelper = DisplayHelper;
 
@@ -48,7 +59,7 @@ export class TimetableComponent implements OnInit {
   }
 
   updateProject(newProject: ProjectDto, timeEntryId: number) {
-    this.timetableControllerService.updateTimetableEntry({
+    this.timetableControllerService.updateProject1({
       entryId: timeEntryId,
       project: newProject,
     }).subscribe({
@@ -57,4 +68,14 @@ export class TimetableComponent implements OnInit {
       },
     });
   }
+
+  // method to call when onLazyLoad lazy when enabled
+
+  // loadEntries($event: TableLazyLoadEvent) {
+  //   let state = ($event.filters?.['state'] as FilterMetadata)?.value as string | undefined;
+  //   let projectId = ($event.filters?.['assignedProject.id'] as FilterMetadata)?.value as string | undefined;
+  //   console.log({ state: state, projectId: projectId });
+  //
+  //   // call the API with the filter and sorting values
+  // }
 }

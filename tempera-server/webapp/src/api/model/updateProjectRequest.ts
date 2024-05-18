@@ -9,10 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ProjectDto } from './projectDto';
 
 
-export interface ProjectDto { 
-    id?: string;
-    name?: string;
+export interface UpdateProjectRequest { 
+    entryId: number;
+    project: ProjectDto;
 }
 

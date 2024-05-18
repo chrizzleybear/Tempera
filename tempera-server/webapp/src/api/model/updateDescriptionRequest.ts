@@ -11,8 +11,8 @@
  */
 
 
-export interface ProjectDto { 
-    id?: string;
-    name?: string;
+export interface UpdateDescriptionRequest { 
+    entryId: number;
+    description: string;
 }
 

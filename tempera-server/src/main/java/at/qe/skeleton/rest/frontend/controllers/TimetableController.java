@@ -6,6 +6,9 @@ import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.TimetableEntryDto;
 import at.qe.skeleton.rest.frontend.mappers.TimeTableDataMapper;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateTimetableDataRequest;
+import at.qe.skeleton.rest.frontend.payload.request.SplitTimeRecordRequest;
+import at.qe.skeleton.rest.frontend.payload.request.UpdateDescriptionRequest;
+import at.qe.skeleton.rest.frontend.payload.request.UpdateProjectRequest;
 import at.qe.skeleton.rest.frontend.payload.response.GetTimetableDataResponse;
 import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
 import at.qe.skeleton.services.UserxService;
@@ -45,22 +48,27 @@ public class TimetableController {
     return ResponseEntity.ok(response);
   }
 
-  @PostMapping("/update")
+  @PostMapping("/update/project")
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
-  public ResponseEntity<MessageResponse> updateTimetableEntry(
-      @RequestBody UpdateTimetableDataRequest request) {
-    if (request.project() != null) {
-      // update project
-      timeTabeControllerLogger.info("New project set for time record: {}", request.project());
-    }
-    if (request.description() != null) {
-      // update description
-      timeTabeControllerLogger.info("New description set for time record: {}", request.description());
-    }
-    if (request.splitTimestamp() != null) {
-      // update splitTimestamp
-      timeTabeControllerLogger.info("Time record was split at: {}", request.splitTimestamp());
-    }
-    return ResponseEntity.ok(new MessageResponse("Timetable data updated: "));
+  public ResponseEntity<MessageResponse> updateProject(@RequestBody UpdateProjectRequest request) {
+    logger.info("New project set for time record: {}", request.project());
+    return ResponseEntity.ok(new MessageResponse("Project for timeRecord updated successfully."));
+  }
+
+  @PostMapping("/update/description")
+  @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
+  public ResponseEntity<MessageResponse> updateDescription(
+      @RequestBody UpdateDescriptionRequest request) {
+    logger.info("New description set for time record: {}", request.description());
+    return ResponseEntity.ok(
+        new MessageResponse("Description for timeRecord updated successfully."));
+  }
+
+  @PostMapping("/split/time-record")
+  @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
+  public ResponseEntity<MessageResponse> splitTimeRecord(
+      @RequestBody SplitTimeRecordRequest request) {
+    logger.info("Time record was split at: {}", request.splitTimestamp());
+    return ResponseEntity.ok(new MessageResponse("Time record was split successfully."));
   }
 }

@@ -1,5 +1,3 @@
 package at.qe.skeleton.rest.frontend.dtos;
 
-
-
-public record ProjectDto(Long id, String name) {}
+public record ProjectDto(String id, String name) {}
