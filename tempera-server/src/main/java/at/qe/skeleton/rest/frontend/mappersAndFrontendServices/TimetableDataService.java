@@ -38,7 +38,7 @@ public class TimetableDataService {
                     new TimetableEntryDto(
                         record.getId(),
                         record.getStart().toString(),
-                        record.getEnd().toString(),
+                        record.getEnd() == null ? null : record.getEnd().toString(),
                         new ProjectDto(
                             Long.toString(record.getAssignedProject().getId()), record.getAssignedProject().getName()),
                         record.getExternalRecord().getState(),
@@ -99,7 +99,7 @@ public class TimetableDataService {
   }
 
   private InternalRecord getInternalRecord(Long id) throws CouldNotFindEntityException {
-    InternalRecord internalRecord =
+    return
         timeRecordService
             .findInternalRecordById(id)
             .orElseThrow(

@@ -2,7 +2,6 @@ package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.TimetableDataService;
-import at.qe.skeleton.rest.frontend.payload.request.UpdateTimetableDataRequest;
 import at.qe.skeleton.rest.frontend.payload.request.SplitTimeRecordRequest;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateDescriptionRequest;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateProjectRequest;

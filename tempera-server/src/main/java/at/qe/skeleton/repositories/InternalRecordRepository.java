@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +19,6 @@ public interface InternalRecordRepository
 
     Optional<InternalRecord> findById(Long id);
 
-    @Query("SELECT i FROM InternalRecord i JOIN ExternalRecord e WHERE e.user == :user ORDER BY i.start DESC")
-    Page<InternalRecord> findAllByUserAndPageTimeDesc(Userx user, Pageable pageable);
+    @Query("SELECT i FROM InternalRecord i JOIN i.externalRecord e WHERE e.user = :user ORDER BY i.start DESC")
+    Page<InternalRecord> findAllByUserAndPageTimeDesc(@Param("user") Userx user, Pageable pageable);
 }
