@@ -12,7 +12,7 @@
 
 
 export interface ProjectDto { 
-    id?: number;
+    id?: string;
     name?: string;
 }
 
