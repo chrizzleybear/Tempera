@@ -1,17 +1,16 @@
 package at.qe.skeleton.model;
 
-import at.qe.skeleton.exceptions.TemperaStationIsNotEnabledException;
 import jakarta.persistence.*;
 import org.springframework.data.domain.Persistable;
 
-import java.io.Serial;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
 @Entity
-public class Room implements Persistable<String> {
+public class Room implements Persistable<String>, Serializable {
 
   // We need to implement Persistable since we set UUID manually
   // the following strategy for the isNew Method comes from spring documentation:
@@ -49,7 +48,7 @@ public class Room implements Persistable<String> {
   }
 
   protected Room() {}
-  ;
+
 
   public String getRoomId() {
     return roomId;

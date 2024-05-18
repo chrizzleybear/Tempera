@@ -15,7 +15,20 @@ public class Project {
   private String name;
   private String description;
   @ManyToOne private Userx manager;
-  @ManyToMany private List<Userx> contributors;
+
+  @ManyToMany
+  @JoinTable(
+      name = "project_contributors",
+      joinColumns = @JoinColumn(name = "project_id"),
+      inverseJoinColumns = @JoinColumn(name = "username"))
+  private List<Userx> contributors;
+
+  @ManyToMany
+  @JoinTable(
+      name = "project_group",
+      joinColumns = @JoinColumn(name = "project_id"),
+      inverseJoinColumns = @JoinColumn(name = "group_id"))
+  private List<Group> groups;
 
   public Project(String name, String description, Userx manager) {
     this.name = name;
@@ -26,16 +39,16 @@ public class Project {
 
   public Project() {}
 
-  //    public List<SubordinateTimeRecord> getSubordinateTimeRecords() {
-  //        return subordinateTimeRecords;
-  //    }
-
   public Userx getManager() {
     return manager;
   }
 
   public List<Userx> getContributors() {
     return contributors;
+  }
+
+  public List<Group> getGroups() {
+    return groups;
   }
 
   public void setName(String name) {
@@ -53,11 +66,34 @@ public class Project {
     this.manager = manager;
   }
 
+  public void addGroup(Group contributor) {
+    if (contributor == null) {
+      throw new NullPointerException("Contributor should not be null when added to Project");
+    }
+    this.groups.add(contributor);
+  }
+
+  public void removeGroup(Group contributor) {
+    if (contributor == null) {
+      throw new NullPointerException("Contributor should not be null when removed from Project");
+    }
+    this.groups.remove(contributor);
+  }
+
   public void addContributor(Userx contributor) {
     if (contributor == null) {
       throw new NullPointerException("Contributor should not be null when added to Project");
     }
     this.contributors.add(contributor);
+    contributor.getProjects().add(this);
+  }
+
+  public void removeContributor(Userx contributor) {
+    if (contributor == null) {
+      throw new NullPointerException("Contributor should not be null when removed from Project");
+    }
+    this.contributors.remove(contributor);
+    contributor.getProjects().remove(this);
   }
 
   public String getName() {
@@ -66,6 +102,10 @@ public class Project {
 
   public String getDescription() {
     return description;
+  }
+
+  public Long getId() {
+    return id;
   }
 
   @Override

@@ -93,7 +93,7 @@ public class AuthenticationService {
             + password
             + " \n\n"
             + "Please follow the link to set your password.\n\n"
-            + "http://localhost:4200/register/"
+            + "http://localhost:4200/validate/"
             + user.getUsername()
             + "\n\n"
             + "Best regards,\n"

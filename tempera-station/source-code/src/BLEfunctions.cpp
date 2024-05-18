@@ -16,6 +16,11 @@
 
 // ############### BLE FUNCTIONS ###############
 
+/**
+ * @brief Handler for BLE peripheral connection. 
+ *        Turns on the built-in LED if a device is connected.
+ * @param central The BLE central device that has connected.
+ */
 void blePeripheralConnectHandler(BLEDevice central) {
   Serial.println("Tempera > [INFO] Connected event, central: ");
   Serial.print("Tempera > [INFO]    ");
@@ -23,6 +28,11 @@ void blePeripheralConnectHandler(BLEDevice central) {
   switchBuiltInLED(1);
 };
 
+/**
+ * @brief Handler for BLE peripheral disconnection.
+ *        Turns off the built-in LED if no device is connected.
+ * @param central The BLE central device that has disconnected.
+ */
 void blePeripheralDisconnectHandler(BLEDevice central) {
   Serial.println("Tempera > [INFO] Disconnected event, central: ");
   Serial.print("Tempera > [INFO]    ");
@@ -30,6 +40,11 @@ void blePeripheralDisconnectHandler(BLEDevice central) {
   switchBuiltInLED(0);
 };
 
+/**
+ * @brief Event handler for reading manufacturer name.
+ * @param central The BLE central device that initiated the read.
+ * @param characteristic The BLE characteristic being read.
+ */
 void readManufacturerName(BLEDevice central, BLECharacteristic characteristic) {
   Serial.println("Tempera > [INFO] Manufacturer Specifications have been read: ");
   Serial.print("Tempera > [INFO]    ");
@@ -38,6 +53,11 @@ void readManufacturerName(BLEDevice central, BLECharacteristic characteristic) {
   Serial.println(buffer); 
 };
 
+/**
+ * @brief Event handler for reading the elapsed time characteristic.
+ * @param central The BLE central device that initiated the read.
+ * @param characteristic The BLE characteristic being read.
+ */
 void readElapsedTime(BLEDevice central, BLECharacteristic characteristic) {
   uint8_t buffer[sizeof(elapsedTimeCharacteristicStructure)];
   characteristic.readValue(buffer, sizeof(buffer));
@@ -50,6 +70,11 @@ void readElapsedTime(BLEDevice central, BLECharacteristic characteristic) {
   Serial.println();
 };
 
+/**
+ * @brief Event handler for reading the serial number which is also used as the unique ID of the device.
+ * @param central The BLE central device that initiated the read.
+ * @param characteristic The BLE characteristic being read.
+ */
 void readSerialNumber(BLEDevice central, BLECharacteristic characteristic) {
   Serial.println("Tempera > [INFO] Serial number has been read.");
   Serial.print("Tempera > [INFO]    ");
@@ -58,6 +83,11 @@ void readSerialNumber(BLEDevice central, BLECharacteristic characteristic) {
   Serial.println(buffer);
 };
 
+/**
+ * @brief Event handler which is triggered if any room climate data characteristic has been read.
+ * @param central The BLE central device that initiated the read.
+ * @param characteristic The BLE characteristic being read.
+ */
 void readAnyRoomClimateData(BLEDevice central, BLECharacteristic characteristic) {
     universalRCValueStructure buffer;
     characteristic.readValue(buffer.valueBytes, sizeof(buffer.valueBytes));
@@ -69,6 +99,11 @@ void readAnyRoomClimateData(BLEDevice central, BLECharacteristic characteristic)
     Serial.println(buffer.value);
 };
 
+/**
+ * @brief Writes the elapsed time characteristic structure to the elapsed time BLE characteristic.
+ * @param etcu The elapsed time characteristic union structure to be written.
+ * @param currentElapsedTimeCharacteristic The BLE characteristic to write the structure to.
+ */
 void writeElapsedTimeCharacteristicStructure(elapsedTimeCharacteristicUnion etcu, BLECharacteristic currentElapsedTimeCharacteristic) {
   if (!currentElapsedTimeCharacteristic.writeValue(etcu.bytes, sizeof(etcu.bytes)) && ERROR) {
     Serial.println("Tempera > [ERROR] Could not write to elapsed time characteristic.");
@@ -91,6 +126,14 @@ void writeElapsedTimeCharacteristicStructure(elapsedTimeCharacteristicUnion etcu
   }
 };
 
+/**
+ * @brief Writes room climate data to all corresponding BLE characteristics.
+ * @param roomClimateData The room climate data structure containing the data to be written.
+ * @param temperatureCharacteristic The BLE characteristic for temperature.
+ * @param irradianceCharacteristic The BLE characteristic for irradiance.
+ * @param humidityCharacteristic The BLE characteristic for humidity.
+ * @param nmvocCharacteristic The BLE characteristic for gas resistance.
+ */
 void writeRoomClimateAllCharacteristics(\
   roomClimateUnionStructure roomClimateData,\
   BLECharacteristic temperatureCharacteristic,\

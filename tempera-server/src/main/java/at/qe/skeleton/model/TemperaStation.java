@@ -1,5 +1,6 @@
 package at.qe.skeleton.model;
 
+import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Persistable;
@@ -8,14 +9,18 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+
 @Entity
 public class TemperaStation implements Persistable<String> {
 
   // we set id manually (has to be configurable from admin)
   @Id private String id;
-  @OneToOne private Userx user;
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY) private Userx user;
   private boolean enabled;
   private boolean connected = false;
+
+  @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY) private AccessPoint accessPoint;
+  @OneToMany(mappedBy = "temperaStation", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, orphanRemoval = true) private List<Sensor> sensors;
 
   // We need to implement Persistable since we set Id manually
   // the following strategy for the isNew Method comes from spring documentation:
@@ -48,7 +53,7 @@ public class TemperaStation implements Persistable<String> {
     this.enabled = enabled;
   }
 
-  protected TemperaStation() {}
+  public TemperaStation() {}
   ;
 
   public void setUser(Userx user) {
@@ -57,6 +62,38 @@ public class TemperaStation implements Persistable<String> {
 
   public Userx getUser() {
     return user;
+  }
+
+  public AccessPoint getAccessPoint() {
+    return accessPoint;
+  }
+
+  public void addSensor(Sensor sensor) {
+    sensors.add(sensor);
+    sensor.setTemperaStation(this);
+  }
+
+  public void removeSensor(Sensor sensor) {
+    sensors.remove(sensor);
+    sensor.setTemperaStation(null);
+  }
+
+  public List<Sensor> getSensors() {
+    return sensors;
+  }
+
+
+  /**
+   * Beware of bidirectional relationship between AccessPoint and TemperaStation.
+   * Best to use the addTemperaStation in AccessPoint Entity..
+   * @param accessPoint
+   */
+  public void setAccessPoint(AccessPoint accessPoint) {
+    this.accessPoint = accessPoint;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 
   public boolean isEnabled() {

@@ -1,5 +1,6 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
+import at.qe.skeleton.rest.frontend.dtos.CredentialsDto;
 import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.AuthenticationService;
@@ -58,19 +59,22 @@ public class UserManagementController {
   }
 
   @PostMapping("/validate")
-  public ResponseEntity<UserxDto> validateUser(@RequestBody Map<String, String> credentials) {
-    String username = credentials.get("username");
-    String password = credentials.get("password");
-    UserxDto isValidUser = userxService.validateUser(username, password);
+  public ResponseEntity<UserxDto> validateUser(@RequestBody CredentialsDto credentials) {
+    UserxDto isValidUser = userxService.validateUser(credentials.username(), credentials.password());
     return ResponseEntity.ok(isValidUser);
   }
 
   @PostMapping("/enable")
   public ResponseEntity<Map<String, String>> enableUser(
-      @RequestBody Map<String, String> credentials) {
-    String username = credentials.get("username");
-    String password = credentials.get("password");
-    userxService.enableUser(username, password);
+      @RequestBody CredentialsDto credentials) {
+    userxService.enableUser(credentials.username(), credentials.password());
     return ResponseEntity.ok(Map.of("message", "User enabled"));
   }
+
+  @GetMapping("/managers")
+    public ResponseEntity<List<UserxDto>> getManagers() {
+        List<UserxDto> managers = userxService.getManagers().stream().map(userxService::convertToDTO).toList();
+        return ResponseEntity.ok(managers);
+    }
+
 }

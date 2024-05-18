@@ -2,6 +2,7 @@ package at.qe.skeleton.repositories;
 
 import at.qe.skeleton.model.TemperaStation;
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.rest.frontend.dtos.UserStateDto;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -16,4 +17,7 @@ public interface TemperaStationRepository extends AbstractRepository<TemperaStat
   Optional<TemperaStation> findFirstByUser(Userx user);
 
   Optional<TemperaStation> findById(String id);
+
+  Optional<TemperaStation> findFirstByUser_Username(String username);
+
 }
