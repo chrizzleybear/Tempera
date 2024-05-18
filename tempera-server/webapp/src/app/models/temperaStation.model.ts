@@ -4,5 +4,5 @@ export interface TemperaStation {
   id: string;
   user: User;
   enabled: boolean;
-  active: boolean;
+  isHealthy: boolean;
 }

@@ -14,7 +14,7 @@ public class TemperaStation implements Persistable<String> {
   @OneToOne private Userx user;
   private boolean enabled;
 
-  private boolean active;
+  private boolean isHealthy;
 
   // We need to implement Persistable since we set Id manually
   // the following strategy for the isNew Method comes from spring documentation:
@@ -41,11 +41,11 @@ public class TemperaStation implements Persistable<String> {
    * direct creation of TemperaStations should be avoided, use {@link
    * at.qe.skeleton.services.TemperaStationService#createTemperaStation} instead
    */
-  public TemperaStation(@NotNull String id, boolean enabled, Userx user, boolean active) {
+  public TemperaStation(@NotNull String id, boolean enabled, Userx user, boolean isHealthy) {
     this.user = user;
     this.id = Objects.requireNonNull(id);
     this.enabled = enabled;
-    this.active = active;
+    this.isHealthy = isHealthy;
   }
 
   protected TemperaStation() {}
@@ -66,12 +66,12 @@ public class TemperaStation implements Persistable<String> {
     this.enabled = enabled;
   }
 
-    public boolean isActive() {
-        return active;
+    public boolean isIsHealthy() {
+        return isHealthy;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setIsHealthy(boolean active) {
+        this.isHealthy = active;
     }
   @Override
   public boolean equals(Object o) {

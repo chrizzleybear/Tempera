@@ -71,7 +71,7 @@ export class FloorPlanComponent implements OnInit{
         this.roomObjects = data;
         this.roomIds = data.map((room) => room.id);
         this.createFloorPlan();
-        this.accesspoints = data.map((room) => room.accessPoint ? room.accessPoint.active : null);
+        this.accesspoints = data.map((room) => room.accessPoint ? room.accessPoint.isHealthy : null);
       },
       error: (error) => {
         console.error('Failed to load rooms:', error);
@@ -106,8 +106,17 @@ export class FloorPlanComponent implements OnInit{
 
 
   viewDetailsAccesspoint(index: number) {
-    if (this.roomObjects[index] && this.roomObjects[index].accessPoint) {
-      this.router.navigate(['/accessPoint', this.roomObjects[index].accessPoint.id]);
+    console.log('Viewing accesspoint details for room:', this.roomObjects[index]);
+    if (this.roomObjects[index]) {
+      this.roomService.getAccessPoints(this.roomObjects[index].id).subscribe({
+        next: (data) => {
+          console.log('AccessPoints: ', data);
+          this.router.navigate(['/accessPoint', data.id]);
+        },
+        error: (error) => {
+          console.error('Failed to load accessPoints:', error);
+        },
+      });
     }
   }
 }

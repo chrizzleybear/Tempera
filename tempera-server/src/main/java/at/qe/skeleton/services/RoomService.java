@@ -1,5 +1,6 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.model.AccessPoint;
 import at.qe.skeleton.model.Room;
 import at.qe.skeleton.model.Threshold;
 import at.qe.skeleton.model.ThresholdTip;
@@ -28,14 +29,14 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final ThresholdRepository thresholdRepository;
     private final ThresholdTipRepository thresholdTipRepository;
-
-
+    private final AccessPointRepository accessPointRepository;
 
     @Autowired
     public RoomService(RoomRepository roomRepository, AccessPointRepository accessPointRepository, ThresholdRepository thresholdRepository, ThresholdTipRepository thresholdTipRepository) {
         this.roomRepository = roomRepository;
         this.thresholdRepository = thresholdRepository;
         this.thresholdTipRepository = thresholdTipRepository;
+        this.accessPointRepository = accessPointRepository;
     }
     @Transactional
     public List<Room> getAllRooms() {
@@ -78,7 +79,12 @@ public class RoomService {
     public List<Room> getAvailableRooms() {
         return roomRepository.findAll().stream().filter(room -> room.getAccessPoint() == null).toList();
     }
+    //two way binding ->delete
+    public AccessPoint getAccesspoint(String roomId) {
+        Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException(ROOM_NOT_FOUND + roomId));
+        return accessPointRepository.findByRoom(room).orElseThrow(() -> new IllegalArgumentException("AccessPoint not found"));
 
+    }
     @Transactional
     public Set<Threshold> initialiseThresholds() {
         Set<Threshold> thresholds = new HashSet<>();

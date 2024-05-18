@@ -33,7 +33,7 @@ import {InputTextModule} from "primeng/inputtext";
 })
 export class AccesspointsComponent implements OnInit{
 
-  accessPoints : AccessPoint[] | undefined ;
+  accessPoints : AccessPoint[] = [] ;
   filteredAccessPoints: AccessPoint[] = [];
   selectedAccessPoint: AccessPoint | null = null;
   displayCreateDialog: boolean = false;
@@ -47,10 +47,10 @@ export class AccesspointsComponent implements OnInit{
 
 
   private loadAccessPoints() {
-    this.accessPointService.getAllAccesspoints().subscribe({
+    this.accessPointService.getAccesspointsByRoomId("room_1").subscribe({
       next: (accessPoints) => {
-        this.accessPoints = accessPoints;
-        this.filteredAccessPoints = accessPoints;
+        this.accessPoints = [accessPoints];
+        this.filteredAccessPoints = this.accessPoints;
         console.log("Loaded accesspoints:", accessPoints);
       },
       error: (error) => {

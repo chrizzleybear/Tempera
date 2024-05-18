@@ -6,6 +6,7 @@ import {RoomService} from "../../_services/room.service";
 import {AccessPointEditDto} from "../../models/AccessPointDtos";
 import {DropdownModule} from "primeng/dropdown";
 import {Room} from "../../models/room.model";
+import {ButtonModule} from "primeng/button";
 
 @Component({
   selector: 'app-access-point-edit',
@@ -13,7 +14,8 @@ import {Room} from "../../models/room.model";
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    DropdownModule
+    DropdownModule,
+    ButtonModule
   ],
   templateUrl: './access-point-edit.component.html',
   styleUrl: './access-point-edit.component.css'
@@ -79,6 +81,7 @@ export class AccessPointEditComponent implements OnInit{
         room: this.accessPointForm.value.room,
         enabled: this.accessPointForm.value.enabled
       }
+      console.log('Editing access point:', dto);
       this.accessPointService.updateAccesspoint(dto
       ).subscribe({
         next: (response) => {

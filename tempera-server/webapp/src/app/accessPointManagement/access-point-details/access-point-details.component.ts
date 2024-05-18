@@ -34,7 +34,7 @@ export class AccessPointDetailsComponent implements OnInit{
   }
 
   fetchAccessPointDetails(id: number) {
-    this.accessPointService.getAccesspointById(id).subscribe({
+    this.accessPointService.getAccesspointsByRoomId("room_1").subscribe({
       next: (data) => {
         this.accessPoint = data;
         console.log('Access Point details: ', this.accessPoint);

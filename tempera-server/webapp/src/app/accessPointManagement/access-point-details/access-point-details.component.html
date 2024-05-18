@@ -4,6 +4,7 @@
       <p><strong>ID:</strong> {{ accessPoint.id }}</p>
       <p><strong>Room:</strong> {{ accessPoint.room.id }}</p>
       <p><strong>Status:</strong> {{ accessPoint.enabled ? 'Enabled' : 'Disabled' }}</p>
+      <p><strong>Healthy:</strong> {{ accessPoint.isHealthy ? 'Yes' : 'No'}}</p>
       <br>
     </div>
     <div class="tempera-stations-section">
@@ -18,12 +19,16 @@
             <th scope="col" pSortableColumn="enabled">Status
               <p-sortIcon field="enabled"></p-sortIcon>
             </th>
+            <th scope="col" pSortableColumn="isHealthy">
+              <p-sortIcon field="isHealthy"></p-sortIcon>
+            </th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-temperaStation>
           <tr>
             <td>{{ temperaStation.id }}</td>
             <td>{{ temperaStation.enabled ? 'Enabled' : 'Disabled' }}</td>
+            <td>{{ temperaStation.isHealthy ? 'Healthy' : 'Unhealthy' }}</td>
           </tr>
         </ng-template>
       </p-table>

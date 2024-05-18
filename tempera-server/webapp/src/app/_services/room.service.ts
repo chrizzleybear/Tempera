@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable, Subject} from "rxjs";
 import {Room} from "../models/room.model";
 import {Threshold, ThresholdTipUpdateDto, ThresholdUpdateDto} from "../models/threshold.model";
+import {AccessPoint} from "../../api/model/accessPoint";
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +33,10 @@ export class RoomService {
 
   getAvailableRooms(): Observable<Room[]>{
     return this.http.get<Room[]>(this.API_URL + 'available');
+  }
+//two way binding ->delete
+  getAccessPoints(roomId: string): Observable<AccessPoint> {
+    return this.http.get<AccessPoint>(`${this.API_URL}accesspoint/${roomId}`);
   }
 
   updateThreshold(dto: ThresholdUpdateDto): Observable<Threshold>{

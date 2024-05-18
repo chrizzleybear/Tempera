@@ -31,4 +31,8 @@ export class AccessPointService {
   deleteAccesspoint(accesspointId: number) {
     return this.http.delete(this.API_URL + 'delete/' + accesspointId);
   }
+
+  getAccesspointsByRoomId(roomId: string): Observable<AccessPoint> {
+    return this.http.get<AccessPoint>('http://localhost:8080/api/rooms/accesspoint/' + roomId);
+  }
 }

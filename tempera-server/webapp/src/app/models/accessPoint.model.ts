@@ -6,5 +6,5 @@ export interface AccessPoint {
   temperaStations: TemperaStation[];
   room: Room;
   enabled: boolean;
-  active: boolean;
+  isHealthy: boolean;
 }

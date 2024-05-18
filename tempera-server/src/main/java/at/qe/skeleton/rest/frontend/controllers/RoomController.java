@@ -104,4 +104,10 @@ public class RoomController {
         return ResponseEntity.ok(temp1);
     }
 
+    @GetMapping("/accesspoint/{roomId}")
+    public ResponseEntity<AccessPoint> getAccessPoints(@PathVariable String roomId) {
+        AccessPoint ap = this.roomService.getAccesspoint(roomId);
+        return ResponseEntity.ok(ap);
+    }
+
 }

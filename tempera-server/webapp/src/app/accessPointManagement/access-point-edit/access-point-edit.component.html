@@ -13,10 +13,13 @@
                   placeholder="Select a Room"
                   id="room"></p-dropdown>
     </div>
+    <br>
     <div class="form-group form-check">
-      <input type="checkbox" id="enabled" [(ngModel)]="accessPoint.enabled" name="enabled" class="form-check-input">
+      <input type="checkbox" id="enabled" [(ngModel)]="accessPoint.enabled" formControlName="enabled" class="form-check-input">
+      <br>
       <label class="form-check-label" for="enabled">Enabled</label>
     </div>
-    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <br>
+    <p-button type="submit" class="btn btn-primary">Save Changes</p-button>
   </form>
 </div>
