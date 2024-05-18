@@ -46,9 +46,10 @@ public class TimetableController {
   @PostMapping("/update/project")
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<MessageResponse> updateProject(@RequestBody UpdateProjectRequest request) {
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
     MessageResponse response;
     try {
-      response = timeTableDataService.updateProject(request);
+      response = timeTableDataService.updateProject(username, request);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
@@ -60,9 +61,10 @@ public class TimetableController {
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<MessageResponse> updateDescription(
       @RequestBody UpdateDescriptionRequest request) {
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
     MessageResponse response;
     try {
-      response = timeTableDataService.updateProjectDescription(request);
+      response = timeTableDataService.updateProjectDescription(username, request);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
@@ -74,9 +76,10 @@ public class TimetableController {
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<MessageResponse> splitTimeRecord(
       @RequestBody SplitTimeRecordRequest request) {
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
     MessageResponse response;
     try {
-      response = timeTableDataService.splitTimeRecord(request);
+      response = timeTableDataService.splitTimeRecord(username, request);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }

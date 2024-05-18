@@ -47,7 +47,7 @@ public class InternalRecord {
 
   @ManyToOne
   @JoinColumn(name = "groupx_id")
-  private Group assignedGroup;
+  private Groupx assignedGroup;
 
   // these are the foreign keys from externalRecord. The ext_rec_start will often be the same
   // as the start of the InternalRecord but once the user starts to divide the ExternalRecord
@@ -112,12 +112,12 @@ public class InternalRecord {
     this.assignedProject = assignedProject;
   }
 
-  public Group getAssignedGroup() {
+  public Groupx getAssignedGroup() {
     return assignedGroup;
   }
 
-  public void setAssignedGroup(Group assignedGroup) {
-    this.assignedGroup = assignedGroup;
+  public void setAssignedGroup(Groupx assignedGroupx) {
+    this.assignedGroup = assignedGroupx;
   }
 
   @Override

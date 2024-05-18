@@ -1,6 +1,6 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
-import at.qe.skeleton.model.Group;
+import at.qe.skeleton.model.Groupx;
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.rest.frontend.dtos.ContributorAssignmentDto;
 import at.qe.skeleton.rest.frontend.dtos.GroupAssignmentDto;
@@ -58,8 +58,8 @@ public class ProjectController {
   }
 
   @GetMapping("/getGroups/{id}")
-  public ResponseEntity<List<Group>> getGroups(@PathVariable Long id) {
-    List<Group> groups = projectService.loadProject(id).getGroups();
+  public ResponseEntity<List<Groupx>> getGroups(@PathVariable Long id) {
+    List<Groupx> groups = projectService.loadProject(id).getGroups();
     return ResponseEntity.ok(groups);
   }
 

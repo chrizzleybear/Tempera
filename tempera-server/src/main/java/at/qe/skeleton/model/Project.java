@@ -28,7 +28,7 @@ public class Project {
       name = "project_group",
       joinColumns = @JoinColumn(name = "project_id"),
       inverseJoinColumns = @JoinColumn(name = "group_id"))
-  private List<Group> groups;
+  private List<Groupx> groups;
 
   public Project(String name, String description, Userx manager) {
     this.name = name;
@@ -47,7 +47,7 @@ public class Project {
     return contributors;
   }
 
-  public List<Group> getGroups() {
+  public List<Groupx> getGroups() {
     return groups;
   }
 
@@ -64,20 +64,6 @@ public class Project {
       throw new NullPointerException("User should not be null when set as ProjectManager");
     }
     this.manager = manager;
-  }
-
-  public void addGroup(Group contributor) {
-    if (contributor == null) {
-      throw new NullPointerException("Contributor should not be null when added to Project");
-    }
-    this.groups.add(contributor);
-  }
-
-  public void removeGroup(Group contributor) {
-    if (contributor == null) {
-      throw new NullPointerException("Contributor should not be null when removed from Project");
-    }
-    this.groups.remove(contributor);
   }
 
   public void addContributor(Userx contributor) {
@@ -110,7 +96,7 @@ public class Project {
 
   @Override
   public int hashCode() {
-    return name.hashCode();
+    return id.hashCode();
   }
 
   @Override
@@ -121,7 +107,7 @@ public class Project {
     if (!(obj instanceof Project other)) {
       return false;
     }
-    return other.name.equals(this.name);
+    return other.id.equals(this.id);
   }
 
   @Override

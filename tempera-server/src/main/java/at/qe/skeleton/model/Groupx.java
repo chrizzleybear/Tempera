@@ -3,13 +3,10 @@ package at.qe.skeleton.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
-@Table(name = "Groupx")
-public class Group {
+public class Groupx {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
@@ -19,7 +16,10 @@ public class Group {
 
   @ManyToOne private Userx groupLead;
 
-  @ManyToMany(cascade = CascadeType.PERSIST) private List<Userx> members;
+  @ManyToMany(cascade = CascadeType.ALL) private List<Userx> members;
+
+  @ManyToMany(mappedBy = "groups", cascade = CascadeType.ALL)
+  private Set<Project> projects = new HashSet<>();
 
   /**
    * For Creating Groups, this Constructor should be used.
@@ -28,7 +28,7 @@ public class Group {
    * @param description a short description of the purpose of the group
    * @param groupLead the Grouplead in Charge of that group
    */
-  public Group(@NotNull String name, @NotNull String description, @NotNull Userx groupLead) {
+  public Groupx(@NotNull String name, @NotNull String description, @NotNull Userx groupLead) {
     if (name == null || name.isBlank()) {
       throw new IllegalArgumentException("Name must not be null or empty");
     }
@@ -41,7 +41,23 @@ public class Group {
     this.members = new ArrayList<>();
   }
 
-  protected Group() {
+  public void addProject(Project project) {
+    if (project == null) {
+      throw new IllegalArgumentException("Project must not be null to be added to group %s".formatted(name));
+    }
+    this.projects.add(project);
+    project.getGroups().add(this);
+  }
+
+  public void removeProject(Project project) {
+    if (project == null) {
+      throw new IllegalArgumentException("Project must not be null to be removed from group %s".formatted(name));
+    }
+    this.projects.remove(project);
+    project.getGroups().remove(this);
+  }
+
+  protected Groupx() {
     this.members = new ArrayList<>();
   }
 
@@ -66,6 +82,11 @@ public class Group {
     }
     this.description = description;
   }
+
+  public Set<Project> getProjects() {
+    return projects;
+  }
+
 
   public Long getId() {
     return id;
@@ -116,7 +137,7 @@ public class Group {
     if (obj == null) {
       return false;
     }
-    if (!(obj instanceof Group other)) {
+    if (!(obj instanceof Groupx other)) {
       return false;
     }
     return other.name.equals(this.name);

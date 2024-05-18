@@ -1,6 +1,6 @@
 package at.qe.skeleton.services;
 
-import at.qe.skeleton.model.Group;
+import at.qe.skeleton.model.Groupx;
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.GroupRepository;
@@ -68,7 +68,7 @@ public class ProjectService {
             throw new NullPointerException("Contributor can not be null");
         }
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException(PROJECT_NOT_FOUND));
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException(GROUP_NOT_FOUND));
+        Groupx group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException(GROUP_NOT_FOUND));
         project.addGroup(group);
         projectRepository.save(project);
     }
@@ -84,7 +84,7 @@ public class ProjectService {
 
     public void deleteGroup(Long groupId, Long projectId) {
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException(PROJECT_NOT_FOUND));
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException(GROUP_NOT_FOUND));
+        Groupx group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException(GROUP_NOT_FOUND));
         project.removeGroup(group);
         projectRepository.save(project);
     }
