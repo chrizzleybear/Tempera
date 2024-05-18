@@ -36,7 +36,7 @@ export class RoomDetailsComponent {
   expandedRows: { [key: string]: boolean } = {};
   selectedThreshold: Threshold | undefined;
   reason: string = '';
-
+  filteredThresholds: Threshold[] = [];
   constructor(
     private route: ActivatedRoute,
     private roomService: RoomService,
@@ -55,6 +55,7 @@ export class RoomDetailsComponent {
       next: (data) => {
         console.log('Room details: ', data);
         this.room = data;
+        this.filteredThresholds = this.room.thresholds;
         console.log('Room Threat: ', this.room.thresholds);
       },
       error: (error) => {
@@ -118,5 +119,15 @@ export class RoomDetailsComponent {
   onCellEditSaveTip(threshold: Threshold) {
     this.selectedThreshold = threshold;
     this.editThresholdTipSave();
+  }
+  globalFilter(event: any) {
+    const filterValue = event.target.value.toLowerCase();
+    this.filteredThresholds = this.room?.thresholds.filter(threshold =>
+      threshold.id.toString().toLowerCase().includes(filterValue) ||
+      threshold.sensorType.toLowerCase().includes(filterValue) ||
+      threshold.thresholdType.toLowerCase().includes(filterValue) ||
+      threshold.value.toString().toLowerCase().includes(filterValue) ||
+      threshold.tip.tip.toLowerCase().includes(filterValue)
+    )!;
   }
 }

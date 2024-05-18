@@ -24,9 +24,10 @@
         </p-table>
       </div>
       <p class="thresholds-title"><strong>Thresholds:</strong></p>
-      <p-table [value]="room.thresholds" dataKey="id" [paginator]="true" [rows]="5" class="thresholds-table"
-               [expandedRowKeys]="expandedRows">
+      <p-table [value]="filteredThresholds" dataKey="id" [paginator]="true" [rows]="10" class="thresholds-table"
+               [expandedRowKeys]="expandedRows" [globalFilterFields]="['id', 'sensorType', 'thresholdType', 'value']">
         <ng-template pTemplate="header">
+          <input type="text" pInputText (input)="globalFilter($event)" placeholder="Global Search">
           <tr>
             <th style="width: 5rem"></th>
             <th>Id</th>
