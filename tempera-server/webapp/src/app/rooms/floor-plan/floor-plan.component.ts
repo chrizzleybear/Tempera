@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {NgForOf} from "@angular/common";
 import {Router} from "@angular/router";
+import {TemperaStationService} from "../../_services/tempera-station.service";
+import {RoomService} from "../../_services/room.service";
+import {RoomsComponent} from "../../roomManagement/rooms/rooms.component";
+import {Subscription} from "rxjs";
 
 interface Room {
   x: number;
@@ -18,18 +22,14 @@ interface Room {
   templateUrl: './floor-plan.component.html',
   styleUrl: './floor-plan.component.css'
 })
-export class FloorPlanComponent {
-  fillColor = 'rgb(255, 0, 0)';
-  rooms: Room[] = [
-    { x: 0, y: 0, roomId: 'room_1', fillColor: 'white', shape: 'rectangle'},
-    { x: 130, y: 0, roomId: 'room_2', fillColor: 'white', shape: 'rectangle'},
-    { x: 0, y: 100, roomId: 'room_3', fillColor: 'white', shape: 'rectangle'},
-    { x: 130, y: 100, roomId: 'room_4', fillColor: 'white', shape: 'rectangle'},
-    { x: 0, y: 200, roomId: 'room_5', fillColor: 'white', shape: 'rectangle'},
-    { x: 130, y: 200, roomId: 'room_6', fillColor: 'white', shape: 'rectangle'},
-    { x: 65, y: 300, roomId: 'room_7', fillColor: 'white', shape: 'rectangle'},
+export class FloorPlanComponent implements OnInit{
 
-  ];
+  private roomChangedSubscription: Subscription;
+
+  temperaStation: any;
+  roomIds: string[] = [];
+  fillColor = 'rgb(255, 0, 0)';
+  rooms: Room[] = [];
   doors: { x: number, y: number }[] = [
     { x: 90, y: 50 },
     { x: 90, y: 150 },
@@ -40,12 +40,62 @@ export class FloorPlanComponent {
     { x: 65, y: 350 },
   ];
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private temperaStationService: TemperaStationService, private roomService: RoomService) {
+    this.roomChangedSubscription = this.roomService.roomChanged$.subscribe(() => {
+      this.fetchData();
+    }
+    );
   }
 
+  ngOnInit() {
+    this.fetchData();
+
+  }
   viewDetails(index: number): void {
     console.log('View details for room:', this.rooms[index]);
     this.router.navigate(['/room', this.rooms[index].roomId]);
+  }
+
+  fetchData() {
+    this.fetchrooms();
+    this.fetchtempera();
+  }
+
+  fetchrooms() {
+    this.roomService.getAllRooms().subscribe({
+      next: (data) => {
+        this.roomIds = data.map((room) => room.id);
+        this.createFloorPlan();
+      },
+      error: (error) => {
+        console.error('Failed to load rooms:', error);
+      },
+    });
+  }
+
+  fetchtempera() {
+    this.temperaStationService.getAllTemperaStations().subscribe({
+      next: (data) => {
+        console.log('TemperaStations: ', data);
+        this.temperaStation = data;
+      },
+      error: (error) => {
+        console.error('Failed to load temperaStations:', error);
+      },
+    });
+  }
+
+  createFloorPlan() {
+    this.rooms = [
+      { x: 0, y: 0, roomId: this.roomIds[0] || '', fillColor: 'white', shape: 'rectangle'},
+      { x: 130, y: 0, roomId: this.roomIds[1] || '', fillColor: 'white', shape: 'rectangle'},
+      { x: 0, y: 100, roomId: this.roomIds[2] || '', fillColor: 'white', shape: 'rectangle'},
+      { x: 130, y: 100, roomId:this.roomIds[3] || '', fillColor: 'white', shape: 'rectangle'},
+      { x: 0, y: 200, roomId: this.roomIds[4] || '', fillColor: 'white', shape: 'rectangle'},
+      { x: 130, y: 200, roomId: this.roomIds[5] || '', fillColor: 'white', shape: 'rectangle'},
+      { x: 65, y: 300, roomId: this.roomIds[6] || '', fillColor: 'white', shape: 'rectangle'},
+
+    ];
   }
 
 

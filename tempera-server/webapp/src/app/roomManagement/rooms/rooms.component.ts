@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {RoomService} from "../../_services/room.service";
 import {Room} from "../../models/room.model";
 import {TableModule} from "primeng/table";
@@ -32,6 +32,8 @@ import {RippleModule} from "primeng/ripple";
   styleUrls: ['./rooms.component.css']
 })
 export class RoomsComponent implements OnInit {
+
+
   rooms: Room[] = [];
   newRoomId: string = '';
   displayCreateDialog: boolean = false;
@@ -61,6 +63,7 @@ export class RoomsComponent implements OnInit {
       next: (response) => {
         console.log('Room deleted successfully:', response);
         this.loadRooms();
+        this.roomService.roomChanged();
         this.messages = [{severity: 'success', summary: 'Success', detail: 'Room deleted successfully'}];
       },
       error: (error) => {
@@ -82,6 +85,7 @@ export class RoomsComponent implements OnInit {
         console.log('Room created successfully:', response);
         this.loadRooms();
         this.displayCreateDialog = false;
+        this.roomService.roomChanged();
         this.messages = [{severity: 'success', summary: 'Success', detail: 'Room created successfully'}];
       },
       error: (error) => console.error('Error creating room:', error)

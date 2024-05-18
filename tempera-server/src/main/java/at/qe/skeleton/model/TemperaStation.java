@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Persistable;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity
 public class TemperaStation implements Persistable<String> {
@@ -15,6 +13,8 @@ public class TemperaStation implements Persistable<String> {
   @Id private String id;
   @OneToOne private Userx user;
   private boolean enabled;
+
+  private boolean active;
 
   // We need to implement Persistable since we set Id manually
   // the following strategy for the isNew Method comes from spring documentation:
@@ -41,10 +41,11 @@ public class TemperaStation implements Persistable<String> {
    * direct creation of TemperaStations should be avoided, use {@link
    * at.qe.skeleton.services.TemperaStationService#createTemperaStation} instead
    */
-  public TemperaStation(@NotNull String id, boolean enabled, Userx user) {
+  public TemperaStation(@NotNull String id, boolean enabled, Userx user, boolean active) {
     this.user = user;
     this.id = Objects.requireNonNull(id);
     this.enabled = enabled;
+    this.active = active;
   }
 
   protected TemperaStation() {}
@@ -66,6 +67,13 @@ public class TemperaStation implements Persistable<String> {
     this.enabled = enabled;
   }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;

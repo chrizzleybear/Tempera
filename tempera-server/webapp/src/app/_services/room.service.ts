@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {Room} from "../models/room.model";
 import {Threshold, ThresholdTipUpdateDto, ThresholdUpdateDto} from "../models/threshold.model";
 
@@ -41,5 +41,12 @@ export class RoomService {
 
   updateThresholdTip(dto: ThresholdTipUpdateDto) {
     return this.http.put<Threshold>(`${this.API_URL}threshold/tip/update`, dto);
+  }
+
+  private roomChangedSource = new Subject<void>();
+  roomChanged$ = this.roomChangedSource.asObservable();
+
+  roomChanged() {
+    this.roomChangedSource.next();
   }
 }

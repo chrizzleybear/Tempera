@@ -42,7 +42,7 @@ public class TemperaStationService {
    */
   public TemperaStation createTemperaStation(String id, boolean enabled, Userx user) {
     logger.info("trying to create new TemperaStation");
-    TemperaStation temperaStation = new TemperaStation(id, enabled, user);
+    TemperaStation temperaStation = new TemperaStation(id, enabled, user, false);
     save(temperaStation);
 
     Sensor temperatureSensor = new Sensor(SensorType.HUMIDITY, Unit.PERCENT, temperaStation);
