@@ -2,6 +2,8 @@ package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.model.Room;
 import at.qe.skeleton.model.Threshold;
+import at.qe.skeleton.model.ThresholdTip;
+import at.qe.skeleton.rest.frontend.dtos.ThresholdUpdateDto;
 import at.qe.skeleton.services.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -83,7 +85,14 @@ public class RoomController {
     }
 
     @PutMapping("/threshold/update")
-    public Threshold updateThreshold(@RequestBody Threshold threshold) {
-        return roomService.updateThreshold(threshold);
+    public ResponseEntity<Threshold> updateThreshold(@RequestBody ThresholdUpdateDto dto) {
+        Threshold updatedThreshold = roomService.updateThreshold(dto);
+        return ResponseEntity.ok(updatedThreshold);
+    }
+
+    @PutMapping("/threshold/tip/update")
+    public ResponseEntity<ThresholdTip> updateThresholdTip(@RequestBody ThresholdTip dto) {
+        ThresholdTip updatedThreshold = roomService.updateThresholdTip(dto);
+            return ResponseEntity.ok(updatedThreshold);
     }
 }

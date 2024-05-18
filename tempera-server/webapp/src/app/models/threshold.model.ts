@@ -4,7 +4,7 @@ export interface Threshold {
   roomId: number;
   sensorType: SensorType;
   thresholdType: ThresholdType;
-  thresholdTip : ThresholdTip;
+  tip : ThresholdTip;
 }
 
 export enum SensorType {
@@ -22,6 +22,15 @@ export enum ThresholdType {
 }
 
 interface ThresholdTip {
+  id: number;
+  tip: string;
+}
+
+export interface ThresholdUpdateDto {
+  threshold: Threshold;
+  reason: string;
+}
+export interface ThresholdTipUpdateDto {
   id: number;
   tip: string;
 }

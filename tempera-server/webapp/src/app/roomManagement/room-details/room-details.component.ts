@@ -7,7 +7,7 @@ import {CardModule} from "primeng/card";
 import {NgForOf, NgIf} from "@angular/common";
 import {ButtonModule} from "primeng/button";
 import {RippleModule} from "primeng/ripple";
-import {Threshold} from "../../models/threshold.model";
+import {Threshold, ThresholdTipUpdateDto, ThresholdUpdateDto} from "../../models/threshold.model";
 import {DialogModule} from "primeng/dialog";
 import {FormsModule} from "@angular/forms";
 import {InputTextModule} from "primeng/inputtext";
@@ -34,6 +34,8 @@ export class RoomDetailsComponent {
   room: Room | undefined;
   displayEditThresholdDialog = false;
   expandedRows: { [key: string]: boolean } = {};
+  selectedThreshold: Threshold | undefined;
+  reason: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -70,18 +72,41 @@ export class RoomDetailsComponent {
     }
     console.log('Expanded rows:', this.expandedRows);
   }
-
-  editThresholdDialog(threshold: Threshold) {
-    console.log('Edit threshold dialog:', threshold);
-
-  }
-
-  onCellEditInit(threshold: Threshold) {
-    console.log('Cell edit init:', threshold);
-  }
-
   onCellEditSave(threshold: Threshold) {
-    this.roomService.updateThreshold(threshold).subscribe({
+    this.displayEditThresholdDialog = true;
+    this.selectedThreshold = threshold;
+  }
+  editDialogThresholdTip(threshold: Threshold) {
+    this.displayEditThresholdDialog = true;
+    this.selectedThreshold = threshold;
+  }
+
+  editThreasholdSave() {
+    if (this.selectedThreshold && this.reason !== '') {
+      const dto : ThresholdUpdateDto = {
+        threshold: this.selectedThreshold,
+        reason: this.reason,
+      };
+      this.roomService.updateThreshold(dto).subscribe({
+        next: (data) => {
+          console.log('Threshold updated: ', data);
+          this.selectedThreshold = undefined;
+          this.reason = '';
+          this.displayEditThresholdDialog = false;
+        },
+        error: (error) => {
+          console.error('Failed to update threshold:', error);
+        },
+      });
+    }
+  }
+  editDialogThresholdSave() {
+    if (this.selectedThreshold) {
+    const dto : ThresholdTipUpdateDto = {
+      id: this.selectedThreshold.id,
+      tip: this.selectedThreshold.tip.tip,
+    };
+    this.roomService.updateThresholdTip(dto).subscribe({
       next: (data) => {
         console.log('Threshold updated: ', data);
       },
@@ -89,9 +114,9 @@ export class RoomDetailsComponent {
         console.error('Failed to update threshold:', error);
       },
     });
+      this.selectedThreshold = undefined;
+      this.reason = '';
+      this.displayEditThresholdDialog = false;
   }
-
-  onCellEditCancel(threshold: Threshold, index: number) {
-    console.log('Cell edit cancel:', threshold, index);
   }
 }

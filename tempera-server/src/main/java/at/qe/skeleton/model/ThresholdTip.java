@@ -22,8 +22,16 @@ public class ThresholdTip implements Serializable {
 
   public ThresholdTip() {}
 
+  public Long getId() {
+    return id;
+  }
+
   public String getTip() {
     return tip;
+  }
+
+  public void setTip(String tip) {
+    this.tip = tip;
   }
 
   @Override

@@ -22,6 +22,7 @@ public class Threshold implements Serializable {
 
   @OneToOne private Modification modification;
 
+  //maybe rename tip to thresholdTip
   @OneToOne private ThresholdTip tip;
 
   public Long getId() {
@@ -84,4 +85,5 @@ public class Threshold implements Serializable {
   public String toString() {
     return String.valueOf(id);
   }
+
 }
