@@ -44,7 +44,7 @@ public class TimetableController {
     return ResponseEntity.ok(
         new GetTimetableDataResponse(
             List.of(entry1, entry2),
-            List.of(new ProjectDto("2", "Project 1"), new ProjectDto("2", "Project 2"))));
+            List.of(new ProjectDto("1", "Project 1"), new ProjectDto("2", "Project 2"))));
   }
 
   @PostMapping("/update/project")

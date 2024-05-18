@@ -5,7 +5,7 @@ import {
   ProjectDto,
   TimetableControllerService,
 } from '../../api';
-import { TableModule } from 'primeng/table';
+import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePipe } from '@angular/common';
 import { TagModule } from 'primeng/tag';
@@ -15,6 +15,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { MultiSelectModule } from 'primeng/multiselect';
 import StateEnum = ColleagueStateDto.StateEnum;
+import { FilterMetadata } from 'primeng/api';
 
 @Component({
   selector: 'app-timetable',
@@ -67,4 +68,14 @@ export class TimetableComponent implements OnInit {
       },
     });
   }
+
+  // method to call when onLazyLoad lazy when enabled
+
+  // loadEntries($event: TableLazyLoadEvent) {
+  //   let state = ($event.filters?.['state'] as FilterMetadata)?.value as string | undefined;
+  //   let projectId = ($event.filters?.['assignedProject.id'] as FilterMetadata)?.value as string | undefined;
+  //   console.log({ state: state, projectId: projectId });
+  //
+  //   // call the API with the filter and sorting values
+  // }
 }

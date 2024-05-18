@@ -18,12 +18,12 @@
       <th></th>
       <th></th>
       <th>
-        <p-columnFilter field="assignedProject.name" [showMenu]="false"
+        <p-columnFilter field="assignedProject.id" [showMenu]="false"
                         [showClearButton]="false">
           <ng-template pTemplate="filter" let-value let-filter="filterCallback">
             <p-dropdown
               [options]="timetableData?.availableProjects ?? []" [showClear]="true"
-              (onChange)="filter($event.value?.name)"
+              (onChange)="filter($event.value?.id)"
               optionLabel="name" appendTo="body" placeholder="Select one"></p-dropdown>
           </ng-template>
         </p-columnFilter>
