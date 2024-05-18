@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { GetTimetableDataResponse, ProjectDto, TimetableControllerService, TimetableEntryDto } from '../../api';
+import {
+  ColleagueStateDto,
+  GetTimetableDataResponse,
+  ProjectDto,
+  TimetableControllerService,
+} from '../../api';
 import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePipe } from '@angular/common';
@@ -10,6 +15,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { FilterMatchMode } from 'primeng/api';
 import { MultiSelectModule } from 'primeng/multiselect';
+import StateEnum = ColleagueStateDto.StateEnum;
 
 @Component({
   selector: 'app-timetable',
@@ -30,6 +36,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
 export class TimetableComponent implements OnInit {
   public timetableData?: GetTimetableDataResponse;
   public filterFields: string[] = [];
+
+  public stateOptions: StateEnum[] = (Object.values(StateEnum) as StateEnum[]);
 
   protected readonly DisplayHelper = DisplayHelper;
 
