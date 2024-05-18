@@ -38,13 +38,13 @@ public class TimetableController {
             2L,
             "2024-05-12T09:00:00",
             "2024-05-12T12:00:00",
-            new ProjectDto(2L, "Project 2"),
+            new ProjectDto("2", "Project 2"),
             State.DEEPWORK,
             "This project is nice.");
     return ResponseEntity.ok(
         new GetTimetableDataResponse(
             List.of(entry1, entry2),
-            List.of(new ProjectDto(1L, "Project 1"), new ProjectDto(2L, "Project 2"))));
+            List.of(new ProjectDto("2", "Project 1"), new ProjectDto("2", "Project 2"))));
   }
 
   @PostMapping("/update/project")
