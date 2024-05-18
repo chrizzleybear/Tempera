@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {RoomService} from "../../_services/room.service";
 import {Room} from "../../models/room.model";
 import {TableModule} from "primeng/table";

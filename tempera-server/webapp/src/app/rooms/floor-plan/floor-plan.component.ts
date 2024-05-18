@@ -1,9 +1,8 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {NgForOf} from "@angular/common";
 import {Router} from "@angular/router";
 import {TemperaStationService} from "../../_services/tempera-station.service";
 import {RoomService} from "../../_services/room.service";
-import {RoomsComponent} from "../../roomManagement/rooms/rooms.component";
 import {Subscription} from "rxjs";
 
 interface Room {

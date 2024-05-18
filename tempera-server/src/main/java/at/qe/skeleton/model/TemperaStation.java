@@ -49,7 +49,6 @@ public class TemperaStation implements Persistable<String> {
   }
 
   protected TemperaStation() {}
-  ;
 
   public void setUser(Userx user) {
     this.user = user;
