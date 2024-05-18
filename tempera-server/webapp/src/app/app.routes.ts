@@ -19,6 +19,10 @@ import {RoomsComponent} from "./roomManagement/rooms/rooms.component";
 import {FloorPlanComponent} from "./rooms/floor-plan/floor-plan.component";
 import {RoomDetailsComponent} from "./roomManagement/room-details/room-details.component";
 import {AccesspointsComponent} from "./accessPointManagement/access-points/accespoints.component";
+import {TemperaStationsComponent} from "./temperaManagement/tempera-stations/tempera-stations.component";
+import {
+  TemperaStationDetailsComponent
+} from "./temperaManagement/tempera-station-details/tempera-station-details.component";
 
 export const routes: Routes = [
   {
@@ -40,7 +44,9 @@ export const routes: Routes = [
           { path: 'myGroups', component: GroupsGroupleadComponent},
           { path: 'group/projects/:id', component: GroupProjectsComponent},
           { path: 'accessPoints', component: AccesspointsComponent},
-          { path: 'accessPoint/:id', component: FloorPlanComponent}
+          { path: 'accessPoint/:id', component: FloorPlanComponent},
+          { path: 'temperaStations', component: TemperaStationsComponent},
+          { path: 'temperaStation/:id', component: TemperaStationDetailsComponent},
         ],
       },
     ],

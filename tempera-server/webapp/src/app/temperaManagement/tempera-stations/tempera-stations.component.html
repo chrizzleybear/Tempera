@@ -1,0 +1,20 @@
+<div *ngIf="temperaStations">
+  <p-table [value]="temperaStations" [paginator]="true" [rows]="10" [responsive]="true" >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Id</th>
+        <th>User</th>
+        <th>Enabled</th>
+        <th>Active</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-temperaStation>
+      <tr (click)="viewDetails(temperaStation)">
+        <td>{{temperaStation.id}}</td>
+        <td>{{temperaStation.user}}</td>
+        <td>{{temperaStation.enabled}}</td>
+        <td>{{temperaStation.active}}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

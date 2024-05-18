@@ -10,6 +10,7 @@ import at.qe.skeleton.repositories.TemperaStationRepository;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -57,6 +58,10 @@ public class TemperaStationService {
     sensorService.saveSensor(nmvocSensor);
 
     return temperaStation;
+  }
+
+  public List<TemperaStation> getAllTemperaStations() {
+    return temperaStationRepository.findAll();
   }
 
   public TemperaStation findById(String id) throws CouldNotFindEntityException {

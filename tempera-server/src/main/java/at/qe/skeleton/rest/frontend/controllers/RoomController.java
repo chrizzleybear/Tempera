@@ -1,10 +1,12 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.model.Room;
+import at.qe.skeleton.model.TemperaStation;
 import at.qe.skeleton.model.Threshold;
 import at.qe.skeleton.model.ThresholdTip;
 import at.qe.skeleton.rest.frontend.dtos.ThresholdUpdateDto;
 import at.qe.skeleton.services.RoomService;
+import at.qe.skeleton.services.TemperaStationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,9 @@ public class RoomController {
 
     @Autowired
     private RoomService roomService;
+
+    @Autowired
+    private TemperaStationService temp;
 
     @GetMapping("/all")
     public ResponseEntity<List<Room>> getAllRooms() {
@@ -94,5 +99,11 @@ public class RoomController {
     public ResponseEntity<ThresholdTip> updateThresholdTip(@RequestBody ThresholdTip dto) {
         ThresholdTip updatedThreshold = roomService.updateThresholdTip(dto);
             return ResponseEntity.ok(updatedThreshold);
+    }
+
+    @GetMapping("/temperaStations")
+    public ResponseEntity<List<TemperaStation>> getTemperaStations() {
+        List<TemperaStation> temp1 = temp.getAllTemperaStations();
+        return ResponseEntity.ok(temp1);
     }
 }
