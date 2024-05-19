@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   ColleagueStateDto,
   GetTimetableDataResponse,
   ProjectDto,
-  TimetableControllerService,
+  TimetableControllerService, TimetableEntryDto,
 } from '../../api';
-import { TableLazyLoadEvent, TableModule } from 'primeng/table';
+import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgIf } from '@angular/common';
 import { TagModule } from 'primeng/tag';
 import { DisplayHelper } from '../_helpers/display-helper';
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
@@ -28,6 +28,10 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
 import { TooltipModule } from 'primeng/tooltip';
+import { MessageModule } from 'primeng/message';
+import { MessagesModule } from 'primeng/messages';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-timetable',
@@ -47,19 +51,30 @@ import { TooltipModule } from 'primeng/tooltip';
     CalendarModule,
     ReactiveFormsModule,
     TooltipModule,
+    MessageModule,
+    NgIf,
+    MessagesModule,
+    ToastModule,
   ],
   templateUrl: './timetable.component.html',
   styleUrl: './timetable.component.css',
 })
 export class TimetableComponent implements OnInit {
   public timetableData?: GetTimetableDataResponse;
+
   public filterFields: string[] = [];
 
   public stateOptions: StateEnum[] = (Object.values(StateEnum) as StateEnum[]);
 
-  selectedRowIndex: number = 0;
+  public selectedRowIndex: number = 0;
 
   protected readonly DisplayHelper = DisplayHelper;
+
+
+  /*
+  * This reference to the PrimeNG table is used because its entries also reflect the correct order if the table is sorted.
+   */
+  @ViewChild('table') table!: Table;
 
   /*
     * Validates that the time is between the start and end time of the time entry.
@@ -72,8 +87,10 @@ export class TimetableComponent implements OnInit {
       return null;
     }
 
-    const minStartTime = new Date(this.timetableData?.tableEntries?.[this.selectedRowIndex].startTimestamp!);
-    const maxEndTime = new Date(this.timetableData?.tableEntries?.[this.selectedRowIndex].endTimestamp!);
+    const entries = this.table.value as TimetableEntryDto[];
+
+    const minStartTime = new Date(entries[this.selectedRowIndex].startTimestamp!);
+    const maxEndTime = new Date(entries[this.selectedRowIndex].endTimestamp!);
     control.value?.setDate(minStartTime.getDate());
     control.value?.setMilliseconds(0);
 
@@ -91,7 +108,7 @@ export class TimetableComponent implements OnInit {
     }),
   });
 
-  constructor(public timetableControllerService: TimetableControllerService) {
+  constructor(public timetableControllerService: TimetableControllerService, private messageService: MessageService) {
   }
 
   ngOnInit(): void {
@@ -102,6 +119,7 @@ export class TimetableComponent implements OnInit {
           this.filterFields = Object.keys(this.timetableData?.tableEntries?.[0] ?? []);
         },
         error: err => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load timetable data' });
           console.error(err);
         },
       },
@@ -114,21 +132,28 @@ export class TimetableComponent implements OnInit {
       project: newProject,
     }).subscribe({
       next: () => {
-        console.log('Updating project for time entry', timeEntryId, 'to', newProject);
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project updated successfully' });
+      },
+      error: () => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update project' });
+        console.error('Failed to update project for time entry', timeEntryId);
       },
     });
   }
 
 
   onSplitFormSubmit() {
-    const timeEntryId = this.timetableData?.tableEntries?.[this.selectedRowIndex].id!;
+    console.log(this.selectedRowIndex);
+    const entries = this.table.value as TimetableEntryDto[];
+    const timeEntryId = entries[this.selectedRowIndex].id!;
     const time = this.splitForm.controls.time.value?.toString()!;
     this.timetableControllerService.splitTimeRecord({ entryId: timeEntryId, splitTimestamp: time }).subscribe(
       {
         next: () => {
-          console.log('Splitting time entry', timeEntryId, 'at', time);
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Time entry split successfully' });
         },
         error: () => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to split time entry' });
           console.error('Failed to split time entry');
         },
       },
