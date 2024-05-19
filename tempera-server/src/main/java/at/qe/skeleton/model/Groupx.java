@@ -18,6 +18,7 @@ public class Groupx {
 
   @ManyToMany(cascade = CascadeType.ALL) private List<Userx> members;
 
+  //todo: projects entfernen
   @ManyToMany(mappedBy = "groups")
   private Set<Project> projects;
 

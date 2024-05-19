@@ -37,6 +37,8 @@ public class ProjectService {
 
   private Logger logger = Logger.getLogger("groupxProjectServiceLogger");
 
+  //todo: write tests for project Service to test the functionality of GroupxProject in particular
+
   @Transactional
   public Project createProject(String name, String description, String manager) {
     Userx managerUser =

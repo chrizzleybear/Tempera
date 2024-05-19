@@ -25,9 +25,11 @@ public class Project {
   private List<Userx> contributors;
 
 
+
   @OneToMany(mappedBy = "project")
   private Set<GroupxProject> groupxProjects;
 
+  //todo: groups entfernen
   @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   private List<Groupx> groups;
 

@@ -1,5 +1,6 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
+import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.Groupx;
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.rest.frontend.dtos.ContributorAssignmentDto;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 @RestController
@@ -19,7 +21,7 @@ import java.util.List;
 public class ProjectController {
 
   @Autowired ProjectService projectService;
-
+  private Logger logger = Logger.getLogger("ProjectController");
   @GetMapping("/all")
   public ResponseEntity<List<Project>> getAllUsers() {
     List<Project> projects = projectService.getAllProjects().stream().toList();
@@ -66,32 +68,57 @@ public class ProjectController {
   @PostMapping("/addGroup")
   public ResponseEntity<Void> addGroupToProject(
       @RequestBody GroupAssignmentDto groupAssignmentDto) {
-    projectService.addGroupToProject(groupAssignmentDto.projectId(), groupAssignmentDto.groupId());
-    return ResponseEntity.ok().build();
+    try{
+      projectService.addGroupToProject(groupAssignmentDto.projectId(), groupAssignmentDto.groupId());
+      return ResponseEntity.ok().build();
+    } catch (Exception e) {
+      logger.warning(e.getMessage());
+      return ResponseEntity.badRequest().build();
+    }
+
   }
 
   @DeleteMapping("/deleteGroup/{projectId}/{groupId}")
   public ResponseEntity<Void> removeGroupFromProject(
-      @PathVariable String projectId, @PathVariable String groupId) {
-    projectService.removeGroupFromProject(Long.parseLong(groupId), Long.parseLong(projectId));
-    return ResponseEntity.ok().build();
+      @PathVariable String projectId, @PathVariable String groupId){
+    try {
+      projectService.removeGroupFromProject(Long.parseLong(groupId), Long.parseLong(projectId));
+      return ResponseEntity.ok().build();
+    } catch (CouldNotFindEntityException e) {
+      logger.warning(e.getMessage());
+      return ResponseEntity.badRequest().build();
+    }
+
   }
+
+  //todo: different return type? we do have a projectDto
 
   @PostMapping("/addContributor")
   public ResponseEntity<Project> addContributor(
       @RequestBody ContributorAssignmentDto contributorAssignmentDto) {
-    projectService.addContributor(
+    try {
+    projectService.addContributor(contributorAssignmentDto.groupId(),
         contributorAssignmentDto.projectId(), contributorAssignmentDto.contributorId());
     Project project = projectService.loadProject(contributorAssignmentDto.projectId());
     return ResponseEntity.ok(project);
+    } catch (Exception e) {
+      logger.warning("caught exception in Controller: %s".formatted(e.getMessage()));
+      return ResponseEntity.badRequest().build();
+    }
   }
 
   @DeleteMapping("/deleteContributor/{projectId}/{contributorId}")
   public ResponseEntity<Project> removeContributor(
-      @PathVariable String projectId, @PathVariable String contributorId) {
-    projectService.deleteContributor(Long.parseLong(projectId), contributorId);
-    Project project = projectService.loadProject(Long.parseLong(projectId));
-    return ResponseEntity.ok(project);
+      @RequestBody ContributorAssignmentDto dto) {
+    try{
+      projectService.removeContributor(dto.groupId(), dto.projectId(), dto.contributorId());
+      Project project = projectService.loadProject(dto.projectId());
+      return ResponseEntity.ok(project);
+    } catch (Exception e) {
+      logger.warning("caught exception in Controller: %s".formatted(e.getMessage()));
+      return ResponseEntity.badRequest().build();
+    }
+
   }
 
   @GetMapping("/allOfGroup/{groupId}")
