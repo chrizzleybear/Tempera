@@ -12,10 +12,22 @@ import { TagModule } from 'primeng/tag';
 import { DisplayHelper } from '../_helpers/display-helper';
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
 import { DropdownModule } from 'primeng/dropdown';
-import { FormsModule } from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule, ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { MultiSelectModule } from 'primeng/multiselect';
 import StateEnum = ColleagueStateDto.StateEnum;
-import { FilterMetadata } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { DialogModule } from 'primeng/dialog';
+import { CalendarModule } from 'primeng/calendar';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-timetable',
@@ -29,6 +41,12 @@ import { FilterMetadata } from 'primeng/api';
     DropdownModule,
     FormsModule,
     MultiSelectModule,
+    ButtonModule,
+    OverlayPanelModule,
+    DialogModule,
+    CalendarModule,
+    ReactiveFormsModule,
+    TooltipModule,
   ],
   templateUrl: './timetable.component.html',
   styleUrl: './timetable.component.css',
@@ -39,7 +57,39 @@ export class TimetableComponent implements OnInit {
 
   public stateOptions: StateEnum[] = (Object.values(StateEnum) as StateEnum[]);
 
+  selectedRowIndex: number = 0;
+
   protected readonly DisplayHelper = DisplayHelper;
+
+  /*
+    * Validates that the time is between the start and end time of the time entry.
+    * Only hours and minutes are considered since it's assumed that time entries are on the same day.
+    * Time entry is selected by the selectedRowIndex.
+    * Also note that at the moment the control is edited inside the validator to set the day to the same as the time entry.
+   */
+  inPermittedTimeRangeValidator: ValidatorFn = (control: AbstractControl<Date | undefined>): ValidationErrors | null => {
+    if (!control.value) {
+      return null;
+    }
+
+    const minStartTime = new Date(this.timetableData?.tableEntries?.[this.selectedRowIndex].startTimestamp!);
+    const maxEndTime = new Date(this.timetableData?.tableEntries?.[this.selectedRowIndex].endTimestamp!);
+    control.value?.setDate(minStartTime.getDate());
+    control.value?.setMilliseconds(0);
+
+    if (control.value > minStartTime && control.value < maxEndTime) {
+      return null;
+    } else {
+      return { notInRange: true };
+    }
+  };
+
+  public splitForm = new FormGroup({
+    time: new FormControl<Date | undefined>(undefined, {
+      nonNullable: true,
+      validators: [Validators.required, this.inPermittedTimeRangeValidator],
+    }),
+  });
 
   constructor(public timetableControllerService: TimetableControllerService) {
   }
@@ -69,7 +119,24 @@ export class TimetableComponent implements OnInit {
     });
   }
 
-  // method to call when onLazyLoad lazy when enabled
+
+  onSplitFormSubmit() {
+    const timeEntryId = this.timetableData?.tableEntries?.[this.selectedRowIndex].id!;
+    const time = this.splitForm.controls.time.value?.toString()!;
+    this.timetableControllerService.splitTimeRecord({ entryId: timeEntryId, splitTimestamp: time }).subscribe(
+      {
+        next: () => {
+          console.log('Splitting time entry', timeEntryId, 'at', time);
+        },
+        error: () => {
+          console.error('Failed to split time entry');
+        },
+      },
+    );
+  }
+
+
+  // method to call onLazyLoad when enabled
 
   // loadEntries($event: TableLazyLoadEvent) {
   //   let state = ($event.filters?.['state'] as FilterMetadata)?.value as string | undefined;

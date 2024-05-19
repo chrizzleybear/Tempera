@@ -10,6 +10,7 @@
       </th>
       <th>State</th>
       <th>Description</th>
+      <th></th>
     </tr>
     <tr>
       <th>
@@ -55,6 +56,7 @@
         </p-columnFilter>
       </th>
       <th></th>
+      <th></th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-timeEntry let-rowIndex="rowIndex">
@@ -74,7 +76,22 @@
                [severity]="DisplayHelper.getStateSeverity | wrapFn: timeEntry.state"></p-tag>
       </td>
       <td>{{ timeEntry.description }}</td>
+      <td>
+        <p-button (onClick)="this.selectedRowIndex = rowIndex;op.toggle($event)">
+          <i class="pi pi-pencil"></i>
+        </p-button>
+      </td>
     </tr>
   </ng-template>
 </p-table>
+
+<p-overlayPanel #op>
+  <form [formGroup]="splitForm" (ngSubmit)="this.splitForm.valid && this.onSplitFormSubmit()">
+    <div class="text-lg pb-2"><strong>Split time record at:</strong></div>
+    <p-calendar formControlName="time" class="pr-2"
+                [timeOnly]="true"
+    ></p-calendar>
+    <p-button label="Confirm" type="submit" [disabled]="!this.splitForm.valid"></p-button>
+  </form>
+</p-overlayPanel>
 
