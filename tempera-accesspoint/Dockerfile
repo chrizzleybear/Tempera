@@ -8,4 +8,6 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 COPY ./src ./src
+COPY app.sh .
+RUN chmod +x app.sh
 ENTRYPOINT ["/bin/sh", "app.sh"]
