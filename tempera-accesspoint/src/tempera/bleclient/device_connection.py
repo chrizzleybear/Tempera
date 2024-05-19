@@ -237,7 +237,7 @@ async def discovery_loop() -> BLEDevice:
     tempera_stations = await get_tempera_stations()
 
     if not tempera_stations:
-        logger.warning("No tempera stations found.")
+        logger.warning("No tempera stations found. Going back to device discovery.")
         raise RuntimeWarning
 
     for station in tempera_stations:
@@ -251,7 +251,9 @@ async def discovery_loop() -> BLEDevice:
             break
 
     if not tempera_station:
-        logger.warning("No valid tempera station found.")
+        logger.warning(
+            "No valid tempera station found. Going back to device discovery."
+        )
         raise RuntimeWarning
 
     return tempera_station
