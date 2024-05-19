@@ -1,3 +1,5 @@
+from pathlib import Path
+
 config = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -18,8 +20,8 @@ config = {
             "class": "logging.handlers.RotatingFileHandler",
             "level": "INFO",
             "formatter": "simple",
-            "filename": "access_point.log",
-            "maxBytes": 10000000,
+            "filename": Path(__file__).parent.parent.resolve() / "access_point.log",
+            "maxBytes": 10_000_000,
             "backupCount": 1,
         },
     },
