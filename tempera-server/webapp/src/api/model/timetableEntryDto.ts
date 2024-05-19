@@ -13,11 +13,11 @@ import { ProjectDto } from './projectDto';
 
 
 export interface TimetableEntryDto { 
-    id?: number;
-    startTimestamp?: string;
-    endTimestamp?: string;
+    id: number;
+    startTimestamp: string;
+    endTimestamp: string;
     assignedProject?: ProjectDto;
-    state?: TimetableEntryDto.StateEnum;
+    state: TimetableEntryDto.StateEnum;
     description?: string;
 }
 export namespace TimetableEntryDto {
