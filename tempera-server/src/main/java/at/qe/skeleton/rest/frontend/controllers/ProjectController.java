@@ -73,7 +73,7 @@ public class ProjectController {
   @DeleteMapping("/deleteGroup/{projectId}/{groupId}")
   public ResponseEntity<Void> removeGroupFromProject(
       @PathVariable String projectId, @PathVariable String groupId) {
-    projectService.deleteGroup(Long.parseLong(groupId), Long.parseLong(projectId));
+    projectService.removeGroupFromProject(Long.parseLong(groupId), Long.parseLong(projectId));
     return ResponseEntity.ok().build();
   }
 

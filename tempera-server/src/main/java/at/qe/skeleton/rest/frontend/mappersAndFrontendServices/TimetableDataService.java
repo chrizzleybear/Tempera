@@ -63,7 +63,8 @@ public class TimetableDataService {
     return new GetTimetableDataResponse(tableEntries, availableProjects);
   }
 
-  //todo: we need to set group here as well.
+  //todo: fix ios group adding logic (bidirectional relationship)
+  //todo: testing and running the system
 
   public MessageResponse updateProject(String username, UpdateProjectRequest request)
       throws CouldNotFindEntityException {
@@ -77,7 +78,7 @@ public class TimetableDataService {
     // set the group over which this user is assigned to that project as well
     List<Groupx> groupList =  groupService.findGroupByUsernameAndProjectId(username, project.getId());
     if(groupList.isEmpty()){
-      throw new CouldNotFindEntityException("No Group with ProjectId %s and User %s found".formatted(project.getId(), username)));
+      throw new CouldNotFindEntityException("No Group with ProjectId %s and User %s found".formatted(project.getId(), username));
     }
     if (groupList.size() > 1){
       throw new RuntimeException("The User %s is assigned to the project %s over more than one Group".formatted(username, project.getName()));

@@ -16,13 +16,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
-
-import static at.qe.skeleton.services.TimestampToolkit.timeStampClipper;
 
 @Component
 @Scope("application")
@@ -32,6 +31,7 @@ public class TimeRecordService {
   private final InternalRecordRepository internalRecordRepository;
   private final ExternalRecordRepository externalRecordRepository;
   private final UserxRepository userxRepository;
+
 
   public TimeRecordService(
       ExternalRecordRepository externalRecordRepository,
@@ -75,7 +75,7 @@ public class TimeRecordService {
   }
 
   public ExternalRecord saveNewTimeRecord(ExternalRecord externalRecord, Userx user) {
-    LocalDateTime start = timeStampClipper(externalRecord.getStart());
+    LocalDateTime start = externalRecord.getStart();
 
     externalRecord.getId().setStart(start);
     InternalRecord internalRecord = new InternalRecord(start);
@@ -83,8 +83,7 @@ public class TimeRecordService {
     // setting the externalRecord for the internalRecord and vice versa.
     // if the record already exists in the db we should not save it again.
     if (findInternalRecordByStartAndUser(start, user).isPresent()) {
-      externalRecord.addInternalRecord(
-          findInternalRecordByStartAndUser(start, user).get());
+      externalRecord.addInternalRecord(findInternalRecordByStartAndUser(start, user).get());
     } else {
       externalRecord.addInternalRecord(internalRecord);
     }
@@ -123,12 +122,14 @@ public class TimeRecordService {
 
     // fetch the subordinate Timerecord of this old superior TimeRecord
     InternalRecord oldInternalRecord = oldExternalRecord.getInternalRecords().get(0);
-    LocalDateTime oldEnd = timeStampClipper(newExternalRecord.getStart()).minusSeconds(1);
-    LocalDateTime oldStart = timeStampClipper(oldExternalRecord.getStart());
+    LocalDateTime oldEnd = newExternalRecord.getStart().minus(Duration.ofMillis(10));
+    LocalDateTime oldStart = oldExternalRecord.getStart();
     long durationInSeconds = ChronoUnit.SECONDS.between(oldStart, oldEnd);
-    if (durationInSeconds <= 0)
-      throw new ExternalRecordOutOfBoundsException("the new TimeRecord starts before the old one.");
-
+    if (durationInSeconds < 0) {
+      throw new ExternalRecordOutOfBoundsException(
+          "the old timeRecord seems to have negative duration - start: %s, end:%s"
+              .formatted(oldStart.toString(), oldEnd.toString()));
+    }
     // time setting
     oldExternalRecord.setDuration(durationInSeconds);
     oldExternalRecord.setEnd(oldEnd);
@@ -168,11 +169,12 @@ public class TimeRecordService {
 
   public List<InternalRecord> getPageOfInternalRecords(Userx user, int page, int size) {
     Pageable pageable = PageRequest.of(page, size);
-    Page<InternalRecord> records = internalRecordRepository.findAllByUserAndPageTimeDesc(user, pageable);
+    Page<InternalRecord> records =
+        internalRecordRepository.findAllByUserAndPageTimeDesc(user, pageable);
     return records.getContent();
   }
 
-  public Optional<InternalRecord> findInternalRecordById(Long id){
+  public Optional<InternalRecord> findInternalRecordById(Long id) {
     return internalRecordRepository.findById(id);
   }
 }

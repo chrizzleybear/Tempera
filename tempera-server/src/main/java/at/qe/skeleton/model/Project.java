@@ -23,11 +23,7 @@ public class Project {
       inverseJoinColumns = @JoinColumn(name = "username"))
   private List<Userx> contributors;
 
-  @ManyToMany
-  @JoinTable(
-      name = "project_group",
-      joinColumns = @JoinColumn(name = "project_id"),
-      inverseJoinColumns = @JoinColumn(name = "group_id"))
+  @ManyToMany(mappedBy = "projects", cascade = CascadeType.ALL)
   private List<Groupx> groups;
 
   public Project(String name, String description, Userx manager) {
@@ -38,6 +34,22 @@ public class Project {
   }
 
   public Project() {}
+
+  public void addGroup(Groupx group) {
+    if (group == null) {
+      throw new IllegalArgumentException("Project must not be null to be added to group %s".formatted(name));
+    }
+    this.groups.add(group);
+    group.getProjects().add(this);
+  }
+
+  public void removeGroup(Groupx group) {
+    if (group == null) {
+      throw new IllegalArgumentException("Project must not be null to be removed from group %s".formatted(name));
+    }
+    this.groups.remove(group);
+    group.getProjects().remove(this);
+  }
 
   public Userx getManager() {
     return manager;

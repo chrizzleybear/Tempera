@@ -162,17 +162,18 @@ public class UserxService implements UserDetailsService {
 
       List<Project> projects = projectService.getProjectsByContributor(user.getUsername());
       for (var project : projects) {
-        project.getContributors().remove(user);
-        projectService.saveProject(project);
+        user.removeProject(project);
       }
       List <Groupx> groupsAsMember = groupRepository.findAllByMembersContains(user);
       for (var group : groupsAsMember) {
-        group.getMembers().remove(user);
-        groupRepository.save(group);
+        user.removeGroup(group);
       }
       externalRecordRepository.deleteAllByUser(user);
       user.removeTemperaStation();
-      userx.ifPresent(value -> userRepository.delete(value));
+      // we are saving the user so that all the other objects, where we set the user reference to null are being
+      // saved via cascading
+      saveUser(user);
+      userRepository.delete(user);
     }
   }
 

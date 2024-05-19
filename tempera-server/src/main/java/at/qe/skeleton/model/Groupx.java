@@ -18,8 +18,8 @@ public class Groupx {
 
   @ManyToMany(cascade = CascadeType.ALL) private List<Userx> members;
 
-  @ManyToMany(mappedBy = "groups", cascade = CascadeType.ALL)
-  private Set<Project> projects = new HashSet<>();
+  @ManyToMany
+  private Set<Project> projects;
 
   /**
    * For Creating Groups, this Constructor should be used.
@@ -39,26 +39,13 @@ public class Groupx {
     this.description = description;
     this.groupLead = Objects.requireNonNull(groupLead, "GroupLead must not be null");
     this.members = new ArrayList<>();
+    this.projects = new HashSet<>();
   }
 
-  public void addProject(Project project) {
-    if (project == null) {
-      throw new IllegalArgumentException("Project must not be null to be added to group %s".formatted(name));
-    }
-    this.projects.add(project);
-    project.getGroups().add(this);
-  }
-
-  public void removeProject(Project project) {
-    if (project == null) {
-      throw new IllegalArgumentException("Project must not be null to be removed from group %s".formatted(name));
-    }
-    this.projects.remove(project);
-    project.getGroups().remove(this);
-  }
 
   protected Groupx() {
     this.members = new ArrayList<>();
+    this.projects = new HashSet<>();
   }
 
   public String getName() {
@@ -86,7 +73,6 @@ public class Groupx {
   public Set<Project> getProjects() {
     return projects;
   }
-
 
   public Long getId() {
     return id;

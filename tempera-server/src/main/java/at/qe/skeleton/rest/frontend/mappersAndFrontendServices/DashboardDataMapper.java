@@ -39,8 +39,8 @@ public class DashboardDataMapper {
   private List<ColleagueStateDto> mapUserToColleagueStateDto(Userx user) {
 
     // using hashmap for faster compare algorithm
-    Collection<Group> groups = user.getGroups();
-    Set<Group> userGroups = new HashSet<>(groups);
+    Collection<Groupx> groups = user.getGroups();
+    Set<Groupx> userGroups = new HashSet<>(groups);
 
     // we dont want user to be displayed as his own colleague
     List<Userx> colleagues =

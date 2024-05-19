@@ -48,7 +48,7 @@ class DashboardControllerTest {
             new ColleagueStateDto("Max Mustermann", "Raum 1", State.DEEPWORK, true, List.of("Gruppe 1")),
             new ColleagueStateDto("Jane Doe", "Raum 3", State.AVAILABLE, true, List.of("Gruppe1","Gruppe 2")),
             new ColleagueStateDto("Cooler Typ", "Raum 1", State.MEETING, false, noGroups));
-    var projects = List.of(new ProjectDto(1L, "Projekt 1"), new ProjectDto(2L, "Projekt 2"), new ProjectDto(3L, "Projekt 3"));
+    var projects = List.of(new ProjectDto("project1", "Projekt 1"), new ProjectDto("project2", "Projekt 2"), new ProjectDto("project3", "Projekt 3"));
     DashboardDataResponse dashboardDataResponse =
         new DashboardDataResponse(
             1.0,

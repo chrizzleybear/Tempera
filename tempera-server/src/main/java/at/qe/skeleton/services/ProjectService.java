@@ -79,10 +79,14 @@ public class ProjectService {
 
     public void deleteProject(Long projectId) {
         Project project = projectRepository.findFirstById(projectId);
+        List<Groupx> groups = project.getGroups();
+        for (Groupx group : groups) {
+            project.removeGroup(group);
+        }
         projectRepository.delete(project);
     }
 
-    public void deleteGroup(Long groupId, Long projectId) {
+    public void removeGroupFromProject(Long groupId, Long projectId) {
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException(PROJECT_NOT_FOUND));
         Groupx group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException(GROUP_NOT_FOUND));
         project.removeGroup(group);
