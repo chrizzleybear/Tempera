@@ -47,6 +47,9 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
 
   @OneToOne (mappedBy = "user", cascade = CascadeType.ALL) private TemperaStation temperaStation;
 
+  @ManyToMany(mappedBy = "contributors")
+  private Set<GroupxProject> groupxProjects;
+
   @ManyToMany(cascade = CascadeType.ALL, mappedBy = "members")
   private List<Groupx> groups;
   @ManyToMany(cascade = CascadeType.ALL, mappedBy = "contributors")
@@ -100,6 +103,9 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     }
   }
 
+  public Set<GroupxProject> getGroupxProjects() {
+    return this.groupxProjects;
+  }
   public String getUsername() {
     return username;
   }

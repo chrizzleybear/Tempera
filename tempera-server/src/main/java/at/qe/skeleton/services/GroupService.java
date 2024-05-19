@@ -92,4 +92,8 @@ public class GroupService {
     public List<Groupx> findGroupByUsernameAndProjectId(String username, Long projectId){
         return groupRepository.findGroupByMemberAndProjectId(username, projectId);
     }
+
+    public void saveGroup(Groupx group){
+        groupRepository.save(group);
+    }
 }

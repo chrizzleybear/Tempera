@@ -58,6 +58,17 @@ INSERT INTO groupx (id, group_lead_username, description, name) VALUES (2,'bruce
 INSERT INTO groupx (id, group_lead_username, description, name) VALUES (3,'brucewayne', 'this is also just for testing', 'outsiderGroup');
 INSERT INTO groupx (id, group_lead_username, description, name) VALUES (4,'brucewayne', 'this is also just for testing', 'outsiderGroup2');
 
+-- add some of the created projects to some groups:
+-- add Serious Business, Expansion, Innovation, Efficiency,Sustainability and Customer Satisfaction to testGroup1
+INSERT INTO project_group (group_id, project_id)
+VALUES (1, -1), (1, -2), (1, -3), (1, -4), (1,-5), (1, -6);
+
+-- add Product Development, Cost Reduction, Quality Assurance, Marketing Campaign Launch, Training and Development and Infrastructure Upgrade to testGroup2
+INSERT INTO project_group (group_id, project_id)
+Values (2, -7), (2, -8), (2, -9), (2, -10), (2, -11), (2, -12);
+
+
+
 INSERT INTO groupx_members (groups_id, members_username) VALUES (1, 'johndoe'), (2, 'johndoe');
 INSERT INTO groupx_members (groups_id, members_username) VALUES (1, 'alicebrown'), (3, 'alicebrown'), (4, 'alicebrown');
 INSERT INTO groupx_members (groups_id, members_username) VALUES (1, 'chriswilliams'), (2, 'chriswilliams'), (3, 'chriswilliams'), (4, 'chriswilliams');

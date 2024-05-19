@@ -63,7 +63,6 @@ public class TimetableDataService {
     return new GetTimetableDataResponse(tableEntries, availableProjects);
   }
 
-  //todo: fix ios group adding logic (bidirectional relationship)
   //todo: testing and running the system
 
   public MessageResponse updateProject(String username, UpdateProjectRequest request)
@@ -76,6 +75,7 @@ public class TimetableDataService {
     internalRecord.setAssignedProject(project);
 
     // set the group over which this user is assigned to that project as well
+    // todo: add logic for the case that user is assigned to project over several groups
     List<Groupx> groupList =  groupService.findGroupByUsernameAndProjectId(username, project.getId());
     if(groupList.isEmpty()){
       throw new CouldNotFindEntityException("No Group with ProjectId %s and User %s found".formatted(project.getId(), username));

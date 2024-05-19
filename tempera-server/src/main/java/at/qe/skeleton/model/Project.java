@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Project {
@@ -23,7 +24,11 @@ public class Project {
       inverseJoinColumns = @JoinColumn(name = "username"))
   private List<Userx> contributors;
 
-  @ManyToMany(mappedBy = "projects", cascade = CascadeType.ALL)
+
+  @OneToMany(mappedBy = "project")
+  private Set<GroupxProject> groupxProjects;
+
+  @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   private List<Groupx> groups;
 
   public Project(String name, String description, Userx manager) {
@@ -35,20 +40,8 @@ public class Project {
 
   public Project() {}
 
-  public void addGroup(Groupx group) {
-    if (group == null) {
-      throw new IllegalArgumentException("Project must not be null to be added to group %s".formatted(name));
-    }
-    this.groups.add(group);
-    group.getProjects().add(this);
-  }
-
-  public void removeGroup(Groupx group) {
-    if (group == null) {
-      throw new IllegalArgumentException("Project must not be null to be removed from group %s".formatted(name));
-    }
-    this.groups.remove(group);
-    group.getProjects().remove(this);
+  public Set<GroupxProject> getGroupxProjects() {
+    return groupxProjects;
   }
 
   public Userx getManager() {

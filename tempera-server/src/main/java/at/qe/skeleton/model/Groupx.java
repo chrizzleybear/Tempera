@@ -18,8 +18,12 @@ public class Groupx {
 
   @ManyToMany(cascade = CascadeType.ALL) private List<Userx> members;
 
-  @ManyToMany
+  @ManyToMany(mappedBy = "groups")
   private Set<Project> projects;
+
+  @OneToMany(mappedBy = "group")
+  private Set<GroupxProject> groupxProjects;
+
 
   /**
    * For Creating Groups, this Constructor should be used.
@@ -41,6 +45,7 @@ public class Groupx {
     this.members = new ArrayList<>();
     this.projects = new HashSet<>();
   }
+
 
 
   protected Groupx() {
@@ -72,6 +77,10 @@ public class Groupx {
 
   public Set<Project> getProjects() {
     return projects;
+  }
+
+  public Set<GroupxProject> getGroupxProjects() {
+    return groupxProjects;
   }
 
   public Long getId() {

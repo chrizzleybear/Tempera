@@ -17,6 +17,6 @@ public interface GroupRepository extends AbstractRepository<Groupx, Long> {
 
     List<Groupx> findAllByMembersContains(Userx user);
 
-    @Query("SELECT Groupx FROM Groupx as group join group.members as members join group.projects as projects WHERE members.username = :username AND projects.id = :id")
+    @Query("SELECT g FROM Groupx as g join g.members as members join g.projects as projects WHERE members.username = :username AND projects.id = :id")
     List<Groupx> findGroupByMemberAndProjectId(@Param("username") String username, @Param("id") Long id);
 }
