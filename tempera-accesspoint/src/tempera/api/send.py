@@ -73,7 +73,6 @@ def _build_payload(
     :param kind:
     :return:
     """
-    # TODO: round all timestamps to tenths of a second before sending them via the API
     match kind:
         case "Measurement":
             return {
@@ -81,7 +80,8 @@ def _build_payload(
                 "tempera_station_id": tempera_station.id,
                 # datetime is not serializable -> to string
                 # web server expects 'T' separated date & time, not ' ' separated
-                "timestamp": f"{data.timestamp}".replace(" ", "T"),
+                # web server needs precision no higher than tenths of a second
+                "timestamp": data.timestamp.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-5],
                 "temperature": data.temperature,
                 "irradiance": data.irradiance,
                 "humidity": data.humidity,
@@ -91,7 +91,7 @@ def _build_payload(
             return {
                 "access_point_id": shared.config["access_point_id"],
                 "tempera_station_id": tempera_station.id,
-                "start": f"{data.start}".replace(" ", "T"),
+                "start": data.start.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-5],
                 # ms / 1_000 = seconds (cast back to int because division turns the value automatically to
                 # float)
                 "duration": int(data.duration / 1_000),
