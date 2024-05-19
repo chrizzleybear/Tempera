@@ -73,6 +73,7 @@ def _build_payload(
     :param kind:
     :return:
     """
+    # TODO: round all timestamps to tenths of a second before sending them via the API
     match kind:
         case "Measurement":
             return {
