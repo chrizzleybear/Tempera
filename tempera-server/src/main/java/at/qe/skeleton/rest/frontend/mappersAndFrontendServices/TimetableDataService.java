@@ -74,8 +74,9 @@ public class TimetableDataService {
     Project project = projectService.loadProject(Long.valueOf(projectDtoId));
     internalRecord.setAssignedProject(project);
 
-    // set the group over which this user is assigned to that project as well
-    // todo: add logic for the case that user is assigned to project over several groups
+    // todo: refactor this service method with GroupxProject
+
+    //  todo: write tests for this service class
     List<Groupx> groupList =  groupService.findGroupByUsernameAndProjectId(username, project.getId());
     if(groupList.isEmpty()){
       throw new CouldNotFindEntityException("No Group with ProjectId %s and User %s found".formatted(project.getId(), username));

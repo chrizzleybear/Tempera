@@ -27,8 +27,12 @@ public class GroupxProject {
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Userx> contributors;
 
+    @OneToMany(mappedBy = "groupxProject", cascade = CascadeType.ALL)
+    private Set<InternalRecord> internalRecords;
+
     public GroupxProject() {
         contributors = new HashSet<>();
+        internalRecords = new HashSet<>();
     }
 
     public void addContributor(Userx contributor) {
@@ -73,7 +77,7 @@ public class GroupxProject {
     }
 
     public Set<Userx> getContributors() {
-        return assignedUsers;
+        return contributors;
     }
 
 

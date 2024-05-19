@@ -49,6 +49,11 @@ public class InternalRecord {
   @JoinColumn(name = "groupx_id")
   private Groupx assignedGroup;
 
+  @ManyToOne
+  private GroupxProject groupxProject;
+
+
+
   // these are the foreign keys from externalRecord. The ext_rec_start will often be the same
   // as the start of the InternalRecord but once the user starts to divide the ExternalRecord
   // they can certainly differ from each other.
