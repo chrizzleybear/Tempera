@@ -1,5 +1,6 @@
 <p-toast></p-toast>
-<p-table #table [value]="timetableData?.tableEntries ?? []" [globalFilterFields]="filterFields">
+<p-table #table [value]="timetableData?.tableEntries ?? []" [globalFilterFields]="filterFields"
+         (onFilter)="calculateTotalTime()">
   <ng-template pTemplate="header">
     <tr>
       <th pSortableColumn="startTimestamp">Date
@@ -98,4 +99,5 @@
     <p-button label="Confirm" type="submit" [disabled]="!this.splitForm.valid"></p-button>
   </form>
 </p-overlayPanel>
+<div>{{ "The total worked time with the current filters is " + this.totalTime.hours + " hours and " + this.totalTime.minutes + " minutes." }}</div>
 

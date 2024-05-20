@@ -70,9 +70,11 @@ export class TimetableComponent implements OnInit {
 
   protected readonly DisplayHelper = DisplayHelper;
 
+  public totalTime: { hours: number, minutes: number } = { hours: 0, minutes: 0 };
+
 
   /*
-  * This reference to the PrimeNG table is used because its entries also reflect the correct order if the table is sorted.
+  * This reference to the PrimeNG table is used because its entries also reflect the correct order if the table is sorted and the available entries when filtered.
    */
   @ViewChild('table') table!: Table;
 
@@ -117,6 +119,8 @@ export class TimetableComponent implements OnInit {
           this.timetableData = data;
 
           this.filterFields = Object.keys(this.timetableData?.tableEntries?.[0] ?? []);
+
+          this.calculateTotalTime();
         },
         error: err => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load timetable data' });
@@ -160,6 +164,24 @@ export class TimetableComponent implements OnInit {
     );
   }
 
+  /*
+  Calculates the total work time with the current active filters
+   */
+  calculateTotalTime() {
+    let totalTimeTemp: number = 0;
+    let tempEntries: TimetableEntryDto[];
+    if ((this.table as any)?.filteredValue?.length > 0) {
+      tempEntries = this.table.filteredValue as TimetableEntryDto[];
+    } else {
+      tempEntries = this.table.value as TimetableEntryDto[];
+    }
+
+    tempEntries.forEach(entry => {
+      totalTimeTemp += new Date(entry.endTimestamp!).getTime() - new Date(entry.startTimestamp!).getTime();
+    });
+    const totalDate = new Date(totalTimeTemp);
+    this.totalTime = { hours: totalDate.getHours(), minutes: totalDate.getMinutes() };
+  }
 
   // method to call onLazyLoad when enabled
 
