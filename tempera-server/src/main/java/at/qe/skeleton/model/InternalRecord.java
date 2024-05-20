@@ -52,6 +52,13 @@ public class InternalRecord {
   @ManyToOne
   private GroupxProject groupxProject;
 
+  public GroupxProject getGroupxProject() {
+    return groupxProject;
+  }
+
+  public void setGroupxProject(GroupxProject groupxProject) {
+    this.groupxProject = groupxProject;
+  }
 
 
   // these are the foreign keys from externalRecord. The ext_rec_start will often be the same

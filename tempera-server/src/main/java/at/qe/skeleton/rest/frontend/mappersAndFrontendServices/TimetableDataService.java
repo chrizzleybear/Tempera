@@ -4,6 +4,8 @@ import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.exceptions.InternalRecordOutOfBoundsException;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.State;
+import at.qe.skeleton.repositories.GroupxProjectRepository;
+import at.qe.skeleton.repositories.UserxRepository;
 import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.TimetableEntryDto;
 import at.qe.skeleton.rest.frontend.payload.request.SplitTimeRecordRequest;
@@ -14,6 +16,7 @@ import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
 import at.qe.skeleton.services.GroupService;
 import at.qe.skeleton.services.ProjectService;
 import at.qe.skeleton.services.TimeRecordService;
+import at.qe.skeleton.services.UserxService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,30 +29,33 @@ public class TimetableDataService {
 
   private final ProjectService projectService;
   private final TimeRecordService timeRecordService;
-  private final GroupService groupService;
+  private final UserxRepository userxRepository;
+  private final UserxService userxService;
 
-  public TimetableDataService(ProjectService projectService, TimeRecordService timeRecordService, GroupService groupService) {
+  public TimetableDataService(ProjectService projectService, TimeRecordService timeRecordService, UserxRepository userxRepository, UserxService userxService) {
     this.projectService = projectService;
     this.timeRecordService = timeRecordService;
-    this.groupService = groupService;
+    this.userxRepository = userxRepository;
+    this.userxService = userxService;
   }
 
   public GetTimetableDataResponse getTimetableData(Userx user, int page, int size) {
     List<InternalRecord> records = timeRecordService.getPageOfInternalRecords(user, page, size);
     List<TimetableEntryDto> tableEntries = new ArrayList<>();
+    //todo once frontend is ready add Groupx here as well (or just sent the entire Groupxproject.)
     for (var record : records) {
       Long id = record.getId();
       String start = record.getStart().toString();
       String end = record.getEnd() == null ? null : record.getEnd().toString();
       String projectId;
       String projectName;
-      if (record.getAssignedProject() == null){
+      if (record.getGroupxProject() == null){
         projectId = null;
         projectName = null;
       }
       else {
-        projectId = record.getAssignedProject().getId().toString();
-        projectName = record.getAssignedProject().getName();
+        projectId = record.getGroupxProject().getProject().getId().toString();
+        projectName = record.getGroupxProject().getProject().getName();
       }
       ProjectDto project = new ProjectDto(projectId, projectName);
       State state = record.getExternalRecord().getState();
@@ -58,7 +64,7 @@ public class TimetableDataService {
     }
 
     List<ProjectDto> availableProjects =
-        user.getProjects().stream().map(p -> new ProjectDto(Long.toString(p.getId()), p.getName())).toList();
+        user.getGroupxProjects().stream().map(p -> new ProjectDto(Long.toString(p.getProject().getId()), p.getProject().getName())).toList();
 
     return new GetTimetableDataResponse(tableEntries, availableProjects);
   }
@@ -69,26 +75,22 @@ public class TimetableDataService {
       throws CouldNotFindEntityException {
     // Long entryId, ProjectDto project, String description, String splitTimestamp
     InternalRecord internalRecord = getInternalRecord(request.entryId());
-
-    String projectDtoId = request.project().id();
-    Project project = projectService.loadProject(Long.valueOf(projectDtoId));
-    internalRecord.setAssignedProject(project);
-
-    // todo: refactor this service method with GroupxProject
+    Userx user = userxService.loadUser(username);
+    Long projectId = Long.valueOf(request.project().id());
+    // todo: add the group as parameter later on
+    // then we need the findbyGroupIdAndProjectId...
 
     //  todo: write tests for this service class
-    List<Groupx> groupList =  groupService.findGroupByUsernameAndProjectId(username, project.getId());
-    if(groupList.isEmpty()){
-      throw new CouldNotFindEntityException("No Group with ProjectId %s and User %s found".formatted(project.getId(), username));
+    List<GroupxProject> groupxProjects = projectService.findGroupxProjectsByContributorAndProjectId(user, projectId);
+    if(groupxProjects.isEmpty()){
+      throw new CouldNotFindEntityException("No Group with ProjectId %s and User %s found".formatted(projectId, username));
     }
-    if (groupList.size() > 1){
-      throw new RuntimeException("The User %s is assigned to the project %s over more than one Group".formatted(username, project.getName()));
-    }
-    internalRecord.setAssignedGroup(groupList.get(0));
-    internalRecord = timeRecordService.saveInternalRecord(internalRecord);
+    GroupxProject groupxProject = groupxProjects.get(0);
+    groupxProject.addInternalRecord(internalRecord);
+    projectService.saveGroupxProject(groupxProject);
 
     return new MessageResponse(
-        "Set Project %s for %s's internal record with id %d.".formatted(project.getName(),username, internalRecord.getId()));
+        "Set Project %s and Group %s for %s's internal record with id %d.".formatted(groupxProject.getProject(), groupxProject.getGroup(), username, internalRecord.getId()));
   }
 
   public MessageResponse updateProjectDescription(String username, UpdateDescriptionRequest request)

@@ -58,14 +58,17 @@ INSERT INTO groupx (id, group_lead_username, description, name) VALUES (2,'bruce
 INSERT INTO groupx (id, group_lead_username, description, name) VALUES (3,'brucewayne', 'this is also just for testing', 'outsiderGroup');
 INSERT INTO groupx (id, group_lead_username, description, name) VALUES (4,'brucewayne', 'this is also just for testing', 'outsiderGroup2');
 
--- add some of the created projects to some groups:
+-- add some of the created projects to some GroupxProject Objects:
 -- add Serious Business, Expansion, Innovation, Efficiency,Sustainability and Customer Satisfaction to testGroup1
-INSERT INTO project_group (group_id, project_id)
+INSERT INTO groupx_project_object (group_id, project_id)
 VALUES (1, -1), (1, -2), (1, -3), (1, -4), (1,-5), (1, -6);
 
 -- add Product Development, Cost Reduction, Quality Assurance, Marketing Campaign Launch, Training and Development and Infrastructure Upgrade to testGroup2
-INSERT INTO project_group (group_id, project_id)
+INSERT INTO groupx_project_object (group_id, project_id)
 Values (2, -7), (2, -8), (2, -9), (2, -10), (2, -11), (2, -12);
+
+INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username)
+VALUES (1, -1, 'admin'), (1, -2, 'admin'), (1, -3, 'admin'), (1, -4, 'admin'), (1, -5, 'admin'), (1, -6, 'admin');
 
 
 
@@ -78,6 +81,7 @@ INSERT INTO groupx_members (groups_id, members_username) VALUES (3, 'brucewayne'
 INSERT INTO groupx_members (groups_id, members_username) VALUES (3, 'peterparker'), (4, 'peterparker');
 INSERT INTO groupx_members (groups_id, members_username) VALUES (3, 'tonystark'), (4, 'tonystark');
 INSERT INTO groupx_members (groups_id, members_username) VALUES (3, 'clarkkent'), (4, 'clarkkent');
+
 
 
 INSERT INTO room (room_id) VALUES ('room_1');

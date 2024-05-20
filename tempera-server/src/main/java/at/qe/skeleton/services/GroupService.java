@@ -1,9 +1,11 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.Groupx;
+import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.repositories.GroupRepository;
+import at.qe.skeleton.repositories.GroupxProjectRepository;
 import at.qe.skeleton.repositories.UserxRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -26,6 +28,9 @@ public class GroupService {
 
     @Autowired
     private GroupRepository groupRepository;
+    @Autowired
+    private GroupxProjectRepository groupxProjectRepository;
+
     public List<Groupx> getAllGroups() {
         return groupRepository.findAll();
     }
@@ -93,7 +98,11 @@ public class GroupService {
         return groupRepository.findGroupByMemberAndProjectId(username, projectId);
     }
 
+
+
     public void saveGroup(Groupx group){
         groupRepository.save(group);
     }
+
+
 }

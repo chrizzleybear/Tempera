@@ -14,6 +14,7 @@ import java.util.Set;
  */
 @Entity
 @IdClass(value = GroupxProjectId.class)
+@Table(name = "groupx_project_object")
 public class GroupxProject {
 
     @Id
@@ -74,6 +75,11 @@ public class GroupxProject {
         this.project.getGroupxProjects().remove(this);
         this.project = null;
 
+    }
+
+    public void addInternalRecord(InternalRecord internalRecord){
+        internalRecords.add(internalRecord);
+        internalRecord.setGroupxProject(this);
     }
 
     public Set<Userx> getContributors() {

@@ -194,4 +194,12 @@ public class ProjectService {
   public void saveProject(Project project) {
     projectRepository.save(project);
   }
+
+  public List<GroupxProject> findGroupxProjectsByContributorAndProjectId(Userx contributor, Long projectId){
+    return groupxProjectRepository.findAllByProjectIdAndContributorsContaining(projectId, contributor);
+  }
+
+  public GroupxProject saveGroupxProject(GroupxProject groupxProject) {
+    return groupxProjectRepository.save(groupxProject);
+  }
 }
