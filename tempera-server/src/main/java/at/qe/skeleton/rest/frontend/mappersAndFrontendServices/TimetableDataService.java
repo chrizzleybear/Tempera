@@ -40,32 +40,29 @@ public class TimetableDataService {
   }
 
   public GetTimetableDataResponse getTimetableData(Userx user, int page, int size) {
-    List<InternalRecord> records = timeRecordService.getPageOfInternalRecords(user, page, size);
+    List<InternalRecord> timeRecords = timeRecordService.getPageOfInternalRecords(user, page, size);
     List<TimetableEntryDto> tableEntries = new ArrayList<>();
     //todo once frontend is ready add Groupx here as well (or just sent the entire Groupxproject.)
-    for (var record : records) {
-      Long id = record.getId();
-      String start = record.getStart().toString();
-      String end = record.getEnd() == null ? null : record.getEnd().toString();
+    for (var timeRecord : timeRecords) {
+      Long id = timeRecord.getId();
+      String start = timeRecord.getStart().toString();
+      String end = timeRecord.getEnd() == null ? null : timeRecord.getEnd().toString();
       String projectId;
       String projectName;
-      if (record.getGroupxProject() == null){
+      if (timeRecord.getGroupxProject() == null){
         projectId = null;
         projectName = null;
       }
       else {
-        projectId = record.getGroupxProject().getProject().getId().toString();
-        projectName = record.getGroupxProject().getProject().getName();
+        projectId = timeRecord.getGroupxProject().getProject().getId().toString();
+        projectName = timeRecord.getGroupxProject().getProject().getName();
       }
       ProjectDto project = new ProjectDto(projectId, projectName);
-      State state = record.getExternalRecord().getState();
-      String description = record.getDescription();
+      State state = timeRecord.getExternalRecord().getState();
+      String description = timeRecord.getDescription();
       tableEntries.add(new TimetableEntryDto(id, start, end, project, state, description));
     }
-
-    List<ProjectDto> availableProjects =
-        user.getGroupxProjects().stream().map(p -> new ProjectDto(Long.toString(p.getProject().getId()), p.getProject().getName())).toList();
-
+    List<ProjectDto> availableProjects = projectService.getProjectsByContributor(user).stream().map(p -> new ProjectDto(Long.toString(p.getId()), p.getName())).toList();
     return new GetTimetableDataResponse(tableEntries, availableProjects);
   }
 

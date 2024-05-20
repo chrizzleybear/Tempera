@@ -1,6 +1,7 @@
 package at.qe.skeleton.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Columns;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -40,17 +41,12 @@ public class InternalRecord {
   @Column(name = "time_end")
   private LocalDateTime end;
 
-  //todo: remove assignedProject and assigned Group and the getters and setters
-  @ManyToOne
-  @JoinColumn(name = "project_id")
-  private Project assignedProject;
-
-  @ManyToOne
-  @JoinColumn(name = "groupx_id")
-  private Groupx assignedGroup;
-
-  @ManyToOne
-  private GroupxProject groupxProject;
+@ManyToOne
+@JoinColumns({
+    @JoinColumn(name = "group_id", referencedColumnName = "group_id"),
+    @JoinColumn(name = "project_id", referencedColumnName = "project_id")
+})
+private GroupxProject groupxProject;
 
   public GroupxProject getGroupxProject() {
     return groupxProject;
@@ -116,22 +112,6 @@ public class InternalRecord {
     Description = description;
   }
 
-  public Project getAssignedProject() {
-    return assignedProject;
-  }
-
-  public void setAssignedProject(Project assignedProject) {
-    this.assignedProject = assignedProject;
-  }
-
-  public Groupx getAssignedGroup() {
-    return assignedGroup;
-  }
-
-  public void setAssignedGroup(Groupx assignedGroupx) {
-    this.assignedGroup = assignedGroupx;
-  }
-
   @Override
   public int hashCode() {
     return Objects.hash(start, externalRecord);
@@ -154,6 +134,6 @@ public class InternalRecord {
         .formatted(
             start.toString(),
             end == null ? "null" : end,
-            assignedProject == null ? "null" : assignedProject);
+            groupxProject == null ? "null" : groupxProject);
   }
 }

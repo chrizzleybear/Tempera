@@ -17,27 +17,24 @@ public class Project {
   private String description;
   @ManyToOne private Userx manager;
 
-  @ManyToMany
-  @JoinTable(
-      name = "project_contributors",
-      joinColumns = @JoinColumn(name = "project_id"),
-      inverseJoinColumns = @JoinColumn(name = "username"))
-  private List<Userx> contributors;
+//  @ManyToMany
+//  @JoinTable(
+//      name = "project_contributors",
+//      joinColumns = @JoinColumn(name = "project_id"),
+//      inverseJoinColumns = @JoinColumn(name = "username"))
+//  private List<Userx> contributors;
 
 
 
   @OneToMany(mappedBy = "project")
   private Set<GroupxProject> groupxProjects;
 
-  //todo: groups entfernen
-  @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-  private List<Groupx> groups;
 
   public Project(String name, String description, Userx manager) {
     this.name = name;
     this.description = description;
     this.manager = manager;
-    this.contributors = new ArrayList<>();
+//    this.contributors = new ArrayList<>();
   }
 
   public Project() {}
@@ -50,13 +47,13 @@ public class Project {
     return manager;
   }
 
-  public List<Userx> getContributors() {
-    return contributors;
-  }
+//  public List<Userx> getContributors() {
+//    return contributors;
+//  }
 
-  public List<Groupx> getGroups() {
-    return groups;
-  }
+//  public List<Groupx> getGroups() {
+//    return groups;
+//  }
 
   public void setName(String name) {
     this.name = name;
@@ -73,21 +70,21 @@ public class Project {
     this.manager = manager;
   }
 
-  public void addContributor(Userx contributor) {
-    if (contributor == null) {
-      throw new NullPointerException("Contributor should not be null when added to Project");
-    }
-    this.contributors.add(contributor);
-    contributor.getProjects().add(this);
-  }
-
-  public void removeContributor(Userx contributor) {
-    if (contributor == null) {
-      throw new NullPointerException("Contributor should not be null when removed from Project");
-    }
-    this.contributors.remove(contributor);
-    contributor.getProjects().remove(this);
-  }
+//  public void addContributor(Userx contributor) {
+//    if (contributor == null) {
+//      throw new NullPointerException("Contributor should not be null when added to Project");
+//    }
+//    this.contributors.add(contributor);
+//    contributor.getProjects().add(this);
+//  }
+//
+//  public void removeContributor(Userx contributor) {
+//    if (contributor == null) {
+//      throw new NullPointerException("Contributor should not be null when removed from Project");
+//    }
+//    this.contributors.remove(contributor);
+//    contributor.getProjects().remove(this);
+//  }
 
   public String getName() {
     return name;

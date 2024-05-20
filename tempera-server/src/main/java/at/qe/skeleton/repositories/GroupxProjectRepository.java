@@ -18,5 +18,7 @@ public interface GroupxProjectRepository extends AbstractRepository<GroupxProjec
     @Query("SELECT gxp From GroupxProject gxp where gxp.project.id = :projectId AND :contributor member of gxp.contributors")
     public List<GroupxProject> findAllByProjectIdAndContributorsContaining(@Param("projectId")Long projectId, @Param("contributor")Userx contributor);
 
-    public List<GroupxProject> findAllByProject_Id(Long projectId);
+    public List<GroupxProject> findAllByContributorsContains(Userx user);
+
+    public List<GroupxProject> findAllByGroup_Id(Long group_id);
 }

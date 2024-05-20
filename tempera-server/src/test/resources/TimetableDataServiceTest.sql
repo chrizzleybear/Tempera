@@ -1,3 +1,19 @@
+DELETE FROM internal_record;
+DELETE FROM external_record;
+DELETE FROM measurement;
+DELETE FROM sensor;
+DELETE FROM tempera_station;
+DELETE FROM access_point;
+DELETE FROM room;
+DELETE FROM groupx_members;
+DELETE FROM groupx_project_object_contributors;
+DELETE FROM groupx_project_object;
+DELETE FROM groupx;
+DELETE FROM userx_userx_role;
+DELETE FROM userx;
+DELETE FROM project;
+
+
 INSERT INTO project (id, name, description) VALUES
                                                 (-1, 'Serious Business', 'This project beuts you aus'),
                                                 (-2, 'Expansion', 'This project aims to expand our operations globally.'),
@@ -39,7 +55,7 @@ INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx
 VALUES (1, -1, 'admin'), (1, -2, 'admin'), (1, -3, 'admin'), (1, -4, 'admin'), (1, -5, 'admin'), (1, -6, 'admin');
 
 INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username)
-VALUES (2, -1, 'johndoe'), (2, -2, 'johndoe'), (2, -3, 'johndoe'), (2, -4, 'johndoe'), (2, -5, 'johndoe'), (2, -6, 'johndoe');
+VALUES (2, -7, 'johndoe'), (2, -8, 'johndoe'), (2, -9, 'johndoe'), (2, -10, 'johndoe'), (2, -11, 'johndoe'), (2, -12, 'johndoe');
 
 -- INSERT INTO room (room_id) VALUES ('room_1');
 -- INSERT INTO room (room_id) VALUES ('room_2');
@@ -80,28 +96,28 @@ VALUES
     (50, '2024-05-15 15:00:00', null, 'johndoe', 'MEETING');
 
 
-INSERT INTO internal_record (id, groupx_id, groupx_project_group_id, groupx_project_project_id, project_id, start, time_end, ext_rec_start, user_name)
+INSERT INTO internal_record (id, group_id, project_id, start, time_end, ext_rec_start, user_name)
 VALUES
-    (-1, null, null, null, null, '2024-05-16 12:00:00', '2024-05-16 12:59:59', '2024-05-16 12:00:00', 'admin'),
-    (-3, null, -2, null, null, '2024-05-16 13:00:00', '2024-05-16 13:59:59', '2024-05-16 13:00:00', 'admin'),
-    (-4, null, null, null, null, '2024-05-16 14:00:00', '2024-05-17 08:59:59', '2024-05-16 14:00:00', 'admin'),
-    (-5, null, -3, null, null, '2024-05-17 09:00:00', '2024-05-17 10:59:59', '2024-05-17 09:00:00', 'admin'),
-    (-6, null, null, null, null, '2024-05-17 11:00:00', '2024-05-17 14:59:59', '2024-05-17 11:00:00', 'admin'),
-    (-7, null, -4, null, null, '2024-05-17 15:00:00', '2024-05-18 09:59:59', '2024-05-17 15:00:00', 'admin'),
-    (-8, null, null, null, null, '2024-05-18 10:00:00', '2024-05-18 13:59:59', '2024-05-18 10:00:00', 'admin'),
-    (-9, null, -5, null, null, '2024-05-18 14:00:00', '2024-05-18 15:59:59', '2024-05-18 14:00:00', 'admin'),
-    (-10, null, null, null, null, '2024-05-18 16:00:00', '2024-05-19 08:59:59', '2024-05-18 16:00:00', 'admin'),
-    (-11, null, -6, null, null, '2024-05-19 09:00:00', '2024-05-19 13:59:59', '2024-05-19 09:00:00', 'admin'),
-    (-12, null, null, null, null, '2024-05-19 14:00:00', null, '2024-05-19 14:00:00', 'admin'),
+    (-1, null, null, '2024-05-16 12:00:00', '2024-05-16 12:59:59', '2024-05-16 12:00:00', 'admin'),
+    (-3, 1, -2, '2024-05-16 13:00:00', '2024-05-16 13:59:59', '2024-05-16 13:00:00', 'admin'),
+    (-4, null, null, '2024-05-16 14:00:00', '2024-05-17 08:59:59', '2024-05-16 14:00:00', 'admin'),
+    (-5, 1, -3, '2024-05-17 09:00:00', '2024-05-17 10:59:59', '2024-05-17 09:00:00', 'admin'),
+    (-6, null, null, '2024-05-17 11:00:00', '2024-05-17 14:59:59', '2024-05-17 11:00:00', 'admin'),
+    (-7, 1, -4, '2024-05-17 15:00:00', '2024-05-18 09:59:59', '2024-05-17 15:00:00', 'admin'),
+    (-8, null, null, '2024-05-18 10:00:00', '2024-05-18 13:59:59', '2024-05-18 10:00:00', 'admin'),
+    (-9, 1, -5, '2024-05-18 14:00:00', '2024-05-18 15:59:59', '2024-05-18 14:00:00', 'admin'),
+    (-10, null, null, '2024-05-18 16:00:00', '2024-05-19 08:59:59', '2024-05-18 16:00:00', 'admin'),
+    (-11, 1, -6, '2024-05-19 09:00:00', '2024-05-19 13:59:59', '2024-05-19 09:00:00', 'admin'),
+    (-12, null, null, '2024-05-19 14:00:00', null, '2024-05-19 14:00:00', 'admin'),
 
-    (-2, null, -1, null, null, '2024-05-10 09:30:00', '2024-05-11 09:29:59', '2024-05-10 09:30:00', 'johndoe'),
-    (-13, null, null, null, null, '2024-05-11 10:00:00', '2024-05-11 12:59:59', '2024-05-11 10:00:00', 'johndoe'),
-    (-14, null, -7, null, null, '2024-05-11 13:00:00', '2024-05-12 10:59:59', '2024-05-11 13:00:00', 'johndoe'),
-    (-15, null, null, null, null, '2024-05-12 11:00:00', '2024-05-12 13:59:59', '2024-05-12 11:00:00', 'johndoe'),
-    (-16, null, -8, null, null, '2024-05-12 14:00:00', '2024-05-12 16:59:59', '2024-05-12 14:00:00', 'johndoe'),
-    (-17, null, null, null, null, '2024-05-13 08:00:00', '2024-05-13 10:59:59', '2024-05-13 08:00:00', 'johndoe'),
-    (-18, null, -9, null, null, '2024-05-13 11:00:00', '2024-05-14 08:59:59', '2024-05-13 11:00:00', 'johndoe'),
-    (-19, null, null, null, null, '2024-05-14 09:00:00', '2024-05-14 12:59:59', '2024-05-14 09:00:00', 'johndoe'),
-    (-20, null, -10, null, null, '2024-05-14 13:00:00', '2024-05-14 16:59:59', '2024-05-14 13:00:00', 'johndoe'),
-    (-21, null, null, null, null, '2024-05-15 10:00:00', '2024-05-15 14:59:59', '2024-05-15 10:00:00', 'johndoe'),
-    (-22, null, -11, null, null, '2024-05-15 15:00:00', null, '2024-05-15 15:00:00', 'johndoe');
+    (-2, 1, -1, '2024-05-10 09:30:00', '2024-05-11 09:29:59', '2024-05-10 09:30:00', 'johndoe'),
+    (-13, null, null, '2024-05-11 10:00:00', '2024-05-11 12:59:59', '2024-05-11 10:00:00', 'johndoe'),
+    (-14, 2, -7, '2024-05-11 13:00:00', '2024-05-12 10:59:59', '2024-05-11 13:00:00', 'johndoe'),
+    (-15, null, null, '2024-05-12 11:00:00', '2024-05-12 13:59:59', '2024-05-12 11:00:00', 'johndoe'),
+    (-16, 2, -8, '2024-05-12 14:00:00', '2024-05-12 16:59:59', '2024-05-12 14:00:00', 'johndoe'),
+    (-17, null, null, '2024-05-13 08:00:00', '2024-05-13 10:59:59', '2024-05-13 08:00:00', 'johndoe'),
+    (-18, 2, -9, '2024-05-13 11:00:00', '2024-05-14 08:59:59', '2024-05-13 11:00:00', 'johndoe'),
+    (-19, null, null, '2024-05-14 09:00:00', '2024-05-14 12:59:59', '2024-05-14 09:00:00', 'johndoe'),
+    (-20, 2, -10, '2024-05-14 13:00:00', '2024-05-14 16:59:59', '2024-05-14 13:00:00', 'johndoe'),
+    (-21, null, null, '2024-05-15 10:00:00', '2024-05-15 14:59:59', '2024-05-15 10:00:00', 'johndoe'),
+    (-22, 2, -11, '2024-05-15 15:00:00', null, '2024-05-15 15:00:00', 'johndoe');

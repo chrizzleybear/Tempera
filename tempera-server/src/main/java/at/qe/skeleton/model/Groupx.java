@@ -18,10 +18,6 @@ public class Groupx {
 
   @ManyToMany(cascade = CascadeType.ALL) private List<Userx> members;
 
-  //todo: projects entfernen
-  @ManyToMany(mappedBy = "groups")
-  private Set<Project> projects;
-
   @OneToMany(mappedBy = "group")
   private Set<GroupxProject> groupxProjects;
 
@@ -44,14 +40,12 @@ public class Groupx {
     this.description = description;
     this.groupLead = Objects.requireNonNull(groupLead, "GroupLead must not be null");
     this.members = new ArrayList<>();
-    this.projects = new HashSet<>();
   }
 
 
 
   protected Groupx() {
     this.members = new ArrayList<>();
-    this.projects = new HashSet<>();
   }
 
   public String getName() {
@@ -74,10 +68,6 @@ public class Groupx {
       throw new IllegalArgumentException("Description must not be null or empty");
     }
     this.description = description;
-  }
-
-  public Set<Project> getProjects() {
-    return projects;
   }
 
   public Set<GroupxProject> getGroupxProjects() {

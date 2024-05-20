@@ -9,7 +9,6 @@ import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.GroupxProjectRepository;
 import at.qe.skeleton.repositories.ProjectRepository;
 import at.qe.skeleton.repositories.UserxRepository;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -21,19 +20,17 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
-public class ProjectService {
+public class
+ProjectService {
 
   @Autowired private ProjectRepository projectRepository;
-
   @Autowired private UserxRepository userxRepository;
-
   @Autowired private GroupRepository groupRepository;
+  @Autowired private GroupxProjectRepository groupxProjectRepository;
 
   private static final String USER_NOT_FOUND = "User not found";
   private static final String PROJECT_NOT_FOUND = "Project not found";
   private static final String GROUP_NOT_FOUND = "Group not found";
-  @Autowired private GroupService groupService;
-  @Autowired private GroupxProjectRepository groupxProjectRepository;
 
   private Logger logger = Logger.getLogger("groupxProjectServiceLogger");
 
@@ -157,19 +154,21 @@ public class ProjectService {
     groupxProjectRepository.save(groupxProject);
   }
 
-  public List<Project> getProjectsForGroups(Long groupId) {
+  public List<Project> getProjectsByGroupId(Long groupId) {
     if (groupRepository.findById(groupId).isEmpty()) {
       throw new IllegalArgumentException(GROUP_NOT_FOUND);
     }
-    return projectRepository.findByGroupId(groupId);
+    List<GroupxProject> groupxProjects = groupxProjectRepository.findAllByGroup_Id(groupId);
+    return groupxProjects.stream().map(GroupxProject::getProject).toList();
   }
 
   public List<Project> getProjectsByManager(String username) {
     return projectRepository.findAllByManager_Username(username);
   }
 
-  public List<Project> getProjectsByContributor(String username) {
-    return projectRepository.findAllByContributors_Username(username);
+  public List<Project> getProjectsByContributor(Userx user) {
+    List<GroupxProject> groupxProjects = groupxProjectRepository.findAllByContributorsContains(user);
+    return groupxProjects.stream().map(GroupxProject::getProject).toList();
   }
 
   @Transactional
@@ -199,7 +198,15 @@ public class ProjectService {
     return groupxProjectRepository.findAllByProjectIdAndContributorsContaining(projectId, contributor);
   }
 
+  public List<GroupxProject> findAllGroupxProjectsOfAUser(Userx user){
+    return groupxProjectRepository.findAllByContributorsContains(user);
+  }
+
   public GroupxProject saveGroupxProject(GroupxProject groupxProject) {
     return groupxProjectRepository.save(groupxProject);
+  }
+
+  public List<GroupxProject> findAllGroupxProjectsByProjectId(Long projectId) {
+    return groupxProjectRepository.findAllByProjectId(projectId);
   }
 }

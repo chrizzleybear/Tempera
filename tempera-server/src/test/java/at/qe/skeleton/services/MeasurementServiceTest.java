@@ -26,8 +26,8 @@ class MeasurementServiceTest {
 
   private Sensor getSensor() {
     SensorId sensorId = new SensorId();
-    sensorId.setSensorId(-1L);
-    sensorId.setTemperaId("tempera_station_1");
+    sensorId.setSensorId(-10L);
+    sensorId.setTemperaId("TEMP123");
     return sensorService.findSensorById(sensorId);
   }
 
@@ -104,6 +104,7 @@ class MeasurementServiceTest {
 
   @Test
   @DirtiesContext
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:measurementServiceTest.sql")
   void saveLoadDeleteMeasurement() throws CouldNotFindEntityException {
     measurementRepository.findAll().forEach(measurementRepository::delete);
 

@@ -154,7 +154,7 @@ public class DashboardDataMapper {
     }
 
     List<ProjectDto> projects =
-        projectService.getProjectsByContributor(user.getUsername()).stream()
+        projectService.getProjectsByContributor(user).stream()
             .map(p -> new ProjectDto(p.getId().toString(), p.getName()))
             .toList();
 

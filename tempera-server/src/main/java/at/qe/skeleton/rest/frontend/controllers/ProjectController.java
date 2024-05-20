@@ -2,6 +2,7 @@ package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.Groupx;
+import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.rest.frontend.dtos.ContributorAssignmentDto;
 import at.qe.skeleton.rest.frontend.dtos.GroupAssignmentDto;
@@ -60,8 +61,9 @@ public class ProjectController {
   }
 
   @GetMapping("/getGroups/{id}")
-  public ResponseEntity<List<Groupx>> getGroups(@PathVariable Long id) {
-    List<Groupx> groups = projectService.loadProject(id).getGroups();
+  public ResponseEntity<List<Groupx>> getGroupsByProjectId(@PathVariable Long projectId) {
+    List<GroupxProject> groupxProjects = projectService.findAllGroupxProjectsByProjectId(projectId);
+    List<Groupx> groups = groupxProjects.stream().map(GroupxProject::getGroup).toList();
     return ResponseEntity.ok(groups);
   }
 
@@ -123,7 +125,7 @@ public class ProjectController {
 
   @GetMapping("/allOfGroup/{groupId}")
   public ResponseEntity<List<Project>> getProjects(@PathVariable String groupId) {
-    List<Project> projects = projectService.getProjectsForGroups(Long.parseLong(groupId));
+    List<Project> projects = projectService.getProjectsByGroupId(Long.parseLong(groupId));
     return ResponseEntity.ok(projects);
   }
 }

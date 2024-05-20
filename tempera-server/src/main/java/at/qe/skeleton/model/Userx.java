@@ -52,8 +52,6 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
 
   @ManyToMany(cascade = CascadeType.ALL, mappedBy = "members")
   private List<Groupx> groups;
-  @ManyToMany(cascade = CascadeType.ALL, mappedBy = "contributors")
-  private List<Project> projects;
 
   private String password;
 
@@ -169,16 +167,6 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     this.roles.add(role);
   }
 
-  public void addProject(Project project){
-    projects.add(project);
-    project.getContributors().add(this);
-  }
-
-  public void removeProject(Project project) {
-    projects.remove(project);
-    project.getContributors().remove(this);
-  }
-
   public void addGroup(Groupx group) {
     groups.add(group);
     group.getMembers().add(this);
@@ -195,14 +183,6 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
 
   public void setGroups(List<Groupx> groupxes) {
     this.groups = groupxes;
-  }
-
-  public List<Project> getProjects() {
-    return projects;
-  }
-
-  public void setProjects(List<Project> projects) {
-    this.projects = projects;
   }
 
   public void setDefaultProject(Project defaultProject) {

@@ -12,11 +12,6 @@ public interface ProjectRepository extends AbstractRepository<Project, Long>{
     Project findFirstByManager(Userx manager);
     void delete(Project project);
     Project findFirstById(Long id);
-
-    @Query("SELECT p FROM Project p JOIN p.groups g WHERE g.id = :groupId")
-    List<Project> findByGroupId(Long groupId);
-
     public List<Project> findAllByManager_Username(String username);
 
-    public List<Project> findAllByContributors_Username(String username);
 }

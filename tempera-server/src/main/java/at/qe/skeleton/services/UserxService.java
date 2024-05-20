@@ -160,13 +160,15 @@ public class UserxService implements UserDetailsService {
         }
       }
 
-      List<Project> projects = projectService.getProjectsByContributor(user.getUsername());
-      for (var project : projects) {
-        user.removeProject(project);
+      List<GroupxProject> groupxProjects = projectService.findAllGroupxProjectsOfAUser(user);
+      for (var groupxProject : groupxProjects) {
+        groupxProject.removeContributor(user);
+        projectService.saveGroupxProject(groupxProject);
       }
       List <Groupx> groupsAsMember = groupRepository.findAllByMembersContains(user);
       for (var group : groupsAsMember) {
         user.removeGroup(group);
+
       }
       externalRecordRepository.deleteAllByUser(user);
       user.removeTemperaStation();

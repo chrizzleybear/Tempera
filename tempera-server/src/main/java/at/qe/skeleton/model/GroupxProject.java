@@ -38,7 +38,7 @@ public class GroupxProject {
 
     public void addContributor(Userx contributor) {
         contributors.add(contributor);
-        contributor.addProject(project);
+        contributor.getGroupxProjects().add(this);
     }
 
     public void removeContributor(Userx contributor) {
@@ -98,5 +98,13 @@ public class GroupxProject {
         if (obj == null) return false;
         if (!(obj instanceof GroupxProject other)) return false;
         return Objects.equals(group, other.group) && Objects.equals(project, other.project);
+    }
+
+    @Override
+    public String toString() {
+        return "GroupxProject{" +
+                "group=" + group +
+                ", project=" + project +
+                '}';
     }
 }

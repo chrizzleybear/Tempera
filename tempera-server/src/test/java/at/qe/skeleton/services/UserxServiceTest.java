@@ -1,9 +1,7 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
-import at.qe.skeleton.model.Groupx;
-import at.qe.skeleton.model.Project;
-import at.qe.skeleton.model.TemperaStation;
+import at.qe.skeleton.model.*;
 import at.qe.skeleton.services.UserxService;
 import org.hibernate.annotations.processing.SQL;
 import org.junit.jupiter.api.Assertions;
@@ -19,12 +17,12 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.UserxRole;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -153,9 +151,10 @@ public class UserxServiceTest {
         for (Groupx groupx : usersGroups) {
             assertTrue(groupx.getMembers().contains(toBeDeletedUser), "The user is not reference in his Group %s".formatted(groupx.getName()));
         }
-        List<Project> usersProjects = toBeDeletedUser.getProjects();
-        for(Project project : usersProjects) {
-            assertTrue(project.getContributors().contains(toBeDeletedUser), "The user is not reference in his Project %s".formatted(project.getName()));
+        Set<GroupxProject> usersProjects = toBeDeletedUser.getGroupxProjects();
+        assertEquals(6, usersProjects.size(), "The user has not exactly six groupxProjects");
+        for(GroupxProject gxproject : usersProjects) {
+            assertTrue(gxproject.getContributors().contains(toBeDeletedUser), "The user is not reference in his gxProject %s".formatted(gxproject));
         }
         Assertions.assertNotNull(toBeDeletedUser, "User \"" + username + "\" could not be loaded from test data source");
 
@@ -168,8 +167,8 @@ public class UserxServiceTest {
         for (Groupx group : usersGroups) {
             assertFalse(group.getMembers().contains(toBeDeletedUser), "The user is still referenced in group %s".formatted(group.getName()));
         }
-        for (Project project : usersProjects) {
-            assertFalse(project.getContributors().contains(toBeDeletedUser), "The user is still refernced in project %s".formatted(project.getName()));
+        for (GroupxProject gxProject : usersProjects) {
+            assertFalse(gxProject.getContributors().contains(toBeDeletedUser), "The user is still refernced in GroupxProject %s".formatted(gxProject));
         }
         for (Userx remainingUser : userxService.getAllUsers()) {
             Assertions.assertNotEquals(toBeDeletedUser.getUsername(), remainingUser.getUsername(), "Deleted User \"" + username + "\" could still be loaded from test data source via UserService.getAllUsers");
