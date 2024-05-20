@@ -147,8 +147,6 @@ class TimeRecordServiceTest {
     assertEquals(10L, difference);
   }
 
-  //todo: add test for timerecord that is only 10th of a second after the one before
-
     @Test
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:addRecordWithOlderRecordsRealRepositoryTest.sql")
     @WithMockUser(username = "admin", roles = {"EMPLOYEE"})
