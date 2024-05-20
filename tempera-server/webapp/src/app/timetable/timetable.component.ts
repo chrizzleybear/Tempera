@@ -33,6 +33,7 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { StringToDatePipe } from '../_pipes/string-to-date.pipe';
 
 @Component({
   selector: 'app-timetable',
@@ -57,6 +58,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     MessagesModule,
     ToastModule,
     InputTextareaModule,
+    StringToDatePipe,
   ],
   templateUrl: './timetable.component.html',
   styleUrl: './timetable.component.css',
@@ -156,6 +158,10 @@ export class TimetableComponent implements OnInit {
     });
   }
 
+  onOpenSplitForm(rowIndex: number) {
+    this.selectedRowIndex = rowIndex;
+    this.splitForm.controls.time.setValue(new Date((this.table.value as TimetableEntryDto[])[rowIndex].startTimestamp!));
+  }
 
   onSplitFormSubmit() {
     const entries = this.table.value as TimetableEntryDto[];
@@ -230,4 +236,5 @@ export class TimetableComponent implements OnInit {
   //
   //   // call the API with the filter and sorting values
   // }
+  protected readonly Date = Date;
 }

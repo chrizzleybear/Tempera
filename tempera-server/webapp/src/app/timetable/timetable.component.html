@@ -81,7 +81,7 @@
           [tabindex]="rowIndex">{{ timeEntry.description }}
       </td>
       <td>
-        <p-button (onClick)="this.selectedRowIndex = rowIndex;op.toggle($event)">
+        <p-button (onClick)="this.onOpenSplitForm(rowIndex);op.toggle($event)">
           <i class="pi pi-pencil"></i>
         </p-button>
       </td>
@@ -89,11 +89,15 @@
   </ng-template>
 </p-table>
 
+<!-- Split time record dialog -->
 <p-overlayPanel #op (onHide)="splitForm.reset()">
   <form [formGroup]="splitForm" (ngSubmit)="this.splitForm.valid && this.onSplitFormSubmit()">
     <div class="text-lg pb-2"><strong>Split time record at:</strong></div>
     <p-calendar formControlName="time" class="pr-2"
-                [timeOnly]="true"
+                [showTime]="true"
+                hourFormat="24"
+                [minDate]="(timetableData?.tableEntries?.[selectedRowIndex]?.startTimestamp!) | stringToDate"
+                [maxDate]="(timetableData?.tableEntries?.[selectedRowIndex]?.endTimestamp!) | stringToDate"
     ></p-calendar>
     <p-message *ngIf="this.splitForm.controls.time.errors?.['notInRange'] && this.splitForm.touched"
                text="Time needs to be between start and end of existing time record" severity="error"
@@ -103,6 +107,7 @@
 </p-overlayPanel>
 <div>{{ "The total worked time with the current filters is " + this.totalTime.hours + " hours and " + this.totalTime.minutes + " minutes." }}</div>
 
+<!-- Edit description dialog -->
 <p-dialog [(visible)]="this.editDescriptionVisible" header="Edit description:"
           [modal]="true" class="w-2/3"
           (onHide)="this.descriptionForm.reset()">
