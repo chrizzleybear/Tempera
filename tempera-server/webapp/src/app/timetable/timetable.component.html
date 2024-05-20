@@ -3,24 +3,24 @@
          (onFilter)="calculateTotalTime()">
   <ng-template pTemplate="header">
     <tr>
-      <th pSortableColumn="startTimestamp">Date
+      <th id="date" pSortableColumn="startTimestamp">Date
         <p-sortIcon field="startTimestamp"></p-sortIcon>
       </th>
-      <th>Start</th>
-      <th>End</th>
-      <th>Project
+      <th id="start">Start</th>
+      <th id="end">End</th>
+      <th id="project">Project
       </th>
-      <th>State</th>
-      <th>Description</th>
-      <th></th>
+      <th id="state">State</th>
+      <th id="description">Description</th>
+      <th id="blank1"></th>
     </tr>
     <tr>
-      <th>
+      <th id="timeFilter">
         <p-columnFilter type="text" field="startTimestamp" matchMode="contains" placeholder="Search"></p-columnFilter>
       </th>
-      <th></th>
-      <th></th>
-      <th>
+      <th id="blank2"></th>
+      <th id="blank3"></th>
+      <th id="projectFilter">
         <p-columnFilter field="assignedProject.id" [showMenu]="false"
                         [showClearButton]="false">
           <ng-template pTemplate="filter" let-value let-filter="filterCallback">
@@ -31,7 +31,7 @@
           </ng-template>
         </p-columnFilter>
       </th>
-      <th>
+      <th id="stateFilter">
         <p-columnFilter field="state" [showMenu]="false" [showClearButton]="false">
           <ng-template pTemplate="filter" let-value let-filter="filterCallback">
             <p-dropdown [options]="stateOptions"
@@ -57,8 +57,8 @@
           </ng-template>
         </p-columnFilter>
       </th>
-      <th></th>
-      <th></th>
+      <th id="blank4"></th>
+      <th id="blank5"></th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-timeEntry let-rowIndex="rowIndex">
@@ -77,7 +77,9 @@
         <p-tag [value]="DisplayHelper.showState | wrapFn: timeEntry.state"
                [severity]="DisplayHelper.getStateSeverity | wrapFn: timeEntry.state"></p-tag>
       </td>
-      <td>{{ timeEntry.description }}</td>
+      <td (click)="onEditDescription(rowIndex)" class="cursor-pointer" (keydown)="onEditDescription(rowIndex)"
+          [tabindex]="rowIndex">{{ timeEntry.description }}
+      </td>
       <td>
         <p-button (onClick)="this.selectedRowIndex = rowIndex;op.toggle($event)">
           <i class="pi pi-pencil"></i>
@@ -100,4 +102,14 @@
   </form>
 </p-overlayPanel>
 <div>{{ "The total worked time with the current filters is " + this.totalTime.hours + " hours and " + this.totalTime.minutes + " minutes." }}</div>
+
+<p-dialog [(visible)]="this.editDescriptionVisible" header="Edit description:"
+          [modal]="true" class="w-2/3"
+          (onHide)="this.descriptionForm.reset()">
+  <form [formGroup]="descriptionForm" class="flex flex-col"
+        (ngSubmit)="this.descriptionForm.value && this.onDescriptionFormSubmit()">
+    <textarea type="text" pInputTextarea formControlName="description"></textarea>
+    <p-button label="Save" type="submit" [disabled]="!this.descriptionForm.dirty" class="pt-2"></p-button>
+  </form>
+</p-dialog>
 

@@ -32,6 +32,7 @@ import { MessageModule } from 'primeng/message';
 import { MessagesModule } from 'primeng/messages';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @Component({
   selector: 'app-timetable',
@@ -55,6 +56,7 @@ import { ToastModule } from 'primeng/toast';
     NgIf,
     MessagesModule,
     ToastModule,
+    InputTextareaModule,
   ],
   templateUrl: './timetable.component.html',
   styleUrl: './timetable.component.css',
@@ -71,6 +73,8 @@ export class TimetableComponent implements OnInit {
   protected readonly DisplayHelper = DisplayHelper;
 
   public totalTime: { hours: number, minutes: number } = { hours: 0, minutes: 0 };
+
+  public editDescriptionVisible: boolean = false;
 
 
   /*
@@ -107,6 +111,13 @@ export class TimetableComponent implements OnInit {
     time: new FormControl<Date | undefined>(undefined, {
       nonNullable: true,
       validators: [Validators.required, this.inPermittedTimeRangeValidator],
+    }),
+  });
+
+  public descriptionForm = new FormGroup({
+    description: new FormControl<string | undefined>(undefined, {
+      nonNullable: true,
+      validators: [Validators.required],
     }),
   });
 
@@ -147,7 +158,6 @@ export class TimetableComponent implements OnInit {
 
 
   onSplitFormSubmit() {
-    console.log(this.selectedRowIndex);
     const entries = this.table.value as TimetableEntryDto[];
     const timeEntryId = entries[this.selectedRowIndex].id!;
     const time = this.splitForm.controls.time.value?.toString()!;
@@ -159,6 +169,34 @@ export class TimetableComponent implements OnInit {
         error: () => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to split time entry' });
           console.error('Failed to split time entry');
+        },
+      },
+    );
+  }
+
+  onEditDescription(rowIndex: number) {
+    this.editDescriptionVisible = true;
+    this.selectedRowIndex = rowIndex;
+    this.descriptionForm.controls.description.setValue((this.table.value as TimetableEntryDto[])[rowIndex].description);
+  }
+
+  onDescriptionFormSubmit() {
+    const entries = this.table.value as TimetableEntryDto[];
+    const timeEntryId = entries[this.selectedRowIndex].id!;
+    const description = this.descriptionForm.controls.description.value!;
+    this.timetableControllerService.updateDescription({ entryId: timeEntryId, description }).subscribe(
+      {
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Description updated successfully',
+          });
+          this.editDescriptionVisible = false;
+        },
+        error: () => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update description' });
+          console.error('Failed to update description for time entry', timeEntryId);
         },
       },
     );
