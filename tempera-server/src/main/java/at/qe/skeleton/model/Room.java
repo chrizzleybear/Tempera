@@ -40,7 +40,7 @@ public class Room implements Persistable<String>, Serializable {
   /**
    * User can choose roomid but RoomService must ensure, that this id is not yet taken.
    *
-   * @param roomId the id, the user assignes to this room. it should be unique.
+   * @param roomId the id, the user assigns to this room. it should be unique.
    */
   public Room(String roomId) {
     this.roomId = roomId;

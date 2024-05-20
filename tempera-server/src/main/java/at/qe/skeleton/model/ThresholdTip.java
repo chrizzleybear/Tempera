@@ -20,7 +20,7 @@ public class ThresholdTip implements Serializable {
     this.tip = tip;
   }
 
-  public ThresholdTip() {}
+  public ThresholdTip() {this.tip = "No tips given."; }
 
   public String getTip() {
     return tip;

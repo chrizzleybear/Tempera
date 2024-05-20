@@ -3,6 +3,7 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.model.Room;
 import at.qe.skeleton.model.Threshold;
 import at.qe.skeleton.repositories.RoomRepository;
+import at.qe.skeleton.repositories.ThresholdRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -15,34 +16,48 @@ import java.util.Optional;
 @Scope("application")
 public class RoomService {
 
-
     private final RoomRepository roomRepository;
+
+    // required to load default threshold tips when creating a room
+    private final ThresholdRepository thresholdRepository;
+
     @Autowired
-    public RoomService(RoomRepository roomRepository) {
+    public RoomService(RoomRepository roomRepository, ThresholdRepository thresholdRepository) {
         this.roomRepository = roomRepository;
+        this.thresholdRepository = thresholdRepository;
     }
+
     @Transactional
     public List<Room> getAllRooms() {
         return roomRepository.findAll();
     }
+
     @Transactional
     public Room createRoom(String roomId) {
         if (roomRepository.existsById(roomId)) {
             throw new IllegalArgumentException("Room ID already in use: " + roomId);
         }
-        return roomRepository.save(new Room(roomId));
+        Room room = new Room(roomId);
+        // when a room is created, the default thresholds are added
+        for (Threshold t : thresholdRepository.findDefaultThresholds()) {
+            room.addThreshold(t);
+        }
+        return roomRepository.save(room);
     }
+
     @Transactional
     public void deleteRoom(String roomId) {
         Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("Room not found: " + roomId));
         roomRepository.delete(room);
     }
+
     @Transactional
     public boolean addThresholdToRoom(String roomId, Threshold threshold){
         Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("Room not found: " + roomId));
         room.addThreshold(threshold);
         return roomRepository.save(room) != null;
     }
+
     @Transactional
     public boolean removeThresholdFromRoom(String roomId, Threshold threshold){
         Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("Room not found: " + roomId));
@@ -52,6 +67,7 @@ public class RoomService {
         }
         return false;
     }
+
     public Optional<Room> getRoomById(String roomId) {
         return roomRepository.findById(roomId);
     }

@@ -14,7 +14,12 @@ public class Threshold implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  private boolean defaultThreshold;
+
+  @Enumerated(EnumType.STRING)
   private SensorType sensorType;
+
+  @Enumerated(EnumType.STRING)
   private ThresholdType thresholdType;
 
   @Column(name = "threshold_value")
@@ -22,6 +27,7 @@ public class Threshold implements Serializable {
 
   @OneToOne private Modification modification;
 
+  // TO-DO: can't this tip just be a String, does it really need its own class?
   @OneToOne private ThresholdTip tip;
 
   public SensorType getSensorType() {
@@ -69,7 +75,7 @@ public class Threshold implements Serializable {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Threshold threshold = (Threshold) o;
-    return id == threshold.id;
+    return id.equals(threshold.id);
   }
 
   @Override
