@@ -40,7 +40,7 @@ public class InternalRecord {
   @Column(name = "time_end")
   private LocalDateTime end;
 
-  // bidirectional one-to-many association
+  //todo: remove assignedProject and assigned Group and the getters and setters
   @ManyToOne
   @JoinColumn(name = "project_id")
   private Project assignedProject;
