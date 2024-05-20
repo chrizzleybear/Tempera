@@ -18,6 +18,7 @@ import {GroupProjectsComponent} from "./grouplead/group-projects/group-projects.
 import {RoomsComponent} from "./roomManagement/rooms/rooms.component";
 import {FloorPlanComponent} from "./rooms/floor-plan/floor-plan.component";
 import {RoomDetailsComponent} from "./roomManagement/room-details/room-details.component";
+import {OverviewChartsComponent} from "./climateCharts/overview-charts/overview-charts.component";
 
 export const routes: Routes = [
   {
@@ -38,6 +39,7 @@ export const routes: Routes = [
           { path: 'project/:id', component: ProjectDetailsComponent},
           { path: 'myGroups', component: GroupsGroupleadComponent},
           { path: 'group/projects/:id', component: GroupProjectsComponent},
+          { path: 'climateChart', component: OverviewChartsComponent},
         ],
       },
     ],
