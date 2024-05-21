@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,11 @@ public class TimetableDataService {
   private final UserxRepository userxRepository;
   private final UserxService userxService;
 
-  public TimetableDataService(ProjectService projectService, TimeRecordService timeRecordService, UserxRepository userxRepository, UserxService userxService) {
+  public TimetableDataService(
+      ProjectService projectService,
+      TimeRecordService timeRecordService,
+      UserxRepository userxRepository,
+      UserxService userxService) {
     this.projectService = projectService;
     this.timeRecordService = timeRecordService;
     this.userxRepository = userxRepository;
@@ -42,18 +47,17 @@ public class TimetableDataService {
   public GetTimetableDataResponse getTimetableData(Userx user, int page, int size) {
     List<InternalRecord> timeRecords = timeRecordService.getPageOfInternalRecords(user, page, size);
     List<TimetableEntryDto> tableEntries = new ArrayList<>();
-    //todo once frontend is ready add Groupx here as well (or just sent the entire Groupxproject.)
+    // todo once frontend is ready add Groupx here as well (or just sent the entire Groupxproject.)
     for (var timeRecord : timeRecords) {
       Long id = timeRecord.getId();
       String start = timeRecord.getStart().toString();
       String end = timeRecord.getEnd() == null ? null : timeRecord.getEnd().toString();
       String projectId;
       String projectName;
-      if (timeRecord.getGroupxProject() == null){
+      if (timeRecord.getGroupxProject() == null) {
         projectId = null;
         projectName = null;
-      }
-      else {
+      } else {
         projectId = timeRecord.getGroupxProject().getProject().getId().toString();
         projectName = timeRecord.getGroupxProject().getProject().getName();
       }
@@ -62,11 +66,14 @@ public class TimetableDataService {
       String description = timeRecord.getDescription();
       tableEntries.add(new TimetableEntryDto(id, start, end, project, state, description));
     }
-    List<ProjectDto> availableProjects = projectService.getProjectsByContributor(user).stream().map(p -> new ProjectDto(Long.toString(p.getId()), p.getName())).toList();
+    List<ProjectDto> availableProjects =
+        projectService.getProjectsByContributor(user).stream()
+            .map(p -> new ProjectDto(Long.toString(p.getId()), p.getName()))
+            .toList();
     return new GetTimetableDataResponse(tableEntries, availableProjects);
   }
 
-  //todo: testing and running the system
+  // todo: testing and running the system
 
   public MessageResponse updateProject(String username, UpdateProjectRequest request)
       throws CouldNotFindEntityException {
@@ -78,16 +85,23 @@ public class TimetableDataService {
     // then we need the findbyGroupIdAndProjectId...
 
     //  todo: write tests for this service class
-    List<GroupxProject> groupxProjects = projectService.findGroupxProjectsByContributorAndProjectId(user, projectId);
-    if(groupxProjects.isEmpty()){
-      throw new CouldNotFindEntityException("No Group with ProjectId %s and User %s found".formatted(projectId, username));
+    List<GroupxProject> groupxProjects =
+        projectService.findGroupxProjectsByContributorAndProjectId(user, projectId);
+    if (groupxProjects.isEmpty()) {
+      throw new CouldNotFindEntityException(
+          "No Group with ProjectId %s and User %s found".formatted(projectId, username));
     }
     GroupxProject groupxProject = groupxProjects.get(0);
     groupxProject.addInternalRecord(internalRecord);
     projectService.saveGroupxProject(groupxProject);
 
     return new MessageResponse(
-        "Set Project %s and Group %s for %s's internal record with id %d.".formatted(groupxProject.getProject(), groupxProject.getGroup(), username, internalRecord.getId()));
+        "Set Project %s and Group %s for %s's internal record with id %d."
+            .formatted(
+                groupxProject.getProject(),
+                groupxProject.getGroup(),
+                username,
+                internalRecord.getId()));
   }
 
   public MessageResponse updateProjectDescription(String username, UpdateDescriptionRequest request)
@@ -97,7 +111,8 @@ public class TimetableDataService {
     internalRecord = timeRecordService.saveInternalRecord(internalRecord);
 
     return new MessageResponse(
-        "Set new Description of %s's internal record with id %d.".formatted(username, internalRecord.getId()));
+        "Set new Description of %s's internal record with id %d."
+            .formatted(username, internalRecord.getId()));
   }
 
   @Transactional
@@ -105,7 +120,8 @@ public class TimetableDataService {
       throws CouldNotFindEntityException {
     InternalRecord oldInternalRecord = getInternalRecord(request.entryId());
     LocalDateTime oldEnd = oldInternalRecord.getEnd();
-    LocalDateTime newEnd = LocalDateTime.parse(request.splitTimestamp());
+    LocalDateTime newEnd =
+        LocalDateTime.parse(request.splitTimestamp(), DateTimeFormatter.ISO_DATE_TIME);
     oldInternalRecord.setEnd(newEnd);
     timeRecordService.saveInternalRecord(oldInternalRecord);
 
@@ -122,16 +138,19 @@ public class TimetableDataService {
 
     return new MessageResponse(
         "Set End at %s for oldInternalRecord of User %s with id %d to %s and created new Internal Record"
-            .formatted(newEnd.toString(), username, oldInternalRecord.getId(), oldInternalRecord.getEnd()));
+            .formatted(
+                newEnd.toString(),
+                username,
+                oldInternalRecord.getId(),
+                oldInternalRecord.getEnd()));
   }
 
   private InternalRecord getInternalRecord(Long id) throws CouldNotFindEntityException {
-    return
-        timeRecordService
-            .findInternalRecordById(id)
-            .orElseThrow(
-                () ->
-                    new CouldNotFindEntityException(
-                        "There is no Internal Record with the Id %d".formatted(id)));
+    return timeRecordService
+        .findInternalRecordById(id)
+        .orElseThrow(
+            () ->
+                new CouldNotFindEntityException(
+                    "There is no Internal Record with the Id %d".formatted(id)));
   }
 }

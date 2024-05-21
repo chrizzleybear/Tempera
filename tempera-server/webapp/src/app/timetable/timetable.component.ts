@@ -33,6 +33,7 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { CardModule } from 'primeng/card';
+import { DateTime } from 'luxon';
 
 interface InternalTimetableEntryDto extends TimetableEntryDto {
   startTime: Date;
@@ -181,7 +182,7 @@ export class TimetableComponent implements OnInit {
   onSplitFormSubmit() {
     const entries = this.table.value as InternalTimetableEntryDto[];
     const timeEntryId = entries[this.selectedRowIndex].id;
-    const time = this.splitForm.controls.time.value?.toString()!;
+    const time = DateTime.fromJSDate(this.splitForm.controls.time.value!).toString();
     this.timetableControllerService.splitTimeRecord({ entryId: timeEntryId, splitTimestamp: time }).subscribe(
       {
         next: () => {
