@@ -1,6 +1,6 @@
 <p-toast></p-toast>
 <p-table #table [value]="timetableData?.tableEntries ?? []" [globalFilterFields]="filterFields"
-         (onFilter)="calculateTotalTime()">
+         (onFilter)="calculateTotalTime()" [rows]="8" [paginator]="true">
   <ng-template pTemplate="header">
     <tr>
       <th id="date" pSortableColumn="startTimestamp">Date

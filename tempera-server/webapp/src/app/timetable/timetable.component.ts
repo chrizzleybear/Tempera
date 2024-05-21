@@ -214,17 +214,19 @@ export class TimetableComponent implements OnInit {
   calculateTotalTime() {
     let totalTimeTemp: number = 0;
     let tempEntries: TimetableEntryDto[];
-    if ((this.table as any)?.filteredValue?.length > 0) {
+    const filters = this.table?.filters as any;
+
+    if (filters['state']?.value || filters['assignedProject.id']?.value || filters['description']?.value) {
       tempEntries = this.table.filteredValue as TimetableEntryDto[];
     } else {
       tempEntries = this.table.value as TimetableEntryDto[];
     }
 
     tempEntries.forEach(entry => {
-      totalTimeTemp += new Date(entry.endTimestamp!).getTime() - new Date(entry.startTimestamp!).getTime();
+      totalTimeTemp += new Date(entry.endTimestamp!).getTime() - new Date(entry.startTimestamp!).getTime() - new Date(0, 0, 0, 1, 0, 0, 0).getTime();
     });
     const totalDate = new Date(totalTimeTemp);
-    this.totalTime = { hours: totalDate.getHours(), minutes: totalDate.getMinutes() };
+    this.totalTime = { hours: totalDate.getUTCHours(), minutes: totalDate.getUTCMinutes() };
   }
 
   // method to call onLazyLoad when enabled

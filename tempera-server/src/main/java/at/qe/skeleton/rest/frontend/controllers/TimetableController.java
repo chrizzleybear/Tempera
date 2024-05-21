@@ -43,7 +43,7 @@ public class TimetableController {
             "This project is nice.");
     return ResponseEntity.ok(
         new GetTimetableDataResponse(
-            List.of(entry1, entry2),
+            List.of(entry1, entry2, entry1, entry2, entry1, entry2, entry1, entry2, entry1, entry2),
             List.of(new ProjectDto("1", "Project 1"), new ProjectDto("2", "Project 2"))));
   }
 
