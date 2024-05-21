@@ -91,10 +91,10 @@ INSERT INTO access_point (enabled, id, room_room_id) VALUES
 
 -- Stations in room
 INSERT INTO TEMPERA_STATION (ENABLED, access_point_id, USER_USERNAME, ID) VALUES
-    (TRUE, '123e4567-e89b-12d3-a456-426614174001','admin', 'tempera_station_1');
-    (FALSE,'123e4567-e89b-12d3-a456-426614174001', 'user2', 'tempera_station_disabled_2');
-    (FALSE, '123e4567-e89b-12d3-a456-426614174001', 'user1', 'tempera_station_disabled');
-    (FALSE, '123e4567-e89b-12d3-a456-426614174001', 'elvis', 'tempera_station_disabled_elvis');
+    (TRUE, '123e4567-e89b-12d3-a456-426614174001','admin', 'tempera_station_1'),
+    (FALSE,'123e4567-e89b-12d3-a456-426614174001', 'user2', 'tempera_station_disabled_2'),
+    (FALSE, '123e4567-e89b-12d3-a456-426614174001', 'user1', 'tempera_station_disabled'),
+    (FALSE, '123e4567-e89b-12d3-a456-426614174001', 'elvis', 'tempera_station_disabled_elvis'),
     (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'johndoe', 'TEMP123'),
     (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'bobjones', 'TEMP125'),
     (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'alicebrown', 'TEMP126'),
@@ -234,17 +234,25 @@ INSERT INTO Modification (id, reason, timeStamp) VALUES
     (0, 'Default threshold.', NULL);
 INSERT INTO Threshold (id, defaultThreshold, sensorType, thresholdType, threshold_value, modification, tip) VALUES
     -- Temperature
-    (01, TRUE, TEMPERATURE, LOWERBOUND, 19.0, 0, 00),
-    (02, TRUE, TEMPERATURE, UPPERBOUND, 25.0, 0, 01),
+    (11, TRUE, TEMPERATURE, 1, 20.0, 0, 00),
+    (12, TRUE, TEMPERATURE, 3, 19.0, 0, 00),
+    (13, TRUE, TEMPERATURE, 0, 24.0, 0, 01),
+    (14, TRUE, TEMPERATURE, 2, 25.0, 0, 01),
     -- Humidity
-    (03, TRUE, HUMIDITY, LOWERBOUND, 40.0, 0, 10),
-    (04, TRUE, HUMIDITY, UPPERBOUND, 70.0, 0, 11),
+    (21, TRUE, HUMIDITY, 1, 50.0, 0, 10),
+    (22, TRUE, HUMIDITY, 3, 40.0, 0, 10),
+    (23, TRUE, HUMIDITY, 0, 60.0, 0, 11),
+    (24, TRUE, HUMIDITY, 2, 70.0, 0, 11),
     -- Irradiance
-    (05, TRUE, IRRADIANCE, LOWERBOUND, 200.0, 0, 20),
-    (06, TRUE, IRRADIANCE, UPPERBOUND, 600.0, 0, 21),
+    (31, TRUE, IRRADIANCE, 1, 220.0, 0, 20),
+    (32, TRUE, IRRADIANCE, 3, 200.0, 0, 20),
+    (33, TRUE, IRRADIANCE, 0, 540.0, 0, 21),
+    (34, TRUE, IRRADIANCE, 2, 600.0, 0, 21),
     -- Air quality
-    (07, TRUE, NMVOC, LOWERBOUND, 10.0, 0, 30),
-    (08, TRUE, NMVOC, UPPERBOUND, NULL, 0, 30);
+    (41, TRUE, NMVOC, 1, 11.0, 0, 30),
+    (42, TRUE, NMVOC, 3, 10.0, 0, 30),
+    (43, TRUE, NMVOC, 0, NULL, 0, 30),
+    (44, TRUE, NMVOC, 2, NULL, 0, 30);
 
 
 

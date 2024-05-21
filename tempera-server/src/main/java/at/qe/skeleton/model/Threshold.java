@@ -16,10 +16,8 @@ public class Threshold implements Serializable {
 
   private boolean defaultThreshold;
 
-  @Enumerated(EnumType.STRING)
   private SensorType sensorType;
 
-  @Enumerated(EnumType.STRING)
   private ThresholdType thresholdType;
 
   @Column(name = "threshold_value")
@@ -27,7 +25,6 @@ public class Threshold implements Serializable {
 
   @OneToOne private Modification modification;
 
-  // TO-DO: can't this tip just be a String, does it really need its own class?
   @OneToOne private ThresholdTip tip;
 
   public SensorType getSensorType() {

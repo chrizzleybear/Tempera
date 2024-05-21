@@ -2,6 +2,7 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.Room;
 import at.qe.skeleton.model.Threshold;
+import at.qe.skeleton.model.enums.ThresholdType;
 import at.qe.skeleton.repositories.RoomRepository;
 import at.qe.skeleton.repositories.ThresholdRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Component
 @Scope("application")
@@ -56,6 +58,13 @@ public class RoomService {
         Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("Room not found: " + roomId));
         room.addThreshold(threshold);
         return roomRepository.save(room) != null;
+    }
+
+    @Transactional
+    public List<Threshold> getAllThresholdsOfRoom(String roomId){
+        Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("Room not found: " + roomId));
+        Set<Threshold> thresholds = room.getThresholds();
+        return thresholds.stream().toList();
     }
 
     @Transactional
