@@ -1,12 +1,11 @@
 <p-toast></p-toast>
-<p-table #table [value]="timetableData?.tableEntries ?? []" [globalFilterFields]="filterFields"
-         (onFilter)="calculateTotalTime()" [rows]="8" [paginator]="true">
+<p-table #table [value]="tableEntries ?? []" [globalFilterFields]="filterFields"
+         (onFilter)="calculateTotalTime()" [rows]="7" [paginator]="true" sortField="startTime" [sortOrder]="1">
   <ng-template pTemplate="header">
     <tr>
-      <th id="date" pSortableColumn="startTimestamp">Date
-        <p-sortIcon field="startTimestamp"></p-sortIcon>
+      <th id="start" pSortableColumn="startTime">Start
+        <p-sortIcon field="startTime"></p-sortIcon>
       </th>
-      <th id="start">Start</th>
       <th id="end">End</th>
       <th id="project">Project
       </th>
@@ -14,18 +13,18 @@
       <th id="description">Description</th>
       <th id="blank1"></th>
     </tr>
+    <!--    Filters     -->
     <tr>
       <th id="timeFilter">
-        <p-columnFilter type="text" field="startTimestamp" matchMode="contains" placeholder="Search"></p-columnFilter>
+        <p-columnFilter type="date" field="startTime" placeholder="Search"></p-columnFilter>
       </th>
-      <th id="blank2"></th>
       <th id="blank3"></th>
       <th id="projectFilter">
         <p-columnFilter field="assignedProject.id" [showMenu]="false"
                         [showClearButton]="false">
           <ng-template pTemplate="filter" let-value let-filter="filterCallback">
             <p-dropdown
-              [options]="timetableData?.availableProjects ?? []" [showClear]="true"
+              [options]="availableProjects" [showClear]="true"
               (onChange)="filter($event.value?.id)"
               optionLabel="name" appendTo="body" placeholder="Select one"></p-dropdown>
           </ng-template>
@@ -63,11 +62,10 @@
   </ng-template>
   <ng-template pTemplate="body" let-timeEntry let-rowIndex="rowIndex">
     <tr>
-      <td>{{ timeEntry.startTimestamp | date: 'fullDate' }}</td>
-      <td>{{ timeEntry.startTimestamp | date: 'HH:mm' }}</td>
-      <td>{{ timeEntry.endTimestamp | date: 'HH:mm' }}</td>
+      <td>{{ timeEntry.startTime | date: 'ccc, MMM dd, y, HH:mm' }}</td>
+      <td>{{ timeEntry.endTime | date: 'ccc, MMM dd, y, HH:mm' }}</td>
       <td>
-        <p-dropdown [options]="timetableData?.availableProjects" [(ngModel)]="timeEntry.assignedProject"
+        <p-dropdown [options]="availableProjects" [(ngModel)]="timeEntry.assignedProject"
                     (onChange)="updateProject($event.value, timeEntry.id)"
                     optionLabel="name"
                     placeholder="Select project"
@@ -96,8 +94,8 @@
     <p-calendar formControlName="time" class="pr-2"
                 [showTime]="true"
                 hourFormat="24"
-                [minDate]="(timetableData?.tableEntries?.[selectedRowIndex]?.startTimestamp!) | stringToDate"
-                [maxDate]="(timetableData?.tableEntries?.[selectedRowIndex]?.endTimestamp!) | stringToDate"
+                [minDate]="(tableEntries?.[selectedRowIndex]?.startTime!)"
+                [maxDate]="(tableEntries?.[selectedRowIndex]?.endTime!)"
     ></p-calendar>
     <p-message *ngIf="this.splitForm.controls.time.errors?.['notInRange'] && this.splitForm.touched"
                text="Time needs to be between start and end of existing time record" severity="error"
@@ -105,7 +103,11 @@
     <p-button label="Confirm" type="submit" [disabled]="!this.splitForm.valid"></p-button>
   </form>
 </p-overlayPanel>
-<div>{{ "The total worked time with the current filters is " + this.totalTime.hours + " hours and " + this.totalTime.minutes + " minutes." }}</div>
+<div class="pt-2">
+  <p-card styleClass="text-lg text-center">
+    {{ "The total worked time with the current filters is " + this.totalTime.hours + " hours and " + this.totalTime.minutes + " minutes." }}
+  </p-card>
+</div>
 
 <!-- Edit description dialog -->
 <p-dialog [(visible)]="this.editDescriptionVisible" header="Edit description:"

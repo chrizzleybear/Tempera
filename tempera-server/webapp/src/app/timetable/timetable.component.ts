@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   ColleagueStateDto,
-  GetTimetableDataResponse,
   ProjectDto,
   TimetableControllerService, TimetableEntryDto,
 } from '../../api';
@@ -33,7 +32,13 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { StringToDatePipe } from '../_pipes/string-to-date.pipe';
+import { CardModule } from 'primeng/card';
+
+interface InternalTimetableEntryDto extends TimetableEntryDto {
+  startTime: Date;
+  endTime: Date;
+
+}
 
 @Component({
   selector: 'app-timetable',
@@ -58,17 +63,19 @@ import { StringToDatePipe } from '../_pipes/string-to-date.pipe';
     MessagesModule,
     ToastModule,
     InputTextareaModule,
-    StringToDatePipe,
+    CardModule,
   ],
   templateUrl: './timetable.component.html',
   styleUrl: './timetable.component.css',
 })
 export class TimetableComponent implements OnInit {
-  public timetableData?: GetTimetableDataResponse;
+  public tableEntries: InternalTimetableEntryDto[] = [];
+
+  public availableProjects: ProjectDto[] = [];
 
   public filterFields: string[] = [];
 
-  public stateOptions: StateEnum[] = (Object.values(StateEnum) as StateEnum[]);
+  public stateOptions: StateEnum[] = (Object.values(StateEnum));
 
   public selectedRowIndex: number = 0;
 
@@ -77,6 +84,8 @@ export class TimetableComponent implements OnInit {
   public totalTime: { hours: number, minutes: number } = { hours: 0, minutes: 0 };
 
   public editDescriptionVisible: boolean = false;
+
+  protected readonly Date = Date;
 
 
   /*
@@ -95,10 +104,10 @@ export class TimetableComponent implements OnInit {
       return null;
     }
 
-    const entries = this.table.value as TimetableEntryDto[];
+    const entries = this.table.value as InternalTimetableEntryDto[];
 
-    const minStartTime = new Date(entries[this.selectedRowIndex].startTimestamp!);
-    const maxEndTime = new Date(entries[this.selectedRowIndex].endTimestamp!);
+    const minStartTime = entries[this.selectedRowIndex].startTime;
+    const maxEndTime = entries[this.selectedRowIndex].endTime;
     control.value?.setDate(minStartTime.getDate());
     control.value?.setMilliseconds(0);
 
@@ -129,9 +138,15 @@ export class TimetableComponent implements OnInit {
   ngOnInit(): void {
     this.timetableControllerService.getTimetableData().subscribe({
         next: data => {
-          this.timetableData = data;
+          this.tableEntries = data.tableEntries?.map(entry => ({
+            ...entry,
+            startTime: new Date(entry.startTimestamp),
+            endTime: new Date(entry.endTimestamp),
+          })) ?? [];
 
-          this.filterFields = Object.keys(this.timetableData?.tableEntries?.[0] ?? []);
+          this.availableProjects = data.availableProjects ?? [];
+
+          this.filterFields = Object.keys(this.tableEntries?.[0] ?? []);
 
           this.calculateTotalTime();
         },
@@ -157,15 +172,15 @@ export class TimetableComponent implements OnInit {
       },
     });
   }
-
+  
   onOpenSplitForm(rowIndex: number) {
     this.selectedRowIndex = rowIndex;
-    this.splitForm.controls.time.setValue(new Date((this.table.value as TimetableEntryDto[])[rowIndex].startTimestamp!));
+    this.splitForm.controls.time.setValue((this.table.value as InternalTimetableEntryDto[])[rowIndex].startTime);
   }
 
   onSplitFormSubmit() {
-    const entries = this.table.value as TimetableEntryDto[];
-    const timeEntryId = entries[this.selectedRowIndex].id!;
+    const entries = this.table.value as InternalTimetableEntryDto[];
+    const timeEntryId = entries[this.selectedRowIndex].id;
     const time = this.splitForm.controls.time.value?.toString()!;
     this.timetableControllerService.splitTimeRecord({ entryId: timeEntryId, splitTimestamp: time }).subscribe(
       {
@@ -183,12 +198,12 @@ export class TimetableComponent implements OnInit {
   onEditDescription(rowIndex: number) {
     this.editDescriptionVisible = true;
     this.selectedRowIndex = rowIndex;
-    this.descriptionForm.controls.description.setValue((this.table.value as TimetableEntryDto[])[rowIndex].description);
+    this.descriptionForm.controls.description.setValue((this.table.value as InternalTimetableEntryDto[])[rowIndex].description);
   }
 
   onDescriptionFormSubmit() {
-    const entries = this.table.value as TimetableEntryDto[];
-    const timeEntryId = entries[this.selectedRowIndex].id!;
+    const entries = this.table.value as InternalTimetableEntryDto[];
+    const timeEntryId = entries[this.selectedRowIndex].id;
     const description = this.descriptionForm.controls.description.value!;
     this.timetableControllerService.updateDescription({ entryId: timeEntryId, description }).subscribe(
       {
@@ -213,17 +228,17 @@ export class TimetableComponent implements OnInit {
    */
   calculateTotalTime() {
     let totalTimeTemp: number = 0;
-    let tempEntries: TimetableEntryDto[];
+    let tempEntries: InternalTimetableEntryDto[];
     const filters = this.table?.filters as any;
 
-    if (filters['state']?.value || filters['assignedProject.id']?.value || filters['description']?.value) {
-      tempEntries = this.table.filteredValue as TimetableEntryDto[];
+    if (filters['startTime']?.value || filters['state']?.value || filters['assignedProject.id']?.value || filters['description']?.value) {
+      tempEntries = this.table.filteredValue as InternalTimetableEntryDto[];
     } else {
-      tempEntries = this.table.value as TimetableEntryDto[];
+      tempEntries = this.table.value as InternalTimetableEntryDto[];
     }
 
     tempEntries.forEach(entry => {
-      totalTimeTemp += new Date(entry.endTimestamp!).getTime() - new Date(entry.startTimestamp!).getTime() - new Date(0, 0, 0, 1, 0, 0, 0).getTime();
+      totalTimeTemp += entry.endTime.getTime() - entry.startTime.getTime() - new Date(0, 0, 0, 1, 0, 0, 0).getTime();
     });
     const totalDate = new Date(totalTimeTemp);
     this.totalTime = { hours: totalDate.getUTCHours(), minutes: totalDate.getUTCMinutes() };
@@ -238,5 +253,4 @@ export class TimetableComponent implements OnInit {
   //
   //   // call the API with the filter and sorting values
   // }
-  protected readonly Date = Date;
 }
