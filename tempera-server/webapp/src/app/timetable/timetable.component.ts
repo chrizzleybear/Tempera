@@ -172,7 +172,7 @@ export class TimetableComponent implements OnInit {
       },
     });
   }
-  
+
   onOpenSplitForm(rowIndex: number) {
     this.selectedRowIndex = rowIndex;
     this.splitForm.controls.time.setValue((this.table.value as InternalTimetableEntryDto[])[rowIndex].startTime);
@@ -238,10 +238,14 @@ export class TimetableComponent implements OnInit {
     }
 
     tempEntries.forEach(entry => {
-      totalTimeTemp += entry.endTime.getTime() - entry.startTime.getTime() - new Date(0, 0, 0, 1, 0, 0, 0).getTime();
+      totalTimeTemp += entry.endTime.getTime() - entry.startTime.getTime();
     });
-    const totalDate = new Date(totalTimeTemp);
-    this.totalTime = { hours: totalDate.getUTCHours(), minutes: totalDate.getUTCMinutes() };
+    const hours = Math.floor(totalTimeTemp / 3600000);
+
+    const remainingTime = totalTimeTemp % 3600000;
+
+    const minutes = Math.floor(remainingTime / 60000);
+    this.totalTime = { hours: hours, minutes: minutes };
   }
 
   // method to call onLazyLoad when enabled
