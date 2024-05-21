@@ -22,7 +22,7 @@
         <p-columnFilter type="date" field="endTime" placeholder="Search"></p-columnFilter>
       </th>
       <th id="projectFilter">
-        <p-columnFilter field="assignedProject.id" [showMenu]="false"
+        <p-columnFilter field="assignedProject.id" [showMenu]="true"
                         [showClearButton]="false">
           <ng-template pTemplate="filter" let-value let-filter="filterCallback">
             <p-dropdown
@@ -33,7 +33,7 @@
         </p-columnFilter>
       </th>
       <th id="stateFilter">
-        <p-columnFilter field="state" [showMenu]="false" [showClearButton]="false">
+        <p-columnFilter field="state" [showMenu]="true" [showClearButton]="false">
           <ng-template pTemplate="filter" let-value let-filter="filterCallback">
             <p-dropdown [options]="stateOptions"
                         [showClear]="true"
