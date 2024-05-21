@@ -14,18 +14,23 @@ public class Threshold implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(name = "default_threshold")
   private boolean defaultThreshold;
 
+  @Column(name = "sensor_type")
   private SensorType sensorType;
 
+  @Column(name = "threshold_type")
   private ThresholdType thresholdType;
 
   @Column(name = "threshold_value")
   private double value;
 
-  @OneToOne private Modification modification;
+  @OneToOne
+  private Modification modification;
 
-  @OneToOne private ThresholdTip tip;
+  @OneToOne
+  private ThresholdTip tip;
 
   public SensorType getSensorType() {
     return sensorType;
@@ -38,6 +43,8 @@ public class Threshold implements Serializable {
   public ThresholdType getThresholdType() {
     return thresholdType;
   }
+
+  public boolean isDefaultThreshold() { return defaultThreshold; }
 
   public void setThresholdType(ThresholdType thresholdType) {
     this.thresholdType = thresholdType;
