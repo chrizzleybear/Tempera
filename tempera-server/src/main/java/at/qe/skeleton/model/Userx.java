@@ -45,12 +45,13 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   @JsonIgnore
   private LocalDateTime updateDate;
 
-  @OneToOne (mappedBy = "user") private TemperaStation temperaStation;
+  @OneToOne (mappedBy = "user", cascade = CascadeType.ALL) private TemperaStation temperaStation;
+
+  @ManyToMany(mappedBy = "contributors")
+  private Set<GroupxProject> groupxProjects;
 
   @ManyToMany(cascade = CascadeType.ALL, mappedBy = "members")
-  private List<Group> groups;
-  @ManyToMany(cascade = CascadeType.ALL, mappedBy = "contributors")
-  private List<Project> projects;
+  private List<Groupx> groups;
 
   private String password;
 
@@ -80,7 +81,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     this.createDate = createDate;
   }
 
-  public List<Group> getGroups() {
+  public List<Groupx> getGroups() {
     return groups;
   }
 
@@ -100,6 +101,9 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     }
   }
 
+  public Set<GroupxProject> getGroupxProjects() {
+    return this.groupxProjects;
+  }
   public String getUsername() {
     return username;
   }
@@ -163,20 +167,22 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     this.roles.add(role);
   }
 
+  public void addGroup(Groupx group) {
+    groups.add(group);
+    group.getMembers().add(this);
+  }
+
+  public void removeGroup(Groupx group) {
+    groups.remove(group);
+    group.getMembers().remove(this);
+  }
+
   public Project getDefaultProject() {
     return defaultProject;
   }
 
-  public void setGroups(List<Group> groups) {
-    this.groups = groups;
-  }
-
-  public List<Project> getProjects() {
-    return projects;
-  }
-
-  public void setProjects(List<Project> projects) {
-    this.projects = projects;
+  public void setGroups(List<Groupx> groupxes) {
+    this.groups = groupxes;
   }
 
   public void setDefaultProject(Project defaultProject) {

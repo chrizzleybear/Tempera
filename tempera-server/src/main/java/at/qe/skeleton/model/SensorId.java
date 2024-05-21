@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import java.io.Serializable;
 import java.util.Objects;
 
-// todo finish the empedded id key
 
 /**
  * This class represents the composite key of the Sensor entity. It consists of the sensorId and the

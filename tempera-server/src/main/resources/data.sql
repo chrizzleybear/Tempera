@@ -38,25 +38,26 @@ INSERT INTO userx (enabled, default_project_id, state, state_visibility, create_
 INSERT INTO userx_userx_role (userx_username, roles) VALUES ('johndoe', 'EMPLOYEE'), ('bobjones', 'EMPLOYEE'), ('alicebrown', 'EMPLOYEE'), ('chriswilliams', 'EMPLOYEE'), ('peterparker', 'EMPLOYEE'), ('tonystark', 'EMPLOYEE'), ('brucewayne', 'EMPLOYEE'), ('clarkkent', 'EMPLOYEE');
 INSERT INTO userx_userx_role (userx_username, roles) VALUES ('brucewayne', 'MANAGER');
 
-INSERT INTO project_contributors (project_id, username) VALUES
-                                                                         (-1, 'admin'), (-1, 'bobjones'), (-1, 'johndoe'), (-1, 'alicebrown'), (-1, 'brucewayne'), (-1, 'clarkkent'),
-                                                                         (-2, 'admin'), (-2, 'bobjones'), (-2, 'johndoe'), (-2, 'alicebrown'), (-2, 'brucewayne'), (-2, 'clarkkent'),
-                                                                         (-3, 'admin'), (-3, 'bobjones'), (-3, 'johndoe'), (-3, 'alicebrown'), (-3, 'brucewayne'), (-3, 'clarkkent'),
-                                                                         (-4, 'admin'), (-4, 'bobjones'), (-4, 'johndoe'), (-4, 'alicebrown'), (-4, 'brucewayne'), (-4, 'clarkkent'),
-                                                                         (-5, 'admin'), (-5, 'bobjones'), (-5, 'johndoe'), (-5, 'alicebrown'), (-5, 'brucewayne'), (-5, 'clarkkent'),
-                                                                         (-6, 'admin'), (-6, 'bobjones'), (-6, 'johndoe'), (-6, 'alicebrown'), (-6, 'brucewayne'), (-6, 'clarkkent'),
-                                                                         (-7, 'admin'), (-7, 'bobjones'), (-7, 'johndoe'), (-7, 'alicebrown'), (-7, 'brucewayne'), (-7, 'clarkkent'),
-                                                                         (-8, 'admin'), (-8, 'bobjones'), (-8, 'johndoe'), (-8, 'alicebrown'), (-8, 'brucewayne'), (-8, 'clarkkent'),
-                                                                         (-9, 'admin'), (-9, 'bobjones'), (-9, 'johndoe'), (-9, 'alicebrown'), (-9, 'brucewayne'), (-9, 'clarkkent'),
-                                                                         (-10, 'admin'), (-10, 'bobjones'), (-10, 'johndoe'), (-10, 'alicebrown'), (-10, 'brucewayne'), (-10, 'clarkkent'),
-                                                                         (-11, 'admin'), (-11, 'bobjones'), (-11, 'johndoe'), (-11, 'alicebrown'), (-11, 'brucewayne'), (-11, 'clarkkent'),
-                                                                         (-12, 'admin'), (-12, 'bobjones'), (-12, 'johndoe'), (-12, 'alicebrown'), (-12, 'brucewayne'), (-12, 'clarkkent');
-
 -- add some Groups to test db
 INSERT INTO groupx (id, group_lead_username, description, name) VALUES (1,'brucewayne', 'this is just for testing', 'testGroup1');
 INSERT INTO groupx (id, group_lead_username, description, name) VALUES (2,'brucewayne', 'this is also just for testing', 'testGroup2');
 INSERT INTO groupx (id, group_lead_username, description, name) VALUES (3,'brucewayne', 'this is also just for testing', 'outsiderGroup');
 INSERT INTO groupx (id, group_lead_username, description, name) VALUES (4,'brucewayne', 'this is also just for testing', 'outsiderGroup2');
+
+-- add some of the created projects to some GroupxProject Objects:
+-- add Serious Business, Expansion, Innovation, Efficiency,Sustainability and Customer Satisfaction to testGroup1
+INSERT INTO groupx_project_object (group_id, project_id)
+VALUES (1, -1), (1, -2), (1, -3), (1, -4), (1,-5), (1, -6);
+
+-- add Product Development, Cost Reduction, Quality Assurance, Marketing Campaign Launch, Training and Development and Infrastructure Upgrade to testGroup2
+INSERT INTO groupx_project_object (group_id, project_id)
+Values (2, -7), (2, -8), (2, -9), (2, -10), (2, -11), (2, -12);
+
+INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username)
+VALUES (1, -1, 'admin'), (1, -2, 'admin'), (1, -3, 'admin'), (1, -4, 'admin'), (1, -5, 'admin'), (1, -6, 'admin');
+INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username)
+VALUES (2, -7, 'johndoe'), (2, -8, 'johndoe'), (2, -9, 'johndoe'), (2, -10, 'johndoe'), (2, -11, 'johndoe'), (2, -12, 'johndoe');
+
 
 INSERT INTO groupx_members (groups_id, members_username) VALUES (1, 'johndoe'), (2, 'johndoe');
 INSERT INTO groupx_members (groups_id, members_username) VALUES (1, 'alicebrown'), (3, 'alicebrown'), (4, 'alicebrown');
@@ -69,6 +70,64 @@ INSERT INTO groupx_members (groups_id, members_username) VALUES (3, 'tonystark')
 INSERT INTO groupx_members (groups_id, members_username) VALUES (3, 'clarkkent'), (4, 'clarkkent');
 
 
+-- Testdata for TimeRecordService
+INSERT INTO external_record (duration, start, time_end, user_username, state)
+VALUES
+    (30, '2024-05-16 12:00:00', '2024-05-16 12:29:59', 'admin', 'DEEPWORK'),
+    (45, '2024-05-16 13:00:00', '2024-05-16 13:44:59', 'admin', 'DEEPWORK'),
+    (90, '2024-05-16 14:00:00', '2024-05-16 15:29:59', 'admin', 'MEETING'),
+    (120, '2024-05-17 09:00:00', '2024-05-17 10:59:59', 'admin', 'MEETING'),
+    (60, '2024-05-17 11:00:00', '2024-05-17 11:59:59', 'admin', 'AVAILABLE'),
+    (300, '2024-05-17 15:00:00', '2024-05-17 19:59:59', 'admin', 'OUT_OF_OFFICE'),
+    (200, '2024-05-18 10:00:00', '2024-05-18 13:19:59', 'admin', 'AVAILABLE'),
+    (100, '2024-05-18 14:00:00', '2024-05-18 15:39:59', 'admin', 'MEETING'),
+    (50, '2024-05-18 16:00:00', '2024-05-18 16:49:59', 'admin', 'OUT_OF_OFFICE'),
+    (400, '2024-05-19 09:00:00', '2024-05-19 15:39:59', 'admin', 'AVAILABLE'),
+    (150, '2024-05-19 14:00:00', null, 'admin', 'DEEPWORK'),
+
+    (3400, '2024-05-10 09:30:00', '2024-05-11 10:29:59', 'johndoe', 'DEEPWORK'),
+    (60, '2024-05-11 10:00:00', '2024-05-11 10:59:59', 'johndoe', 'MEETING'),
+    (45, '2024-05-11 13:00:00', '2024-05-11 13:44:59', 'johndoe', 'OUT_OF_OFFICE'),
+    (90, '2024-05-12 11:00:00', '2024-05-12 12:29:59', 'johndoe', 'AVAILABLE'),
+    (120, '2024-05-12 14:00:00', '2024-05-12 15:59:59', 'johndoe', 'MEETING'),
+    (120, '2024-05-12 17:00:00', '2024-05-12 18:59:59', 'johndoe', 'OUT_OF_OFFICE'),
+    (30, '2024-05-13 08:00:00', '2024-05-13 08:29:59', 'johndoe', 'AVAILABLE'),
+    (150, '2024-05-13 11:00:00', '2024-05-13 13:29:59', 'johndoe', 'OUT_OF_OFFICE'),
+    (300, '2024-05-14 09:00:00', '2024-05-14 13:59:59', 'johndoe', 'AVAILABLE'),
+    (200, '2024-05-14 13:00:00', '2024-05-14 16:19:59', 'johndoe', 'DEEPWORK'),
+    (200, '2024-05-14 17:00:00', '2024-05-14 20:19:59', 'johndoe', 'OUT_OF_OFFICE'),
+    (100, '2024-05-15 10:00:00', '2024-05-15 11:39:59', 'johndoe', 'DEEPWORK'),
+    (50, '2024-05-15 15:00:00', null, 'johndoe', 'MEETING');
+
+
+INSERT INTO internal_record (id, group_id, project_id, start, time_end, ext_rec_start, user_name)
+VALUES
+    (-1, null, null, '2024-05-16 12:00:00', '2024-05-16 12:59:59', '2024-05-16 12:00:00', 'admin'),
+    (-3, 1, -2, '2024-05-16 13:00:00', '2024-05-16 13:59:59', '2024-05-16 13:00:00', 'admin'),
+    (-4, null, null, '2024-05-16 14:00:00', '2024-05-17 08:59:59', '2024-05-16 14:00:00', 'admin'),
+    (-5, 1, -3, '2024-05-17 09:00:00', '2024-05-17 10:59:59', '2024-05-17 09:00:00', 'admin'),
+    (-6, null, null, '2024-05-17 11:00:00', '2024-05-17 14:59:59', '2024-05-17 11:00:00', 'admin'),
+    (-7, 1, -4, '2024-05-17 15:00:00', '2024-05-18 09:59:59', '2024-05-17 15:00:00', 'admin'),
+    (-8, null, null, '2024-05-18 10:00:00', '2024-05-18 13:59:59', '2024-05-18 10:00:00', 'admin'),
+    (-9, 1, -5, '2024-05-18 14:00:00', '2024-05-18 15:59:59', '2024-05-18 14:00:00', 'admin'),
+    (-10, null, null, '2024-05-18 16:00:00', '2024-05-19 08:59:59', '2024-05-18 16:00:00', 'admin'),
+    (-11, 1, -6, '2024-05-19 09:00:00', '2024-05-19 13:59:59', '2024-05-19 09:00:00', 'admin'),
+    (-12, null, null, '2024-05-19 14:00:00', null, '2024-05-19 14:00:00', 'admin'),
+
+    (-2, 1, -1, '2024-05-10 09:30:00', '2024-05-11 09:29:59', '2024-05-10 09:30:00', 'johndoe'),
+    (-13, null, null, '2024-05-11 10:00:00', '2024-05-11 12:59:59', '2024-05-11 10:00:00', 'johndoe'),
+    (-14, 2, -7, '2024-05-11 13:00:00', '2024-05-12 10:59:59', '2024-05-11 13:00:00', 'johndoe'),
+    (-15, null, null, '2024-05-12 11:00:00', '2024-05-12 13:59:59', '2024-05-12 11:00:00', 'johndoe'),
+    (-16, 2, -8, '2024-05-12 14:00:00', '2024-05-12 16:59:59', '2024-05-12 14:00:00', 'johndoe'),
+    (-17, null, null, '2024-05-13 08:00:00', '2024-05-13 10:59:59', '2024-05-13 08:00:00', 'johndoe'),
+    (-18, 2, -9, '2024-05-13 11:00:00', '2024-05-14 08:59:59', '2024-05-13 11:00:00', 'johndoe'),
+    (-19, null, null, '2024-05-14 09:00:00', '2024-05-14 12:59:59', '2024-05-14 09:00:00', 'johndoe'),
+    (-20, 2, -10, '2024-05-14 13:00:00', '2024-05-14 16:59:59', '2024-05-14 13:00:00', 'johndoe'),
+    (-21, null, null, '2024-05-15 10:00:00', '2024-05-15 14:59:59', '2024-05-15 10:00:00', 'johndoe'),
+    (-22, 2, -11, '2024-05-15 15:00:00', null, '2024-05-15 15:00:00', 'johndoe');
+
+
+-------------------------------------------MEASUREMENT CHAIN----------------------------------------
 INSERT INTO room (room_id) VALUES ('room_1');
 INSERT INTO room (room_id) VALUES ('room_2');
 INSERT INTO room(room_id) VALUES ('room_3');
@@ -100,48 +159,48 @@ VALUES
     (FALSE, '333e4567-e89b-12d3-a456-426614174001', 'clarkkent', 'TEMP131');
 
 INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES
-                                                                     ('TEMPERATURE', -1, 'tempera_station_1', 'CELSIUS'),
-                                                                     ('TEMPERATURE', -10, 'TEMP123', 'CELSIUS'),
-                                                                     ('TEMPERATURE', -10, 'TEMP125', 'CELSIUS'),
-                                                                     ('TEMPERATURE', -10, 'TEMP126', 'CELSIUS'),
-                                                                     ('TEMPERATURE', -10, 'TEMP127', 'CELSIUS'),
-                                                                     ('TEMPERATURE', -10, 'TEMP128', 'CELSIUS'),
-                                                                     ('TEMPERATURE', -10, 'TEMP129', 'CELSIUS'),
-                                                                     ('TEMPERATURE', -10, 'TEMP130', 'CELSIUS'),
-                                                                     ('TEMPERATURE', -10, 'TEMP131', 'CELSIUS');
+                                                                  ('TEMPERATURE', -1, 'tempera_station_1', 'CELSIUS'),
+                                                                  ('TEMPERATURE', -10, 'TEMP123', 'CELSIUS'),
+                                                                  ('TEMPERATURE', -10, 'TEMP125', 'CELSIUS'),
+                                                                  ('TEMPERATURE', -10, 'TEMP126', 'CELSIUS'),
+                                                                  ('TEMPERATURE', -10, 'TEMP127', 'CELSIUS'),
+                                                                  ('TEMPERATURE', -10, 'TEMP128', 'CELSIUS'),
+                                                                  ('TEMPERATURE', -10, 'TEMP129', 'CELSIUS'),
+                                                                  ('TEMPERATURE', -10, 'TEMP130', 'CELSIUS'),
+                                                                  ('TEMPERATURE', -10, 'TEMP131', 'CELSIUS');
 
 INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES
-                                                                     ('IRRADIANCE', -2, 'tempera_station_1', 'LUX'),
-                                                                     ('IRRADIANCE', -11, 'TEMP123', 'LUX'),
-                                                                     ('IRRADIANCE', -11, 'TEMP125', 'LUX'),
-                                                                     ('IRRADIANCE', -11, 'TEMP126', 'LUX'),
-                                                                     ('IRRADIANCE', -11, 'TEMP127', 'LUX'),
-                                                                     ('IRRADIANCE', -11, 'TEMP128', 'LUX'),
-                                                                     ('IRRADIANCE', -11, 'TEMP129', 'LUX'),
-                                                                     ('IRRADIANCE', -11, 'TEMP130', 'LUX'),
-                                                                     ('IRRADIANCE', -11, 'TEMP131', 'LUX');
+                                                                  ('IRRADIANCE', -2, 'tempera_station_1', 'LUX'),
+                                                                  ('IRRADIANCE', -11, 'TEMP123', 'LUX'),
+                                                                  ('IRRADIANCE', -11, 'TEMP125', 'LUX'),
+                                                                  ('IRRADIANCE', -11, 'TEMP126', 'LUX'),
+                                                                  ('IRRADIANCE', -11, 'TEMP127', 'LUX'),
+                                                                  ('IRRADIANCE', -11, 'TEMP128', 'LUX'),
+                                                                  ('IRRADIANCE', -11, 'TEMP129', 'LUX'),
+                                                                  ('IRRADIANCE', -11, 'TEMP130', 'LUX'),
+                                                                  ('IRRADIANCE', -11, 'TEMP131', 'LUX');
 
 INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES
-                                                                     ('HUMIDITY', -3, 'tempera_station_1', 'PERCENT'),
-                                                                     ('HUMIDITY', -12, 'TEMP123', 'PERCENT'),
-                                                                     ('HUMIDITY', -12, 'TEMP125', 'PERCENT'),
-                                                                     ('HUMIDITY', -12, 'TEMP126', 'PERCENT'),
-                                                                     ('HUMIDITY', -12, 'TEMP127', 'PERCENT'),
-                                                                     ('HUMIDITY', -12, 'TEMP128', 'PERCENT'),
-                                                                     ('HUMIDITY', -12, 'TEMP129', 'PERCENT'),
-                                                                     ('HUMIDITY', -12, 'TEMP130', 'PERCENT'),
-                                                                     ('HUMIDITY', -12, 'TEMP131', 'PERCENT');
+                                                                  ('HUMIDITY', -3, 'tempera_station_1', 'PERCENT'),
+                                                                  ('HUMIDITY', -12, 'TEMP123', 'PERCENT'),
+                                                                  ('HUMIDITY', -12, 'TEMP125', 'PERCENT'),
+                                                                  ('HUMIDITY', -12, 'TEMP126', 'PERCENT'),
+                                                                  ('HUMIDITY', -12, 'TEMP127', 'PERCENT'),
+                                                                  ('HUMIDITY', -12, 'TEMP128', 'PERCENT'),
+                                                                  ('HUMIDITY', -12, 'TEMP129', 'PERCENT'),
+                                                                  ('HUMIDITY', -12, 'TEMP130', 'PERCENT'),
+                                                                  ('HUMIDITY', -12, 'TEMP131', 'PERCENT');
 
 INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES
-                                                                     ('NMVOC', -4, 'tempera_station_1', 'OHM'),
-                                                                     ('NMVOC', -13, 'TEMP123', 'OHM'),
-                                                                     ('NMVOC', -13, 'TEMP125', 'OHM'),
-                                                                     ('NMVOC', -13, 'TEMP126', 'OHM'),
-                                                                     ('NMVOC', -13, 'TEMP127', 'OHM'),
-                                                                     ('NMVOC', -13, 'TEMP128', 'OHM'),
-                                                                     ('NMVOC', -13, 'TEMP129', 'OHM'),
-                                                                     ('NMVOC', -13, 'TEMP130', 'OHM'),
-                                                                     ('NMVOC', -13, 'TEMP131', 'OHM');
+                                                                  ('NMVOC', -4, 'tempera_station_1', 'OHM'),
+                                                                  ('NMVOC', -13, 'TEMP123', 'OHM'),
+                                                                  ('NMVOC', -13, 'TEMP125', 'OHM'),
+                                                                  ('NMVOC', -13, 'TEMP126', 'OHM'),
+                                                                  ('NMVOC', -13, 'TEMP127', 'OHM'),
+                                                                  ('NMVOC', -13, 'TEMP128', 'OHM'),
+                                                                  ('NMVOC', -13, 'TEMP129', 'OHM'),
+                                                                  ('NMVOC', -13, 'TEMP130', 'OHM'),
+                                                                  ('NMVOC', -13, 'TEMP131', 'OHM');
 
 -- fill in measurements for all the temperature sensors (also not necessary for HomeDataMapperTest but can be used later)
 -- user of interest is johndoe (TEMP123)
@@ -190,10 +249,5 @@ INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_
                                                                                                  (900.0, -13, '2024-05-10T14:30:00', 'TEMP129'),
                                                                                                  (890.0, -13, '2024-05-11T15:45:00', 'TEMP130'),
                                                                                                  (890.0, -13, '2024-05-11T15:45:00', 'TEMP131');
-
--- Testdata for TimeRecordService
-INSERT INTO external_record (duration, start, time_end, user_username, state) VALUES (30, '2024-05-16 12:00:00', null, 'admin', 'DEEPWORK'), (3400, '2024-05-10 09:30:00', null, 'johndoe', 'DEEPWORK');
-INSERT INTO internal_record (groupx_id, project_id, start, time_end, ext_rec_start, user_name) VALUES (null, null, '2024-05-16 12:00:00', null, '2024-05-16 12:00:00', 'admin'), (null,  -1, '2024-05-10 09:30:00', null, '2024-05-10 09:30:00', 'johndoe');
-
 
 

@@ -1,4 +1,4 @@
-package at.qe.skeleton.rest.frontend.mappers;
+package at.qe.skeleton.rest.frontend.mappersAndFrontendServices;
 
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.SensorType;
@@ -11,9 +11,7 @@ import at.qe.skeleton.services.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class DashboardDataMapper {
@@ -41,8 +39,8 @@ public class DashboardDataMapper {
   private List<ColleagueStateDto> mapUserToColleagueStateDto(Userx user) {
 
     // using hashmap for faster compare algorithm
-    Collection<Group> groups = user.getGroups();
-    Set<Group> userGroups = new HashSet<>(groups);
+    Collection<Groupx> groups = user.getGroups();
+    Set<Groupx> userGroups = new HashSet<>(groups);
 
     // we dont want user to be displayed as his own colleague
     List<Userx> colleagues =
@@ -156,7 +154,7 @@ public class DashboardDataMapper {
     }
 
     List<ProjectDto> projects =
-        projectService.getProjectsByContributor(user.getUsername()).stream()
+        projectService.getProjectsByContributor(user).stream()
             .map(p -> new ProjectDto(p.getId().toString(), p.getName()))
             .toList();
 

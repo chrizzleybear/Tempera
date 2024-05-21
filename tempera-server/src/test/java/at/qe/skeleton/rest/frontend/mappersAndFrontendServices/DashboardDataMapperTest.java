@@ -1,4 +1,4 @@
-package at.qe.skeleton.rest.frontend.mappers;
+package at.qe.skeleton.rest.frontend.mappersAndFrontendServices;
 
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;

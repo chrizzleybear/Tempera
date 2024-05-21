@@ -1,73 +1,89 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
-import at.qe.skeleton.model.enums.State;
-import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
-import at.qe.skeleton.rest.frontend.dtos.TimetableEntryDto;
+import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.TimetableDataService;
 import at.qe.skeleton.rest.frontend.payload.request.SplitTimeRecordRequest;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateDescriptionRequest;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateProjectRequest;
 import at.qe.skeleton.rest.frontend.payload.response.GetTimetableDataResponse;
 import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
+import at.qe.skeleton.services.UserxService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 @RestController
 @RequestMapping(value = "/api/timetable", produces = "application/json")
 public class TimetableController {
-  private static final Logger logger = LoggerFactory.getLogger(TimetableController.class);
+  private static final Logger timeTabeControllerLogger =
+      LoggerFactory.getLogger(TimetableController.class);
+  private final TimetableDataService timeTableDataService;
+  private final UserxService userService;
+
+  public TimetableController(TimetableDataService timeTableDataService, UserxService userService) {
+    this.timeTableDataService = timeTableDataService;
+    this.userService = userService;
+  }
 
   @GetMapping("/data")
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<GetTimetableDataResponse> getTimetableData() {
-    var entry1 =
-        new TimetableEntryDto(
-            1L,
-            "2024-05-12T08:00:00",
-            "2024-05-12T09:00:00",
-            null,
-            State.AVAILABLE,
-            "I did a lot of work today.");
-    var entry2 =
-        new TimetableEntryDto(
-            2L,
-            "2024-05-12T09:00:00",
-            "2024-05-12T12:00:00",
-            new ProjectDto("2", "Project 2"),
-            State.DEEPWORK,
-            "This project is nice.");
-    return ResponseEntity.ok(
-        new GetTimetableDataResponse(
-            List.of(entry1, entry2, entry1, entry2, entry1, entry2, entry1, entry2, entry1, entry2),
-            List.of(new ProjectDto("1", "Project 1"), new ProjectDto("2", "Project 2"))));
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    Userx user = userService.loadUser(username);
+    // for now we set the page and size in the controller itself, but can easily be sent by Frontend
+    int page = 0;
+    int size = 20;
+    GetTimetableDataResponse response = timeTableDataService.getTimetableData(user, page, size);
+    timeTabeControllerLogger.info(
+        "created TimeTableDataResponse page %d with size %d".formatted(page, size));
+    return ResponseEntity.ok(response);
   }
 
   @PostMapping("/update/project")
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<MessageResponse> updateProject(@RequestBody UpdateProjectRequest request) {
-    logger.info("New project set for time record: {}", request.project());
-    return ResponseEntity.ok(new MessageResponse("Project for timeRecord updated successfully."));
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    MessageResponse response;
+    try {
+      response = timeTableDataService.updateProject(username, request);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+    }
+    timeTabeControllerLogger.info(response.getMessage());
+    return ResponseEntity.ok(response);
   }
 
   @PostMapping("/update/description")
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<MessageResponse> updateDescription(
       @RequestBody UpdateDescriptionRequest request) {
-    logger.info("New description set for time record: {}", request.description());
-    return ResponseEntity.ok(
-        new MessageResponse("Description for timeRecord updated successfully."));
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    MessageResponse response;
+    try {
+      response = timeTableDataService.updateProjectDescription(username, request);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+    }
+    timeTabeControllerLogger.info(response.getMessage());
+    return ResponseEntity.ok(response);
   }
 
   @PostMapping("/split/time-record")
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<MessageResponse> splitTimeRecord(
       @RequestBody SplitTimeRecordRequest request) {
-    logger.info("Time record was split at: {}", request.splitTimestamp());
-    return ResponseEntity.ok(new MessageResponse("Time record was split successfully."));
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    MessageResponse response;
+    try {
+      response = timeTableDataService.splitTimeRecord(username, request);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+    }
+    timeTabeControllerLogger.info(response.getMessage());
+    return ResponseEntity.ok(response);
   }
 }
