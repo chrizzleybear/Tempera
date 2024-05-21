@@ -4,7 +4,7 @@ cd ./src || exit
 OVERWRITE=$1
 if [ ! -f conf.yaml ]; then
   echo -e "\nNo configuration file 'conf.yaml' found. Launching configuration script.\n\n"
-  sleep 2
+  sleep 3s
   python3 configure.py;
   python3 main.py
   exit 0
