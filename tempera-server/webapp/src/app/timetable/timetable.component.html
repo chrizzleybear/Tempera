@@ -15,10 +15,12 @@
     </tr>
     <!--    Filters     -->
     <tr>
-      <th id="timeFilter">
+      <th id="startTimeFilter">
         <p-columnFilter type="date" field="startTime" placeholder="Search"></p-columnFilter>
       </th>
-      <th id="blank3"></th>
+      <th id="endTimeFilter">
+        <p-columnFilter type="date" field="endTime" placeholder="Search"></p-columnFilter>
+      </th>
       <th id="projectFilter">
         <p-columnFilter field="assignedProject.id" [showMenu]="false"
                         [showClearButton]="false">

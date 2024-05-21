@@ -231,7 +231,7 @@ export class TimetableComponent implements OnInit {
     let tempEntries: InternalTimetableEntryDto[];
     const filters = this.table?.filters as any;
 
-    if (filters['startTime']?.value || filters['state']?.value || filters['assignedProject.id']?.value || filters['description']?.value) {
+    if (filters['startTime']?.value || filters['endTime']?.value || filters['state']?.value || filters['assignedProject.id']?.value || filters['description']?.value) {
       tempEntries = this.table.filteredValue as InternalTimetableEntryDto[];
     } else {
       tempEntries = this.table.value as InternalTimetableEntryDto[];
