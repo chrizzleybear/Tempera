@@ -6,7 +6,7 @@ import {
 } from '../../api';
 import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
-import { DatePipe, NgClass, NgIf } from '@angular/common';
+import { DatePipe, NgIf } from '@angular/common';
 import { TagModule } from 'primeng/tag';
 import { DisplayHelper } from '../_helpers/display-helper';
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
@@ -64,7 +64,6 @@ interface InternalTimetableEntryDto extends TimetableEntryDto {
     ToastModule,
     InputTextareaModule,
     CardModule,
-    NgClass,
   ],
   templateUrl: './timetable.component.html',
   styleUrl: './timetable.component.css',

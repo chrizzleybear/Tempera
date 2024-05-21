@@ -77,8 +77,10 @@
         <p-tag [value]="DisplayHelper.showState | wrapFn: timeEntry.state"
                [severity]="DisplayHelper.getStateSeverity | wrapFn: timeEntry.state"></p-tag>
       </td>
-      <td (click)="onEditDescription(rowIndex)" class="cursor-pointer" (keydown)="onEditDescription(rowIndex)"
-          [tabindex]="rowIndex">{{ timeEntry.description }}
+      <td (click)="onEditDescription(rowIndex)" class="cursor-pointer"
+          (keydown)="onEditDescription(rowIndex)"
+          [tabindex]="rowIndex"
+      >{{ timeEntry?.description ?? 'Enter a description' }}
       </td>
       <td>
         <p-button (onClick)="this.onOpenSplitForm(rowIndex);op.toggle($event)">
