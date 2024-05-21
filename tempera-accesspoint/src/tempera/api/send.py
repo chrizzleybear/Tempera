@@ -105,7 +105,7 @@ async def send_data(*, kind: DataType) -> None:
 
     :param kind: type of data to send (measurement or time record).
     :return: None
-    :raises: requests.exceptions.ConnectionError if the web server can't be reached
+    :raises requests.exceptions.ConnectionError: if the web server can't be reached
     """
     match kind:
         case "Measurement":
@@ -142,7 +142,7 @@ async def send_data(*, kind: DataType) -> None:
         )
         raise requests.exceptions.ConnectionError
 
-    _safe_delete_data(data, kind=kind)
+    _safe_delete_data(data)
 
 
 def _safe_delete_data(data: Sequence[Measurement | TimeRecord]) -> None:

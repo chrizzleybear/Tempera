@@ -5,7 +5,7 @@ from typing import List, Tuple
 
 import bleak.exc
 import requests
-from bleak import BLEDevice, BleakScanner, BleakClient
+from bleak import BLEDevice, BleakScanner, BleakClient, AdvertisementData
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from tenacity import retry, retry_if_exception_type, wait_fixed
@@ -24,12 +24,15 @@ REQUIRED_CHARACTERISTICS = ["2a25", "2bf2", "2a6e", "2a77", "2a6f", "2bd3"]
 SCANNING_TIMEOUT = 5
 
 
-async def detection_callback(device, advertisement_data) -> None:
+async def detection_callback(
+    device: BLEDevice, advertisement_data: AdvertisementData
+) -> None:
     """
+    Callback to execute when the :class:`~BleakScanner` detects a bluetooth device.
 
-    :param device:
-    :param advertisement_data:
-    :return:
+    :param device: detected device.
+    :param advertisement_data: device's advertisement data.
+    :return: None
     """
     logger.info(
         f"Device[name:{device.name};address:{device.address};signal_strength(RSSI):{advertisement_data.rssi};"
@@ -39,8 +42,9 @@ async def detection_callback(device, advertisement_data) -> None:
 
 async def get_tempera_stations() -> List[BLEDevice] | None:
     """
+    Scan for BLE devices and filter out the tempera stations according to the advertisement data.
 
-    :return:
+    :return: a list of tempera stations found.
     """
     logger.info("Scanning for BLE devices...")
     scanner = BleakScanner(detection_callback)
@@ -91,12 +95,13 @@ async def validate_station(
       (can only happen at startup). In this scenario, data of an unauthorized/deactivated station may be read and
       stored in some unlikely scenarios, but once the connection is established again,
       it won't be sent to the server because the validation will fail so no harm no fault.
+      TODO: verify this point
 
-    :param client:
-    :param tempera_station:
-    :return:
+    :param tempera_station: the tempera station BLE device.
+    :param client: the connection to the tempera station, i.e., the client.
+    :return: the tempera station passed as a parameter, if it satisfies all requirements, else None.
 
-    :raises: BluetoothConnectionLostException if the established connection to the tempera station is disrupted.
+    :raises BluetoothConnectionLostException: if the established connection to the tempera station is disrupted.
     """
     logger.info(f"Trying to validate stations: {tempera_station}")
     try:
@@ -165,9 +170,10 @@ async def validate_station(
 
 async def get_station_id(client: BleakClient) -> str:
     """
+    Read the serial number (=id) of the connected tempera station.
 
-    :param client:
-    :return:
+    :param client: the connection to the tempera station.
+    :return: the id of the tempera station.
     """
     device_info_service = await filter_uuid(client, "180a")
     serial_number_characteristic = await filter_uuid(device_info_service, "2a25")
@@ -178,9 +184,9 @@ async def get_station_id(client: BleakClient) -> str:
 async def validate_id(client: BleakClient, valid_ids: List[str]) -> Tuple[bool, str]:
     """
 
-    :param client:
-    :param valid_ids:
-    :return:
+    :param client: the connection to the tempera station.
+    :param valid_ids: a list of valid ids to check the tempera station id against.
+    :return: Tuple of (true, station id) if the id is valid, else (False, station id)
     """
     station_id = await get_station_id(client)
     if station_id == "":
@@ -194,9 +200,10 @@ async def validate_id(client: BleakClient, valid_ids: List[str]) -> Tuple[bool, 
 
 async def validate_characteristics(client: BleakClient) -> List[str]:
     """
+    Check if all required characteristics are implemented by a station.
 
-    :param client:
-    :return:
+    :param client: the connection to the tempera station.
+    :return: a list of missing characteristics. This is an empty list if all are implemented.
     """
     missing_characteristics = REQUIRED_CHARACTERISTICS
     for service in client.services:
@@ -210,8 +217,10 @@ async def validate_characteristics(client: BleakClient) -> List[str]:
 
 async def save_station(station_id: str) -> None:
     """
+    Save the tempera station id if it isn't already in the database.
 
-    :param station_id:
+    :param station_id: the id of the station to save.
+    :returns: None
     """
     with Session(shared.db_engine) as session:
         station = session.scalars(
@@ -231,8 +240,14 @@ async def save_station(station_id: str) -> None:
 @retry(retry=retry_if_exception_type(RuntimeWarning), wait=wait_fixed(30))
 async def discovery_loop() -> BLEDevice:
     """
+    Piece together multiple functions to create a discovery loop and return the first valid tmepera station found.
 
-    :return:
+    #. Search for tempera stations with :func:`~get_tempera_stations`
+    #. Validate the tempera stations if found with :func:`~validate_station`
+
+    :return: the first valid tempera station found.
+
+    :raises RuntimeWarning: if no tempera station is found and starts looking for devices again.
     """
     tempera_stations = await get_tempera_stations()
 
@@ -261,8 +276,9 @@ async def discovery_loop() -> BLEDevice:
 
 async def get_scan_order() -> bool:
     """
+    Get the scan order from the web server.
 
-    :return:
+    :return: True if the server requests a scan else False.
     """
     try:
         response = await make_request(
