@@ -7,7 +7,7 @@
         <button type="button" pButton label="Add New Room" icon="pi pi-plus" (click)="createRoomDialog()"
                 class="mr-2"></button>
       </div>
-      <p-table [value]="rooms" dataKey="id" [paginator]="true" [rows]="10" responsiveLayout="scroll"
+      <p-table [value]="rooms" dataKey="id" [paginator]="true" [rows]="6" responsiveLayout="scroll"
                [expandedRowKeys]="expandedRows">
         <ng-template pTemplate="header">
           <tr>

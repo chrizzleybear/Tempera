@@ -84,6 +84,7 @@ export class RoomsComponent implements OnInit {
       next: (response) => {
         console.log('Room created successfully:', response);
         this.loadRooms();
+        this.newRoomId = '';
         this.displayCreateDialog = false;
         this.roomService.roomChanged();
         this.messages = [{severity: 'success', summary: 'Success', detail: 'Room created successfully'}];
