@@ -17,7 +17,7 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-temperaStation>
-      <tr>
+      <tr (click)="viewDetails(temperaStation)">
         <td>{{temperaStation.id}}</td>
         <td>{{temperaStation.user.username}}</td>
         <td>{{temperaStation.enabled}}</td>
