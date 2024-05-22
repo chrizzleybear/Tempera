@@ -10,7 +10,7 @@
         <th scope="col">Id</th>
         <th scope="col">User</th>
         <th scope="col">Enabled</th>
-        <th scope="col">Active</th>
+        <th scope="col">Healthy</th>
         <th></th>
         <th></th>
 
@@ -21,7 +21,7 @@
         <td>{{temperaStation.id}}</td>
         <td>{{temperaStation.user.username}}</td>
         <td>{{temperaStation.enabled}}</td>
-        <td>{{temperaStation.active}}</td>
+        <td>{{temperaStation.isHealthy}}</td>
         <td>
           <p-button (click)="editTemperaStationDialog(temperaStation)">Edit</p-button>
         </td>

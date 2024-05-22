@@ -41,8 +41,7 @@ export class TemperaStationEditComponent implements OnInit {
   ) {
     this.temperaForm = this.formBuilder.group({
       user: '',
-      enabled: '',
-      isHealthy: '',
+      enabled: ''
     });
   }
 
@@ -93,8 +92,7 @@ export class TemperaStationEditComponent implements OnInit {
   populateForm() {
     this.temperaForm = this.formBuilder.group({
       user: this.temperaStation.user,
-      enabled: this.temperaStation.enabled,
-      isHealthy: this.temperaStation.isHealthy,
+      enabled: this.temperaStation.enabled
     });
   }
 }

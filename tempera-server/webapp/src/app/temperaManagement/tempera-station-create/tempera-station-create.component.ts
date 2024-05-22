@@ -20,6 +20,7 @@ import {UsersService} from "../../_services/users.service";
   styleUrl: './tempera-station-create.component.css'
 })
 export class TemperaStationCreateComponent implements OnInit{
+
   temperaForm: FormGroup;
   @Output() onCreateCompleted = new EventEmitter<boolean>();
   users: { label: string; value: User; }[] | undefined;
@@ -33,8 +34,7 @@ export class TemperaStationCreateComponent implements OnInit{
     this.temperaForm = this.formBuilder.group({
       id: '',
       user: '',
-      enabled: false,
-      active: false,
+      enabled: false
     });
   }
 
