@@ -10,6 +10,6 @@ public interface ThresholdRepository extends AbstractRepository<Threshold, Long>
     List<Threshold> findAll();
     boolean existsById(Long thresholdID);
 
-    @Query("SELECT t FROM Threshold t WHERE t.default_threshold = TRUE")
+    @Query("SELECT t FROM Threshold t WHERE t.defaultThreshold = TRUE")
     List<Threshold> findDefaultThresholds();
 }
