@@ -14,10 +14,11 @@ logger = logging.getLogger(f"tempera.{__name__}")
 
 async def init_globals() -> None:
     """
-    Initializes the global variables.
-    Reads the config file 'conf.yaml' into a dictionary, creates the API request header and the database engine.
+    Initializes the global variables used across many modules in the package.
+    Reads the config file 'conf.yaml' into a dictionary, creates the API request header and the database engine and
+    sets the corresponding variables.
 
-    :return:
+    :return: None
     """
     global project_root
     global db_engine
@@ -79,9 +80,9 @@ async def init_config() -> Dict[str, Any]:
 
 async def init_header(conf: Dict[str, Any]) -> HTTPBasicAuth:
     """
-    Returns the authentication objet to set as the 'headers' kwarg in any request to the web app server.
-
-    :return:
+    :conf: dictionary of user-configured parameters read from conf.yaml \
+    (see the configure.py file / Configuration script documentation section)
+    :return: the authentication objet to set as the 'headers' kwarg in any request to the web app server.
     """
     logger.info("Creating api request header from config file parameters.")
     return HTTPBasicAuth(conf["user_name"], conf["password"])
@@ -89,8 +90,7 @@ async def init_header(conf: Dict[str, Any]) -> HTTPBasicAuth:
 
 async def init_engine() -> sqlalchemy.Engine:
     """
-
-    :return:
+    :return: the SQLAlchemy database engine created from the standard path of the database file in the package.
     """
     database = project_root / "src" / "tempera" / "database" / "data.sqlite"
 

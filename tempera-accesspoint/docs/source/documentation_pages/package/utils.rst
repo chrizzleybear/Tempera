@@ -6,6 +6,14 @@ Utilities
 Request utils
 =============
 
+Every HTTP request made in the tempera package requires equal handling of the
+
+* making
+* receiving
+* response handling
+
+of HTTP requests. To avoid duplicate code, one unified function is defined as a util and imported where needed.
+
 .. autofunction:: tempera.utils.request_utils.make_request
 
 

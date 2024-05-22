@@ -11,10 +11,15 @@ logger = logging.getLogger(f"tempera.{__name__}")
 
 async def make_request(kind: Literal["get", "post", "put"], url: str, **kwargs) -> Dict:
     """
-    Wrapper around a request to handle common response scenarios.
-    Ensures the request returns a non-empty response or a RuntimeError is raised.
+    Wrapper around :func:`requests.get`/:func:`requests.post`/:func:`requests.put` to send the request and
+    handle common response scenarios in a unified way. Ensures the request returns a non-empty response or a
+    RuntimeError is raised.
 
-    :return:
+    :kind: the type of the HTTP request (i.e., get, post, put).
+    :url: the url to send the request to.
+    :kwargs: additional kwargs to pass to the :func:`requests.get`/... function.
+    :return: the response content as python dictionary.
+    :raises RuntimeError: if there is no response.
     """
     match kind:
         case "get":
