@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable, Subject} from "rxjs";
 import {Room} from "../models/room.model";
 import {Threshold, ThresholdTipUpdateDto, ThresholdUpdateDto} from "../models/threshold.model";
-import {AccessPoint} from "../../api/model/accessPoint";
+import {AccessPoint} from "../models/accessPoint.model";
 
 @Injectable({
   providedIn: 'root',
