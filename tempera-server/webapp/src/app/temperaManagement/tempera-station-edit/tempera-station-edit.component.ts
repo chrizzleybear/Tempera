@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { TemperaStationService } from '../../_services/tempera-station.service';
 import { TemperaStation } from '../../models/temperaStation.model';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -33,8 +32,6 @@ export class TemperaStationEditComponent implements OnInit {
   users!: { label: string, value: User }[] | undefined;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
     private temperaStationService: TemperaStationService,
     private formBuilder: FormBuilder,
     private userService: UsersService
@@ -47,6 +44,8 @@ export class TemperaStationEditComponent implements OnInit {
 
   ngOnInit() {
     this.fetchUsers();
+    this.fetchTemperaStationDetails(this.temperaStation.id);
+    this.populateForm();
   }
 
   private fetchTemperaStationDetails(temperaStationId: string) {
