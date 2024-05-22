@@ -29,7 +29,7 @@ export class TemperaStationEditComponent implements OnInit {
 
   @Input() temperaStation!: TemperaStation;
   @Output() onEditComplete = new EventEmitter<boolean>();
-  users!: { label: string, value: User }[] | undefined;
+  users!: { label: string, value: User }[];
 
   constructor(
     private temperaStationService: TemperaStationService,
@@ -44,8 +44,7 @@ export class TemperaStationEditComponent implements OnInit {
 
   ngOnInit() {
     this.fetchUsers();
-    this.fetchTemperaStationDetails(this.temperaStation.id);
-    this.populateForm();
+    //this.fetchTemperaStationDetails(this.temperaStation.id);
   }
 
   private fetchTemperaStationDetails(temperaStationId: string) {
@@ -81,17 +80,22 @@ export class TemperaStationEditComponent implements OnInit {
     this.userService.getAllUsers().subscribe({
       next: (users: User[]) => {
         this.users = users.map(user => ({
-          label: `${user.firstName} ${user.lastName}`, value: user
+          label: `${user.firstName} ${user.lastName}`,
+          value: user
         }));
+        this.populateForm();
       },
       error: (error) => console.error('Error loading managers:', error)
     });
   }
 
   populateForm() {
+    console.log(this.temperaStation.user.username);
+    console.log(this.users);
     this.temperaForm = this.formBuilder.group({
-      user: this.temperaStation.user,
+      user: this.users?.find(user => user.value.username === this.temperaStation.user.username),
       enabled: this.temperaStation.enabled
     });
   }
 }
+
