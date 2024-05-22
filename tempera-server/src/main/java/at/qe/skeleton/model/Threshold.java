@@ -34,6 +34,15 @@ public class Threshold implements Serializable {
   @JoinColumn(name = "tip_id")
   private ThresholdTip tip;
 
+  public Threshold(SensorType sensorType, ThresholdType thresholdType, double value, Modification modification, ThresholdTip tip) {
+    this.defaultThreshold = false;
+    this.sensorType = sensorType;
+    this.thresholdType = thresholdType;
+    this.value = value;
+    this.modification = modification;
+    this.tip = tip;
+  }
+
   public SensorType getSensorType() {
     return sensorType;
   }
