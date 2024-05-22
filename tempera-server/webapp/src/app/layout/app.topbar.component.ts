@@ -20,6 +20,8 @@ export class AppTopBarComponent {
 
   @ViewChild('topbarmenu') menu!: ElementRef;
 
+  @ViewChild('topbar') warnings!: ElementRef;
+
   constructor(public layoutService: LayoutService) {
   }
 }
