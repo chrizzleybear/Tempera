@@ -26,9 +26,9 @@ public class ProjectController {
   private Logger logger = Logger.getLogger("ProjectController");
 
     @GetMapping("/all")
-    public ResponseEntity<List<ExtendedProjectDto>> getAllProjects() {
-      List<ExtendedProjectDto> projects = projectService.getAllProjects();
-      return ResponseEntity.ok(projectDto);
+    public ResponseEntity<List<SimpleProjectDto>> getAllProjects() {
+      List<SimpleProjectDto> projects = projectMapperService.getAllSimpleProjects();
+      return ResponseEntity.ok(projects);
     }
 
 
@@ -51,7 +51,7 @@ public class ProjectController {
   public ResponseEntity<Project> updateProject(@RequestBody SimpleProjectDto projectData) {
     Project updatedProject =
         projectService.updateProject(
-            projectData.projectId(),
+            Long.parseLong(projectData.projectId()),
             projectData.name(),
             projectData.description(),
             projectData.manager());
@@ -72,22 +72,26 @@ public class ProjectController {
     return ResponseEntity.ok("Project deleted");
   }
 
-  @GetMapping("/load/{id}")
-  public ResponseEntity<GroupxProjectDto> getProjectDetailedById(@PathVariable Long id) {
-      //alle infos zu einem Projekt inklusive aller Gruppen
-    Project project = projectService.loadProject(id);
-    return ResponseEntity.ok(project);
+  @GetMapping("/load/{projectId}")
+  public ResponseEntity<ExtendedProjectDto> getProjectDetailedById(@PathVariable String projectId) {
+      try{
+        ExtendedProjectDto projectDto = projectMapperService.loadProjectDetailed(projectId);
+        return ResponseEntity.ok(projectDto);
+      } catch (CouldNotFindEntityException e) {
+        logger.warning(e.getMessage());
+        return ResponseEntity.badRequest().build();
+      }
+
   }
 
   //ehemals getGroups
   @GetMapping("/getGroups/{id}")
-  public ResponseEntity<List<Groupx>> getGroupsByProjectId(@PathVariable Long projectId) {
-    List<GroupxProject> groupxProjects = projectService.findAllGroupxProjectsByProjectId(projectId);
-    List<Groupx> groups = groupxProjects.stream().map(GroupxProject::getGroup).toList();
+  public ResponseEntity<List<SimpleGroupDto>> getGroupsByProjectId(@PathVariable String projectId) {
+    List<SimpleGroupDto> groups = projectMapperService.getAllSimpleGroups(projectId);
     return ResponseEntity.ok(groups);
   }
 
-  //getProjectsByGroupId
+  //todo: hier weiter machen
 
   @PostMapping("/addGroup")
   public ResponseEntity<Void> addGroupToProject(

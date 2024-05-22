@@ -9,6 +9,7 @@ import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.GroupxProjectRepository;
 import at.qe.skeleton.repositories.ProjectRepository;
 import at.qe.skeleton.repositories.UserxRepository;
+import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -208,5 +209,13 @@ ProjectService {
 
   public List<GroupxProject> findAllGroupxProjectsByProjectId(Long projectId) {
     return groupxProjectRepository.findAllByProjectId(projectId);
+  }
+
+  public List<Project> findAllProjects(){
+    return projectRepository.findAll();
+  }
+
+  public List<SimpleUserDto> findAllContributorsByProjectId(Long projectId){
+    return groupxProjectRepository.findAllContributorsByProject_Id(projectId);
   }
 }

@@ -4,5 +4,5 @@ import at.qe.skeleton.model.Userx;
 
 import java.util.Set;
 
-public record ExtendedGroupDto(Long groupId, String name, String description, UserSimpleDto grouplead, Set<Userx> members) {
+public record ExtendedGroupDto(Long groupId, String name, String description, SimpleUserDto grouplead, Set<Userx> members) {
 }
