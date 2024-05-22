@@ -119,7 +119,6 @@ export class FloorPlanComponent implements OnInit{
 
   viewDetailsAccesspoint(index: number) {
     if (this.roomObjects[index]) {
-      console.log('AccessPoints for room:', this.roomObjects[index + this.currentFloor*7].id);
       this.roomService.getAccessPoints(this.roomObjects[index + this.currentFloor*7].id).subscribe({
         next: (data) => {
           console.log('AccessPoints: ', data);
