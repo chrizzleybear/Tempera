@@ -11,21 +11,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Component
 @Scope("application")
 public class RoomService {
 
     private final RoomRepository roomRepository;
-
-    // required to load default threshold tips when creating a room
-    private final ThresholdRepository thresholdRepository;
+    @Autowired private ThresholdRepository thresholdRepository;
 
     @Autowired
-    public RoomService(RoomRepository roomRepository, ThresholdRepository thresholdRepository) {
+    public RoomService(RoomRepository roomRepository) {
         this.roomRepository = roomRepository;
-        this.thresholdRepository = thresholdRepository;
     }
 
     @Transactional

@@ -30,6 +30,11 @@ public class ThresholdService {
     }
 
     @Transactional
+    public List<Threshold> getDefaultThresholds() {
+        return thresholdRepository.findDefaultThresholds();
+    }
+
+    @Transactional
     public Threshold createThreshold(SensorType sensorType, ThresholdType thresholdType, double value, String reason, String tip) {
         Threshold t = new Threshold(sensorType, thresholdType, value,
                 new Modification(reason),
