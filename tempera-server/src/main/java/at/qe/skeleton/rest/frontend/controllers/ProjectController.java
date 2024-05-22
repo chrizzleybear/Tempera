@@ -4,9 +4,8 @@ import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.Groupx;
 import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.Project;
-import at.qe.skeleton.rest.frontend.dtos.ContributorAssignmentDto;
-import at.qe.skeleton.rest.frontend.dtos.GroupAssignmentDto;
-import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.*;
+import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.ProjectMapperService;
 import at.qe.skeleton.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -22,12 +21,23 @@ import java.util.logging.Logger;
 public class ProjectController {
 
   @Autowired ProjectService projectService;
+  @Autowired
+  ProjectMapperService projectMapperService;
   private Logger logger = Logger.getLogger("ProjectController");
-  @GetMapping("/all")
-  public ResponseEntity<List<Project>> getAllUsers() {
-    List<Project> projects = projectService.getAllProjects().stream().toList();
-    return ResponseEntity.ok(projects);
+  @GetMapping("/manager/all")
+  public ResponseEntity<List<GroupxProjectDto>> getAllGroupxProjectsAsManager(@RequestParam("managerId") String managerId) {
+    List<GroupxProjectDto> groupxProjectDtos = projectMapperService.getAllGroupxProjectsAsManager(managerId);
+    return ResponseEntity.ok(groupxProjectDtos);
   }
+
+    @GetMapping("/grouplead/all")
+    public ResponseEntity<List<GroupxProjectDto>> getAllGroupxProjectsAsGroupLead(@RequestParam("managerId") String managerId) {
+      List<GroupxProjectDto> groupxProjectDtos = projectMapperService.getAllGroupxProjectsAsGrouplead(managerId);
+      return ResponseEntity.ok(groupxProjectDtos);
+    }
+
+
+
 
   @PutMapping("/update")
   public ResponseEntity<Project> updateProject(@RequestBody SimpleProjectDto projectData) {

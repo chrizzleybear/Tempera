@@ -49,20 +49,26 @@ public class TimetableDataService {
       String end = timeRecord.getEnd() == null ? null : timeRecord.getEnd().toString();
       String projectId;
       String projectName;
+      String projectDescription;
+      String projectManager;
       if (timeRecord.getGroupxProject() == null){
         projectId = null;
         projectName = null;
+        projectDescription = null;
+        projectManager = null;
       }
       else {
         projectId = timeRecord.getGroupxProject().getProject().getId().toString();
         projectName = timeRecord.getGroupxProject().getProject().getName();
+        projectDescription = timeRecord.getGroupxProject().getProject().getDescription();
+        projectManager = timeRecord.getGroupxProject().getProject().getManager().getUsername();
       }
-      ProjectDto project = new ProjectDto(projectId, projectName);
+      ProjectDto project = new ProjectDto(projectId, projectName, projectDescription, projectManager);
       State state = timeRecord.getExternalRecord().getState();
       String description = timeRecord.getDescription();
       tableEntries.add(new TimetableEntryDto(id, start, end, project, state, description));
     }
-    List<ProjectDto> availableProjects = projectService.getProjectsByContributor(user).stream().map(p -> new ProjectDto(Long.toString(p.getId()), p.getName())).toList();
+    List<ProjectDto> availableProjects = projectService.getProjectsByContributor(user).stream().map(p -> new ProjectDto(Long.toString(p.getId()), p.getName(), p.getDescription(), p.getManager().getUsername())).toList();
     return new GetTimetableDataResponse(tableEntries, availableProjects);
   }
 

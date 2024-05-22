@@ -147,15 +147,15 @@ public class DashboardDataMapper {
     Project defaultProject = user.getDefaultProject();
     ProjectDto defaultProjectDto;
     if (defaultProject == null) {
-      defaultProjectDto = new ProjectDto(null, "No default project assigned");
+      defaultProjectDto = new ProjectDto(null, "No default project assigned", null, null);
     } else {
       defaultProjectDto =
-          new ProjectDto(defaultProject.getId().toString(), defaultProject.getName());
+          new ProjectDto(defaultProject.getId().toString(), defaultProject.getName(), defaultProject.getDescription(), defaultProject.getManager().getUsername());
     }
 
     List<ProjectDto> projects =
         projectService.getProjectsByContributor(user).stream()
-            .map(p -> new ProjectDto(p.getId().toString(), p.getName()))
+            .map(p -> new ProjectDto(p.getId().toString(), p.getName(), p.getDescription(), p.getManager().getUsername()))
             .toList();
 
     return new DashboardDataResponse(

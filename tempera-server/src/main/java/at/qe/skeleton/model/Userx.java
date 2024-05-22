@@ -45,7 +45,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   @JsonIgnore
   private LocalDateTime updateDate;
 
-  @OneToOne (mappedBy = "user", cascade = CascadeType.ALL) private TemperaStation temperaStation;
+  @OneToOne (mappedBy = "user") private TemperaStation temperaStation;
 
   @ManyToMany(mappedBy = "contributors")
   private Set<GroupxProject> groupxProjects;

@@ -49,7 +49,7 @@ ProjectService {
     return projectRepository.save(project);
   }
 
-  @Transactional(readOnly = true)
+//  @Transactional(readOnly = true)
   public List<Project> getAllProjects() {
     return projectRepository.findAll();
   }
