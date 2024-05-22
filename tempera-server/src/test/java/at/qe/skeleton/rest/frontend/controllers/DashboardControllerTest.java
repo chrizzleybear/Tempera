@@ -4,7 +4,7 @@ import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
-import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.ExtendedProjectDto;
 import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.DashboardDataMapper;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
 import at.qe.skeleton.services.UserxService;
@@ -48,7 +48,7 @@ class DashboardControllerTest {
             new ColleagueStateDto("Max Mustermann", "Raum 1", State.DEEPWORK, true, List.of("Gruppe 1")),
             new ColleagueStateDto("Jane Doe", "Raum 3", State.AVAILABLE, true, List.of("Gruppe1","Gruppe 2")),
             new ColleagueStateDto("Cooler Typ", "Raum 1", State.MEETING, false, noGroups));
-    var projects = List.of(new ProjectDto("project1", "Projekt 1"), new ProjectDto("project2", "Projekt 2"), new ProjectDto("project3", "Projekt 3"));
+    var projects = List.of(new ExtendedProjectDto("project1", "Projekt 1"), new ExtendedProjectDto("project2", "Projekt 2"), new ExtendedProjectDto("project3", "Projekt 3"));
     DashboardDataResponse dashboardDataResponse =
         new DashboardDataResponse(
             1.0,

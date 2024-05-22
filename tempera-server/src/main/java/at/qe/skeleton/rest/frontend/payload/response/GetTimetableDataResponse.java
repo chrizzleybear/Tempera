@@ -1,9 +1,9 @@
 package at.qe.skeleton.rest.frontend.payload.response;
 
-import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.ExtendedProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.TimetableEntryDto;
 
 import java.util.List;
 
 public record GetTimetableDataResponse(
-    List<TimetableEntryDto> tableEntries, List<ProjectDto> availableProjects) {}
+    List<TimetableEntryDto> tableEntries, List<ExtendedProjectDto> availableProjects) {}

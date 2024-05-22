@@ -2,7 +2,7 @@ package at.qe.skeleton.rest.frontend.mappersAndFrontendServices;
 
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.State;
-import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.ExtendedProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.TimetableEntryDto;
 import at.qe.skeleton.rest.frontend.payload.response.GetTimetableDataResponse;
 import at.qe.skeleton.services.UserxService;
@@ -15,7 +15,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,9 +48,9 @@ class TimetableDataServiceTest {
         timetableDataService.getTimetableData(user, page1, size);
     assertNotNull(dataResponse);
     List<TimetableEntryDto> timeTableEntries1 = dataResponse.tableEntries();
-    List<ProjectDto> projectDtos1 = dataResponse.availableProjects();
+    List<ExtendedProjectDto> extendedProjectDtos1 = dataResponse.availableProjects();
     assertNotNull(timeTableEntries1);
-    assertNotNull(projectDtos1);
+    assertNotNull(extendedProjectDtos1);
     assertEquals(size, timeTableEntries1.size());
 
     // INSERT INTO internal_record
@@ -62,7 +61,7 @@ class TimetableDataServiceTest {
     long id = -22;
     String startTimestamp = "2024-05-15T15:00";
     String endTimestamp = null;
-    ProjectDto projectDto = new ProjectDto("-11", "Training and Development Program");
+    ExtendedProjectDto extendedProjectDto = new ExtendedProjectDto("-11", "Training and Development Program");
     State state = State.MEETING;
     String description = null;
 
@@ -72,7 +71,7 @@ class TimetableDataServiceTest {
     assertEquals(id, entry.id());
     assertEquals(startTimestamp, entry.startTimestamp());
     assertEquals(endTimestamp, entry.endTimestamp());
-    assertEquals(projectDto, entry.assignedProject());
+    assertEquals(extendedProjectDto, entry.assignedProject());
     assertEquals(state, entry.state());
     assertEquals(description, entry.description());
 
@@ -82,15 +81,15 @@ class TimetableDataServiceTest {
         timetableDataService.getTimetableData(user, page2, size);
     assertNotNull(dataResponse2);
     List<TimetableEntryDto> timeTableEntries2 = dataResponse2.tableEntries();
-    List<ProjectDto> projectDtos2 = dataResponse2.availableProjects();
+    List<ExtendedProjectDto> extendedProjectDtos2 = dataResponse2.availableProjects();
     assertNotNull(timeTableEntries2);
-    assertNotNull(projectDtos2);
+    assertNotNull(extendedProjectDtos2);
     assertEquals(size, timeTableEntries2.size());
 
     long id2 = -15;
     String startTimestamp2 = "2024-05-12T11:00";
     String endTimestamp2 = "2024-05-12T13:59:59";
-    ProjectDto projectDto2 = new ProjectDto(null, null); // projectId and GroupId are null on this one
+    ExtendedProjectDto extendedProjectDto2 = new ExtendedProjectDto(null, null); // projectId and GroupId are null on this one
     State state2 = State.AVAILABLE;
     String description2 = null;
 
@@ -100,7 +99,7 @@ class TimetableDataServiceTest {
     assertEquals(id2, entry2.id());
     assertEquals(startTimestamp2, entry2.startTimestamp());
     assertEquals(endTimestamp2, entry2.endTimestamp());
-    assertEquals(projectDto2, entry2.assignedProject());
+    assertEquals(extendedProjectDto2, entry2.assignedProject());
     assertEquals(state2, entry2.state());
     assertEquals(description2, entry2.description());
   }

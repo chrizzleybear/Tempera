@@ -24,17 +24,25 @@ public class ProjectController {
   @Autowired
   ProjectMapperService projectMapperService;
   private Logger logger = Logger.getLogger("ProjectController");
-  @GetMapping("/manager/all")
-  public ResponseEntity<List<GroupxProjectDto>> getAllGroupxProjectsAsManager(@RequestParam("managerId") String managerId) {
-    List<GroupxProjectDto> groupxProjectDtos = projectMapperService.getAllGroupxProjectsAsManager(managerId);
-    return ResponseEntity.ok(groupxProjectDtos);
-  }
 
-    @GetMapping("/grouplead/all")
-    public ResponseEntity<List<GroupxProjectDto>> getAllGroupxProjectsAsGroupLead(@RequestParam("managerId") String managerId) {
-      List<GroupxProjectDto> groupxProjectDtos = projectMapperService.getAllGroupxProjectsAsGrouplead(managerId);
-      return ResponseEntity.ok(groupxProjectDtos);
+    @GetMapping("/all")
+    public ResponseEntity<List<ExtendedProjectDto>> getAllProjects() {
+      List<ExtendedProjectDto> projects = projectService.getAllProjects();
+      return ResponseEntity.ok(projectDto);
     }
+
+
+//  @GetMapping("/manager/all")
+//  public ResponseEntity<List<GroupxProjectDto>> getAllProjectXGroups() {
+//    List<GroupxProjectDto> groupxProjectDtos = projectMapperService.getAllGroupxProjectsAsManager();
+//    return ResponseEntity.ok(groupxProjectDtos);
+//  }
+//
+//    @GetMapping("/grouplead/all")
+//    public ResponseEntity<List<GroupxProjectDto>> getAllGroupxProjectsAsGroupLead(@RequestParam("managerId") String managerId) {
+//      List<GroupxProjectDto> groupxProjectDtos = projectMapperService.getAllGroupxProjectsAsGrouplead(managerId);
+//      return ResponseEntity.ok(groupxProjectDtos);
+//    }
 
 
 
@@ -65,17 +73,21 @@ public class ProjectController {
   }
 
   @GetMapping("/load/{id}")
-  public ResponseEntity<Project> getProject(@PathVariable Long id) {
+  public ResponseEntity<GroupxProjectDto> getProjectDetailedById(@PathVariable Long id) {
+      //alle infos zu einem Projekt inklusive aller Gruppen
     Project project = projectService.loadProject(id);
     return ResponseEntity.ok(project);
   }
 
+  //ehemals getGroups
   @GetMapping("/getGroups/{id}")
   public ResponseEntity<List<Groupx>> getGroupsByProjectId(@PathVariable Long projectId) {
     List<GroupxProject> groupxProjects = projectService.findAllGroupxProjectsByProjectId(projectId);
     List<Groupx> groups = groupxProjects.stream().map(GroupxProject::getGroup).toList();
     return ResponseEntity.ok(groups);
   }
+
+  //getProjectsByGroupId
 
   @PostMapping("/addGroup")
   public ResponseEntity<Void> addGroupToProject(
@@ -103,7 +115,7 @@ public class ProjectController {
 
   }
 
-  //todo: different return type? we do have a projectDto
+  //todo: different return type? we do have a extendedProjectDto
 
   @PostMapping("/addContributor")
   public ResponseEntity<Project> addContributor(
@@ -130,11 +142,10 @@ public class ProjectController {
       logger.warning("caught exception in Controller: %s".formatted(e.getMessage()));
       return ResponseEntity.badRequest().build();
     }
-
   }
 
   @GetMapping("/allOfGroup/{groupId}")
-  public ResponseEntity<List<Project>> getProjects(@PathVariable String groupId) {
+  public ResponseEntity<List<Project>> getProjectsByGroupId(@PathVariable String groupId) {
     List<Project> projects = projectService.getProjectsByGroupId(Long.parseLong(groupId));
     return ResponseEntity.ok(projects);
   }

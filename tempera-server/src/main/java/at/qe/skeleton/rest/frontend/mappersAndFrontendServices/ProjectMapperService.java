@@ -16,7 +16,13 @@ public class ProjectMapperService {
         this.projectService = projectService;
     }
 
-    public List<GroupxProjectDto> getAllGroupxProjectsAsManager(String managerId) {
+    public List<GroupxProjectDto> getAllGroupxProjectsAsManager() {
+        // find all projects of manager
+
+
+        //ExtendedGroupDto
+        //ExtendedProjectDto
+        //MemberDtos
         return null;
     }
 

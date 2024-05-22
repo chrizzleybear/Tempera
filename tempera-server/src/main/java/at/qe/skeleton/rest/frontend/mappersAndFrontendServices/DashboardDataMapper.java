@@ -5,7 +5,8 @@ import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
-import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.ExtendedProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
 import at.qe.skeleton.services.*;
 import org.springframework.stereotype.Service;
@@ -145,17 +146,23 @@ public class DashboardDataMapper {
             .orElse(null);
 
     Project defaultProject = user.getDefaultProject();
-    ProjectDto defaultProjectDto;
+    SimpleProjectDto defaultProjectDto;
     if (defaultProject == null) {
-      defaultProjectDto = new ProjectDto(null, "No default project assigned", null, null);
+      defaultProjectDto = new SimpleProjectDto(null, "No default project assigned", null, null);
     } else {
       defaultProjectDto =
-          new ProjectDto(defaultProject.getId().toString(), defaultProject.getName(), defaultProject.getDescription(), defaultProject.getManager().getUsername());
+          new SimpleProjectDto(defaultProject.getId().toString(), defaultProject.getName(), defaultProject.getDescription(), defaultProject.getManager().getUsername());
     }
 
-    List<ProjectDto> projects =
+    List<SimpleProjectDto> projects =
         projectService.getProjectsByContributor(user).stream()
-            .map(p -> new ProjectDto(p.getId().toString(), p.getName(), p.getDescription(), p.getManager().getUsername()))
+            .map(
+                p ->
+                    new SimpleProjectDto(
+                        p.getId().toString(),
+                        p.getName(),
+                        p.getDescription(),
+                        p.getManager().getUsername()))
             .toList();
 
     return new DashboardDataResponse(
@@ -166,7 +173,7 @@ public class DashboardDataMapper {
         user.getStateVisibility(),
         user.getState(),
         stateTimeStamp,
-        defaultProjectDto,
+            defaultProjectDto,
         projects,
         colleagueStateDtos);
   }

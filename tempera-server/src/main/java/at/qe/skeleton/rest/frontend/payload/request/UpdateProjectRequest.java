@@ -1,6 +1,6 @@
 package at.qe.skeleton.rest.frontend.payload.request;
 
-import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.ExtendedProjectDto;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -9,4 +9,4 @@ import jakarta.validation.constraints.NotNull;
  * @param entryId The id of the timetable entry to update
  * @param project The new project to assign to the timeRecord
  */
-public record UpdateProjectRequest(@NotNull Long entryId, @NotNull ProjectDto project) {}
+public record UpdateProjectRequest(@NotNull Long entryId, @NotNull ExtendedProjectDto project) {}

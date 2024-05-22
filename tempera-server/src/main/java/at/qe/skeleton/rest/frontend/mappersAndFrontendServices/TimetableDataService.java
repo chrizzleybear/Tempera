@@ -4,16 +4,14 @@ import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.exceptions.InternalRecordOutOfBoundsException;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.State;
-import at.qe.skeleton.repositories.GroupxProjectRepository;
 import at.qe.skeleton.repositories.UserxRepository;
-import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.ExtendedProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.TimetableEntryDto;
 import at.qe.skeleton.rest.frontend.payload.request.SplitTimeRecordRequest;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateDescriptionRequest;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateProjectRequest;
 import at.qe.skeleton.rest.frontend.payload.response.GetTimetableDataResponse;
 import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
-import at.qe.skeleton.services.GroupService;
 import at.qe.skeleton.services.ProjectService;
 import at.qe.skeleton.services.TimeRecordService;
 import at.qe.skeleton.services.UserxService;
@@ -63,12 +61,12 @@ public class TimetableDataService {
         projectDescription = timeRecord.getGroupxProject().getProject().getDescription();
         projectManager = timeRecord.getGroupxProject().getProject().getManager().getUsername();
       }
-      ProjectDto project = new ProjectDto(projectId, projectName, projectDescription, projectManager);
+      ExtendedProjectDto project = new ExtendedProjectDto(projectId, projectName, projectDescription, projectManager);
       State state = timeRecord.getExternalRecord().getState();
       String description = timeRecord.getDescription();
       tableEntries.add(new TimetableEntryDto(id, start, end, project, state, description));
     }
-    List<ProjectDto> availableProjects = projectService.getProjectsByContributor(user).stream().map(p -> new ProjectDto(Long.toString(p.getId()), p.getName(), p.getDescription(), p.getManager().getUsername())).toList();
+    List<ExtendedProjectDto> availableProjects = projectService.getProjectsByContributor(user).stream().map(p -> new ExtendedProjectDto(Long.toString(p.getId()), p.getName(), p.getDescription(), p.getManager().getUsername())).toList();
     return new GetTimetableDataResponse(tableEntries, availableProjects);
   }
 
@@ -76,7 +74,7 @@ public class TimetableDataService {
 
   public MessageResponse updateProject(String username, UpdateProjectRequest request)
       throws CouldNotFindEntityException {
-    // Long entryId, ProjectDto project, String description, String splitTimestamp
+    // Long entryId, ExtendedProjectDto project, String description, String splitTimestamp
     InternalRecord internalRecord = getInternalRecord(request.entryId());
     Userx user = userxService.loadUser(username);
     Long projectId = Long.valueOf(request.project().id());

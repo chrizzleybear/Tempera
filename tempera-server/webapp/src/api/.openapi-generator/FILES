@@ -35,7 +35,7 @@ model/messageResponse.ts
 model/models.ts
 model/modification.ts
 model/project.ts
-model/projectDto.ts
+model/extendedProjectDto.ts
 model/room.ts
 model/scanOrderDto.ts
 model/sensor.ts
