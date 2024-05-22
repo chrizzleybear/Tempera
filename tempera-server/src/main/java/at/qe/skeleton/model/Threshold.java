@@ -26,10 +26,12 @@ public class Threshold implements Serializable {
   @Column(name = "threshold_value")
   private double value;
 
-  @OneToOne
+  @ManyToOne
+  @JoinColumn(name = "modification_id")
   private Modification modification;
 
-  @OneToOne
+  @ManyToOne
+  @JoinColumn(name = "tip_id")
   private ThresholdTip tip;
 
   public SensorType getSensorType() {

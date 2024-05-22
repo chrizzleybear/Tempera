@@ -212,23 +212,23 @@ INSERT INTO threshold_tip (id, tip) VALUES
     (30, 'Regelmäßiges Lüften: Öffnen Sie Fenster und Türen mehrmals täglich für mindestens 10 Minuten, um frische Luft hereinzulassen und abgestandene Luft auszutauschen.\nVerwendung von Luftreinigern: Setzen Sie Luftreiniger ein, um Staub, Pollen und andere Schadstoffe aus der Luft zu filtern und die Raumluftqualität zu verbessern.\nPflanzen im Raum platzieren: Stellen Sie Zimmerpflanzen auf, die die Luftqualität verbessern können und das Wohlbefinden erhöhen.\n');
 INSERT INTO Modification (id, reason, time_stamp) VALUES
     (0, 'Default threshold.', NULL);
-INSERT INTO Threshold (id, default_threshold, sensor_type, threshold_type, threshold_value, modification, tip) VALUES
-    (11, TRUE, TEMPERATURE, 1, 20.0, 0, 00),
-    (12, TRUE, TEMPERATURE, 3, 19.0, 0, 00),
-    (13, TRUE, TEMPERATURE, 0, 24.0, 0, 01),
-    (14, TRUE, TEMPERATURE, 2, 25.0, 0, 01),
-    (21, TRUE, HUMIDITY, 1, 50.0, 0, 10),
-    (22, TRUE, HUMIDITY, 3, 40.0, 0, 10),
-    (23, TRUE, HUMIDITY, 0, 60.0, 0, 11),
-    (24, TRUE, HUMIDITY, 2, 70.0, 0, 11),
-    (31, TRUE, IRRADIANCE, 1, 220.0, 0, 20),
-    (32, TRUE, IRRADIANCE, 3, 200.0, 0, 20),
-    (33, TRUE, IRRADIANCE, 0, 540.0, 0, 21),
-    (34, TRUE, IRRADIANCE, 2, 600.0, 0, 21),
-    (41, TRUE, NMVOC, 1, 11.0, 0, 30),
-    (42, TRUE, NMVOC, 3, 10.0, 0, 30),
-    (43, TRUE, NMVOC, 0, NULL, 0, 30),
-    (44, TRUE, NMVOC, 2, NULL, 0, 30);
+INSERT INTO Threshold (id, default_threshold, sensor_type, threshold_type, threshold_value, modification_id, tip_id) VALUES
+    (-11, TRUE, 0, 1, 20.0, 0, 00),
+    (-12, TRUE, 0, 3, 19.0, 0, 00),
+    (-13, TRUE, 0, 0, 24.0, 0, 01),
+    (-14, TRUE, 0, 2, 25.0, 0, 01),
+    (-21, TRUE, 2, 1, 50.0, 0, 10),
+    (-22, TRUE, 2, 3, 40.0, 0, 10),
+    (-23, TRUE, 2, 0, 60.0, 0, 11),
+    (-24, TRUE, 2, 2, 70.0, 0, 11),
+    (-31, TRUE, 1, 1, 220.0, 0, 20),
+    (-32, TRUE, 1, 3, 200.0, 0, 20),
+    (-33, TRUE, 1, 0, 540.0, 0, 21),
+    (-34, TRUE, 1, 2, 600.0, 0, 21),
+    (-41, TRUE, 3, 1, 11.0, 0, 30),
+    (-42, TRUE, 3, 3, 10.0, 0, 30),
+    (-43, TRUE, 3, 0, NULL, 0, 30),
+    (-44, TRUE, 3, 2, NULL, 0, 30);
 
 
 
