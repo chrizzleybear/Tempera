@@ -154,7 +154,7 @@ def _safe_delete_data(data: Sequence[Measurement | TimeRecord]) -> None:
     :param data: sequence of measurements or time records to send
     :return: None
     """
-    if isinstance(data[0], TimeRecord):
+    if len(data) > 0 and isinstance(data[0], TimeRecord):
         data = data[:-1]
 
     with Session(shared.db_engine) as session:
