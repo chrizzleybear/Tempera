@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   ColleagueStateDto,
-  ProjectDto,
+  SimpleProjectDto,
   TimetableControllerService, TimetableEntryDto,
 } from '../../api';
 import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
@@ -71,7 +71,7 @@ interface InternalTimetableEntryDto extends TimetableEntryDto {
 export class TimetableComponent implements OnInit {
   public tableEntries: InternalTimetableEntryDto[] = [];
 
-  public availableProjects: ProjectDto[] = [];
+  public availableProjects: SimpleProjectDto[] = [];
 
   public filterFields: string[] = [];
 
@@ -152,7 +152,7 @@ export class TimetableComponent implements OnInit {
     );
   }
 
-  updateProject(newProject: ProjectDto, timeEntryId: number) {
+  updateProject(newProject: SimpleProjectDto, timeEntryId: number) {
     this.timetableControllerService.updateProject1({
       entryId: timeEntryId,
       project: newProject,

@@ -22,12 +22,12 @@
         <p-columnFilter type="date" field="endTime" placeholder="Search"></p-columnFilter>
       </th>
       <th id="projectFilter">
-        <p-columnFilter field="assignedProject.id" [showMenu]="true"
+        <p-columnFilter field="assignedProject.projectId" [showMenu]="true"
                         [showClearButton]="false">
           <ng-template pTemplate="filter" let-value let-filter="filterCallback">
             <p-dropdown
               [options]="availableProjects" [showClear]="true"
-              (onChange)="filter($event.value?.id)"
+              (onChange)="filter($event.value?.projectId)"
               optionLabel="name" appendTo="body" placeholder="Select one"></p-dropdown>
           </ng-template>
         </p-columnFilter>

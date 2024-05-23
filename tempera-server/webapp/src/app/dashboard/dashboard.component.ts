@@ -9,7 +9,7 @@ import { AirQualityPipe } from '../_pipes/air-quality.pipe';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
-import { DashboardControllerService, DashboardDataResponse, ProjectDto, UserxDto } from '../../api';
+import { DashboardControllerService, DashboardDataResponse, SimpleProjectDto, UserxDto } from '../../api';
 import VisibilityEnum = DashboardDataResponse.VisibilityEnum;
 import { StorageService } from '../_services/storage.service';
 import { ButtonModule } from 'primeng/button';
@@ -69,7 +69,7 @@ export class DashboardComponent implements OnInit {
 
   public form = new FormGroup({
     visibility: new FormControl<VisibilityEnum>(VisibilityEnum.Public, { nonNullable: true }),
-    project: new FormControl<ProjectDto | undefined>(undefined, { nonNullable: true }),
+    project: new FormControl<SimpleProjectDto | undefined>(undefined, { nonNullable: true }),
   });
 
   constructor(private dashboardControllerService: DashboardControllerService, private storageService: StorageService, private destroyRef: DestroyRef) {
@@ -89,7 +89,7 @@ export class DashboardComponent implements OnInit {
           if (this.user?.roles?.includes(RolesEnum.Admin)) {
             this.form.controls.visibility.disable();
           }
-          if (this.dashboardData?.defaultProject?.id) {
+          if (this.dashboardData?.defaultProject?.projectId) {
             this.form.controls.project.setValue(this.dashboardData?.defaultProject);
           }
         },

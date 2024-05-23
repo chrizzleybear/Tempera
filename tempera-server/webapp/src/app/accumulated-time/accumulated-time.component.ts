@@ -2,8 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   AccumulatedTimeControllerService,
   AccumulatedTimeDto,
-  GroupDto,
-  ProjectDto, Userx,
+  SimpleGroupDto,
+  SimpleProjectDto,
 } from '../../api';
 import { Table, TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
@@ -15,7 +15,7 @@ interface InternalAccumulatedTimeDto extends AccumulatedTimeDto {
   groupWithStringId: GroupWithStringId;
 }
 
-interface GroupWithStringId extends GroupDto {
+interface GroupWithStringId extends SimpleGroupDto {
   stringId: string;
 }
 
@@ -32,7 +32,7 @@ interface GroupWithStringId extends GroupDto {
 })
 export class AccumulatedTimeComponent implements OnInit {
   public accumulatedTimes: InternalAccumulatedTimeDto[] = [];
-  public availableProjects: ProjectDto[] = [];
+  public availableProjects: SimpleProjectDto[] = [];
   public availableGroups: GroupWithStringId[] = [];
 
   public totalTime: { hours: number, minutes: number } = { hours: 0, minutes: 0 };

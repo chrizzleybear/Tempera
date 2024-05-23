@@ -21,9 +21,9 @@
         </p-columnFilter>
       </th>
       <th id="projectFilter">
-        <p-columnFilter field="project.id" [showMenu]="true" [showClearButton]="false">
+        <p-columnFilter field="project.projectId" [showMenu]="true" [showClearButton]="false">
           <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-            <p-dropdown [options]="availableProjects" [showClear]="true" (onChange)="filter($event.value?.id)"
+            <p-dropdown [options]="availableProjects" [showClear]="true" (onChange)="filter($event.value?.projectId)"
                         optionLabel="name" appendTo="body" placeholder="Select one"></p-dropdown>
           </ng-template>
         </p-columnFilter>
