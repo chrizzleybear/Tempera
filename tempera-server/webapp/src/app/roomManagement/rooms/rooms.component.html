@@ -1,5 +1,7 @@
+<div *ngIf="!displayCreateDialog">
 <p-messages [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
-<div class="container">
+</div>
+  <div class="container">
   <div>
     <div *ngIf="!displayCreateDialog">
       <div class="mb-4">
@@ -58,6 +60,7 @@
     </div>
     <p-dialog header="Create Room" [(visible)]="displayCreateDialog" [modal]="true" [style]="{ width: '50vw' }"
               [closable]="true">
+      <p-messages [(value)]="messagesCreate"></p-messages>
       <input id="roomId" type="text" pInputText [(ngModel)]="newRoomId" required>
       <br>
       <br>

@@ -38,6 +38,7 @@ export class RoomsComponent implements OnInit {
   newRoomId: string = '';
   displayCreateDialog: boolean = false;
   messages: any;
+  messagesCreate: any;
   expandedRows: { [key: string]: boolean } = {};
 
   constructor(private roomService: RoomService) {
@@ -89,7 +90,10 @@ export class RoomsComponent implements OnInit {
         this.roomService.roomChanged();
         this.messages = [{severity: 'success', summary: 'Success', detail: 'Room created successfully'}];
       },
-      error: (error) => console.error('Error creating room:', error)
+      error: (error) => {
+        this.messagesCreate = [{severity: 'error', summary: 'Error', detail: 'Name already exists'}];
+        console.error('Error creating room:', error)
+      }
     });
   }
 
