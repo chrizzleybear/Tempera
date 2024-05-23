@@ -52,9 +52,6 @@ public class AccessPoint implements Persistable<UUID>, Serializable {
     return temperaStations;
   }
 
-  public Room getRoom() {
-    return room;
-  }
 
   public boolean isHealthy() {
         return isHealthy;
@@ -70,8 +67,6 @@ public class AccessPoint implements Persistable<UUID>, Serializable {
    *     adds the accesspoint before
    */
   public boolean addTemperaStation(@NotNull TemperaStation temperaStation) {
-    if (temperaStation == null)
-      throw new IllegalArgumentException("temperaStation must not be null");
     temperaStation.setAccessPoint(this);
     return this.temperaStations.add(temperaStation);
   }

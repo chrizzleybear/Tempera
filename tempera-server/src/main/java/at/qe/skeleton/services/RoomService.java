@@ -1,8 +1,14 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.model.AccessPoint;
 import at.qe.skeleton.model.Room;
 import at.qe.skeleton.model.Threshold;
+import at.qe.skeleton.model.ThresholdTip;
+import at.qe.skeleton.repositories.AccessPointRepository;
 import at.qe.skeleton.repositories.RoomRepository;
+import at.qe.skeleton.repositories.ThresholdRepository;
+import at.qe.skeleton.repositories.ThresholdTipRepository;
+import at.qe.skeleton.rest.frontend.dtos.ThresholdUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -15,10 +21,14 @@ import java.util.Optional;
 @Scope("application")
 public class RoomService {
 
-
+    private static final String ROOM_NOT_FOUND = "Room not found: ";
     private final RoomRepository roomRepository;
 
     @Autowired private ThresholdRepository thresholdRepository;
+
+    @Autowired private ThresholdTipRepository thresholdTipRepository;
+
+    @Autowired private AccessPointRepository accessPointRepository;
 
     @Autowired
     public RoomService(RoomRepository roomRepository) {
@@ -43,18 +53,18 @@ public class RoomService {
     }
     @Transactional
     public void deleteRoom(String roomId) {
-        Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("Room not found: " + roomId));
+        Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException(ROOM_NOT_FOUND + roomId));
         roomRepository.delete(room);
     }
     @Transactional
     public boolean addThresholdToRoom(String roomId, Threshold threshold){
-        Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("Room not found: " + roomId));
+        Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException(ROOM_NOT_FOUND + roomId));
         room.addThreshold(threshold);
         return roomRepository.save(room) != null;
     }
     @Transactional
     public boolean removeThresholdFromRoom(String roomId, Threshold threshold){
-        Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("Room not found: " + roomId));
+        Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException(ROOM_NOT_FOUND + roomId));
         if(room.getThresholds().contains(threshold)){
             room.getThresholds().remove(threshold);
             return roomRepository.save(room) != null;
@@ -84,7 +94,8 @@ public class RoomService {
     }
     @Transactional
     public ThresholdTip updateThresholdTip(ThresholdTip tip) {
-        ThresholdTip updateTip = thresholdTipRepository.findById(tip.getId()).orElseThrow(() -> new IllegalArgumentException("Tip not found"));
+        Threshold threshold = thresholdRepository.findById(tip.getId()).orElseThrow(() -> new IllegalArgumentException("Threshold not found"));
+        ThresholdTip updateTip= threshold.getTip();
         updateTip.setTip(tip.getTip());
         return thresholdTipRepository.save(updateTip);
     }

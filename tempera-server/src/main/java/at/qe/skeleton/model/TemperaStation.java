@@ -6,7 +6,6 @@ import org.springframework.data.domain.Persistable;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity
 public class TemperaStation implements Persistable<String> {
@@ -25,6 +24,13 @@ public class TemperaStation implements Persistable<String> {
   // the following strategy for the isNew Method comes from spring documentation:
   // https://docs.spring.io/spring-data/jpa/reference/jpa/entity-persistence.html
   @Transient private boolean isNew = true;
+
+    public TemperaStation(String id, boolean enabled, Userx user) {
+    }
+
+  public TemperaStation() {
+
+  }
 
   @Override
   public String getId() {
@@ -52,9 +58,6 @@ public class TemperaStation implements Persistable<String> {
     this.enabled = enabled;
     this.isHealthy = isHealthy;
   }
-
-  public TemperaStation() {}
-  ;
 
   public void setUser(Userx user) {
     this.user = user;

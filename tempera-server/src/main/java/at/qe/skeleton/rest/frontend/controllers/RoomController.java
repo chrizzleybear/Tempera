@@ -1,8 +1,9 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
-import at.qe.skeleton.model.Room;
-import at.qe.skeleton.model.Threshold;
+import at.qe.skeleton.model.*;
+import at.qe.skeleton.rest.frontend.dtos.ThresholdUpdateDto;
 import at.qe.skeleton.services.RoomService;
+import at.qe.skeleton.services.TemperaStationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +20,10 @@ public class RoomController {
 
   @Autowired private RoomService roomService;
 
+  @Autowired private TemperaStationService temp;
+
+
+
     @GetMapping("/all")
     public ResponseEntity<List<Room>> getAllRooms() {
         List<Room> rooms = roomService.getAllRooms();
@@ -28,7 +33,7 @@ public class RoomController {
     @PostMapping("/create")
     public ResponseEntity<String> createRoom(@RequestBody String roomId) {
         try {
-            Room room = roomService.createRoom(roomId);
+            roomService.createRoom(roomId);
             return ResponseEntity.ok("Room created successfully.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
