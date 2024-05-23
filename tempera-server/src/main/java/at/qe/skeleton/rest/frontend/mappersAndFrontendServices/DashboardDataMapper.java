@@ -110,22 +110,22 @@ public class DashboardDataMapper {
         sensors.stream()
             .filter(sensor -> sensor.getSensorType().equals(SensorType.TEMPERATURE))
             .findFirst()
-            .get();
+            .orElseThrow(() -> new RuntimeException("No temperature sensor found"));
     Sensor humiditySensor =
         sensors.stream()
             .filter(sensor -> sensor.getSensorType().equals(SensorType.HUMIDITY))
             .findFirst()
-            .get();
+            .orElseThrow(() -> new RuntimeException("No humidity sensor found"));
     Sensor irradianceSensor =
         sensors.stream()
             .filter(sensor -> sensor.getSensorType().equals(SensorType.IRRADIANCE))
             .findFirst()
-            .get();
+            .orElseThrow(() -> new RuntimeException("No irradiance sensor found"));
     Sensor nmvocSensor =
         sensors.stream()
             .filter(sensor -> sensor.getSensorType().equals(SensorType.NMVOC))
             .findFirst()
-            .get();
+            .orElseThrow(() -> new RuntimeException("No nmvoc sensor found"));
 
 
     Optional<Measurement> temperatureMeasurement = measurementService.findLatestMeasurementBySensor(temperatureSensor);
