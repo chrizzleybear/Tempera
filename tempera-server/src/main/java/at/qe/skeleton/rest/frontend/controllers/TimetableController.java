@@ -71,16 +71,16 @@ public class TimetableController {
 
   @PostMapping("/split/time-record")
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
-  public ResponseEntity<MessageResponse> splitTimeRecord(
+  public ResponseEntity<GetTimetableDataResponse> splitTimeRecord(
       @RequestBody SplitTimeRecordRequest request) {
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    MessageResponse response;
+    GetTimetableDataResponse response;
     try {
       response = timeTableDataService.splitTimeRecord(username, request);
     } catch (Exception e) {
-      return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+      return ResponseEntity.badRequest().build();
     }
-    timeTabeControllerLogger.info(response.getMessage());
+    timeTabeControllerLogger.info("split TimeRecord");
     return ResponseEntity.ok(response);
   }
 }
