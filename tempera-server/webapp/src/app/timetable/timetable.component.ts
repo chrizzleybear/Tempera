@@ -4,7 +4,7 @@ import {
   SimpleProjectDto,
   TimetableControllerService, TimetableEntryDto,
 } from '../../api';
-import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
+import { Table, TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePipe, NgIf } from '@angular/common';
 import { TagModule } from 'primeng/tag';
@@ -243,14 +243,4 @@ export class TimetableComponent implements OnInit {
     const minutes = Math.floor(remainingTime / 60000);
     this.totalTime = { hours: hours, minutes: minutes };
   }
-
-  // method to call onLazyLoad when enabled
-
-  // loadEntries($event: TableLazyLoadEvent) {
-  //   let state = ($event.filters?.['state'] as FilterMetadata)?.value as string | undefined;
-  //   let projectId = ($event.filters?.['assignedProject.id'] as FilterMetadata)?.value as string | undefined;
-  //   console.log({ state: state, projectId: projectId });
-  //
-  //   // call the API with the filter and sorting values
-  // }
 }
