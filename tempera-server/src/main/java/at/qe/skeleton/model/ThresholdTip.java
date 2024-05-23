@@ -20,8 +20,16 @@ public class ThresholdTip implements Serializable {
 
   public ThresholdTip() {this.tip = "No tips given."; }
 
+  public Long getId() {
+    return id;
+  }
+
   public String getTip() {
     return tip;
+  }
+
+  public void setTip(String tip) {
+    this.tip = tip;
   }
 
   @Override

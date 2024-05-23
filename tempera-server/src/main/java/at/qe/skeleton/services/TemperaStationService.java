@@ -11,6 +11,7 @@ import at.qe.skeleton.repositories.TemperaStationRepository;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -42,7 +43,7 @@ public class TemperaStationService {
    */
   public TemperaStation createTemperaStation(String id, boolean enabled, Userx user) {
     logger.info("creating new Temperastation with id %s".formatted(id));
-    TemperaStation temperaStation = new TemperaStation(id, enabled, user);
+    TemperaStation temperaStation = new TemperaStation(id, enabled, user, false);
     save(temperaStation);
 
     Sensor temperatureSensor = new Sensor(SensorType.HUMIDITY, Unit.PERCENT, temperaStation);
@@ -60,13 +61,19 @@ public class TemperaStationService {
     return temperaStation;
   }
 
+  public List<TemperaStation> getAllTemperaStations() {
+    return temperaStationRepository.findAll();
+  }
+
   public TemperaStation findById(String id) throws CouldNotFindEntityException {
+    logger.info("trying to find TemperaStation with Id: %s".formatted(id));
     return temperaStationRepository
         .findById(id)
         .orElseThrow(() -> new CouldNotFindEntityException("TemperaStation %s".formatted(id)));
   }
 
   public Optional<TemperaStation> findByUser(Userx user) {
+    logger.info("trying to find Temperastation of User %s".formatted(user));
     return temperaStationRepository.findFirstByUser(user);
   }
 

@@ -1,0 +1,41 @@
+<div *ngIf="accessPoint">
+  <div class="details-card">
+    <h1 class="text-2xl font-bold mb-4">Accesspoint Details</h1>
+    <div class="access-point-info">
+      <p><strong>ID:</strong> {{ accessPoint.id }}</p>
+      <p><strong>Room:</strong> {{ accessPoint.room.id }}</p>
+      <p><strong>Status:</strong> {{ accessPoint.enabled ? 'Enabled' : 'Disabled' }}</p>
+      <p><strong>Healthy:</strong> {{ accessPoint.isHealthy ? 'Yes' : 'No'}}</p>
+      <br>
+    </div>
+    <div class="tempera-stations-section">
+      <h3 class="text-center"><strong>Tempera Stations</strong></h3>
+      <br>
+      <p-table [value]="accessPoint.temperaStations" [paginator]="true" [rows]="10" responsiveLayout="scroll" class="tempera-stations-table">
+        <ng-template pTemplate="header">
+          <tr>
+            <th scope="col" pSortableColumn="id">ID
+              <p-sortIcon field="id"></p-sortIcon>
+            </th>
+            <th scope="col" pSortableColumn="enabled">Status
+              <p-sortIcon field="enabled"></p-sortIcon>
+            </th>
+            <th scope="col" pSortableColumn="isHealthy">
+              <p-sortIcon field="isHealthy"></p-sortIcon>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-temperaStation>
+          <tr>
+            <td>{{ temperaStation.id }}</td>
+            <td>{{ temperaStation.enabled ? 'Enabled' : 'Disabled' }}</td>
+            <td>{{ temperaStation.isHealthy ? 'Healthy' : 'Unhealthy' }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+<div *ngIf="!accessPoint">
+  <p>Loading Access Point details...</p>
+</div>

@@ -1,6 +1,5 @@
 package at.qe.skeleton.model;
 
-import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Persistable;
@@ -9,7 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-
 @Entity
 public class TemperaStation implements Persistable<String> {
 
@@ -17,6 +15,8 @@ public class TemperaStation implements Persistable<String> {
   @Id private String id;
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY) private Userx user;
   private boolean enabled;
+
+  private boolean isHealthy;
 
   @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY) private AccessPoint accessPoint;
   @OneToMany(mappedBy = "temperaStation", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, orphanRemoval = true) private List<Sensor> sensors;
@@ -46,10 +46,11 @@ public class TemperaStation implements Persistable<String> {
    * direct creation of TemperaStations should be avoided, use {@link
    * at.qe.skeleton.services.TemperaStationService#createTemperaStation} instead
    */
-  public TemperaStation(@NotNull String id, boolean enabled, Userx user) {
+  public TemperaStation(@NotNull String id, boolean enabled, Userx user, boolean isHealthy) {
     this.user = user;
     this.id = Objects.requireNonNull(id);
     this.enabled = enabled;
+    this.isHealthy = isHealthy;
   }
 
   public TemperaStation() {}
@@ -102,6 +103,14 @@ public class TemperaStation implements Persistable<String> {
   public void setEnabled(boolean enabled) {
     this.enabled = enabled;
   }
+
+    public boolean isIsHealthy() {
+        return isHealthy;
+    }
+
+    public void setIsHealthy(boolean active) {
+        this.isHealthy = active;
+    }
 
   @Override
   public boolean equals(Object o) {

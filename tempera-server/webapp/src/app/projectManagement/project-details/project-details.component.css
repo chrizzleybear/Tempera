@@ -1,11 +1,4 @@
-.project-details-card {
-  max-width: 100%;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  padding: 20px;
-  margin-bottom: 20px;
-}
-
-.project-info p, .manager-details p, .groups-section li p {
+.project-info p, .manager-details p, .groups-section li p, contributors-section li p {
   margin-bottom: 10px;
   line-height: 1.6;
 }

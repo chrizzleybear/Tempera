@@ -1,12 +1,13 @@
 <div *ngIf="project">
-  <p-card header="Project Details" class="project-details-card">
+  <div class="details-card">
+    <h1 class="text-xl font-bold mb-4 text-center">Project Details</h1>
   <div class="project-info">
     <p><strong>Name:</strong> {{ project.name }}</p>
     <p><strong>Description:</strong> {{ project.description }}</p>
   </div>
 
   <div class="manager-details">
-    <h3><strong>Manager Details</strong></h3>
+    <h3 class="text-xl font-bold mb-2 text-center">Manager Details</h3>
     <br>
     <p><strong>Username:</strong> {{ project.manager.username }}</p>
     <p><strong>Name:</strong> {{ project.manager.firstName }} {{ project.manager.lastName }}</p>
@@ -14,7 +15,7 @@
   </div>
 
   <div class="groups-section">
-    <h3><strong>Groups</strong></h3>
+    <h3 class="text-xl font-bold mb-2 text-center">Groups</h3>
     <br>
     <p-table [value]="project.groups!" [paginator]="true" [rows]="10" responsiveLayout="scroll" class="groups-table">
       <ng-template pTemplate="header">
@@ -32,8 +33,9 @@
     </p-table>
   </div>
 
-    <div class="members-section">
-      <h3><strong>Contributors</strong></h3>
+    <div class="contributors-section">
+      <br>
+      <h3 class="text-xl font-bold mb-2 text-center">Contributors</h3>
       <br>
       <p-table [value]="project.contributors!" [paginator]="true" [rows]="10" responsiveLayout="scroll" class="members-table">
         <ng-template pTemplate="header">
@@ -59,5 +61,5 @@
         </ng-template>
       </p-table>
     </div>
-  </p-card>
+  </div>
 </div>

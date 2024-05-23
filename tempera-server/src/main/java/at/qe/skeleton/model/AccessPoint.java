@@ -34,12 +34,14 @@ public class AccessPoint implements Persistable<UUID>, Serializable {
   @OneToMany(mappedBy = "accessPoint") private Set<TemperaStation> temperaStations;
   @ManyToOne private Room room;
   private boolean enabled;
+  private boolean isHealthy;
 
-  public AccessPoint(@NotNull UUID id, @NotNull Room room, boolean enabled) {
+  public AccessPoint(@NotNull UUID id, @NotNull Room room, boolean enabled, boolean isHealthy) {
     this.id = Objects.requireNonNull(id, "id must not be null");
     this.room = Objects.requireNonNull(room, "room must not be null");
     this.temperaStations = new HashSet<>();
     this.enabled = enabled;
+    this.isHealthy = isHealthy;
   }
 
   public AccessPoint() {
@@ -48,6 +50,14 @@ public class AccessPoint implements Persistable<UUID>, Serializable {
 
   public Set<TemperaStation> getTemperaStations() {
     return temperaStations;
+  }
+
+  public Room getRoom() {
+    return room;
+  }
+
+  public boolean isHealthy() {
+        return isHealthy;
   }
 
   /**

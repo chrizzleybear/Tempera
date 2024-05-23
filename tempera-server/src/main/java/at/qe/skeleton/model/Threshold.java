@@ -46,6 +46,9 @@ public class Threshold implements Serializable {
   public Threshold() {
   }
 
+  public Long getId() {
+    return id;
+  }
   public SensorType getSensorType() {
     return sensorType;
   }
