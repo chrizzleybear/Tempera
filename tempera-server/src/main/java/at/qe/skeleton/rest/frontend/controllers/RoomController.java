@@ -1,6 +1,7 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.model.*;
+import at.qe.skeleton.rest.frontend.dtos.AccesspointDto;
 import at.qe.skeleton.rest.frontend.dtos.ThresholdUpdateDto;
 import at.qe.skeleton.services.RoomService;
 import at.qe.skeleton.services.TemperaStationService;
@@ -110,9 +111,10 @@ public class RoomController {
     }
 
     @GetMapping("/accesspoint/{roomId}")
-    public ResponseEntity<AccessPoint> getAccessPoints(@PathVariable String roomId) {
+    public ResponseEntity<AccesspointDto> getAccessPoints(@PathVariable String roomId) {
         AccessPoint ap = this.roomService.getAccesspoint(roomId);
-        return ResponseEntity.ok(ap);
+        AccesspointDto dto = new AccesspointDto(ap.getId().toString(), ap.getRoom().getId() ,ap.isEnabled(), ap.isHealthy());
+        return ResponseEntity.ok(dto);
     }
 
 }
