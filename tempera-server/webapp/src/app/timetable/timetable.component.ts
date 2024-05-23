@@ -38,7 +38,6 @@ import { DateTime } from 'luxon';
 interface InternalTimetableEntryDto extends TimetableEntryDto {
   startTime: Date;
   endTime: Date;
-
 }
 
 @Component({
@@ -148,8 +147,6 @@ export class TimetableComponent implements OnInit {
           this.availableProjects = data.availableProjects ?? [];
 
           this.filterFields = Object.keys(this.tableEntries?.[0] ?? []);
-
-          this.calculateTotalTime();
         },
         error: err => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load timetable data' });
@@ -182,6 +179,7 @@ export class TimetableComponent implements OnInit {
   onSplitFormSubmit() {
     const entries = this.table.value as InternalTimetableEntryDto[];
     const timeEntryId = entries[this.selectedRowIndex].id;
+
     const time = DateTime.fromJSDate(this.splitForm.controls.time.value!).toString();
     this.timetableControllerService.splitTimeRecord({ entryId: timeEntryId, splitTimestamp: time }).subscribe(
       {
