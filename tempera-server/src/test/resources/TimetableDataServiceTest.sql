@@ -10,20 +10,14 @@ DELETE FROM groupx_project_object_contributors;
 DELETE FROM groupx_project_object;
 DELETE FROM groupx;
 DELETE FROM userx_userx_role;
-DELETE FROM userx;
+DELETE FROM userx WHERE default_project_id Is Not NULL;
 DELETE FROM project;
-
-
-
-
+DELETE FROM userx;
 
 
 
 INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE, state, state_visibility) VALUES(TRUE, 'Admin', 'Istrator', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'admin', 'admin', '2016-01-01 00:00:00', 'DEEPWORK', 'PUBLIC');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('admin', 'ADMIN');
-INSERT INTO userx (enabled, default_project_id, state, state_visibility, create_date, update_date, create_user_username, update_user_username, username, email, first_name, last_name, password)
-VALUES (TRUE, -2, 'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin', 'johndoe', 'johndoe@example.com', 'John', 'Doe', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u');
-INSERT INTO userx_userx_role (userx_username, roles) VALUES ('johndoe', 'EMPLOYEE');
 
 -- Testdata for ProjectService
 INSERT INTO project (id, name, description, manager_username) VALUES
@@ -39,6 +33,11 @@ INSERT INTO project (id, name, description, manager_username) VALUES
 (-10, 'Marketing Campaign Launch', 'This project involves planning and executing a new marketing campaign to attract customers.', 'admin'),
 (-11, 'Training and Development Program', 'This project focuses on providing training and development opportunities for employees to enhance their skills and performance.', 'admin'),
 (-12, 'Infrastructure Upgrade', 'This project involves upgrading the company''s IT infrastructure to improve efficiency and security.', 'admin');
+
+INSERT INTO userx (enabled, default_project_id, state, state_visibility, create_date, update_date, create_user_username, update_user_username, username, email, first_name, last_name, password)
+VALUES (TRUE, -2, 'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin', 'johndoe', 'johndoe@example.com', 'John', 'Doe', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u');
+INSERT INTO userx_userx_role (userx_username, roles) VALUES ('johndoe', 'EMPLOYEE');
+
 
 INSERT INTO groupx (id, group_lead_username, description, name) VALUES (1,'admin', 'this is just for testing', 'Marketing_Group');
 INSERT INTO groupx (id, group_lead_username, description, name) VALUES (2,'admin', 'this is also just for testing', 'Research_Group');

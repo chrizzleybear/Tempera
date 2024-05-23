@@ -100,12 +100,12 @@ class TimetableDataServiceTest {
      //                                                 (-20,                2,              -10,             '2024-05-14 13:00:00',      '2024-05-14 16:59:59',       '2024-05-14 13:00:00',        'johndoe'),
 
       //Expected Data
-      long id = 20;
+      long id = -20;
       String startTimestamp = "2024-05-14T13:00";
       String endTimestamp = "2024-05-14T16:59:59";
       SimpleProjectDto simpleProjectDto =
-              new SimpleProjectDto("-10", "Marketing Campaign Launch", "blabla", "admin");
-      State state = State.MEETING;
+              new SimpleProjectDto("-10", "Marketing Campaign Launch", "This project involves planning and executing a new marketing campaign to attract customers.", "admin");
+      State state = State.DEEPWORK;
       String entryDescription = null;
 
       // get our user:
