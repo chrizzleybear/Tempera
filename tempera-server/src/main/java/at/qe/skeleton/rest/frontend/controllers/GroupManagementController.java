@@ -1,6 +1,6 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
-import at.qe.skeleton.model.Group;
+import at.qe.skeleton.model.Groupx;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.rest.frontend.dtos.MemberAssigmentDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleGroupDto;
@@ -27,23 +27,23 @@ public class GroupManagementController {
   }
 
   @GetMapping("/all")
-  public ResponseEntity<List<Group>> getAllGroups() {
-    List<Group> users = groupService.getAllGroups();
+  public ResponseEntity<List<Groupx>> getAllGroups() {
+    List<Groupx> users = groupService.getAllGroups();
     return ResponseEntity.ok(users);
   }
 
   @PostMapping("/create")
-  public ResponseEntity<Group> createGroup(@RequestBody SimpleGroupDto groupData) {
-    Group group =
+  public ResponseEntity<Groupx> createGroup(@RequestBody SimpleGroupDto groupData) {
+    Groupx group =
         groupService.createGroup(groupData.name(), groupData.description(), groupData.groupLead());
     return ResponseEntity.ok(group);
   }
 
   @PutMapping("/update")
-  public ResponseEntity<Group> updateGroup(@RequestBody SimpleGroupDto groupData) {
-    Group updatedGroup =
+  public ResponseEntity<Groupx> updateGroup(@RequestBody SimpleGroupDto groupData) {
+    Groupx updatedGroup =
         groupService.updateGroup(
-            groupData.groupId(), groupData.name(), groupData.description(), groupData.groupLead());
+            Long.parseLong(groupData.groupId()), groupData.name(), groupData.description(), groupData.groupLead());
     return ResponseEntity.ok(updatedGroup);
   }
 
@@ -54,8 +54,8 @@ public class GroupManagementController {
   }
 
   @GetMapping("/load/{groupId}")
-  public ResponseEntity<Group> getGroup(@PathVariable String groupId) {
-    Group group = groupService.getGroup(Long.parseLong(groupId));
+  public ResponseEntity<Groupx> getGroup(@PathVariable String groupId) {
+    Groupx group = groupService.getGroup(Long.parseLong(groupId));
     return ResponseEntity.ok(group);
   }
 
@@ -83,8 +83,8 @@ public class GroupManagementController {
   }
 
   @GetMapping("/groupLead/{groupLeadId}")
-  public ResponseEntity<List<Group>> getGroupByGroupLead(@PathVariable String groupLeadId) {
-    List<Group> groups = groupService.getGroupFromGroupLead(groupLeadId);
+  public ResponseEntity<List<Groupx>> getGroupByGroupLead(@PathVariable String groupLeadId) {
+    List<Groupx> groups = groupService.getGroupFromGroupLead(groupLeadId);
     return ResponseEntity.ok(groups);
   }
 }

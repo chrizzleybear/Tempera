@@ -6,8 +6,9 @@ DELETE FROM tempera_station;
 DELETE FROM access_point;
 DELETE FROM room;
 DELETE FROM groupx_members;
+DELETE FROM groupx_project_object_contributors;
+DELETE FROM groupx_project_object;
 DELETE FROM groupx;
-DELETE FROM project_contributors;
 DELETE FROM userx_userx_role;
 DELETE FROM userx;
 DELETE FROM project;
@@ -47,19 +48,6 @@ VALUES
 -- this one is in the same group but his temperastation is not enabled
     (TRUE, -4, 'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin', 'clarkkent', 'clarkkent@webmail.com', 'Clark', 'Kent', 'hashed_password123');
 
-INSERT INTO project_contributors (project_id, username) VALUES
-                                                                         (-1, 'admin'), (-1, 'manager'), (-1, 'johndoe'), (-1, 'alicebrown'), (-1, 'brucewayne'), (-1, 'clarkkent'),
-                                                                         (-2, 'admin'), (-2, 'manager'), (-2, 'johndoe'), (-2, 'alicebrown'), (-2, 'brucewayne'), (-2, 'clarkkent'),
-                                                                         (-3, 'admin'), (-3, 'manager'), (-3, 'johndoe'), (-3, 'alicebrown'), (-3, 'brucewayne'), (-3, 'clarkkent'),
-                                                                         (-4, 'admin'), (-4, 'manager'), (-4, 'johndoe'), (-4, 'alicebrown'), (-4, 'brucewayne'), (-4, 'clarkkent'),
-                                                                         (-5, 'admin'), (-5, 'manager'), (-5, 'johndoe'), (-5, 'alicebrown'), (-5, 'brucewayne'), (-5, 'clarkkent'),
-                                                                         (-6, 'admin'), (-6, 'manager'), (-6, 'johndoe'), (-6, 'alicebrown'), (-6, 'brucewayne'), (-6, 'clarkkent'),
-                                                                         (-7, 'admin'), (-7, 'manager'), (-7, 'johndoe'), (-7, 'alicebrown'), (-7, 'brucewayne'), (-7, 'clarkkent'),
-                                                                         (-8, 'admin'), (-8, 'manager'), (-8, 'johndoe'), (-8, 'alicebrown'), (-8, 'brucewayne'), (-8, 'clarkkent'),
-                                                                         (-9, 'admin'), (-9, 'manager'), (-9, 'johndoe'), (-9, 'alicebrown'), (-9, 'brucewayne'), (-9, 'clarkkent'),
-                                                                         (-10, 'admin'), (-10, 'manager'), (-10, 'johndoe'), (-10, 'alicebrown'), (-10, 'brucewayne'), (-10, 'clarkkent'),
-                                                                         (-11, 'admin'), (-11, 'manager'), (-11, 'johndoe'), (-11, 'alicebrown'), (-11, 'brucewayne'), (-11, 'clarkkent'),
-                                                                         (-12, 'admin'), (-12, 'manager'), (-12, 'johndoe'), (-12, 'alicebrown'), (-12, 'brucewayne'), (-12, 'clarkkent');
 -- add some Groups to test db
 INSERT INTO groupx (id, group_lead_username, description, name) VALUES (1,'manager', 'this is just for testing', 'testGroup1');
 INSERT INTO groupx (id, group_lead_username, description, name) VALUES (2,'manager', 'this is also just for testing', 'testGroup2');
@@ -203,7 +191,7 @@ INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_
 INSERT INTO external_record (duration, start, time_end, user_username, state) VALUES
 (3400, '2024-05-10 09:30:00', null, 'johndoe', 'DEEPWORK');
 
-INSERT INTO internal_record (groupx_id, project_id, start, time_end, ext_rec_start, user_name) VALUES
-(null, null, '2024-05-10 09:30:00', null, '2024-05-10 09:30:00', 'johndoe');
+INSERT INTO internal_record (id, group_id, project_id, start, time_end, ext_rec_start, user_name) VALUES
+(-1, null, -1, '2024-05-10 09:30:00', null, '2024-05-10 09:30:00', 'johndoe');
 
 -- possibly add older data

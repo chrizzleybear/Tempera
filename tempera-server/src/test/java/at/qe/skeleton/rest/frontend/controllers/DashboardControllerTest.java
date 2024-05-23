@@ -5,8 +5,9 @@ import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
-import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
-import at.qe.skeleton.rest.frontend.mappers.DashboardDataMapper;
+import at.qe.skeleton.rest.frontend.dtos.ExtendedProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
+import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.DashboardDataMapper;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateDashboardDataRequest;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
 import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
@@ -58,7 +59,11 @@ class DashboardControllerTest {
             new ColleagueStateDto("Max Mustermann", "Raum 1", State.DEEPWORK, true, List.of("Gruppe 1")),
             new ColleagueStateDto("Jane Doe", "Raum 3", State.AVAILABLE, true, List.of("Gruppe1","Gruppe 2")),
             new ColleagueStateDto("Cooler Typ", "Raum 1", State.MEETING, false, noGroups));
-    var projects = List.of(new ProjectDto(1L, "Projekt 1"), new ProjectDto(2L, "Projekt 2"), new ProjectDto(3L, "Projekt 3"));
+    var projects =
+        List.of(
+            new SimpleProjectDto("project1", "Projekt 1", "Beschreibung 1", "manager1"),
+            new SimpleProjectDto("project2", "Projekt 2", "Beschreibung 2", "manager2"),
+            new SimpleProjectDto("project3", "Projekt 3", "Beschreibung 3", "manager3"));
     DashboardDataResponse dashboardDataResponse =
         new DashboardDataResponse(
             1.0,

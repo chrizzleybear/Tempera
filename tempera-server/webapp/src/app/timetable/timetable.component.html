@@ -1,0 +1,80 @@
+<p-table [value]="timetableData?.tableEntries ?? []" [globalFilterFields]="filterFields">
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="startTimestamp">Date
+        <p-sortIcon field="startTimestamp"></p-sortIcon>
+      </th>
+      <th>Start</th>
+      <th>End</th>
+      <th>Project
+      </th>
+      <th>State</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <th>
+        <p-columnFilter type="text" field="startTimestamp" matchMode="contains" placeholder="Search"></p-columnFilter>
+      </th>
+      <th></th>
+      <th></th>
+      <th>
+        <p-columnFilter field="assignedProject.id" [showMenu]="false"
+                        [showClearButton]="false">
+          <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+            <p-dropdown
+              [options]="timetableData?.availableProjects ?? []" [showClear]="true"
+              (onChange)="filter($event.value?.id)"
+              optionLabel="name" appendTo="body" placeholder="Select one"></p-dropdown>
+          </ng-template>
+        </p-columnFilter>
+      </th>
+      <th>
+        <p-columnFilter field="state" [showMenu]="false" [showClearButton]="false">
+          <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+            <p-dropdown [options]="stateOptions"
+                        [showClear]="true"
+                        (onChange)="filter($event.value)"
+                        optionLabel="value"
+                        appendTo="body"
+                        placeholder="Select one">
+              <ng-template let-option pTemplate="item">
+                <div class="flex">
+                  <p-tag [value]="DisplayHelper.showState | wrapFn: option"
+                         [severity]="DisplayHelper.getStateSeverity | wrapFn: option"></p-tag>
+                </div>
+              </ng-template>
+              <ng-template let-option pTemplate="selectedItem">
+                <div class="flex">
+                  <p-tag [value]="DisplayHelper.showState | wrapFn: option"
+                         [severity]="DisplayHelper.getStateSeverity | wrapFn: option"></p-tag>
+                </div>
+              </ng-template>
+
+            </p-dropdown>
+          </ng-template>
+        </p-columnFilter>
+      </th>
+      <th></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-timeEntry let-rowIndex="rowIndex">
+    <tr>
+      <td>{{ timeEntry.startTimestamp | date: 'fullDate' }}</td>
+      <td>{{ timeEntry.startTimestamp | date: 'HH:mm' }}</td>
+      <td>{{ timeEntry.endTimestamp | date: 'HH:mm' }}</td>
+      <td>
+        <p-dropdown [options]="timetableData?.availableProjects" [(ngModel)]="timeEntry.assignedProject"
+                    (onChange)="updateProject($event.value, timeEntry.id)"
+                    optionLabel="name"
+                    placeholder="Select project"
+                    appendTo="body"></p-dropdown>
+      </td>
+      <td>
+        <p-tag [value]="DisplayHelper.showState | wrapFn: timeEntry.state"
+               [severity]="DisplayHelper.getStateSeverity | wrapFn: timeEntry.state"></p-tag>
+      </td>
+      <td>{{ timeEntry.description }}</td>
+    </tr>
+  </ng-template>
+</p-table>
+

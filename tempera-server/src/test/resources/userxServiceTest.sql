@@ -6,11 +6,15 @@ DELETE FROM tempera_station;
 DELETE FROM access_point;
 DELETE FROM room;
 DELETE FROM groupx_members;
+DELETE FROM groupx_project_object_contributors;
+DELETE FROM groupx_project_object;
 DELETE FROM groupx;
-DELETE FROM project_contributors;
 DELETE FROM userx_userx_role;
-DELETE FROM userx;
+DELETE FROM userx WHERE default_project_id Is Not NULL;
 DELETE FROM project;
+DELETE FROM userx;
+
+
 
 INSERT INTO project (id, name, description) VALUES
                                                 (-1, 'Serious Business', 'This project beuts you aus'),
@@ -52,19 +56,6 @@ INSERT INTO userx (enabled, default_project_id, state, state_visibility, create_
 INSERT INTO userx_userx_role (userx_username, roles) VALUES ('johndoe', 'EMPLOYEE'), ('bobjones', 'EMPLOYEE'), ('alicebrown', 'EMPLOYEE'), ('chriswilliams', 'EMPLOYEE'), ('peterparker', 'EMPLOYEE'), ('tonystark', 'EMPLOYEE'), ('brucewayne', 'EMPLOYEE'), ('clarkkent', 'EMPLOYEE');
 INSERT INTO userx_userx_role (userx_username, roles) VALUES ('brucewayne', 'MANAGER');
 
-INSERT INTO project_contributors (project_id, username) VALUES
-                                                                         (-1, 'admin'), (-1, 'bobjones'), (-1, 'johndoe'), (-1, 'alicebrown'), (-1, 'brucewayne'), (-1, 'clarkkent'),
-                                                                         (-2, 'admin'), (-2, 'bobjones'), (-2, 'johndoe'), (-2, 'alicebrown'), (-2, 'brucewayne'), (-2, 'clarkkent'),
-                                                                         (-3, 'admin'), (-3, 'bobjones'), (-3, 'johndoe'), (-3, 'alicebrown'), (-3, 'brucewayne'), (-3, 'clarkkent'),
-                                                                         (-4, 'admin'), (-4, 'bobjones'), (-4, 'johndoe'), (-4, 'alicebrown'), (-4, 'brucewayne'), (-4, 'clarkkent'),
-                                                                         (-5, 'admin'), (-5, 'bobjones'), (-5, 'johndoe'), (-5, 'alicebrown'), (-5, 'brucewayne'), (-5, 'clarkkent'),
-                                                                         (-6, 'admin'), (-6, 'bobjones'), (-6, 'johndoe'), (-6, 'alicebrown'), (-6, 'brucewayne'), (-6, 'clarkkent'),
-                                                                         (-7, 'admin'), (-7, 'bobjones'), (-7, 'johndoe'), (-7, 'alicebrown'), (-7, 'brucewayne'), (-7, 'clarkkent'),
-                                                                         (-8, 'admin'), (-8, 'bobjones'), (-8, 'johndoe'), (-8, 'alicebrown'), (-8, 'brucewayne'), (-8, 'clarkkent'),
-                                                                         (-9, 'admin'), (-9, 'bobjones'), (-9, 'johndoe'), (-9, 'alicebrown'), (-9, 'brucewayne'), (-9, 'clarkkent'),
-                                                                         (-10, 'admin'), (-10, 'bobjones'), (-10, 'johndoe'), (-10, 'alicebrown'), (-10, 'brucewayne'), (-10, 'clarkkent'),
-                                                                         (-11, 'admin'), (-11, 'bobjones'), (-11, 'johndoe'), (-11, 'alicebrown'), (-11, 'brucewayne'), (-11, 'clarkkent'),
-                                                                         (-12, 'admin'), (-12, 'bobjones'), (-12, 'johndoe'), (-12, 'alicebrown'), (-12, 'brucewayne'), (-12, 'clarkkent');
 
 -- add some Groups to test db
 INSERT INTO groupx (id, group_lead_username, description, name) VALUES (1,'brucewayne', 'this is just for testing', 'testGroup1');
@@ -81,6 +72,22 @@ INSERT INTO groupx_members (groups_id, members_username) VALUES (3, 'brucewayne'
 INSERT INTO groupx_members (groups_id, members_username) VALUES (3, 'peterparker'), (4, 'peterparker');
 INSERT INTO groupx_members (groups_id, members_username) VALUES (3, 'tonystark'), (4, 'tonystark');
 INSERT INTO groupx_members (groups_id, members_username) VALUES (3, 'clarkkent'), (4, 'clarkkent');
+
+-- add some of the created projects to some GroupxProject Objects:
+-- add Serious Business, Expansion, Innovation, Efficiency,Sustainability and Customer Satisfaction to testGroup1
+INSERT INTO groupx_project_object (group_id, project_id)
+VALUES (1, -1), (1, -2), (1, -3), (1, -4), (1,-5), (1, -6);
+
+-- add Product Development, Cost Reduction, Quality Assurance, Marketing Campaign Launch, Training and Development and Infrastructure Upgrade to testGroup2
+INSERT INTO groupx_project_object (group_id, project_id)
+Values (2, -7), (2, -8), (2, -9), (2, -10), (2, -11), (2, -12);
+
+
+INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username)
+VALUES (1, -1, 'admin'), (1, -2, 'admin'), (1, -3, 'admin'), (1, -4, 'admin'), (1, -5, 'admin'), (1, -6, 'admin');
+
+INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username)
+VALUES (2, -7, 'johndoe'), (2, -8, 'johndoe'), (2, -9, 'johndoe'), (2, -10, 'johndoe'), (2, -11, 'johndoe'), (2, -12, 'johndoe');
 
 
 INSERT INTO room (room_id) VALUES ('room_1');
@@ -203,8 +210,8 @@ INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_
                                                                                                  (890.0, -13, '2024-05-11T15:45:00', 'TEMP131');
 
 -- Testdata for TimeRecordService
-INSERT INTO external_record (duration, start, time_end, user_username, state) VALUES (30, '2016-01-01 00:00:00', null, 'admin', 'DEEPWORK'), (3400, '2024-05-10 09:30:00', null, 'johndoe', 'DEEPWORK'), (3400, '2024-05-10 09:30:00', null, 'brucewayne', 'DEEPWORK');
-INSERT INTO internal_record (groupx_id, project_id, start, time_end, ext_rec_start, user_name) VALUES (null, null, '2016-01-01 00:00:00', null, '2016-01-01 00:00:00', 'admin'), (null,  -1, '2024-05-10 09:30:00', null, '2024-05-10 09:30:00', 'johndoe');
+INSERT INTO external_record (duration, start, time_end, user_username, state) VALUES (30, '2016-01-01 00:00:00', null, 'admin', 'DEEPWORK'), (3400, '2024-05-10 09:30:00', null, 'johndoe', 'DEEPWORK');
+INSERT INTO internal_record (id, group_id, project_id, start, time_end, ext_rec_start, user_name) VALUES (-1, null, null, '2016-01-01 00:00:00', null, '2016-01-01 00:00:00', 'admin'), (-2, null,  -1, '2024-05-10 09:30:00', null, '2024-05-10 09:30:00', 'johndoe');
 
 
 

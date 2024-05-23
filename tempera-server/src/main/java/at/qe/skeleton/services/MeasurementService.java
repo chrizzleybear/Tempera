@@ -15,8 +15,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static at.qe.skeleton.services.TimestampToolkit.timeStampClipper;
-
 @Component
 @Scope("application")
 public class MeasurementService {
@@ -48,7 +46,7 @@ public class MeasurementService {
 
   public Measurement saveMeasurement(Measurement measurement) {
     LocalDateTime timestamp = measurement.getId().getTimestamp();
-    measurement.getId().setTimestamp(timeStampClipper(timestamp));
+    measurement.getId().setTimestamp(timestamp);
     return measurementRepository.save(measurement);
   }
 

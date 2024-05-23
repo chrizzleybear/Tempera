@@ -17,6 +17,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,10 +42,10 @@ class TimeRecordServiceTest {
   @Mock private ExternalRecordRepository externalRecordRepositoryMock;
   @Mock private InternalRecordRepository internalRecordRepositoryMock;
     @Mock private UserxRepository mockedUserxRepository;
+    private TimeRecordService timeRecordService;
 
 
-
-  @BeforeEach
+    @BeforeEach
   void setUp() {
     timeRecordServiceMockedDependencies =
         new TimeRecordService(
@@ -118,7 +119,7 @@ class TimeRecordServiceTest {
           roles = {"ADMIN"})
   public void addRecordWithOlderRecordsRealRepository() throws Exception {
 
- LocalDateTime startNew = LocalDateTime.now();
+ LocalDateTime startNew = LocalDateTime.of(2020, 10, 10, 12, 30, 45, 100000000);
  Userx admin = userxService.loadUser("admin");
 
 
@@ -142,11 +143,33 @@ class TimeRecordServiceTest {
 
     assertEquals(1, oldExternalRecord.getInternalRecords().size());
     assertEquals(admin, oldExternalRecord.getUser());
-    long difference = ChronoUnit.SECONDS.between(oldExternalRecord.getEnd(), newExternalRecord.getStart());
-    assertEquals(1L, difference);
+    long difference = ChronoUnit.MILLIS.between(oldExternalRecord.getEnd(), newExternalRecord.getStart());
+    assertEquals(10L, difference);
   }
 
-  @Test
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:addRecordWithOlderRecordsRealRepositoryTest.sql")
+    @WithMockUser(username = "admin", roles = {"EMPLOYEE"})
+    public void externalRecordWithATightSchedule() throws Exception{
+
+      Userx admin = userxService.loadUser("admin");
+        ExternalRecord oldRecord = timeRecordServiceReal.findLatestExternalRecordByUser(admin).get();
+        assertNotNull(oldRecord);
+
+        LocalDateTime oldStart = oldRecord.getStart();
+    System.out.println(oldStart);
+        // now we will send one that starts just a 10/th of a second later, thats the closest leo will send.
+        LocalDateTime newStart = oldStart.plus(100, ChronoUnit.MILLIS);
+        ExternalRecord newRecord = new ExternalRecord(admin, newStart, 0L, null, State.OUT_OF_OFFICE);
+        assertDoesNotThrow(() -> timeRecordServiceReal.addRecord(newRecord));
+        Optional<ExternalRecord> recordAfterAddingOptional = timeRecordServiceReal.findLatestExternalRecordByUser(admin);
+        assertEquals(newRecord.getStart(), recordAfterAddingOptional.get().getStart());
+
+        Optional<ExternalRecord> oldRecrdAfterAddingOptional = timeRecordServiceReal.findExternalRecordByStartAndUser(oldStart, admin);
+        assertEquals(newStart.minus(10, ChronoUnit.MILLIS), oldRecrdAfterAddingOptional.get().getEnd());
+  }
+
+    @Test
   void delete() {}
 
 

@@ -24,6 +24,8 @@ import {
   TemperaStationDetailsComponent
 } from "./temperaManagement/tempera-station-details/tempera-station-details.component";
 import {AccessPointDetailsComponent} from "./accessPointManagement/access-point-details/access-point-details.component";
+import { TimetableComponent } from './timetable/timetable.component';
+
 
 export const routes: Routes = [
   {
@@ -37,13 +39,14 @@ export const routes: Routes = [
           { path: 'room/:id', component: RoomDetailsComponent},
           { path: 'plan', component: FloorPlanComponent },
           { path: 'groups', component: GroupsComponent },
-          { path: 'group/:id', component: GroupDetailsComponent},
-          { path: 'group/members/:id', component: GroupMembersComponent},
-          { path: 'project/groups/:id', component: ProjectGroupsComponent},
-          { path: 'projects', component: ProjectsComponent},
-          { path: 'project/:id', component: ProjectDetailsComponent},
-          { path: 'myGroups', component: GroupsGroupleadComponent},
-          { path: 'group/projects/:id', component: GroupProjectsComponent},
+          { path: 'group/:id', component: GroupDetailsComponent },
+          { path: 'group/members/:id', component: GroupMembersComponent },
+          { path: 'project/groups/:id', component: ProjectGroupsComponent },
+          { path: 'projects', component: ProjectsComponent },
+          { path: 'project/:id', component: ProjectDetailsComponent },
+          { path: 'myGroups', component: GroupsGroupleadComponent },
+          { path: 'group/projects/:id', component: GroupProjectsComponent },
+          { path: 'timetable', component: TimetableComponent },
           { path: 'accessPoints', component: AccesspointsComponent},
           { path: 'accessPoint/:id', component: AccessPointDetailsComponent},
           { path: 'temperaStations', component: TemperaStationsComponent},
