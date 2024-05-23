@@ -34,7 +34,7 @@ export class ProjectService {
   }
 
   getProjectById(projectId: number): Observable<Project> {
-    return this.http.get<Project>(`${this.API_URL}load/${projectId}`);
+    return this.http.get<Project>(`${this.API_URL}loadExtendedProject/${projectId}`);
   }
 
   addGroupToProject(dto: GroupAssignmentDTO): Observable<void> {

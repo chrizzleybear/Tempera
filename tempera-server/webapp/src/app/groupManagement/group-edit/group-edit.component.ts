@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {DropdownOptionUser, User} from "../../models/user.model";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {GroupService} from "../../_services/group.service";
@@ -49,7 +49,7 @@ export class GroupEditComponent implements OnInit, OnChanges{
     this.fetchGroupLeads();
   }
 
-  ngOnChanges() {
+  ngOnChanges(change: SimpleChanges) {
     this.groupForm.reset();
     this.populateForm();
 
@@ -76,7 +76,7 @@ export class GroupEditComponent implements OnInit, OnChanges{
     this.groupForm.patchValue({
       name: this.group.name,
       description: this.group.description,
-      groupLead: this.groupLeads.find(lead => lead.value.username === this.group.groupLead.username)
+      groupLead: this.groupLeads.find(lead => lead.value.username === this.group.groupLead.id)
     });
   }
 
@@ -88,7 +88,6 @@ export class GroupEditComponent implements OnInit, OnChanges{
         description: this.groupForm.value.description,
         groupLead: this.groupForm.value.groupLead.value.username
       };
-      console.log('Updating group:', dto);
       this.groupService.updateGroup(dto).subscribe({
         next: (response) => {
           console.log('Group updated:', response);
