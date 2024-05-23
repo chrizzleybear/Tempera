@@ -96,7 +96,10 @@ class DashboardControllerTest {
     when(userXService.loadUser("johndoe")).thenReturn(userx);
     when(dashboardDataMapper.updateUserVisibilityAndTimeStampProject(any(), any())).thenReturn(messageResponse);
 
-    ResponseEntity<MessageResponse> response = dashboardController.updateDashboardData(new UpdateDashboardDataRequest(Visibility.HIDDEN, new ProjectDto(1L, "Projekt 1")));
+    ResponseEntity<MessageResponse> response =
+        dashboardController.updateDashboardData(
+            new UpdateDashboardDataRequest(
+                Visibility.HIDDEN, new SimpleProjectDto("-1", "Projekt 1", "blabla", "johnathan hingeforth mc cringleberry")));
     assertEquals(messageResponse, response.getBody());
     verify(userXService, times(1)).loadUser("johndoe");
     verify(dashboardDataMapper, times(1)).updateUserVisibilityAndTimeStampProject(any(), any());
