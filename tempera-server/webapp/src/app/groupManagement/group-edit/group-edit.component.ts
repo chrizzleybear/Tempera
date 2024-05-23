@@ -76,18 +76,19 @@ export class GroupEditComponent implements OnInit, OnChanges{
     this.groupForm.patchValue({
       name: this.group.name,
       description: this.group.description,
-      groupLead: this.groupLeads.find(lead => lead.value.username === this.group.groupLead.id)
+      groupLead: this.groupLeads.find(lead => lead.value.username === this.group.groupLead.username)
     });
   }
 
   onSubmit() {
     if (this.groupForm.valid) {
       const dto: GroupUpdateDTO = {
-        groupId: Number(this.group.id),
+        id: Number(this.group.id),
         name: this.groupForm.value.name,
         description: this.groupForm.value.description,
         groupLead: this.groupForm.value.groupLead.value.username
       };
+      console.log('Updating group:', dto);
       this.groupService.updateGroup(dto).subscribe({
         next: (response) => {
           console.log('Group updated:', response);

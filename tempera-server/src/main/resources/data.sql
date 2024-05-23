@@ -5,8 +5,8 @@ INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('admin', 'EMPLOYEE'
 INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE, state, state_visibility) VALUES(TRUE, 'Susi', 'Kaufgern', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'user1', 'admin', '2016-01-01 00:00:00', 'DEEPWORK', 'PRIVATE');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('user1', 'MANAGER');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('user1', 'EMPLOYEE');
-INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE, state, state_visibility) VALUES(TRUE, 'Max', 'Mustermann', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'user2', 'admin', '2016-01-01 00:00:00', 'OUT_OF_OFFICE', 'HIDDEN');
-INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('user2', 'EMPLOYEE');
+INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE, state, state_visibility) VALUES(TRUE, 'Maria', 'Theresa', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'MariaTheresa', 'admin', '2016-01-01 00:00:00', 'OUT_OF_OFFICE', 'HIDDEN');
+INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('MariaTheresa', 'MANAGER'), ('MariaTheresa', 'EMPLOYEE');
 INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE, state, state_visibility) VALUES(TRUE, 'Elvis', 'The King', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'elvis', 'elvis', '2016-01-01 00:00:00', 'OUT_OF_OFFICE', 'PUBLIC');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('elvis', 'ADMIN');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('elvis', 'EMPLOYEE');
@@ -28,14 +28,14 @@ INSERT INTO project (id, name, description, manager_username) VALUES
 
 -- these users can be used to display as colleagues for john doe
 INSERT INTO userx (enabled, default_project_id, state, state_visibility, create_date, update_date, create_user_username, update_user_username, username, email, first_name, last_name, password) VALUES
-    (TRUE, -2, 'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin', 'johndoe', 'johndoe@example.com', 'John', 'Doe', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
-    (TRUE, null, 'MEETING', 'PUBLIC', '2024-05-10T10:00:00', '2024-05-10T11:45:00', 'bobjones', 'admin', 'bobjones', 'bobjones@example.com', 'Bob', 'Jones', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
-    (TRUE, -3, 'OUT_OF_OFFICE', 'HIDDEN', '2024-05-08T15:30:00', '2024-05-08T17:00:00', 'admin', 'admin', 'alicebrown', 'alicebrown@example.com', 'Alice', 'Brown', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
-    (true, -2,'DEEPWORK', 'PRIVATE', '2024-05-07T14:00:00', '2024-05-07T16:30:00', 'chriswilliams', 'admin', 'chriswilliams', 'chriswilliams@example.com', 'Chris', 'Williams', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
-    (TRUE, -5, 'MEETING', 'PUBLIC', '2024-05-11T10:30:00', '2024-05-11T11:45:00', 'admin', 'admin', 'peterparker', 'peterparker@example.com', 'Peter', 'Parker', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
-    (true, null, 'OUT_OF_OFFICE', 'PRIVATE', '2024-05-11T13:00:00', '2024-05-11T14:15:00', 'admin', 'admin', 'tonystark', 'tonystark@example.com', 'Tony', 'Stark', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
-    (TRUE, -1, 'DEEPWORK', 'HIDDEN', '2024-05-10T15:30:00', '2024-05-10T17:00:00', 'admin', 'admin', 'brucewayne', 'brucewayne@example.com', 'Bruce', 'Wayne', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
-    (TRUE, -4, 'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin', 'clarkkent', 'clarkkent@webmail.com', 'Clark', 'Kent', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u');
+                                                                                                                                                                                                     (TRUE, -2, 'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin', 'johndoe', 'johndoe@example.com', 'John', 'Doe', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
+                                                                                                                                                                                                     (TRUE, null, 'MEETING', 'PUBLIC', '2024-05-10T10:00:00', '2024-05-10T11:45:00', 'bobjones', 'admin', 'bobjones', 'bobjones@example.com', 'Bob', 'Jones', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
+                                                                                                                                                                                                     (TRUE, -3, 'OUT_OF_OFFICE', 'HIDDEN', '2024-05-08T15:30:00', '2024-05-08T17:00:00', 'admin', 'admin', 'alicebrown', 'alicebrown@example.com', 'Alice', 'Brown', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
+                                                                                                                                                                                                     (true, -2,'DEEPWORK', 'PRIVATE', '2024-05-07T14:00:00', '2024-05-07T16:30:00', 'chriswilliams', 'admin', 'chriswilliams', 'chriswilliams@example.com', 'Chris', 'Williams', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
+                                                                                                                                                                                                     (TRUE, -5, 'MEETING', 'PUBLIC', '2024-05-11T10:30:00', '2024-05-11T11:45:00', 'admin', 'admin', 'peterparker', 'peterparker@example.com', 'Peter', 'Parker', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
+                                                                                                                                                                                                     (true, null, 'OUT_OF_OFFICE', 'PRIVATE', '2024-05-11T13:00:00', '2024-05-11T14:15:00', 'admin', 'admin', 'tonystark', 'tonystark@example.com', 'Tony', 'Stark', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
+                                                                                                                                                                                                     (TRUE, -1, 'DEEPWORK', 'HIDDEN', '2024-05-10T15:30:00', '2024-05-10T17:00:00', 'admin', 'admin', 'brucewayne', 'brucewayne@example.com', 'Bruce', 'Wayne', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
+                                                                                                                                                                                                     (TRUE, -4, 'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin', 'clarkkent', 'clarkkent@webmail.com', 'Clark', 'Kent', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u');
 
 INSERT INTO userx_userx_role (userx_username, roles) VALUES ('johndoe', 'EMPLOYEE'), ('bobjones', 'EMPLOYEE'), ('alicebrown', 'EMPLOYEE'), ('chriswilliams', 'EMPLOYEE'), ('peterparker', 'EMPLOYEE'), ('tonystark', 'EMPLOYEE'), ('brucewayne', 'EMPLOYEE'), ('clarkkent', 'EMPLOYEE');
 INSERT INTO userx_userx_role (userx_username, roles) VALUES ('brucewayne', 'MANAGER'), ('peterparker', 'GROUPLEAD'), ('tonystark', 'GROUPLEAD');
@@ -72,7 +72,6 @@ INSERT INTO groupx_members (groups_id, members_username) VALUES (-3, 'brucewayne
 INSERT INTO groupx_members (groups_id, members_username) VALUES (-3, 'peterparker'), (-4, 'peterparker');
 INSERT INTO groupx_members (groups_id, members_username) VALUES (-3, 'tonystark'), (-4, 'tonystark');
 INSERT INTO groupx_members (groups_id, members_username) VALUES (-3, 'clarkkent'), (-4, 'clarkkent');
-
 
 
 -- Testdata for TimeRecordService
@@ -140,51 +139,46 @@ INSERT INTO room (room_id) VALUES ('room_10');
 INSERT INTO room (room_id) VALUES ('room_11');
 INSERT INTO room (room_id) VALUES ('room_12');
 
-INSERT INTO access_point (is_healthy, enabled, id, room_room_id) VALUES
-                                                                     (TRUE, TRUE, '123e4567-e89b-12d3-a456-426614174001', 'room_1'),
-                                                                     (TRUE, FALSE, '456e4567-e89b-12d3-a456-426614174001', 'room_2'),
-                                                                     (TRUE, TRUE, '789e4567-e89b-12d3-a456-426614174001', 'room_3'),
-                                                                     (TRUE, TRUE, '111e4567-e89b-12d3-a456-426614174001', 'room_10'),
-                                                                     (TRUE, TRUE, '222e4567-e89b-12d3-a456-426614174001', 'room_11'),
-                                                                     (TRUE, TRUE, '333e4567-e89b-12d3-a456-426614174001', 'room_12');
+INSERT INTO access_point (id, is_healthy, enabled, room_room_id) VALUES ('123e4567-e89b-12d3-a456-426614174001', TRUE, TRUE, 'room_1');
+INSERT INTO access_point (id, is_healthy, enabled, room_room_id) VALUES ('456e4567-e89b-12d3-a456-426614174001', FALSE, TRUE, 'room_2');
+INSERT INTO access_point (id, is_healthy, enabled, room_room_id) VALUES ('789e4567-e89b-12d3-a456-426614174001', TRUE, TRUE, 'room_3');
+INSERT INTO access_point (id, is_healthy, enabled, room_room_id) VALUES ('111e4567-e89b-12d3-a456-426614174001', TRUE, TRUE, 'room_10');
+INSERT INTO access_point (id, is_healthy, enabled, room_room_id) VALUES ('222e4567-e89b-12d3-a456-426614174001', TRUE, TRUE, 'room_11');
+INSERT INTO access_point (id, is_healthy, enabled, room_room_id) VALUES ('333e4567-e89b-12d3-a456-426614174001', TRUE, TRUE, 'room_12');
 
--- Stations in room
-INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES
-                                                                                          (TRUE, TRUE, '123e4567-e89b-12d3-a456-426614174001','admin', 'tempera_station_1'),
-                                                                                          (TRUE, FALSE,'123e4567-e89b-12d3-a456-426614174001', 'user2', 'tempera_station_disabled_2'),
-                                                                                          (TRUE, FALSE, '123e4567-e89b-12d3-a456-426614174001', 'user1', 'tempera_station_disabled'),
-                                                                                          (TRUE, FALSE, '123e4567-e89b-12d3-a456-426614174001', 'elvis', 'tempera_station_disabled_elvis'),
-                                                                                          (TRUE, TRUE, '111e4567-e89b-12d3-a456-426614174001', 'johndoe', 'TEMP123'),
-                                                                                          (TRUE, TRUE, '111e4567-e89b-12d3-a456-426614174001', 'bobjones', 'TEMP125'),
-                                                                                          (TRUE, TRUE, '222e4567-e89b-12d3-a456-426614174001', 'alicebrown', 'TEMP126'),
-                                                                                          (TRUE, TRUE, '222e4567-e89b-12d3-a456-426614174001', 'chriswilliams', 'TEMP127'),
-                                                                                          (TRUE, TRUE, '222e4567-e89b-12d3-a456-426614174001', 'peterparker', 'TEMP128'),
-                                                                                          (TRUE, TRUE, '333e4567-e89b-12d3-a456-426614174001', 'tonystark', 'TEMP129'),
-                                                                                          (TRUE, TRUE, '333e4567-e89b-12d3-a456-426614174001', 'brucewayne', 'TEMP130'),
-                                                                                          (TRUE, FALSE, '333e4567-e89b-12d3-a456-426614174001', 'clarkkent', 'TEMP131');
+INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (TRUE, TRUE, '123e4567-e89b-12d3-a456-426614174001','admin', 'tempera_station_1');
+INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (FALSE, FALSE,'123e4567-e89b-12d3-a456-426614174001', 'MariaTheresa', 'tempera_station_disabled_2');
+INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (FALSE, FALSE, '123e4567-e89b-12d3-a456-426614174001', 'user1', 'tempera_station_disabled');
+INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (FALSE, FALSE, '123e4567-e89b-12d3-a456-426614174001', 'elvis', 'tempera_station_disabled_elvis');
+INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (TRUE, TRUE, '111e4567-e89b-12d3-a456-426614174001', 'johndoe', 'TEMP123');
+INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (TRUE, TRUE, '111e4567-e89b-12d3-a456-426614174001', 'bobjones', 'TEMP125');
+INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (TRUE, TRUE, '222e4567-e89b-12d3-a456-426614174001', 'alicebrown', 'TEMP126');
+INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (TRUE, TRUE, '222e4567-e89b-12d3-a456-426614174001', 'chriswilliams', 'TEMP127');
+INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (TRUE, TRUE, '222e4567-e89b-12d3-a456-426614174001', 'peterparker', 'TEMP128');
+INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (TRUE, TRUE, '333e4567-e89b-12d3-a456-426614174001', 'tonystark', 'TEMP129');
+INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (TRUE, TRUE, '333e4567-e89b-12d3-a456-426614174001', 'brucewayne', 'TEMP130');
+INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (FALSE, FALSE, '333e4567-e89b-12d3-a456-426614174001', 'clarkkent', 'TEMP131');
 
 INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES
-                                                                     ('TEMPERATURE', -1, 'tempera_station_1', 'CELSIUS'),
-                                                                     ('TEMPERATURE', -10, 'TEMP123', 'CELSIUS'),
-                                                                     ('TEMPERATURE', -10, 'TEMP125', 'CELSIUS'),
-                                                                     ('TEMPERATURE', -10, 'TEMP126', 'CELSIUS'),
-                                                                     ('TEMPERATURE', -10, 'TEMP127', 'CELSIUS'),
-                                                                     ('TEMPERATURE', -10, 'TEMP128', 'CELSIUS'),
-                                                                     ('TEMPERATURE', -10, 'TEMP129', 'CELSIUS'),
-                                                                     ('TEMPERATURE', -10, 'TEMP130', 'CELSIUS'),
-                                                                     ('TEMPERATURE', -10, 'TEMP131', 'CELSIUS');
-
+                                                                  ('TEMPERATURE', -1, 'tempera_station_1', 'CELSIUS'),
+                                                                  ('TEMPERATURE', -10, 'TEMP123', 'CELSIUS'),
+                                                                  ('TEMPERATURE', -10, 'TEMP125', 'CELSIUS'),
+                                                                  ('TEMPERATURE', -10, 'TEMP126', 'CELSIUS'),
+                                                                  ('TEMPERATURE', -10, 'TEMP127', 'CELSIUS'),
+                                                                  ('TEMPERATURE', -10, 'TEMP128', 'CELSIUS'),
+                                                                  ('TEMPERATURE', -10, 'TEMP129', 'CELSIUS'),
+                                                                  ('TEMPERATURE', -10, 'TEMP130', 'CELSIUS'),
+                                                                  ('TEMPERATURE', -10, 'TEMP131', 'CELSIUS');
 INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES
-                                                                     ('IRRADIANCE', -2, 'tempera_station_1', 'LUX'),
-                                                                     ('IRRADIANCE', -11, 'TEMP123', 'LUX'),
-                                                                     ('IRRADIANCE', -11, 'TEMP125', 'LUX'),
-                                                                     ('IRRADIANCE', -11, 'TEMP126', 'LUX'),
-                                                                     ('IRRADIANCE', -11, 'TEMP127', 'LUX'),
-                                                                     ('IRRADIANCE', -11, 'TEMP128', 'LUX'),
-                                                                     ('IRRADIANCE', -11, 'TEMP129', 'LUX'),
-                                                                     ('IRRADIANCE', -11, 'TEMP130', 'LUX'),
-                                                                     ('IRRADIANCE', -11, 'TEMP131', 'LUX');
-
+                                                                  ('IRRADIANCE', -2, 'tempera_station_1', 'LUX'),
+                                                                  ('IRRADIANCE', -11, 'TEMP123', 'LUX'),
+                                                                  ('IRRADIANCE', -11, 'TEMP125', 'LUX'),
+                                                                  ('IRRADIANCE', -11, 'TEMP126', 'LUX'),
+                                                                  ('IRRADIANCE', -11, 'TEMP127', 'LUX'),
+                                                                  ('IRRADIANCE', -11, 'TEMP128', 'LUX'),
+                                                                  ('IRRADIANCE', -11, 'TEMP129', 'LUX'),
+                                                                  ('IRRADIANCE', -11, 'TEMP130', 'LUX'),
+                                                                  ('IRRADIANCE', -11, 'TEMP131', 'LUX');
 INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES
                                                                   ('HUMIDITY', -3, 'tempera_station_1', 'PERCENT'),
                                                                   ('HUMIDITY', -12, 'TEMP123', 'PERCENT'),
@@ -195,7 +189,6 @@ INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES
                                                                   ('HUMIDITY', -12, 'TEMP129', 'PERCENT'),
                                                                   ('HUMIDITY', -12, 'TEMP130', 'PERCENT'),
                                                                   ('HUMIDITY', -12, 'TEMP131', 'PERCENT');
-
 INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES
                                                                   ('NMVOC', -4, 'tempera_station_1', 'OHM'),
                                                                   ('NMVOC', -13, 'TEMP123', 'OHM'),
@@ -246,7 +239,7 @@ INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_
 -- fill in measurements for all the nmvoc sensors
 INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES
                                                                                                  (430.222, -4, '2024-05-15 09:02:00', 'tempera_station_1'),
-                                                                                                 (100.0, -13, '2024-05-10T08:30:00', 'TEMP123'),
+                                                                                                (100.0, -13, '2024-05-10T08:30:00', 'TEMP123'),
                                                                                                  (110.0, -13, '2024-05-11T10:15:00', 'TEMP125'),
                                                                                                  (120.0, -13, '2024-05-11T11:30:00', 'TEMP126'),
                                                                                                  (124.0, -13, '2024-05-12T12:00:00', 'TEMP127'),
@@ -254,5 +247,38 @@ INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_
                                                                                                  (900.0, -13, '2024-05-10T14:30:00', 'TEMP129'),
                                                                                                  (890.0, -13, '2024-05-11T15:45:00', 'TEMP130'),
                                                                                                  (890.0, -13, '2024-05-11T15:45:00', 'TEMP131');
+
+-- Default tips
+-- 1. add ThresholdTips, a lower and upper one for each of the sensors
+-- 2. add Modification reason
+-- 3. add Thresholds
+INSERT INTO threshold_tip (id, tip) VALUES
+                                        (-1, 'Heizen: Nutzen Sie Heizkörper beziehungsweise die entsprechenden Bedienfelder zur Raumklimasteuerung\nSchließen von Zugluftquellen: Überprüfen Sie Fenster und Türen und schließen Sie diese, um Zugluft zu reduzieren\nSchichtung von Kleidung: Im Fall z.B. eines technischen Defekts können vorübergehend mehrere Schichten warmer Kleidung Abhilfe schaffen\n'),
+                                        (-2, 'Lüften: Öffnen Sie Fenster und Türen in den kühleren Morgen- oder Abendstunden um frische Luft hereinzulassen\nVerwendung von Ventilatoren: Verwenden Sie Ventilatoren, um die Luftzirkulation zu verbessern und für eine kühlere Atmosphäre zu sorgen\nVerdunkelung: Schließen Sie Vorhänge oder Jalousien um die direkte Sonneneinstrahlung zu reduzieren\nVerwendung von Klimaanlagen: Wenn möglich, verwenden Sie Klimaanlagen um die Raumtemperatur effektiv zu senken.\nReduzierung interner Wärmequellen: Schalten Sie elektronische Geräte aus oder reduzieren Sie deren Nutzung, um die interne Wärmeabgabe im Raum zu minimieren.\n'),
+                                        (-10, 'Verwendung von Luftbefeuchtern: Platzieren Sie Luftbefeuchter im Raum, um die Luftfeuchtigkeit zu erhöhen\nPflanzen: Platzieren Sie Zimmerpflanzen da diese Feuchtigkeit abgeben\nVermeidung von Lufttrocknern/Klimaanlagen: Vermeiden Sie den Einsatz von Klimaanlagen, diese können die Luftfeuchte noch weiter senken.\n'),
+                                        (-11, 'Verwendung von Entfeuchtern: Nutzen Sie Entfeuchter um überschüssige Feuchtigkeit aus der Luft zu entfernen\nBelüftung: Lüften Sie den Raum regelmäßig um Feuchtigkeit abzuführen und die Luftzirkulation zu verbessern\nVermeidung von Wasserquellen: Reduzieren Sie die Nutzung von Wasserdampf erzeugenden Geräten wie Wasserkochern oder Luftbefeuchtern\n'),
+                                        (-20, 'Verwendung von Dimmern: Verwenden Sie, wenn gegeben, Dimmer-Schalter, um die Helligkeit der Beleuchtung flexibel anzupassen und bei Bedarf zu reduzieren\nVerwendung von Lampenschirmen oder Diffusoren: Platzieren Sie Lampenschirme oder Diffusoren über den Lichtquellen, um das Licht zu streuen und eine weichere Beleuchtung zu erzeugen\nReduzierung der Anzahl der Lichtquellen: Schalten Sie einige Lampen oder Leuchten aus\n'),
+                                        (-21, 'Verwendung hellerer Lichtquellen: Installieren Sie hellere Glühbirnen oder Leuchten, um die allgemeine Beleuchtung zu erhöhen.\nHinzufügen von zusätzlichen Lichtquellen: Platzieren Sie zusätzliche Lampen oder Leuchten an strategischen Stellen, um dunkle Bereiche aufzuhellen\nOptimierung der natürlichen Beleuchtung: Öffnen Sie Vorhänge oder Jalousien um mehr natürliches Licht einzulassen, und positionieren Sie Möbel so, dass sie Lichtquellen möglichst nicht verdecken\n'),
+                                        (-30, 'Regelmäßiges Lüften: Öffnen Sie Fenster und Türen mehrmals täglich für mindestens 10 Minuten, um frische Luft hereinzulassen und abgestandene Luft auszutauschen.\nVerwendung von Luftreinigern: Setzen Sie Luftreiniger ein, um Staub, Pollen und andere Schadstoffe aus der Luft zu filtern und die Raumluftqualität zu verbessern.\nPflanzen im Raum platzieren: Stellen Sie Zimmerpflanzen auf, die die Luftqualität verbessern können und das Wohlbefinden erhöhen.\n');
+INSERT INTO Modification (id, reason, time_stamp) VALUES
+    (-1, 'Default threshold.', NULL);
+INSERT INTO Threshold (id, default_threshold, sensor_type, threshold_type, threshold_value, modification_id, tip_id) VALUES
+                                                                                                                         (-11, TRUE, 0, 1, 20.0, -1, -1),
+                                                                                                                         (-12, TRUE, 0, 3, 19.0, -1, -1),
+                                                                                                                         (-13, TRUE, 0, 0, 24.0, -1, -2),
+                                                                                                                         (-14, TRUE, 0, 2, 25.0, -1, -2),
+                                                                                                                         (-21, TRUE, 2, 1, 50.0, -1, -10),
+                                                                                                                         (-22, TRUE, 2, 3, 40.0, -1, -10),
+                                                                                                                         (-23, TRUE, 2, 0, 60.0, -1, -11),
+                                                                                                                         (-24, TRUE, 2, 2, 70.0, -1, -11),
+                                                                                                                         (-31, TRUE, 1, 1, 220.0, -1, -20),
+                                                                                                                         (-32, TRUE, 1, 3, 200.0, -1, -20),
+                                                                                                                         (-33, TRUE, 1, 0, 540.0, -1, -21),
+                                                                                                                         (-34, TRUE, 1, 2, 600.0, -1, -21),
+                                                                                                                         (-41, TRUE, 3, 1, 11.0, -1, -30),
+                                                                                                                         (-42, TRUE, 3, 3, 10.0, -1, -30),
+                                                                                                                         (-43, TRUE, 3, 0, 10.00, -1, -30),
+                                                                                                                         (-44, TRUE, 3, 2, 10.00, -1, -30);
+
 
 

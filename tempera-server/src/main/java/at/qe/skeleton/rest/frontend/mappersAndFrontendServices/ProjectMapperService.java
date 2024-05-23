@@ -111,17 +111,26 @@ public class ProjectMapperService {
         return new SimpleGroupDto(
                 groupx.getId().toString(),
                 groupx.getName(),
-                groupx.getGroupLead().getUsername(),
+                groupx.getDescription(),
                 groupx.getGroupLead().getUsername()
         );
     }
 
-    private SimpleUserDto userDtoMapper(Userx userx) {
+    public SimpleUserDto userDtoMapper(Userx userx) {
         return new SimpleUserDto(
                 userx.getUsername(),
                 userx.getFirstName(),
                 userx.getLastName(),
                 userx.getEmail()
+        );
+    }
+
+    public GroupDetailsDto groupDetailsDto(Groupx groupx) {
+        return new GroupDetailsDto(
+                groupx.getId().toString(),
+                groupx.getName(),
+                groupx.getDescription(),
+                userDtoMapper(groupx.getGroupLead())
         );
     }
 }
