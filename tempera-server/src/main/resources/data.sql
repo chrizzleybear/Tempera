@@ -161,7 +161,7 @@ VALUES (TRUE, '123e4567-e89b-12d3-a456-426614174001', 'room_1'),
 
 INSERT INTO tempera_station (enabled, access_point_id, user_username, id, connected)
 VALUES (TRUE, '123e4567-e89b-12d3-a456-426614174001', 'admin', 'tempera_station_1', FALSE),
-       (FALSE, '123e4567-e89b-12d3-a456-426614174001', 'user2', 'tempera_station_disabled_2', FALSE),
+       (FALSE, '123e4567-e89b-12d3-a456-426614174001', 'MariaTheresa', 'tempera_station_disabled_2', FALSE),
        (FALSE, '123e4567-e89b-12d3-a456-426614174001', 'user1', 'tempera_station_disabled', FALSE),
        (FALSE, '123e4567-e89b-12d3-a456-426614174001', 'elvis', 'tempera_station_disabled_elvis', FALSE),
        (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'johndoe', 'TEMP123', FALSE),
