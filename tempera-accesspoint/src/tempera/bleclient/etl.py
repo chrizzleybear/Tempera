@@ -2,13 +2,16 @@ import logging
 from datetime import datetime, timezone, timedelta
 from typing import List
 
+import bleak.exc
 import sqlalchemy.orm
 from bleak import BleakClient, BleakGATTCharacteristic
 from bleak.backends.service import BleakGATTService
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_fixed
 
 from tempera.database.entities import Mode, TimeRecord, TemperaStation, Measurement
+from tempera.exceptions import BluetoothConnectionLostException
 from tempera.utils import shared
 
 logger = logging.getLogger(f"tempera.{__name__}")
@@ -22,13 +25,14 @@ def _create_time_record(
     auto_update: bool,
 ) -> TimeRecord:
     """
+    Utility function to create a time record from the required parameters and save it to the database.
 
-    :param session:
-    :param tempera_station:
-    :param elapsed_time:
-    :param work_mode:
-    :param auto_update:
-    :return:
+    :param session: the database session for saving to db.
+    :param tempera_station: the tempera station where the time record came from.
+    :param elapsed_time: the elapsed time.
+    :param work_mode: the work mode.
+    :param auto_update: whether the time recod was update automatically.
+    :return: the saved time record.
     """
     now = datetime.now(tz=timezone.utc)
     start_time = now - timedelta(milliseconds=elapsed_time)
@@ -50,9 +54,25 @@ async def elapsed_time_handler(
     data: bytearray,
 ):
     """
+    Handler for the data sent by the tempera station as notification. Creates, updates and saves time records
+    based on the data sent by the tempera station. Uses :func:`_create_time_record` under the hood.
 
-    :param _characteristic:
-    :param data:
+    Handles the following scenarios:
+
+    * The time record exists already (i.e., a time record with the same start time exists in the database) and the
+      incoming one is set to auto update. => The existing time record is updated by adding the duration of the
+      incoming one.
+    * The time record doesn't exist in the database but the incoming one has auto update set to true. => Create a new
+      time record with auto update = False and issue a warning.
+    * The time record exists already and the incoming one has auto update = False. => Update the existing
+      time record and set auto update = False thereby concluding it.
+    * The time record doesn't exist and the incoming one has auto update = False => Save the new time record.
+
+    *auto update* are periodic updates sent as notifications. Only time records triggered by button press have
+    auto update = False.
+
+    :param _characteristic: characteristic of the notification.
+    :param data: binary data containing the information.
     """
     work_mode_map = {
         2: Mode.DEEP_WORK,
@@ -74,12 +94,6 @@ async def elapsed_time_handler(
         f"auto_update: {auto_update}"
     )
 
-    # The auto_update flag tells if the update is triggered manually (button press) or if it is just a periodic
-    # update send via notify. Only when auto_update=False a button press has taken place and a new record must be
-    # created.
-    # Records are always handled retroactively, meaning that when a button is pressed the previous record is
-    # concluded and a new one started. The data of the previous one is sent to the access point.
-
     with Session(shared.db_engine) as session:
         tempera_station = session.scalars(
             select(TemperaStation).where(TemperaStation.id == shared.current_station_id)
@@ -97,11 +111,6 @@ async def elapsed_time_handler(
                 current_record.duration += elapsed_time
                 current_record.auto_update = True
             elif not current_record:
-                # Time record with auto update == True but without corresponding open record in the database.
-                # Note: only the very last record saved can even come in to question for an update, all others
-                #       must already have been concluded.
-                # Create a new time record as if auto update == False
-                # (this corrects the mistake to throw fewer erros in the web server)
                 record = _create_time_record(
                     session, tempera_station, elapsed_time, work_mode, False
                 )
@@ -127,64 +136,66 @@ async def elapsed_time_handler(
         session.commit()
 
 
+@retry(
+    retry=retry_if_exception_type(bleak.exc.BleakDBusError),
+    wait=wait_fixed(10),
+    stop=stop_after_attempt(10),
+)
 async def measurements_handler(
     client: BleakClient,
     characteristics: List[BleakGATTCharacteristic],
 ):
     """
+    Read the measurement service characteristics from the device and create/save the resulting measurement to db.
 
-    :param client:
-    :param characteristics:
+    :param client: the connection to the tempera station.
+    :param characteristics: list of measurement characteristics to read from the tempera station.
+    :return: None
+    :raises bleak.exc.BleakError: if connection issues occur when reading the characteristics from the tempera station.
+    :raises bleak.exc.BleakDBusError: see BleakError
     """
     temperature, irradiance, humidity, nmvoc = None, None, None, None
     for characteristic in characteristics:
-        if "2a6e" in characteristic.uuid:
-            temperature = (
-                int.from_bytes(
-                    await client.read_gatt_char(characteristic), byteorder="little"
+        try:
+            if "2a6e" in characteristic.uuid:
+                temperature = (
+                    int.from_bytes(
+                        await client.read_gatt_char(characteristic), byteorder="little"
+                    )
+                    / 100
                 )
-                / 100
-            )
-        elif "2a77" in characteristic.uuid:
-            irradiance = (
-                int.from_bytes(
-                    await client.read_gatt_char(characteristic), byteorder="little"
+            elif "2a77" in characteristic.uuid:
+                irradiance = (
+                    int.from_bytes(
+                        await client.read_gatt_char(characteristic), byteorder="little"
+                    )
+                    / 10
                 )
-                / 10
-            )
-        elif "2a6f" in characteristic.uuid:
-            humidity = (
-                int.from_bytes(
-                    await client.read_gatt_char(characteristic), byteorder="little"
+            elif "2a6f" in characteristic.uuid:
+                humidity = (
+                    int.from_bytes(
+                        await client.read_gatt_char(characteristic), byteorder="little"
+                    )
+                    / 100
                 )
-                / 100
-            )
-        elif "2bd3" in characteristic.uuid:
-            nmvoc = float(
-                int.from_bytes(
-                    await client.read_gatt_char(characteristic), byteorder="little"
+            elif "2bd3" in characteristic.uuid:
+                nmvoc = float(
+                    int.from_bytes(
+                        await client.read_gatt_char(characteristic), byteorder="little"
+                    )
+                    * 100
                 )
-                * 100
-            )
-        else:
-            logger.warning(
-                f"UUID {characteristic} doesn't match any supported "
-                "characteristic in the environmental sensing service."
-            )
-            raise RuntimeError
-
-    if not temperature:
-        logger.warning("Received no value for measurement: temperature.")
-        raise ValueError
-    elif not irradiance:
-        logger.warning("Received no value for measurement: irradiance.")
-        raise ValueError
-    elif not humidity:
-        logger.warning("Received no value for measurement: humidity.")
-        raise ValueError
-    elif not nmvoc:
-        logger.warning("Received no value for measurement: nmvoc.")
-        raise ValueError
+            else:
+                logger.warning(
+                    f"UUID {characteristic} doesn't match any supported "
+                    "characteristic in the environmental sensing service."
+                )
+        except bleak.exc.BleakDBusError:
+            logger.error("Failed to read measurement.")
+            raise
+        except bleak.exc.BleakError:
+            logger.error("Connection to tempera station lost.")
+            raise BluetoothConnectionLostException
 
     with Session(shared.db_engine) as session:
         tempera_station = session.scalars(
@@ -209,10 +220,11 @@ async def filter_uuid(
     provider: BleakClient | BleakGATTService, uuid: str
 ) -> BleakGATTService | BleakGATTCharacteristic:
     """
+    Find and return the complete UUID in a list of services or characteristics, given a substring of it.
 
-    :param provider:
-    :param uuid:
-    :return:
+    :param provider: the client (when searching services), else the service (when searching for characteristics).
+    :param uuid: the UUID substring to find.
+    :return: the service or characteristic that has the passed uuid as substring.
     """
     if isinstance(provider, BleakClient):
         return list(filter(lambda service: uuid in service.uuid, provider.services))[0]
