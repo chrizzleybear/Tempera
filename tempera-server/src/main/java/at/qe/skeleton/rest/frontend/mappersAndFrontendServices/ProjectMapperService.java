@@ -8,7 +8,9 @@ import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.rest.frontend.dtos.*;
 import at.qe.skeleton.services.GroupService;
 import at.qe.skeleton.services.ProjectService;
+import at.qe.skeleton.services.UserxService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,16 +23,19 @@ import static java.util.stream.Collectors.toList;
 public class ProjectMapperService {
     private ProjectService projectService;
     private GroupService groupService;
+    private UserxService userService;
 
 
-    public ProjectMapperService(ProjectService projectService, GroupService groupService) {
+    public ProjectMapperService(ProjectService projectService, GroupService groupService, UserxService userService) {
         this.projectService = projectService;
         this.groupService = groupService;
+        this.userService = userService;
     }
 
-    public List<SimpleProjectDto> getAllSimpleProjects() {
+    @Transactional
+    public List<ProjectDetailsDto> getAllDetailedProjects() {
         List<Project> projects = projectService.findAllProjects();
-        return projects.stream().map(this::projectDtoMapper).collect(toList());
+        return projects.stream().map(this::detailedProjectDtoMapper).collect(toList());
     }
 
   public ExtendedProjectDto loadExtendedProjectDto(Long projectId)
@@ -40,6 +45,7 @@ public class ProjectMapperService {
             .getProjectById(projectId)
             .orElseThrow(() -> new CouldNotFindEntityException("Project not found: " + projectId));
     SimpleProjectDto simpleProjectDto = projectDtoMapper(project);
+    SimpleUserDto managerDetails = userDtoMapper(project.getManager());
 
     List<GroupxProject> groupxProjects =
         projectService.findAllGroupxProjectsByProjectId(projectId);
@@ -49,7 +55,7 @@ public class ProjectMapperService {
     List<SimpleUserDto> contributors =
         projectService.findAllContributorsByProjectId(projectId);
 
-    return new ExtendedProjectDto(simpleProjectDto, connectedGroups, contributors);
+    return new ExtendedProjectDto(managerDetails, simpleProjectDto, connectedGroups, contributors);
     }
 
     public ExtendedGroupDto loadExtendedGroupDto(Long groupId)
@@ -104,6 +110,26 @@ public class ProjectMapperService {
         );
     }
 
+    public SimpleProjectDto updateProject(SimpleProjectDto projectDto) {
+        Project updatedProject =
+                projectService.updateProject(
+                        Long.valueOf(projectDto.projectId()),
+                        projectDto.name(),
+                        projectDto.description(),
+                        projectDto.manager());
+        return projectDtoMapper(updatedProject);
+    }
+
+    public SimpleProjectDto createProject(SimpleProjectDto projectDto) {
+        Project createdProject =
+                projectService.createProject(
+                        projectDto.name(),
+                        projectDto.description(),
+                        projectDto.manager());
+        return projectDtoMapper(createdProject);
+    }
+
+
     private SimpleGroupDto groupDtoMapper(GroupxProject groupxProject) {
         return groupDtoMapper(groupxProject.getGroup());
     }
@@ -115,6 +141,14 @@ public class ProjectMapperService {
                 groupx.getGroupLead().getUsername(),
                 groupx.getGroupLead().getUsername()
         );
+    }
+
+    private ProjectDetailsDto detailedProjectDtoMapper(Project project) {
+        String projectId = project.getId().toString();
+        String projectName = project.getName();
+        String projectDescription = project.getDescription();
+        SimpleUserDto projectManagerDto = userDtoMapper(project.getManager());
+        return new ProjectDetailsDto(projectId, projectName, projectDescription, projectManagerDto);
     }
 
     private SimpleUserDto userDtoMapper(Userx userx) {
