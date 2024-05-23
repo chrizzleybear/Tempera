@@ -1,5 +1,6 @@
 package at.qe.skeleton.rest.frontend.mappersAndFrontendServices;
 
+import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.State;
@@ -7,7 +8,9 @@ import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
 import at.qe.skeleton.rest.frontend.dtos.ExtendedProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
+import at.qe.skeleton.rest.frontend.payload.request.UpdateDashboardDataRequest;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
+import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
 import at.qe.skeleton.services.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +39,7 @@ public class DashboardDataMapper {
     this.userService = userxService;
     this.projectService = projectService;
   }
+
 
   private List<ColleagueStateDto> mapUserToColleagueStateDto(Userx user) {
 
@@ -124,26 +128,20 @@ public class DashboardDataMapper {
             .findFirst()
             .get();
 
-    Optional<Measurement> temperatureMeasurement =
-        measurementService.findLatestMeasurementBySensor(temperatureSensor);
-    Optional<Measurement> humidityMeasurement =
-        measurementService.findLatestMeasurementBySensor(humiditySensor);
-    Optional<Measurement> irradianceMeasurement =
-        measurementService.findLatestMeasurementBySensor(irradianceSensor);
-    Optional<Measurement> nmvocMeasurement =
-        measurementService.findLatestMeasurementBySensor(nmvocSensor);
+
+    Optional<Measurement> temperatureMeasurement = measurementService.findLatestMeasurementBySensor(temperatureSensor);
+    Optional<Measurement> humidityMeasurement = measurementService.findLatestMeasurementBySensor(humiditySensor);
+    Optional<Measurement> irradianceMeasurement = measurementService.findLatestMeasurementBySensor(irradianceSensor);
+    Optional<Measurement> nmvocMeasurement = measurementService.findLatestMeasurementBySensor(nmvocSensor);
 
     Double temperature = temperatureMeasurement.map(Measurement::getValue).orElse(null);
     Double humidity = humidityMeasurement.map(Measurement::getValue).orElse(null);
     Double irradiance = irradianceMeasurement.map(Measurement::getValue).orElse(null);
     Double nmvoc = nmvocMeasurement.map(Measurement::getValue).orElse(null);
 
-    Optional<ExternalRecord> externalRecordOptional =
-        timeRecordService.findLatestExternalRecordByUser(user);
-    String stateTimeStamp =
-        externalRecordOptional
-            .map(externalRecord -> externalRecord.getStart().toString())
-            .orElse(null);
+
+    Optional<ExternalRecord> externalRecordOptional = timeRecordService.findLatestExternalRecordByUser(user);
+    String stateTimeStamp = externalRecordOptional.map(externalRecord -> externalRecord.getStart().toString()).orElse(null);
 
     Project defaultProject = user.getDefaultProject();
     SimpleProjectDto defaultProjectDto;
@@ -173,8 +171,20 @@ public class DashboardDataMapper {
         user.getStateVisibility(),
         user.getState(),
         stateTimeStamp,
-            defaultProjectDto,
+        defaultProjectDto,
         projects,
         colleagueStateDtos);
+  }
+
+
+  public MessageResponse updateUserVisibilityAndTimeStampProject(UpdateDashboardDataRequest request, Userx user) throws CouldNotFindEntityException{
+    Project project = projectService.getProjectById(request.project().id()).orElseThrow(() -> new CouldNotFindEntityException("No project found for id"));
+    InternalRecord record = timeRecordService.findLatestInternalRecordByUser(user).orElseThrow(()-> new CouldNotFindEntityException("No external record found for user"));
+    record.setAssignedProject(project);
+    user.setStateVisibility(request.visibility());
+    userService.saveUser(user);
+    timeRecordService.saveInternalRecord(record);
+
+    return new MessageResponse("Dashboard data updated successfully!");
   }
 }

@@ -156,6 +156,10 @@ public class TimeRecordService {
     return externalRecordRepository.findFirstByUserAndEndIsNull(user);
   }
 
+  public Optional<InternalRecord> findLatestInternalRecordByUser(Userx user) {
+    return internalRecordRepository.findByExternalRecord_EndIsNullAndExternalRecord_User(user);
+  }
+
   public Optional<ExternalRecord> findExternalRecordByStartAndUser(
       LocalDateTime start, Userx user) {
     return externalRecordRepository.findByUserAndId_Start(user, start);
@@ -172,5 +176,9 @@ public class TimeRecordService {
 
   public Optional<InternalRecord> findInternalRecordById(Long id) {
     return internalRecordRepository.findById(id);
+  }
+
+  public List<ExternalRecord> findAllExternalTimeRecordsByUser(Userx user) {
+    return externalRecordRepository.findAllByUser(user);
   }
 }

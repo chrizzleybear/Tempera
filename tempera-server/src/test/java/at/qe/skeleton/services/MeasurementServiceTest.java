@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
 @SpringBootTest
 @WebAppConfiguration
+@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS, scripts = "classpath:measurementServiceTest.sql")
 class MeasurementServiceTest {
   @Autowired private MeasurementRepository measurementRepository;
   @Autowired private MeasurementService measurementService;
@@ -33,7 +34,6 @@ class MeasurementServiceTest {
 
   @DirtiesContext
   @Test
-  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:measurementServiceTest.sql")
   void loadMeasurement() throws CouldNotFindEntityException {
     // loads a measurement Entity from the database
     LocalDateTime timestamp = LocalDateTime.of(2024, 5, 10, 8, 30, 0);

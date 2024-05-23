@@ -78,7 +78,7 @@ public class UserxService implements UserDetailsService {
    * @param user the user to save
    * @return the updated user
    */
-  @PreAuthorize("hasAuthority('ADMIN')")
+  @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #user.getUsername()")
   public Userx saveUser(Userx user) {
     if (user.isNew()) {
       user.setCreateDate(LocalDateTime.now());

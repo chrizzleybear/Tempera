@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface InternalRecordRepository
-    extends AbstractRepository<InternalRecord, Long>, PagingAndSortingRepository<InternalRecord, Long> {
+    extends AbstractRepository<InternalRecord, Long> {
 
     Optional<InternalRecord> findByStartAndExternalRecordUser(LocalDateTime start, Userx user);
 
@@ -21,4 +21,7 @@ public interface InternalRecordRepository
 
     @Query("SELECT i FROM InternalRecord i JOIN i.externalRecord e WHERE e.user = :user ORDER BY i.start DESC")
     List<InternalRecord> findAllByUserOrderByStartDesc(@Param("user") Userx user);
+
+    Optional<InternalRecord> findByExternalRecord_EndIsNullAndExternalRecord_User(Userx user);
+
 }
