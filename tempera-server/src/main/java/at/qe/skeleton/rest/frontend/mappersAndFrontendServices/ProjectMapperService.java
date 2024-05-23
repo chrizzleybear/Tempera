@@ -23,8 +23,9 @@ public class ProjectMapperService {
     private GroupService groupService;
 
 
-    public ProjectMapperService(ProjectService projectService) {
+    public ProjectMapperService(ProjectService projectService, GroupService groupService) {
         this.projectService = projectService;
+        this.groupService = groupService;
     }
 
     public List<SimpleProjectDto> getAllSimpleProjects() {
