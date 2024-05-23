@@ -1,7 +1,21 @@
 TEMPERA - next generation time tracking
 =======================================
 
-# Running the components (Web-Server & Raspberry)
+[![pipeline](https://git.uibk.ac.at/informatik/qe/swess24/group4/g4t1/badges/main/pipeline.svg)](https://git.uibk.ac.at/informatik/qe/swess24/group4/g4t1/-/commits/main/)
+
+# Running the components (Web-Server & Raspberry) with docker
+
+---
+
+> :rocket:
+> Pro tip: you can run and manage docker images & containers from your IDE like Intellij or Pycharm.
+> Just select the *services* widget on your sidebar and/or open any Dockerfile or compose.yaml in your IDE.
+
+To run the web-server and the Bluetooth-LE Raspberry app,
+docker images are provided, so you don't have to install anything locally.
+If you don't already have docker on your machine, follow these [instructions](https://docs.docker.com/get-docker/) and
+come back. If you are having trouble installing docker or any other docker/ci-cd relaetd issue,
+you can always write an email to Leonardo.Pedri@uibk.ac.at :slight_smile:.
 
 ---
 
@@ -16,15 +30,6 @@ create a *secrets* directory and in it create these files with your password/key
 * email_key.txt
 
 ---
-
-> :rocket:
-> Pro tip: you can run and manage docker images & containers from your IDE like Intellij or Pycharm.
-> Just select the *services* widget on your sidebar and/or open any Dockerfile or compose.yaml in your IDE.
-
-To run the web-server and the Bluetooth-LE Raspberry app,
-docker images are provided, so you don't have to install anything locally.
-If you don't already have docker on your machine, follow these [instructions](https://docs.docker.com/get-docker/) and
-come back.
 
 The compose.yaml file is designed to have the back-end (with its database) and the BLE app to be independent from each
 other,
@@ -80,12 +85,3 @@ $ docker compose down
 > hostname >> http://back-end:8080.
 > If you want to connect from your machine to a container or from a container to your machine, use localhost:port as
 > usual.
-
-> :information_source:
-> If you know you want to run all services on the same machine, just uncomment the *depends on* key in the ble-service
-> of
-> the compose.yaml file. The same goes if you want to run the ble-app with the python testing api (also commented out).
-> If the database depends on the back-end, and the back-end on the ble-app, you just have to run the ble-app and every
-> thing else will be handled automatically by docker. This is why you never have to handle anything (docker-) related to
-> the database
-> explicitly, because it depends on the back-end.

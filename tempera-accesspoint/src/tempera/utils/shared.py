@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import os
 from pathlib import Path
 from typing import Any, Dict
 
@@ -13,10 +14,11 @@ logger = logging.getLogger(f"tempera.{__name__}")
 
 async def init_globals() -> None:
     """
-    Initializes the global variables.
-    Reads the config file 'conf.yaml' into a dictionary, creates the API request header and the database engine.
+    Initializes the global variables used across many modules in the package.
+    Reads the config file 'conf.yaml' into a dictionary, creates the API request header and the database engine and
+    sets the corresponding variables.
 
-    :return:
+    :return: None
     """
     global project_root
     global db_engine
@@ -35,21 +37,29 @@ async def init_globals() -> None:
 
 
 async def init_config() -> Dict[str, Any]:
+    """
+
+    :return:
+    """
     config_file = project_root / "src" / "conf.yaml"
 
-    if not config_file.is_file():
-        logger.critical(
-            f"{config_file.absolute()} not found. Couldn't load configuration. "
-        )
-        raise FileNotFoundError
-
     logger.info(f"Loading config from file ({config_file.absolute()})")
-    with open(config_file, "r") as config_file:
-        conf = yaml.safe_load(config_file)
+    try:
+        with open(config_file, "r") as config_file:
+            conf = yaml.safe_load(config_file)
+    except FileNotFoundError:
+        logger.critical(
+            f"Config file {config_file.absolute()} not found. "
+            "Don't forget to create one with the configure.py script :)"
+        )
+        os._exit(0)
 
     if not conf:
-        logger.critical("Config file is empty.")
-        raise RuntimeError
+        logger.critical(
+            "Config file is empty. "
+            "Make sure run configure.py to create a valid config file."
+        )
+        os._exit(0)
 
     for key in (
         "access_point_id",
@@ -59,38 +69,35 @@ async def init_config() -> Dict[str, Any]:
         "webserver_address",
     ):
         if key not in conf.keys():
-            logger.critical(f"Missing parameter {key} in the configuration file.")
-            raise KeyError
+            logger.critical(
+                f"Missing parameter {key} in the configuration file. "
+                "Make sure run configure.py to create a valid config file."
+            )
+            os._exit(0)
 
     return conf
 
 
 async def init_header(conf: Dict[str, Any]) -> HTTPBasicAuth:
     """
-    Returns the authentication objet to set as the 'headers' kwarg in any request to the web app server.
-    Raises an error if it fails the generation of the authentication object fails.
-
-    :return:
+    :conf: dictionary of user-configured parameters read from conf.yaml \
+    (see the configure.py file / Configuration script documentation section)
+    :return: the authentication objet to set as the 'headers' kwarg in any request to the web app server.
     """
-    try:
-        logger.info("Creating api request header from config file parameters.")
-        return HTTPBasicAuth(conf["user_name"], conf["password"])
-    except KeyError as e:
-        logger.critical(
-            f"{e.args[0]} not found in config file. "
-            "Unable to create header for api requests authentication."
-        )
-        raise RuntimeError
+    logger.info("Creating api request header from config file parameters.")
+    return HTTPBasicAuth(conf["user_name"], conf["password"])
 
 
 async def init_engine() -> sqlalchemy.Engine:
+    """
+    :return: the SQLAlchemy database engine created from the standard path of the database file in the package.
+    """
     database = project_root / "src" / "tempera" / "database" / "data.sqlite"
 
     if not Path(database).is_file():
-        logger.critical(
-            f"{database} is not a valid file path. No database engine can be created from it."
-        )
-        raise FileNotFoundError
+        logger.critical(f"No database file found at {database}. Can't create engine.")
+        os._exit(0)
 
     logger.info(f"Creating database engine from db file: {database}")
-    return create_engine(f"sqlite:///{database}", echo=False)
+    engine = create_engine(f"sqlite:///{database}", echo=False)
+    return engine

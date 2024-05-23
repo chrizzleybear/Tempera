@@ -104,21 +104,21 @@ INSERT INTO access_point (enabled, id, room_room_id) VALUES (TRUE, '111e4567-e89
 INSERT INTO access_point (enabled, id, room_room_id) VALUES (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'room_11');
 INSERT INTO access_point (enabled, id, room_room_id) VALUES (TRUE, '333e4567-e89b-12d3-a456-426614174001', 'room_12');
 
-INSERT INTO TEMPERA_STATION (ENABLED, access_point_id, USER_USERNAME, ID) VALUES (TRUE, '123e4567-e89b-12d3-a456-426614174001','admin', 'tempera_station_1');
-INSERT INTO TEMPERA_STATION (ENABLED, access_point_id, USER_USERNAME, ID) VALUES (FALSE,'123e4567-e89b-12d3-a456-426614174001', 'user2', 'tempera_station_disabled_2');
-INSERT INTO TEMPERA_STATION (ENABLED, access_point_id, USER_USERNAME, ID) VALUES (FALSE, '123e4567-e89b-12d3-a456-426614174001', 'user1', 'tempera_station_disabled');
-INSERT INTO TEMPERA_STATION (enabled, access_point_id, user_username, id) VALUES (FALSE, '123e4567-e89b-12d3-a456-426614174001', 'elvis', 'tempera_station_disabled_elvis');
+INSERT INTO TEMPERA_STATION (ENABLED, access_point_id, USER_USERNAME, ID, connected) VALUES (TRUE, '123e4567-e89b-12d3-a456-426614174001','admin', 'tempera_station_1', TRUE);
+INSERT INTO TEMPERA_STATION (ENABLED, access_point_id, USER_USERNAME, ID, connected) VALUES (FALSE,'123e4567-e89b-12d3-a456-426614174001', 'user2', 'tempera_station_disabled_2', True);
+INSERT INTO TEMPERA_STATION (ENABLED, access_point_id, USER_USERNAME, ID, connected) VALUES (FALSE, '123e4567-e89b-12d3-a456-426614174001', 'user1', 'tempera_station_disabled', true);
+INSERT INTO TEMPERA_STATION (enabled, access_point_id, user_username, id, connected) VALUES (FALSE, '123e4567-e89b-12d3-a456-426614174001', 'elvis', 'tempera_station_disabled_elvis', true);
 INSERT INTO tempera_station
-(enabled, access_point_id, user_username, id)
+(enabled, access_point_id, user_username, id, connected)
 VALUES
-    (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'johndoe', 'TEMP123'),
-    (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'bobjones', 'TEMP125'),
-    (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'alicebrown', 'TEMP126'),
-    (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'chriswilliams', 'TEMP127'),
-    (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'peterparker', 'TEMP128'),
-    (TRUE, '333e4567-e89b-12d3-a456-426614174001', 'tonystark', 'TEMP129'),
-    (TRUE, '333e4567-e89b-12d3-a456-426614174001', 'brucewayne', 'TEMP130'),
-    (FALSE, '333e4567-e89b-12d3-a456-426614174001', 'clarkkent', 'TEMP131');
+    (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'johndoe', 'TEMP123', true),
+    (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'bobjones', 'TEMP125', true),
+    (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'alicebrown', 'TEMP126', true),
+    (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'chriswilliams', 'TEMP127', true),
+    (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'peterparker', 'TEMP128', true),
+    (TRUE, '333e4567-e89b-12d3-a456-426614174001', 'tonystark', 'TEMP129', true),
+    (TRUE, '333e4567-e89b-12d3-a456-426614174001', 'brucewayne', 'TEMP130', true),
+    (FALSE, '333e4567-e89b-12d3-a456-426614174001', 'clarkkent', 'TEMP131', true);
 
 INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES
                                                                   ('TEMPERATURE', -1, 'tempera_station_1', 'CELSIUS'),
