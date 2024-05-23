@@ -176,15 +176,16 @@ public class DashboardDataMapper {
         colleagueStateDtos);
   }
 
+  //todo fix with GroupxProject
 
-  public MessageResponse updateUserVisibilityAndTimeStampProject(UpdateDashboardDataRequest request, Userx user) throws CouldNotFindEntityException{
-    Project project = projectService.getProjectById(request.project().id()).orElseThrow(() -> new CouldNotFindEntityException("No project found for id"));
-    InternalRecord record = timeRecordService.findLatestInternalRecordByUser(user).orElseThrow(()-> new CouldNotFindEntityException("No external record found for user"));
-    record.setAssignedProject(project);
-    user.setStateVisibility(request.visibility());
-    userService.saveUser(user);
-    timeRecordService.saveInternalRecord(record);
-
-    return new MessageResponse("Dashboard data updated successfully!");
-  }
+//  public MessageResponse updateUserVisibilityAndTimeStampProject(UpdateDashboardDataRequest request, Userx user) throws CouldNotFindEntityException{
+//    Project project = projectService.getProjectById(Long.parseLong(request.project().simpleProjectDto().projectId())).orElseThrow(() -> new CouldNotFindEntityException("No project found for id"));
+//    InternalRecord record = timeRecordService.findLatestInternalRecordByUser(user).orElseThrow(()-> new CouldNotFindEntityException("No external record found for user"));
+//    record.setAssignedProject(project);
+//    user.setStateVisibility(request.visibility());
+//    userService.saveUser(user);
+//    timeRecordService.saveInternalRecord(record);
+//
+//    return new MessageResponse("Dashboard data updated successfully!");
+//  }
 }
