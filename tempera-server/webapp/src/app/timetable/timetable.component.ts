@@ -95,9 +95,7 @@ export class TimetableComponent implements OnInit {
 
   /*
     * Validates that the time is between the start and end time of the time entry.
-    * Only hours and minutes are considered since it's assumed that time entries are on the same day.
     * Time entry is selected by the selectedRowIndex.
-    * Also note that at the moment the control is edited inside the validator to set the day to the same as the time entry.
    */
   inPermittedTimeRangeValidator: ValidatorFn = (control: AbstractControl<Date | undefined>): ValidationErrors | null => {
     if (!control.value) {
@@ -108,8 +106,6 @@ export class TimetableComponent implements OnInit {
 
     const minStartTime = entries[this.selectedRowIndex].startTime;
     const maxEndTime = entries[this.selectedRowIndex].endTime;
-    control.value?.setDate(minStartTime.getDate());
-    control.value?.setMilliseconds(0);
 
     if (control.value > minStartTime && control.value < maxEndTime) {
       return null;
