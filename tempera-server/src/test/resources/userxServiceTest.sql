@@ -10,8 +10,11 @@ DELETE FROM groupx_project_object_contributors;
 DELETE FROM groupx_project_object;
 DELETE FROM groupx;
 DELETE FROM userx_userx_role;
-DELETE FROM userx;
+DELETE FROM userx WHERE default_project_id Is Not NULL;
 DELETE FROM project;
+DELETE FROM userx;
+
+
 
 INSERT INTO project (id, name, description) VALUES
                                                 (-1, 'Serious Business', 'This project beuts you aus'),

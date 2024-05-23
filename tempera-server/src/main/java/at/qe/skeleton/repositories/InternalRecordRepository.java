@@ -13,12 +13,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface InternalRecordRepository
-    extends AbstractRepository<InternalRecord, Long>, PagingAndSortingRepository<InternalRecord, Long> {
+    extends AbstractRepository<InternalRecord, Long> {
 
     Optional<InternalRecord> findByStartAndExternalRecordUser(LocalDateTime start, Userx user);
 
     Optional<InternalRecord> findById(Long id);
 
     @Query("SELECT i FROM InternalRecord i JOIN i.externalRecord e WHERE e.user = :user ORDER BY i.start DESC")
-    Page<InternalRecord> findAllByUserAndPageTimeDesc(@Param("user") Userx user, Pageable pageable);
+    List<InternalRecord> findAllByUserOrderByStartDesc(@Param("user") Userx user);
+
+    Optional<InternalRecord> findByExternalRecord_EndIsNullAndExternalRecord_User(Userx user);
+
 }

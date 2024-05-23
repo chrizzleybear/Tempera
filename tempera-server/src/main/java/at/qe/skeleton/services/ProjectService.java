@@ -9,6 +9,7 @@ import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.GroupxProjectRepository;
 import at.qe.skeleton.repositories.ProjectRepository;
 import at.qe.skeleton.repositories.UserxRepository;
+import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,7 @@ ProjectService {
     return projectRepository.save(project);
   }
 
-  @Transactional(readOnly = true)
+//  @Transactional(readOnly = true)
   public List<Project> getAllProjects() {
     return projectRepository.findAll();
   }
@@ -78,10 +79,7 @@ ProjectService {
   // todo: for the following methods develop queries in the groupxprojectRepository that make it
   // easy to handle everyting
   @Transactional
-  public void addGroupToProject(Long projectId, Long groupId) throws IOException {
-    if (groupId == null) {
-      throw new NullPointerException("Contributor can not be null");
-    }
+  public GroupxProject  createGroupxProject (Long projectId, Long groupId) throws IOException {
     Project project =
         projectRepository
             .findById(projectId)
@@ -96,7 +94,7 @@ ProjectService {
     GroupxProject groupxProject = new GroupxProject();
     groupxProject.addProject(project);
     groupxProject.addGroup(group);
-    groupxProjectRepository.save(groupxProject);
+    return groupxProjectRepository.save(groupxProject);
   }
 
   public Project loadProject(Long projectId) {
@@ -208,5 +206,17 @@ ProjectService {
 
   public List<GroupxProject> findAllGroupxProjectsByProjectId(Long projectId) {
     return groupxProjectRepository.findAllByProjectId(projectId);
+  }
+
+  public List<Project> findAllProjects(){
+    return projectRepository.findAll();
+  }
+
+  public List<SimpleUserDto> findAllContributorsByProjectId(Long projectId){
+    return groupxProjectRepository.findAllContributorsByProject_Id(projectId);
+  }
+
+  public List<GroupxProject> getGroupxProjectsByGroupId(Long groupId){
+    return groupxProjectRepository.findAllByGroup_Id(groupId);
   }
 }

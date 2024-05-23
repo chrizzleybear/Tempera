@@ -17,14 +17,6 @@ public class Project {
   private String description;
   @ManyToOne private Userx manager;
 
-//  @ManyToMany
-//  @JoinTable(
-//      name = "project_contributors",
-//      joinColumns = @JoinColumn(name = "project_id"),
-//      inverseJoinColumns = @JoinColumn(name = "username"))
-//  private List<Userx> contributors;
-
-
 
   @OneToMany(mappedBy = "project")
   private Set<GroupxProject> groupxProjects;

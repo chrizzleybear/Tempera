@@ -33,4 +33,6 @@ public interface ExternalRecordRepository
   boolean existsByUserAndId_Start(Userx user, LocalDateTime start);
 
   void deleteAllByUser(Userx userx);
+
+  List<ExternalRecord> findAllByUser(Userx user);
 }

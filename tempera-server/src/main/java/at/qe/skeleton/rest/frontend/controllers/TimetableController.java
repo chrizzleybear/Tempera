@@ -34,12 +34,9 @@ public class TimetableController {
   public ResponseEntity<GetTimetableDataResponse> getTimetableData() {
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
     Userx user = userService.loadUser(username);
-    // for now we set the page and size in the controller itself, but can easily be sent by Frontend
-    int page = 0;
-    int size = 20;
-    GetTimetableDataResponse response = timeTableDataService.getTimetableData(user, page, size);
+    GetTimetableDataResponse response = timeTableDataService.getTimetableData(user);
     timeTabeControllerLogger.info(
-        "created TimeTableDataResponse page %d with size %d".formatted(page, size));
+        "created TimeTableDataResponse with all entries for user %s".formatted(user.getUsername()));
     return ResponseEntity.ok(response);
   }
 

@@ -32,7 +32,6 @@ public class TimeRecordService {
   private final ExternalRecordRepository externalRecordRepository;
   private final UserxRepository userxRepository;
 
-
   public TimeRecordService(
       ExternalRecordRepository externalRecordRepository,
       InternalRecordRepository internalRecordRepository,
@@ -157,6 +156,10 @@ public class TimeRecordService {
     return externalRecordRepository.findFirstByUserAndEndIsNull(user);
   }
 
+  public Optional<InternalRecord> findLatestInternalRecordByUser(Userx user) {
+    return internalRecordRepository.findByExternalRecord_EndIsNullAndExternalRecord_User(user);
+  }
+
   public Optional<ExternalRecord> findExternalRecordByStartAndUser(
       LocalDateTime start, Userx user) {
     return externalRecordRepository.findByUserAndId_Start(user, start);
@@ -167,14 +170,15 @@ public class TimeRecordService {
     return internalRecordRepository.findByStartAndExternalRecordUser(start, user);
   }
 
-  public List<InternalRecord> getPageOfInternalRecords(Userx user, int page, int size) {
-    Pageable pageable = PageRequest.of(page, size);
-    Page<InternalRecord> records =
-        internalRecordRepository.findAllByUserAndPageTimeDesc(user, pageable);
-    return records.getContent();
+  public List<InternalRecord> getInternalRecordsForUser(Userx user) {
+    return internalRecordRepository.findAllByUserOrderByStartDesc(user);
   }
 
   public Optional<InternalRecord> findInternalRecordById(Long id) {
     return internalRecordRepository.findById(id);
+  }
+
+  public List<ExternalRecord> findAllExternalTimeRecordsByUser(Userx user) {
+    return externalRecordRepository.findAllByUser(user);
   }
 }

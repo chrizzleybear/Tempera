@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
@@ -39,6 +40,15 @@ public class DashboardController {
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<MessageResponse> updateDashboardData(
       @RequestBody UpdateDashboardDataRequest request) {
-    return ResponseEntity.ok(new MessageResponse("Dashboard data updated successfully!"));
+    MessageResponse response;
+    try{
+    String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+    Userx user = userXService.loadUser(userName);
+    response = dashboardDataMapper.updateUserVisibilityAndTimeStampProject(request, user);
+    } catch (Exception e) {
+      logger.error("Error updating dashboard data: " + e.getMessage());
+      return ResponseEntity.badRequest().body(new MessageResponse("Error updating dashboard data: " + e.getMessage()));
+    }
+    return ResponseEntity.ok(response);
   }
 }

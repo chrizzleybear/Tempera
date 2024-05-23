@@ -59,7 +59,6 @@ public class GroupxProject {
     public void removeGroup(){
         this.group.getGroupxProjects().remove(this);
         this.group = null;
-
     }
 
     public Project getProject() {

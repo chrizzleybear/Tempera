@@ -1,12 +1,16 @@
 package at.qe.skeleton.rest.frontend.mappersAndFrontendServices;
 
+import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
-import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.ExtendedProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
+import at.qe.skeleton.rest.frontend.payload.request.UpdateDashboardDataRequest;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
+import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
 import at.qe.skeleton.services.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,11 +40,11 @@ public class DashboardDataMapper {
     this.projectService = projectService;
   }
 
+
   private List<ColleagueStateDto> mapUserToColleagueStateDto(Userx user) {
 
     // using hashmap for faster compare algorithm
-    Collection<Groupx> groups = user.getGroups();
-    Set<Groupx> userGroups = new HashSet<>(groups);
+    Set<Groupx> userGroups = new HashSet<>(user.getGroups());
 
     // we dont want user to be displayed as his own colleague
     List<Userx> colleagues =
@@ -123,39 +127,39 @@ public class DashboardDataMapper {
             .findFirst()
             .get();
 
-    Optional<Measurement> temperatureMeasurement =
-        measurementService.findLatestMeasurementBySensor(temperatureSensor);
-    Optional<Measurement> humidityMeasurement =
-        measurementService.findLatestMeasurementBySensor(humiditySensor);
-    Optional<Measurement> irradianceMeasurement =
-        measurementService.findLatestMeasurementBySensor(irradianceSensor);
-    Optional<Measurement> nmvocMeasurement =
-        measurementService.findLatestMeasurementBySensor(nmvocSensor);
+
+    Optional<Measurement> temperatureMeasurement = measurementService.findLatestMeasurementBySensor(temperatureSensor);
+    Optional<Measurement> humidityMeasurement = measurementService.findLatestMeasurementBySensor(humiditySensor);
+    Optional<Measurement> irradianceMeasurement = measurementService.findLatestMeasurementBySensor(irradianceSensor);
+    Optional<Measurement> nmvocMeasurement = measurementService.findLatestMeasurementBySensor(nmvocSensor);
 
     Double temperature = temperatureMeasurement.map(Measurement::getValue).orElse(null);
     Double humidity = humidityMeasurement.map(Measurement::getValue).orElse(null);
     Double irradiance = irradianceMeasurement.map(Measurement::getValue).orElse(null);
     Double nmvoc = nmvocMeasurement.map(Measurement::getValue).orElse(null);
 
-    Optional<ExternalRecord> externalRecordOptional =
-        timeRecordService.findLatestExternalRecordByUser(user);
-    String stateTimeStamp =
-        externalRecordOptional
-            .map(externalRecord -> externalRecord.getStart().toString())
-            .orElse(null);
+
+    Optional<ExternalRecord> externalRecordOptional = timeRecordService.findLatestExternalRecordByUser(user);
+    String stateTimeStamp = externalRecordOptional.map(externalRecord -> externalRecord.getStart().toString()).orElse(null);
 
     Project defaultProject = user.getDefaultProject();
-    ProjectDto defaultProjectDto;
+    SimpleProjectDto defaultProjectDto;
     if (defaultProject == null) {
-      defaultProjectDto = new ProjectDto(null, "No default project assigned");
+      defaultProjectDto = new SimpleProjectDto(null, "No default project assigned", null, null);
     } else {
       defaultProjectDto =
-          new ProjectDto(defaultProject.getId().toString(), defaultProject.getName());
+          new SimpleProjectDto(defaultProject.getId().toString(), defaultProject.getName(), defaultProject.getDescription(), defaultProject.getManager().getUsername());
     }
 
-    List<ProjectDto> projects =
+    List<SimpleProjectDto> projects =
         projectService.getProjectsByContributor(user).stream()
-            .map(p -> new ProjectDto(p.getId().toString(), p.getName()))
+            .map(
+                p ->
+                    new SimpleProjectDto(
+                        p.getId().toString(),
+                        p.getName(),
+                        p.getDescription(),
+                        p.getManager().getUsername()))
             .toList();
 
     return new DashboardDataResponse(
@@ -169,5 +173,23 @@ public class DashboardDataMapper {
         defaultProjectDto,
         projects,
         colleagueStateDtos);
+  }
+
+  //todo fix with GroupxProject
+@Transactional
+  public MessageResponse updateUserVisibilityAndTimeStampProject(UpdateDashboardDataRequest request, Userx user) throws CouldNotFindEntityException{
+    SimpleProjectDto projectDto = request.project();
+    List<GroupxProject> groupxProjectList = projectService.findAllGroupxProjectsByProjectId(Long.parseLong(projectDto.projectId()));
+    if (groupxProjectList.isEmpty()) {
+      throw new CouldNotFindEntityException("No groupxProject found for project");
+    }
+    InternalRecord record = timeRecordService.findLatestInternalRecordByUser(user).orElseThrow(()-> new CouldNotFindEntityException("No external record found for user"));
+    GroupxProject groupxProject= groupxProjectList.get(0);
+    groupxProject.addInternalRecord(record);
+    projectService.saveGroupxProject(groupxProject);
+    user.setStateVisibility(request.visibility());
+    userService.saveUser(user);
+
+    return new MessageResponse("Dashboard data updated successfully!");
   }
 }

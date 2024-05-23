@@ -43,7 +43,7 @@ public class GroupManagementController {
   public ResponseEntity<Groupx> updateGroup(@RequestBody SimpleGroupDto groupData) {
     Groupx updatedGroup =
         groupService.updateGroup(
-            groupData.groupId(), groupData.name(), groupData.description(), groupData.groupLead());
+            Long.parseLong(groupData.groupId()), groupData.name(), groupData.description(), groupData.groupLead());
     return ResponseEntity.ok(updatedGroup);
   }
 

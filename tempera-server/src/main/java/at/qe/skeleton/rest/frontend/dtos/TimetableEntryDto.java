@@ -15,9 +15,9 @@ import jakarta.validation.constraints.NotNull;
  * @param description the description of the entry.
  */
 public record TimetableEntryDto(
-    @NotNull Long id,
-    @NotNull String startTimestamp,
-    @NotNull String endTimestamp,
-    ProjectDto assignedProject,
-    @NotNull State state,
-    String description) {}
+   @NotNull Long id,
+   @NotNull String startTimestamp,
+   @NotNull String endTimestamp,
+   SimpleProjectDto assignedProject,
+   @NotNull State state,
+   String description) {}
