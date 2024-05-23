@@ -182,9 +182,16 @@ export class TimetableComponent implements OnInit {
     const time = DateTime.fromJSDate(this.splitForm.controls.time.value!).toString();
     this.timetableControllerService.splitTimeRecord({ entryId: timeEntryId, splitTimestamp: time }).subscribe(
       {
-        next: () => {
+        next: data => {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Time entry split successfully' });
           this.splitVisible = false;
+          this.tableEntries = data.tableEntries?.map(entry => ({
+            ...entry,
+            startTime: new Date(entry.startTimestamp),
+            endTime: new Date(entry.endTimestamp),
+          })) ?? [];
+
+          this.availableProjects = data.availableProjects ?? [];
         },
         error: () => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to split time entry' });

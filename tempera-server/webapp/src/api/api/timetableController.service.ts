@@ -163,9 +163,9 @@ export class TimetableControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public splitTimeRecord(splitTimeRecordRequest: SplitTimeRecordRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<MessageResponse>;
-    public splitTimeRecord(splitTimeRecordRequest: SplitTimeRecordRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<MessageResponse>>;
-    public splitTimeRecord(splitTimeRecordRequest: SplitTimeRecordRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<MessageResponse>>;
+    public splitTimeRecord(splitTimeRecordRequest: SplitTimeRecordRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<GetTimetableDataResponse>;
+    public splitTimeRecord(splitTimeRecordRequest: SplitTimeRecordRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<GetTimetableDataResponse>>;
+    public splitTimeRecord(splitTimeRecordRequest: SplitTimeRecordRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<GetTimetableDataResponse>>;
     public splitTimeRecord(splitTimeRecordRequest: SplitTimeRecordRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (splitTimeRecordRequest === null || splitTimeRecordRequest === undefined) {
             throw new Error('Required parameter splitTimeRecordRequest was null or undefined when calling splitTimeRecord.');
@@ -217,7 +217,7 @@ export class TimetableControllerService {
         }
 
         let localVarPath = `/api/timetable/split/time-record`;
-        return this.httpClient.request<MessageResponse>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<GetTimetableDataResponse>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: splitTimeRecordRequest,
