@@ -184,6 +184,7 @@ export class TimetableComponent implements OnInit {
       {
         next: () => {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Time entry split successfully' });
+          this.splitVisible = false;
         },
         error: () => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to split time entry' });
