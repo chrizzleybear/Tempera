@@ -12,6 +12,7 @@
 
 
 export interface ContributorAssignmentDto { 
+    groupId?: number;
     projectId?: number;
     contributorId?: string;
 }

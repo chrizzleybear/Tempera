@@ -13,11 +13,12 @@ import { GroupxProject } from './groupxProject';
 import { Userx } from './userx';
 
 
-export interface Project { 
+export interface Groupx { 
     id?: number;
     name?: string;
     description?: string;
-    manager?: Userx;
+    groupLead?: Userx;
+    members?: Array<Userx>;
     groupxProjects?: Set<GroupxProject>;
 }
 

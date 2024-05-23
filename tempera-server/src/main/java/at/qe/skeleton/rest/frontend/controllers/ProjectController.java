@@ -23,6 +23,7 @@ public class ProjectController {
 
   @Autowired ProjectService projectService;
   private Logger logger = Logger.getLogger("ProjectController");
+
   @GetMapping("/all")
   public ResponseEntity<List<Project>> getAllUsers() {
     List<Project> projects = projectService.getAllProjects().stream().toList();
@@ -60,7 +61,7 @@ public class ProjectController {
     return ResponseEntity.ok(project);
   }
 
-  @GetMapping("/getGroups/{id}")
+  @GetMapping("/getGroups/id")
   public ResponseEntity<List<Groupx>> getGroupsByProjectId(@PathVariable Long projectId) {
     List<GroupxProject> groupxProjects = projectService.findAllGroupxProjectsByProjectId(projectId);
     List<Groupx> groups = groupxProjects.stream().map(GroupxProject::getGroup).toList();
@@ -70,19 +71,19 @@ public class ProjectController {
   @PostMapping("/addGroup")
   public ResponseEntity<Void> addGroupToProject(
       @RequestBody GroupAssignmentDto groupAssignmentDto) {
-    try{
-      projectService.addGroupToProject(groupAssignmentDto.projectId(), groupAssignmentDto.groupId());
+    try {
+      projectService.addGroupToProject(
+          groupAssignmentDto.projectId(), groupAssignmentDto.groupId());
       return ResponseEntity.ok().build();
     } catch (Exception e) {
       logger.warning(e.getMessage());
       return ResponseEntity.badRequest().build();
     }
-
   }
 
-  @DeleteMapping("/deleteGroup/{projectId}/{groupId}")
+  @DeleteMapping("/deleteGroup/projectId/groupId")
   public ResponseEntity<Void> removeGroupFromProject(
-      @PathVariable String projectId, @PathVariable String groupId){
+      @PathVariable String projectId, @PathVariable String groupId) {
     try {
       projectService.removeGroupFromProject(Long.parseLong(groupId), Long.parseLong(projectId));
       return ResponseEntity.ok().build();
@@ -90,29 +91,29 @@ public class ProjectController {
       logger.warning(e.getMessage());
       return ResponseEntity.badRequest().build();
     }
-
   }
 
-  //todo: different return type? we do have a projectDto
+  // todo: different return type? we do have a projectDto
 
   @PostMapping("/addContributor")
   public ResponseEntity<Project> addContributor(
       @RequestBody ContributorAssignmentDto contributorAssignmentDto) {
     try {
-    projectService.addContributor(contributorAssignmentDto.groupId(),
-        contributorAssignmentDto.projectId(), contributorAssignmentDto.contributorId());
-    Project project = projectService.loadProject(contributorAssignmentDto.projectId());
-    return ResponseEntity.ok(project);
+      projectService.addContributor(
+          contributorAssignmentDto.groupId(),
+          contributorAssignmentDto.projectId(),
+          contributorAssignmentDto.contributorId());
+      Project project = projectService.loadProject(contributorAssignmentDto.projectId());
+      return ResponseEntity.ok(project);
     } catch (Exception e) {
       logger.warning("caught exception in Controller: %s".formatted(e.getMessage()));
       return ResponseEntity.badRequest().build();
     }
   }
 
-  @DeleteMapping("/deleteContributor/{projectId}/{contributorId}")
-  public ResponseEntity<Project> removeContributor(
-      @RequestBody ContributorAssignmentDto dto) {
-    try{
+  @DeleteMapping("/deleteContributor/projectId/contributorId")
+  public ResponseEntity<Project> removeContributor(@RequestBody ContributorAssignmentDto dto) {
+    try {
       projectService.removeContributor(dto.groupId(), dto.projectId(), dto.contributorId());
       Project project = projectService.loadProject(dto.projectId());
       return ResponseEntity.ok(project);
@@ -120,7 +121,6 @@ public class ProjectController {
       logger.warning("caught exception in Controller: %s".formatted(e.getMessage()));
       return ResponseEntity.badRequest().build();
     }
-
   }
 
   @GetMapping("/allOfGroup/{groupId}")

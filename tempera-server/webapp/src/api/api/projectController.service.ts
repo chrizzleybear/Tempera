@@ -21,9 +21,9 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { ContributorAssignmentDto } from '../model/contributorAssignmentDto';
 // @ts-ignore
-import { Group } from '../model/group';
-// @ts-ignore
 import { GroupAssignmentDto } from '../model/groupAssignmentDto';
+// @ts-ignore
+import { Groupx } from '../model/groupx';
 // @ts-ignore
 import { Project } from '../model/project';
 // @ts-ignore
@@ -440,17 +440,13 @@ export class ProjectControllerService {
     }
 
     /**
-     * @param id 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getGroups(id: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<Group>>;
-    public getGroups(id: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<Group>>>;
-    public getGroups(id: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<Group>>>;
-    public getGroups(id: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getGroups.');
-        }
+    public getGroupsByProjectId(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<Groupx>>;
+    public getGroupsByProjectId(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<Groupx>>>;
+    public getGroupsByProjectId(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<Groupx>>>;
+    public getGroupsByProjectId(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -488,8 +484,8 @@ export class ProjectControllerService {
             }
         }
 
-        let localVarPath = `/api/project/getGroups/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`;
-        return this.httpClient.request<Array<Group>>('get', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/api/project/getGroups/id`;
+        return this.httpClient.request<Array<Groupx>>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -629,20 +625,16 @@ export class ProjectControllerService {
     }
 
     /**
-     * @param projectId 
-     * @param contributorId 
+     * @param contributorAssignmentDto 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public removeContributor(projectId: string, contributorId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Project>;
-    public removeContributor(projectId: string, contributorId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Project>>;
-    public removeContributor(projectId: string, contributorId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Project>>;
-    public removeContributor(projectId: string, contributorId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling removeContributor.');
-        }
-        if (contributorId === null || contributorId === undefined) {
-            throw new Error('Required parameter contributorId was null or undefined when calling removeContributor.');
+    public removeContributor(contributorAssignmentDto: ContributorAssignmentDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Project>;
+    public removeContributor(contributorAssignmentDto: ContributorAssignmentDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Project>>;
+    public removeContributor(contributorAssignmentDto: ContributorAssignmentDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Project>>;
+    public removeContributor(contributorAssignmentDto: ContributorAssignmentDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (contributorAssignmentDto === null || contributorAssignmentDto === undefined) {
+            throw new Error('Required parameter contributorAssignmentDto was null or undefined when calling removeContributor.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -670,6 +662,15 @@ export class ProjectControllerService {
         }
 
 
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
         let responseType_: 'text' | 'json' | 'blob' = 'json';
         if (localVarHttpHeaderAcceptSelected) {
             if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
@@ -681,10 +682,11 @@ export class ProjectControllerService {
             }
         }
 
-        let localVarPath = `/api/project/deleteContributor/${this.configuration.encodeParam({name: "projectId", value: projectId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/${this.configuration.encodeParam({name: "contributorId", value: contributorId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/api/project/deleteContributor/projectId/contributorId`;
         return this.httpClient.request<Project>('delete', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
+                body: contributorAssignmentDto,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -696,21 +698,13 @@ export class ProjectControllerService {
     }
 
     /**
-     * @param projectId 
-     * @param groupId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public removeGroupFromProject(projectId: string, groupId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public removeGroupFromProject(projectId: string, groupId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public removeGroupFromProject(projectId: string, groupId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public removeGroupFromProject(projectId: string, groupId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling removeGroupFromProject.');
-        }
-        if (groupId === null || groupId === undefined) {
-            throw new Error('Required parameter groupId was null or undefined when calling removeGroupFromProject.');
-        }
+    public removeGroupFromProject(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public removeGroupFromProject(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public removeGroupFromProject(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public removeGroupFromProject(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -747,7 +741,7 @@ export class ProjectControllerService {
             }
         }
 
-        let localVarPath = `/api/project/deleteGroup/${this.configuration.encodeParam({name: "projectId", value: projectId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/${this.configuration.encodeParam({name: "groupId", value: groupId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/api/project/deleteGroup/projectId/groupId`;
         return this.httpClient.request<any>('delete', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,

@@ -9,15 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { GroupxProject } from './groupxProject';
-import { Userx } from './userx';
+import { AccumulatedTimeDto } from './accumulatedTimeDto';
 
 
-export interface Project { 
-    id?: number;
-    name?: string;
-    description?: string;
-    manager?: Userx;
-    groupxProjects?: Set<GroupxProject>;
+export interface AccumulatedTimeResponse { 
+    accumulatedTimes?: Array<AccumulatedTimeDto>;
 }
 

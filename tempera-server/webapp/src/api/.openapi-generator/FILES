@@ -1,6 +1,7 @@
 .gitignore
 README.md
 api.module.ts
+api/accumulatedTimeController.service.ts
 api/api.ts
 api/authController.service.ts
 api/dashboardController.service.ts
@@ -18,14 +19,18 @@ git_push.sh
 index.ts
 model/accessPoint.ts
 model/accessPointDto.ts
+model/accumulatedTimeDto.ts
+model/accumulatedTimeResponse.ts
 model/colleagueStateDto.ts
 model/contributorAssignmentDto.ts
 model/credentialsDto.ts
 model/dashboardDataResponse.ts
 model/externalRecordDto.ts
 model/getTimetableDataResponse.ts
-model/group.ts
 model/groupAssignmentDto.ts
+model/groupDto.ts
+model/groupx.ts
+model/groupxProject.ts
 model/loginRequest.ts
 model/measurement.ts
 model/measurementDto.ts

@@ -9,16 +9,17 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Group } from './group';
 import { Project } from './project';
+import { GroupxProject } from './groupxProject';
 import { TemperaStation } from './temperaStation';
+import { Groupx } from './groupx';
 
 
 export interface Userx { 
     username?: string;
     temperaStation?: TemperaStation;
-    groups?: Array<Group>;
-    projects?: Array<Project>;
+    groupxProjects?: Set<GroupxProject>;
+    groups?: Array<Groupx>;
     password?: string;
     firstName?: string;
     lastName?: string;

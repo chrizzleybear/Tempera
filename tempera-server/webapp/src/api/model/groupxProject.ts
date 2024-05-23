@@ -9,15 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { GroupxProject } from './groupxProject';
+import { Project } from './project';
+import { Groupx } from './groupx';
 import { Userx } from './userx';
 
 
-export interface Project { 
-    id?: number;
-    name?: string;
-    description?: string;
-    manager?: Userx;
-    groupxProjects?: Set<GroupxProject>;
+export interface GroupxProject { 
+    group?: Groupx;
+    project?: Project;
+    contributors?: Set<Userx>;
 }
 

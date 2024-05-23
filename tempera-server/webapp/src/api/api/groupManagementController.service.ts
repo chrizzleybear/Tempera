@@ -19,7 +19,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { Group } from '../model/group';
+import { Groupx } from '../model/groupx';
 // @ts-ignore
 import { MemberAssigmentDto } from '../model/memberAssigmentDto';
 // @ts-ignore
@@ -175,9 +175,9 @@ export class GroupManagementControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createGroup(simpleGroupDto: SimpleGroupDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Group>;
-    public createGroup(simpleGroupDto: SimpleGroupDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Group>>;
-    public createGroup(simpleGroupDto: SimpleGroupDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Group>>;
+    public createGroup(simpleGroupDto: SimpleGroupDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Groupx>;
+    public createGroup(simpleGroupDto: SimpleGroupDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Groupx>>;
+    public createGroup(simpleGroupDto: SimpleGroupDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Groupx>>;
     public createGroup(simpleGroupDto: SimpleGroupDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (simpleGroupDto === null || simpleGroupDto === undefined) {
             throw new Error('Required parameter simpleGroupDto was null or undefined when calling createGroup.');
@@ -229,7 +229,7 @@ export class GroupManagementControllerService {
         }
 
         let localVarPath = `/api/groups/create`;
-        return this.httpClient.request<Group>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<Groupx>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: simpleGroupDto,
@@ -309,9 +309,9 @@ export class GroupManagementControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getAllGroups(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<Group>>;
-    public getAllGroups(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<Group>>>;
-    public getAllGroups(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<Group>>>;
+    public getAllGroups(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<Groupx>>;
+    public getAllGroups(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<Groupx>>>;
+    public getAllGroups(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<Groupx>>>;
     public getAllGroups(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
@@ -351,7 +351,7 @@ export class GroupManagementControllerService {
         }
 
         let localVarPath = `/api/groups/all`;
-        return this.httpClient.request<Array<Group>>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<Array<Groupx>>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -369,9 +369,9 @@ export class GroupManagementControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getGroup(groupId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Group>;
-    public getGroup(groupId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Group>>;
-    public getGroup(groupId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Group>>;
+    public getGroup(groupId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Groupx>;
+    public getGroup(groupId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Groupx>>;
+    public getGroup(groupId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Groupx>>;
     public getGroup(groupId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (groupId === null || groupId === undefined) {
             throw new Error('Required parameter groupId was null or undefined when calling getGroup.');
@@ -414,7 +414,7 @@ export class GroupManagementControllerService {
         }
 
         let localVarPath = `/api/groups/load/${this.configuration.encodeParam({name: "groupId", value: groupId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<Group>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<Groupx>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -432,9 +432,9 @@ export class GroupManagementControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getGroupByGroupLead(groupLeadId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<Group>>;
-    public getGroupByGroupLead(groupLeadId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<Group>>>;
-    public getGroupByGroupLead(groupLeadId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<Group>>>;
+    public getGroupByGroupLead(groupLeadId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<Groupx>>;
+    public getGroupByGroupLead(groupLeadId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<Groupx>>>;
+    public getGroupByGroupLead(groupLeadId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<Groupx>>>;
     public getGroupByGroupLead(groupLeadId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (groupLeadId === null || groupLeadId === undefined) {
             throw new Error('Required parameter groupLeadId was null or undefined when calling getGroupByGroupLead.');
@@ -477,7 +477,7 @@ export class GroupManagementControllerService {
         }
 
         let localVarPath = `/api/groups/groupLead/${this.configuration.encodeParam({name: "groupLeadId", value: groupLeadId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<Array<Group>>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<Array<Groupx>>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -624,9 +624,9 @@ export class GroupManagementControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateGroup(simpleGroupDto: SimpleGroupDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Group>;
-    public updateGroup(simpleGroupDto: SimpleGroupDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Group>>;
-    public updateGroup(simpleGroupDto: SimpleGroupDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Group>>;
+    public updateGroup(simpleGroupDto: SimpleGroupDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Groupx>;
+    public updateGroup(simpleGroupDto: SimpleGroupDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Groupx>>;
+    public updateGroup(simpleGroupDto: SimpleGroupDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Groupx>>;
     public updateGroup(simpleGroupDto: SimpleGroupDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (simpleGroupDto === null || simpleGroupDto === undefined) {
             throw new Error('Required parameter simpleGroupDto was null or undefined when calling updateGroup.');
@@ -678,7 +678,7 @@ export class GroupManagementControllerService {
         }
 
         let localVarPath = `/api/groups/update`;
-        return this.httpClient.request<Group>('put', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<Groupx>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: simpleGroupDto,
