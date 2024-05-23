@@ -43,6 +43,9 @@ public class Threshold implements Serializable {
     this.tip = tip;
   }
 
+  public Threshold() {
+  }
+
   public SensorType getSensorType() {
     return sensorType;
   }

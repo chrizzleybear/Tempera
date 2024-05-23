@@ -227,8 +227,8 @@ INSERT INTO Threshold (id, default_threshold, sensor_type, threshold_type, thres
     (-34, TRUE, 1, 2, 600.0, -1, -21),
     (-41, TRUE, 3, 1, 11.0, -1, -30),
     (-42, TRUE, 3, 3, 10.0, -1, -30),
-    (-43, TRUE, 3, 0, NULL, -1, -30),
-    (-44, TRUE, 3, 2, NULL, -1, -30);
+    (-43, TRUE, 3, 0, 10.00, -1, -30),
+    (-44, TRUE, 3, 2, 10.00, -1, -30);
 
 
 
