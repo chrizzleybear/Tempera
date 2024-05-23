@@ -95,7 +95,6 @@ async def validate_station(
       (can only happen at startup). In this scenario, data of an unauthorized/deactivated station may be read and
       stored in some unlikely scenarios, but once the connection is established again,
       it won't be sent to the server because the validation will fail so no harm no fault.
-      TODO: verify this point
 
     :param tempera_station: the tempera station BLE device.
     :param client: the connection to the tempera station, i.e., the client.

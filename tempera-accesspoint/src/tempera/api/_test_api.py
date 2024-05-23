@@ -128,9 +128,6 @@ async def get_scan_order(
     return {"scan": False}
 
 
-# TODO: define custom errors (enums) in device discovery and send them to web server for displaying
-
-
 @app.post("/rasp/api/measurement", status_code=201)
 async def post_measurements(
     credentials: Annotated[HTTPBasicCredentials, Depends(security)],
