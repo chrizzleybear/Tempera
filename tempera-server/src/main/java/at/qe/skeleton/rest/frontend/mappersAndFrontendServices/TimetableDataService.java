@@ -53,11 +53,17 @@ public class TimetableDataService {
       String start = timeRecord.getStart().toString();
       SimpleProjectDto simpleProjectDto = null;
       if (timeRecord.getGroupxProject() != null){
+        Project project = timeRecord.getGroupxProject().getProject();
+        String projectId = project.getId().toString();
+        String projectName = project.getName();
+        String projectDescription = project.getDescription();
+        String projectManager = project.getManager().getUsername();
+
         simpleProjectDto = new SimpleProjectDto(
-            timeRecord.getGroupxProject().getProject().getId().toString(),
-            timeRecord.getGroupxProject().getProject().getName(),
-            timeRecord.getGroupxProject().getProject().getDescription(),
-            timeRecord.getGroupxProject().getProject().getManager().getUsername());
+            projectId,
+            projectName,
+            projectDescription,
+            projectManager);
       }
       State state = timeRecord.getExternalRecord().getState();
       String description = timeRecord.getDescription();

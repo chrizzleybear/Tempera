@@ -14,19 +14,7 @@ DELETE FROM userx;
 DELETE FROM project;
 
 
-INSERT INTO project (id, name, description) VALUES
-                                                (-1, 'Serious Business', 'This project beuts you aus'),
-                                                (-2, 'Expansion', 'This project aims to expand our operations globally.'),
-                                                (-3, 'Innovation', 'This project focuses on fostering innovation within the company.'),
-                                                (-4, 'Efficiency', 'This project aims to improve efficiency across all departments.'),
-                                                (-5, 'Sustainability Initiative', 'This project aims to make our operations more environmentally friendly.'),
-                                                (-6, 'Customer Satisfaction Improvement', 'This project focuses on enhancing customer experience and satisfaction.'),
-                                                (-7, 'Product Development', 'This project involves developing new products to meet market demands.'),
-                                                (-8, 'Cost Reduction Initiative', 'This project aims to identify and implement cost-saving measures across the organization.'),
-                                                (-9, 'Quality Assurance Enhancement', 'This project focuses on improving the quality control processes to ensure product quality and reliability.'),
-                                                (-10, 'Marketing Campaign Launch', 'This project involves planning and executing a new marketing campaign to attract customers.'),
-                                                (-11, 'Training and Development Program', 'This project focuses on providing training and development opportunities for employees to enhance their skills and performance.'),
-                                                (-12, 'Infrastructure Upgrade', 'This project involves upgrading the company''s IT infrastructure to improve efficiency and security.');
+
 
 
 
@@ -36,6 +24,21 @@ INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('admin', 'ADMIN');
 INSERT INTO userx (enabled, default_project_id, state, state_visibility, create_date, update_date, create_user_username, update_user_username, username, email, first_name, last_name, password)
 VALUES (TRUE, -2, 'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin', 'johndoe', 'johndoe@example.com', 'John', 'Doe', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u');
 INSERT INTO userx_userx_role (userx_username, roles) VALUES ('johndoe', 'EMPLOYEE');
+
+-- Testdata for ProjectService
+INSERT INTO project (id, name, description, manager_username) VALUES
+(-1, 'Serious Business', 'This project beuts you aus', 'admin'),
+(-2, 'Expansion', 'This project aims to expand our operations globally.', 'admin'),
+(-3, 'Innovation', 'This project focuses on fostering innovation within the company.', 'admin'),
+(-4, 'Efficiency', 'This project aims to improve efficiency across all departments.', 'admin'),
+(-5, 'Sustainability Initiative', 'This project aims to make our operations more environmentally friendly.', 'admin'),
+(-6, 'Customer Satisfaction Improvement', 'This project focuses on enhancing customer experience and satisfaction.', 'admin'),
+(-7, 'Product Development', 'This project involves developing new products to meet market demands.', 'admin'),
+(-8, 'Cost Reduction Initiative', 'This project aims to identify and implement cost-saving measures across the organization.', 'admin'),
+(-9, 'Quality Assurance Enhancement', 'This project focuses on improving the quality control processes to ensure product quality and reliability.', 'admin'),
+(-10, 'Marketing Campaign Launch', 'This project involves planning and executing a new marketing campaign to attract customers.', 'admin'),
+(-11, 'Training and Development Program', 'This project focuses on providing training and development opportunities for employees to enhance their skills and performance.', 'admin'),
+(-12, 'Infrastructure Upgrade', 'This project involves upgrading the company''s IT infrastructure to improve efficiency and security.', 'admin');
 
 INSERT INTO groupx (id, group_lead_username, description, name) VALUES (1,'admin', 'this is just for testing', 'Marketing_Group');
 INSERT INTO groupx (id, group_lead_username, description, name) VALUES (2,'admin', 'this is also just for testing', 'Research_Group');

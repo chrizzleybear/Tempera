@@ -22,10 +22,12 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 @SpringBootTest
 @WebAppConfiguration
 class DashboardDataMapperTest {
-    @Autowired private UserxService userService;
+    @Autowired
+    private UserxService userService;
     @Autowired private TemperaStationService temperaService;
     @Autowired private MeasurementService measurementService;
     @Autowired private TimeRecordService timeRecordService;
@@ -33,11 +35,11 @@ class DashboardDataMapperTest {
 
     @BeforeEach
     void setUp() {
-      }
+    }
 
     @AfterEach
     void tearDown() {
-      }
+    }
 
     @Test
     @Transactional
@@ -61,18 +63,18 @@ class DashboardDataMapperTest {
         boolean chrisIsVisible = optionalColleague2.get().isVisible();
         assertTrue(chrisIsVisible, "chriswilliams should be visible, since his Visibility is set to Private, but he is in one of john does Groups.");
 
-Optional<ColleagueStateDto> optionalColleague3= homeDataResponse.colleagueStates().stream().filter(c -> c.name().equals("tonystark")).findAny();
+        Optional<ColleagueStateDto> optionalColleague3= homeDataResponse.colleagueStates().stream().filter(c -> c.name().equals("tonystark")).findAny();
         assertTrue(optionalColleague3.isPresent(), "Colleague tonystark should be present in the list");
         boolean tonyIsVisible = optionalColleague3.get().isVisible();
         assertFalse(tonyIsVisible, "tonystark should not be visible, since his Visibility is set to private and he is not in one of john does groups.");
 
-Optional<ColleagueStateDto> optionalColleague4= homeDataResponse.colleagueStates().stream().filter(c -> c.name().equals("manager")).findAny();
+        Optional<ColleagueStateDto> optionalColleague4= homeDataResponse.colleagueStates().stream().filter(c -> c.name().equals("manager")).findAny();
         assertTrue(optionalColleague4.isPresent(), "Colleague manager should be present in the list");
         List<String> managerGroups = optionalColleague4.get().groupOverlap();
         assertEquals(2, managerGroups.size(), "overlap should be two groups");
         assertTrue(managerGroups.contains("testGroup1"), "manager should be in group1");
         assertTrue(managerGroups.contains("testGroup2"), "manager should be in group2");
-      }
+    }
 
 
 
