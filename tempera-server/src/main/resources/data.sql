@@ -42,6 +42,7 @@ INSERT INTO userx_userx_role (userx_username, roles) VALUES ('brucewayne', 'MANA
 
 
 
+
 -- add some Groups to test db
 INSERT INTO groupx (id, group_lead_username, description, name) VALUES (-1,'peterparker', 'this is just for testing', 'Research Team');
 INSERT INTO groupx (id, group_lead_username, description, name) VALUES (-2,'peterparker', 'this is also just for testing', 'Security Team');
@@ -103,6 +104,7 @@ VALUES
     (-11, -1, -6, '2024-05-19 09:00:00', '2024-05-19 14:00:00', '2024-05-19 09:00:00', 'admin'),
     (-12, null, null, '2024-05-19 14:00:00', null, '2024-05-19 14:00:00', 'admin');
 
+
 INSERT INTO external_record (duration, start, time_end, user_username, state)
 VALUES
     (3400, '2024-05-11 09:30:00', '2024-05-11 10:00:00', 'johndoe', 'DEEPWORK'),
@@ -141,127 +143,122 @@ VALUES
     (-22, -2, -11, '2024-05-15 15:00:00', null, '2024-05-15 15:00:00', 'johndoe');
 
 
--------------------------------------------MEASUREMENT CHAIN----------------------------------------
-INSERT INTO room (room_id) VALUES ('room_1');
-INSERT INTO room (room_id) VALUES ('room_2');
-INSERT INTO room(room_id) VALUES ('room_3');
-INSERT INTO room (room_id) VALUES ('room_10');
-INSERT INTO room (room_id) VALUES ('room_11');
-INSERT INTO room (room_id) VALUES ('room_12');
+INSERT INTO room (room_id)
+VALUES ('room_1'),
+       ('room_2'),
+       ('room_3'),
+       ('room_10'),
+       ('room_11'),
+       ('room_12');
 
-INSERT INTO access_point (enabled, id, room_room_id) VALUES (TRUE, '123e4567-e89b-12d3-a456-426614174001', 'room_1');
-INSERT INTO access_point (enabled, id, room_room_id) VALUES (FALSE, '456e4567-e89b-12d3-a456-426614174001', 'room_2');
-INSERT INTO access_point (enabled, id, room_room_id) VALUES (TRUE, '789e4567-e89b-12d3-a456-426614174001', 'room_3');
-INSERT INTO access_point (enabled, id, room_room_id) VALUES (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'room_10');
-INSERT INTO access_point (enabled, id, room_room_id) VALUES (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'room_11');
-INSERT INTO access_point (enabled, id, room_room_id) VALUES (TRUE, '333e4567-e89b-12d3-a456-426614174001', 'room_12');
+INSERT INTO access_point (enabled, id, room_room_id)
+VALUES (TRUE, '123e4567-e89b-12d3-a456-426614174001', 'room_1'),
+       (FALSE, '456e4567-e89b-12d3-a456-426614174001', 'room_2'),
+       (TRUE, '789e4567-e89b-12d3-a456-426614174001', 'room_3'),
+       (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'room_10'),
+       (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'room_11'),
+       (TRUE, '333e4567-e89b-12d3-a456-426614174001', 'room_12');
 
-INSERT INTO TEMPERA_STATION (ENABLED, access_point_id, USER_USERNAME, ID) VALUES (TRUE, '123e4567-e89b-12d3-a456-426614174001','admin', 'tempera_station_1');
-INSERT INTO TEMPERA_STATION (ENABLED, access_point_id, USER_USERNAME, ID) VALUES (FALSE,'123e4567-e89b-12d3-a456-426614174001', 'MariaTheresa', 'tempera_station_disabled_2');
-INSERT INTO TEMPERA_STATION (ENABLED, access_point_id, USER_USERNAME, ID) VALUES (FALSE, '123e4567-e89b-12d3-a456-426614174001', 'user1', 'tempera_station_disabled');
-INSERT INTO TEMPERA_STATION (enabled, access_point_id, user_username, id) VALUES (FALSE, '123e4567-e89b-12d3-a456-426614174001', 'elvis', 'tempera_station_disabled_elvis');
-INSERT INTO tempera_station
-(enabled, access_point_id, user_username, id)
+INSERT INTO tempera_station (enabled, access_point_id, user_username, id, connected)
+VALUES (TRUE, '123e4567-e89b-12d3-a456-426614174001', 'admin', 'tempera_station_1', FALSE),
+       (FALSE, '123e4567-e89b-12d3-a456-426614174001', 'user2', 'tempera_station_disabled_2', FALSE),
+       (FALSE, '123e4567-e89b-12d3-a456-426614174001', 'user1', 'tempera_station_disabled', FALSE),
+       (FALSE, '123e4567-e89b-12d3-a456-426614174001', 'elvis', 'tempera_station_disabled_elvis', FALSE),
+       (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'johndoe', 'TEMP123', FALSE),
+       (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'bobjones', 'TEMP125', FALSE),
+       (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'alicebrown', 'TEMP126', FALSE),
+       (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'chriswilliams', 'TEMP127', FALSE),
+       (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'peterparker', 'TEMP128', FALSE),
+       (TRUE, '333e4567-e89b-12d3-a456-426614174001', 'tonystark', 'TEMP129', FALSE),
+       (TRUE, '333e4567-e89b-12d3-a456-426614174001', 'brucewayne', 'TEMP130', FALSE),
+       (FALSE, '333e4567-e89b-12d3-a456-426614174001', 'clarkkent', 'TEMP131', FALSE);
+
+INSERT INTO sensor (sensor_type, sensor_id, tempera_id, unit)
 VALUES
-    (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'johndoe', 'TEMP123'),
-    (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'bobjones', 'TEMP125'),
-    (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'alicebrown', 'TEMP126'),
-    (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'chriswilliams', 'TEMP127'),
-    (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'peterparker', 'TEMP128'),
-    (TRUE, '333e4567-e89b-12d3-a456-426614174001', 'tonystark', 'TEMP129'),
-    (TRUE, '333e4567-e89b-12d3-a456-426614174001', 'brucewayne', 'TEMP130'),
-    (FALSE, '333e4567-e89b-12d3-a456-426614174001', 'clarkkent', 'TEMP131');
+    -- temperature
+    ('TEMPERATURE', -1, 'tempera_station_1', 'CELSIUS'),
+    ('TEMPERATURE', -10, 'TEMP123', 'CELSIUS'),
+    ('TEMPERATURE', -10, 'TEMP125', 'CELSIUS'),
+    ('TEMPERATURE', -10, 'TEMP126', 'CELSIUS'),
+    ('TEMPERATURE', -10, 'TEMP127', 'CELSIUS'),
+    ('TEMPERATURE', -10, 'TEMP128', 'CELSIUS'),
+    ('TEMPERATURE', -10, 'TEMP129', 'CELSIUS'),
+    ('TEMPERATURE', -10, 'TEMP130', 'CELSIUS'),
+    ('TEMPERATURE', -10, 'TEMP131', 'CELSIUS'),
+    -- irradiance
+    ('IRRADIANCE', -2, 'tempera_station_1', 'LUX'),
+    ('IRRADIANCE', -11, 'TEMP123', 'LUX'),
+    ('IRRADIANCE', -11, 'TEMP125', 'LUX'),
+    ('IRRADIANCE', -11, 'TEMP126', 'LUX'),
+    ('IRRADIANCE', -11, 'TEMP127', 'LUX'),
+    ('IRRADIANCE', -11, 'TEMP128', 'LUX'),
+    ('IRRADIANCE', -11, 'TEMP129', 'LUX'),
+    ('IRRADIANCE', -11, 'TEMP130', 'LUX'),
+    ('IRRADIANCE', -11, 'TEMP131', 'LUX'),
+    -- humidity
+    ('HUMIDITY', -3, 'tempera_station_1', 'PERCENT'),
+    ('HUMIDITY', -12, 'TEMP123', 'PERCENT'),
+    ('HUMIDITY', -12, 'TEMP125', 'PERCENT'),
+    ('HUMIDITY', -12, 'TEMP126', 'PERCENT'),
+    ('HUMIDITY', -12, 'TEMP127', 'PERCENT'),
+    ('HUMIDITY', -12, 'TEMP128', 'PERCENT'),
+    ('HUMIDITY', -12, 'TEMP129', 'PERCENT'),
+    ('HUMIDITY', -12, 'TEMP130', 'PERCENT'),
+    ('HUMIDITY', -12, 'TEMP131', 'PERCENT'),
+    -- nmvoc
+    ('NMVOC', -4, 'tempera_station_1', 'OHM'),
+    ('NMVOC', -13, 'TEMP123', 'OHM'),
+    ('NMVOC', -13, 'TEMP125', 'OHM'),
+    ('NMVOC', -13, 'TEMP126', 'OHM'),
+    ('NMVOC', -13, 'TEMP127', 'OHM'),
+    ('NMVOC', -13, 'TEMP128', 'OHM'),
+    ('NMVOC', -13, 'TEMP129', 'OHM'),
+    ('NMVOC', -13, 'TEMP130', 'OHM'),
+    ('NMVOC', -13, 'TEMP131', 'OHM');
 
-INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES
-                                                                  ('TEMPERATURE', -1, 'tempera_station_1', 'CELSIUS'),
-                                                                  ('TEMPERATURE', -10, 'TEMP123', 'CELSIUS'),
-                                                                  ('TEMPERATURE', -10, 'TEMP125', 'CELSIUS'),
-                                                                  ('TEMPERATURE', -10, 'TEMP126', 'CELSIUS'),
-                                                                  ('TEMPERATURE', -10, 'TEMP127', 'CELSIUS'),
-                                                                  ('TEMPERATURE', -10, 'TEMP128', 'CELSIUS'),
-                                                                  ('TEMPERATURE', -10, 'TEMP129', 'CELSIUS'),
-                                                                  ('TEMPERATURE', -10, 'TEMP130', 'CELSIUS'),
-                                                                  ('TEMPERATURE', -10, 'TEMP131', 'CELSIUS');
-
-INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES
-                                                                  ('IRRADIANCE', -2, 'tempera_station_1', 'LUX'),
-                                                                  ('IRRADIANCE', -11, 'TEMP123', 'LUX'),
-                                                                  ('IRRADIANCE', -11, 'TEMP125', 'LUX'),
-                                                                  ('IRRADIANCE', -11, 'TEMP126', 'LUX'),
-                                                                  ('IRRADIANCE', -11, 'TEMP127', 'LUX'),
-                                                                  ('IRRADIANCE', -11, 'TEMP128', 'LUX'),
-                                                                  ('IRRADIANCE', -11, 'TEMP129', 'LUX'),
-                                                                  ('IRRADIANCE', -11, 'TEMP130', 'LUX'),
-                                                                  ('IRRADIANCE', -11, 'TEMP131', 'LUX');
-
-INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES
-                                                                  ('HUMIDITY', -3, 'tempera_station_1', 'PERCENT'),
-                                                                  ('HUMIDITY', -12, 'TEMP123', 'PERCENT'),
-                                                                  ('HUMIDITY', -12, 'TEMP125', 'PERCENT'),
-                                                                  ('HUMIDITY', -12, 'TEMP126', 'PERCENT'),
-                                                                  ('HUMIDITY', -12, 'TEMP127', 'PERCENT'),
-                                                                  ('HUMIDITY', -12, 'TEMP128', 'PERCENT'),
-                                                                  ('HUMIDITY', -12, 'TEMP129', 'PERCENT'),
-                                                                  ('HUMIDITY', -12, 'TEMP130', 'PERCENT'),
-                                                                  ('HUMIDITY', -12, 'TEMP131', 'PERCENT');
-
-INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES
-                                                                  ('NMVOC', -4, 'tempera_station_1', 'OHM'),
-                                                                  ('NMVOC', -13, 'TEMP123', 'OHM'),
-                                                                  ('NMVOC', -13, 'TEMP125', 'OHM'),
-                                                                  ('NMVOC', -13, 'TEMP126', 'OHM'),
-                                                                  ('NMVOC', -13, 'TEMP127', 'OHM'),
-                                                                  ('NMVOC', -13, 'TEMP128', 'OHM'),
-                                                                  ('NMVOC', -13, 'TEMP129', 'OHM'),
-                                                                  ('NMVOC', -13, 'TEMP130', 'OHM'),
-                                                                  ('NMVOC', -13, 'TEMP131', 'OHM');
-
--- fill in measurements for all the temperature sensors (also not necessary for HomeDataMapperTest but can be used later)
+-- fill in measurements for all the sensors (also not necessary for HomeDataMapperTest but can be used later)
 -- user of interest is johndoe (TEMP123)
-INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES
-                                                                                                 (20.0, -1, '2024-05-15 09:00:00', 'tempera_station_1'),
-                                                                                                 (20.0, -10, '2024-05-10T08:30:00', 'TEMP123'),
-                                                                                                 (25.9, -10, '2024-05-11T10:15:00', 'TEMP125'),
-                                                                                                 (22.0, -10, '2024-05-11T11:30:00', 'TEMP126'),
-                                                                                                 (24.0, -10, '2024-05-12T12:00:00', 'TEMP127'),
-                                                                                                 (30.0, -10, '2024-05-12T13:15:00', 'TEMP128'),
-                                                                                                 (17.0, -10, '2024-05-10T14:30:00', 'TEMP129'),
-                                                                                                 (24.1, -10, '2024-05-11T15:45:00', 'TEMP130'),
-                                                                                                 (24.1, -10, '2024-05-11T15:45:00', 'TEMP131');
-
--- fill in measurements for all the irradiance sensors
-INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES
-                                                                                                 (999.8, -2, '2024-05-15 09:02:00', 'tempera_station_1'),
-                                                                                                 (1000.0, -11, '2024-05-10T08:30:00', 'TEMP123'),
-                                                                                                 (1100.0, -11, '2024-05-11T10:15:00', 'TEMP125'),
-                                                                                                 (1200.0, -11, '2024-05-11T11:30:00', 'TEMP126'),
-                                                                                                 (1240.0, -11, '2024-05-12T12:00:00', 'TEMP127'),
-                                                                                                 (1900.0, -11, '2024-05-12T13:15:00', 'TEMP128'),
-                                                                                                 (9000.0, -11, '2024-05-10T14:30:00', 'TEMP129'),
-                                                                                                 (8900.0, -11, '2024-05-11T15:45:00', 'TEMP130'),
-                                                                                                 (8900.0, -11, '2024-05-11T15:45:00', 'TEMP131');
-
--- fill in measurements for all the humidity sensors
-INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES
-                                                                                                 (40.8, -3, '2024-05-15 09:02:00', 'tempera_station_1'),
-                                                                                                 (50.0, -12, '2024-05-10T08:30:00', 'TEMP123'),
-                                                                                                 (55.0, -12, '2024-05-11T10:15:00', 'TEMP125'),
-                                                                                                 (60.0, -12, '2024-05-11T11:30:00', 'TEMP126'),
-                                                                                                 (65.0, -12, '2024-05-12T12:00:00', 'TEMP127'),
-                                                                                                 (70.0, -12, '2024-05-12T13:15:00', 'TEMP128'),
-                                                                                                 (75.0, -12, '2024-05-10T14:30:00', 'TEMP129'),
-                                                                                                 (80.0, -12, '2024-05-11T15:45:00', 'TEMP130'),
-                                                                                                 (80.0, -12, '2024-05-11T15:45:00', 'TEMP131');
--- fill in measurements for all the nmvoc sensors
-INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES
-                                                                                                 (430.222, -4, '2024-05-15 09:02:00', 'tempera_station_1'),
-                                                                                                 (100.0, -13, '2024-05-10T08:30:00', 'TEMP123'),
-                                                                                                 (110.0, -13, '2024-05-11T10:15:00', 'TEMP125'),
-                                                                                                 (120.0, -13, '2024-05-11T11:30:00', 'TEMP126'),
-                                                                                                 (124.0, -13, '2024-05-12T12:00:00', 'TEMP127'),
-                                                                                                 (190.0, -13, '2024-05-12T13:15:00', 'TEMP128'),
-                                                                                                 (900.0, -13, '2024-05-10T14:30:00', 'TEMP129'),
-                                                                                                 (890.0, -13, '2024-05-11T15:45:00', 'TEMP130'),
-                                                                                                 (890.0, -13, '2024-05-11T15:45:00', 'TEMP131');
+INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)
+VALUES
+    -- temperature
+    (20.0, -1, '2024-05-15 09:00:00', 'tempera_station_1'),
+    (20.0, -10, '2024-05-10T08:30:00', 'TEMP123'),
+    (25.9, -10, '2024-05-11T10:15:00', 'TEMP125'),
+    (22.0, -10, '2024-05-11T11:30:00', 'TEMP126'),
+    (24.0, -10, '2024-05-12T12:00:00', 'TEMP127'),
+    (30.0, -10, '2024-05-12T13:15:00', 'TEMP128'),
+    (17.0, -10, '2024-05-10T14:30:00', 'TEMP129'),
+    (24.1, -10, '2024-05-11T15:45:00', 'TEMP130'),
+    (24.1, -10, '2024-05-11T15:45:00', 'TEMP131'),
+    -- irradiance
+    (999.8, -2, '2024-05-15 09:02:00', 'tempera_station_1'),
+    (1000.0, -11, '2024-05-10T08:30:00', 'TEMP123'),
+    (1100.0, -11, '2024-05-11T10:15:00', 'TEMP125'),
+    (1200.0, -11, '2024-05-11T11:30:00', 'TEMP126'),
+    (1240.0, -11, '2024-05-12T12:00:00', 'TEMP127'),
+    (1900.0, -11, '2024-05-12T13:15:00', 'TEMP128'),
+    (9000.0, -11, '2024-05-10T14:30:00', 'TEMP129'),
+    (8900.0, -11, '2024-05-11T15:45:00', 'TEMP130'),
+    (8900.0, -11, '2024-05-11T15:45:00', 'TEMP131'),
+    -- humidity
+    (40.8, -3, '2024-05-15 09:02:00', 'tempera_station_1'),
+    (50.0, -12, '2024-05-10T08:30:00', 'TEMP123'),
+    (55.0, -12, '2024-05-11T10:15:00', 'TEMP125'),
+    (60.0, -12, '2024-05-11T11:30:00', 'TEMP126'),
+    (65.0, -12, '2024-05-12T12:00:00', 'TEMP127'),
+    (70.0, -12, '2024-05-12T13:15:00', 'TEMP128'),
+    (75.0, -12, '2024-05-10T14:30:00', 'TEMP129'),
+    (80.0, -12, '2024-05-11T15:45:00', 'TEMP130'),
+    (80.0, -12, '2024-05-11T15:45:00', 'TEMP131'),
+    -- mvoc
+    (430.222, -4, '2024-05-15 09:02:00', 'tempera_station_1'),
+    (100.0, -13, '2024-05-10T08:30:00', 'TEMP123'),
+    (110.0, -13, '2024-05-11T10:15:00', 'TEMP125'),
+    (120.0, -13, '2024-05-11T11:30:00', 'TEMP126'),
+    (124.0, -13, '2024-05-12T12:00:00', 'TEMP127'),
+    (190.0, -13, '2024-05-12T13:15:00', 'TEMP128'),
+    (900.0, -13, '2024-05-10T14:30:00', 'TEMP129'),
+    (890.0, -13, '2024-05-11T15:45:00', 'TEMP130'),
+    (890.0, -13, '2024-05-11T15:45:00', 'TEMP131');
 
 
