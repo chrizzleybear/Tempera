@@ -7,6 +7,7 @@ import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.GroupxProjectRepository;
 import at.qe.skeleton.repositories.UserxRepository;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -92,6 +93,11 @@ public class GroupService {
         Userx groupLead = userxRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException(INVALID_GROUPLEAD_ID));
         List<Groupx> groups = groupRepository.findByGroupLead(groupLead);
         return groups;
+    }
+
+    public List<Userx> getMembers(Long groupId) {
+        Groupx group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
+        return group.getMembers();
     }
 
     public void saveGroup(Groupx group){

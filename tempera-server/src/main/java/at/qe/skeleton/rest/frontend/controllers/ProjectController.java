@@ -1,8 +1,6 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
-import at.qe.skeleton.model.Groupx;
-import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.rest.frontend.dtos.*;
 import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.ProjectMapperService;
@@ -72,41 +70,48 @@ public class ProjectController {
     return ResponseEntity.ok("Project deleted");
   }
 
-  @GetMapping("/load/{projectId}")
+  @GetMapping("/loadExtendedProject/{projectId}")
   public ResponseEntity<ExtendedProjectDto> getProjectDetailedById(@PathVariable String projectId) {
       try{
-        ExtendedProjectDto projectDto = projectMapperService.loadProjectDetailed(projectId);
+        ExtendedProjectDto projectDto = projectMapperService.loadExtendedProjectDto(Long.parseLong(projectId));
         return ResponseEntity.ok(projectDto);
       } catch (CouldNotFindEntityException e) {
         logger.warning(e.getMessage());
         return ResponseEntity.badRequest().build();
       }
+  }
 
+  @GetMapping("/loadExtendedGroup/{groupId}")
+  public ResponseEntity<ExtendedGroupDto> getExtendedGroupById(@PathVariable String groupId) {
+    try {
+      ExtendedGroupDto groupDto = projectMapperService.loadExtendedGroupDto(Long.parseLong(groupId));
+      return ResponseEntity.ok(groupDto);
+    } catch (CouldNotFindEntityException e) {
+      logger.warning(e.getMessage());
+      return ResponseEntity.badRequest().build();
+    }
   }
 
   //ehemals getGroups
-  @GetMapping("/getGroups/{id}")
+  @GetMapping("/getGroupsOfProject/{projectId}")
   public ResponseEntity<List<SimpleGroupDto>> getGroupsByProjectId(@PathVariable String projectId) {
     List<SimpleGroupDto> groups = projectMapperService.getAllSimpleGroups(projectId);
     return ResponseEntity.ok(groups);
   }
 
-  //todo: hier weiter machen
-
   @PostMapping("/addGroup")
-  public ResponseEntity<Void> addGroupToProject(
+  public ResponseEntity<ExtendedProjectDto> addGroupToProject(
       @RequestBody GroupAssignmentDto groupAssignmentDto) {
     try{
-      projectService.addGroupToProject(groupAssignmentDto.projectId(), groupAssignmentDto.groupId());
-      return ResponseEntity.ok().build();
+      ExtendedProjectDto extendedProjectDto = projectMapperService.addGroupToProject(groupAssignmentDto);
+      return ResponseEntity.ok(extendedProjectDto);
     } catch (Exception e) {
       logger.warning(e.getMessage());
       return ResponseEntity.badRequest().build();
     }
-
   }
 
-  @DeleteMapping("/deleteGroup/{projectId}/{groupId}")
+  @DeleteMapping("/removeGroup/{projectId}/{groupId}")
   public ResponseEntity<Void> removeGroupFromProject(
       @PathVariable String projectId, @PathVariable String groupId){
     try {
@@ -116,41 +121,38 @@ public class ProjectController {
       logger.warning(e.getMessage());
       return ResponseEntity.badRequest().build();
     }
-
   }
 
-  //todo: different return type? we do have a extendedProjectDto
-
   @PostMapping("/addContributor")
-  public ResponseEntity<Project> addContributor(
+  public ResponseEntity<ExtendedProjectDto> addContributor(
       @RequestBody ContributorAssignmentDto contributorAssignmentDto) {
     try {
     projectService.addContributor(contributorAssignmentDto.groupId(),
         contributorAssignmentDto.projectId(), contributorAssignmentDto.contributorId());
-    Project project = projectService.loadProject(contributorAssignmentDto.projectId());
-    return ResponseEntity.ok(project);
+    ExtendedProjectDto extendedProjectDtoproject = projectMapperService.loadExtendedProjectDto(contributorAssignmentDto.projectId());
+    return ResponseEntity.ok(extendedProjectDtoproject);
     } catch (Exception e) {
       logger.warning("caught exception in Controller: %s".formatted(e.getMessage()));
       return ResponseEntity.badRequest().build();
     }
   }
 
-  @DeleteMapping("/deleteContributor/{projectId}/{contributorId}")
-  public ResponseEntity<Project> removeContributor(
-      @RequestBody ContributorAssignmentDto dto) {
-    try{
-      projectService.removeContributor(dto.groupId(), dto.projectId(), dto.contributorId());
-      Project project = projectService.loadProject(dto.projectId());
-      return ResponseEntity.ok(project);
+  @DeleteMapping("/removeContributor/{projectId}/{groupId}/{contributorId}")
+  public ResponseEntity<ExtendedProjectDto> removeContributor(
+      @RequestParam String projectId, @RequestParam String groupId, @RequestParam String contributorId) throws CouldNotFindEntityException {
+    try {
+      projectService.removeContributor(Long.parseLong(groupId), Long.parseLong(projectId), contributorId);
+      ExtendedProjectDto extendedProjectDto = projectMapperService.loadExtendedProjectDto(Long.parseLong(projectId));
+      return ResponseEntity.ok(extendedProjectDto);
     } catch (Exception e) {
       logger.warning("caught exception in Controller: %s".formatted(e.getMessage()));
       return ResponseEntity.badRequest().build();
     }
   }
 
-  @GetMapping("/allOfGroup/{groupId}")
-  public ResponseEntity<List<Project>> getProjectsByGroupId(@PathVariable String groupId) {
-    List<Project> projects = projectService.getProjectsByGroupId(Long.parseLong(groupId));
+  @GetMapping("/projectsOfGroup/{groupId}")
+  public ResponseEntity<List<SimpleProjectDto>> getProjectsByGroupId(@PathVariable String groupId) {
+    List<SimpleProjectDto> projects = projectMapperService.getSimpleProjectsByGroupId(Long.parseLong(groupId));
     return ResponseEntity.ok(projects);
   }
 }

@@ -6,6 +6,7 @@ import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.repositories.UserxRepository;
 import at.qe.skeleton.rest.frontend.dtos.ExtendedProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.TimetableEntryDto;
 import at.qe.skeleton.rest.frontend.payload.request.SplitTimeRecordRequest;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateDescriptionRequest;
@@ -37,37 +38,43 @@ public class TimetableDataService {
     this.userxService = userxService;
   }
 
-  public GetTimetableDataResponse getTimetableData(Userx user, int page, int size) {
-    List<InternalRecord> timeRecords = timeRecordService.getPageOfInternalRecords(user, page, size);
+  public GetTimetableDataResponse getTimetableData(Userx user) {
+    List<InternalRecord> timeRecords = timeRecordService.getInternalRecordsForUser(user);
     List<TimetableEntryDto> tableEntries = new ArrayList<>();
     //todo once frontend is ready add Groupx here as well (or just sent the entire Groupxproject.)
     for (var timeRecord : timeRecords) {
+      String end;
+      // um die Arbeitszeitberechnung im Frontend nicht zu sprengen filtern wir den aktuellen TR raus.
+      if (timeRecord.getEnd() == null){
+        continue;
+      }
+        end = timeRecord.getEnd().toString();
       Long id = timeRecord.getId();
       String start = timeRecord.getStart().toString();
-      String end = timeRecord.getEnd() == null ? null : timeRecord.getEnd().toString();
-      String projectId;
-      String projectName;
-      String projectDescription;
-      String projectManager;
-      if (timeRecord.getGroupxProject() == null){
-        projectId = null;
-        projectName = null;
-        projectDescription = null;
-        projectManager = null;
+      SimpleProjectDto simpleProjectDto = null;
+      if (timeRecord.getGroupxProject() != null){
+        simpleProjectDto = new SimpleProjectDto(
+            timeRecord.getGroupxProject().getProject().getId().toString(),
+            timeRecord.getGroupxProject().getProject().getName(),
+            timeRecord.getGroupxProject().getProject().getDescription(),
+            timeRecord.getGroupxProject().getProject().getManager().getUsername());
       }
-      else {
-        projectId = timeRecord.getGroupxProject().getProject().getId().toString();
-        projectName = timeRecord.getGroupxProject().getProject().getName();
-        projectDescription = timeRecord.getGroupxProject().getProject().getDescription();
-        projectManager = timeRecord.getGroupxProject().getProject().getManager().getUsername();
-      }
-      ExtendedProjectDto project = new ExtendedProjectDto(projectId, projectName, projectDescription, projectManager);
       State state = timeRecord.getExternalRecord().getState();
       String description = timeRecord.getDescription();
-      tableEntries.add(new TimetableEntryDto(id, start, end, project, state, description));
+      tableEntries.add(new TimetableEntryDto(id, start, end, simpleProjectDto, state, description));
     }
-    List<ExtendedProjectDto> availableProjects = projectService.getProjectsByContributor(user).stream().map(p -> new ExtendedProjectDto(Long.toString(p.getId()), p.getName(), p.getDescription(), p.getManager().getUsername())).toList();
+    List<SimpleProjectDto> availableProjects =
+        projectService.getProjectsByContributor(user).stream()
+            .map(
+                p ->
+                    new SimpleProjectDto(
+                        Long.toString(p.getId()),
+                        p.getName(),
+                        p.getDescription(),
+                        p.getManager().getUsername()))
+            .toList();
     return new GetTimetableDataResponse(tableEntries, availableProjects);
+
   }
 
   //todo: testing and running the system
@@ -77,11 +84,9 @@ public class TimetableDataService {
     // Long entryId, ExtendedProjectDto project, String description, String splitTimestamp
     InternalRecord internalRecord = getInternalRecord(request.entryId());
     Userx user = userxService.loadUser(username);
-    Long projectId = Long.valueOf(request.project().id());
+    Long projectId = Long.valueOf(request.project().projectId());
     // todo: add the group as parameter later on
     // then we need the findbyGroupIdAndProjectId...
-
-    //  todo: write tests for this service class
     List<GroupxProject> groupxProjects = projectService.findGroupxProjectsByContributorAndProjectId(user, projectId);
     if(groupxProjects.isEmpty()){
       throw new CouldNotFindEntityException("No Group with ProjectId %s and User %s found".formatted(projectId, username));

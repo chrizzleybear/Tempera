@@ -12,6 +12,6 @@ public record TimetableEntryDto(
     Long id,
     String startTimestamp,
     String endTimestamp,
-    ExtendedProjectDto assignedProject,
+    SimpleProjectDto assignedProject,
     State state,
     String description) {}

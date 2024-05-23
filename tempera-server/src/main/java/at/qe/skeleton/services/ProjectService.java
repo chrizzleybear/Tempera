@@ -79,10 +79,7 @@ ProjectService {
   // todo: for the following methods develop queries in the groupxprojectRepository that make it
   // easy to handle everyting
   @Transactional
-  public void addGroupToProject(Long projectId, Long groupId) throws IOException {
-    if (groupId == null) {
-      throw new NullPointerException("Contributor can not be null");
-    }
+  public GroupxProject  createGroupxProject (Long projectId, Long groupId) throws IOException {
     Project project =
         projectRepository
             .findById(projectId)
@@ -97,7 +94,7 @@ ProjectService {
     GroupxProject groupxProject = new GroupxProject();
     groupxProject.addProject(project);
     groupxProject.addGroup(group);
-    groupxProjectRepository.save(groupxProject);
+    return groupxProjectRepository.save(groupxProject);
   }
 
   public Project loadProject(Long projectId) {
@@ -217,5 +214,9 @@ ProjectService {
 
   public List<SimpleUserDto> findAllContributorsByProjectId(Long projectId){
     return groupxProjectRepository.findAllContributorsByProject_Id(projectId);
+  }
+
+  public List<GroupxProject> getGroupxProjectsByGroupId(Long groupId){
+    return groupxProjectRepository.findAllByGroup_Id(groupId);
   }
 }
