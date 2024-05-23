@@ -34,6 +34,8 @@ import { ToastModule } from 'primeng/toast';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { CardModule } from 'primeng/card';
 import { DateTime } from 'luxon';
+import { SkeletonModule } from 'primeng/skeleton';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 interface InternalTimetableEntryDto extends TimetableEntryDto {
   startTime: Date;
@@ -64,12 +66,14 @@ interface InternalTimetableEntryDto extends TimetableEntryDto {
     ToastModule,
     InputTextareaModule,
     CardModule,
+    SkeletonModule,
+    ProgressSpinnerModule,
   ],
   templateUrl: './timetable.component.html',
   styleUrl: './timetable.component.css',
 })
 export class TimetableComponent implements OnInit {
-  public tableEntries: InternalTimetableEntryDto[] = [];
+  public tableEntries?: InternalTimetableEntryDto[];
 
   public availableProjects: SimpleProjectDto[] = [];
 
@@ -219,7 +223,7 @@ export class TimetableComponent implements OnInit {
             summary: 'Success',
             detail: 'Description updated successfully',
           });
-          this.tableEntries[this.selectedRowIndex].description = description;
+          this.tableEntries![this.selectedRowIndex].description = description;
           this.editDescriptionVisible = false;
         },
         error: () => {
