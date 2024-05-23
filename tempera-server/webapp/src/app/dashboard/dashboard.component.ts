@@ -20,6 +20,8 @@ import { MessagesModule } from 'primeng/messages';
 import { Observable, switchMap, timer } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DisplayHelper } from '../_helpers/display-helper';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-dashboard',
@@ -39,6 +41,7 @@ import { DisplayHelper } from '../_helpers/display-helper';
     WrapFnPipe,
     ReactiveFormsModule,
     MessagesModule,
+    ToastModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -51,8 +54,6 @@ export class DashboardComponent implements OnInit {
   public colleagueTableFilterFields: string[] = [];
 
   public visibilityOptions: VisibilityEnum[] = Object.values(VisibilityEnum);
-
-  public messages: any;
 
   /**
    * This observable handles fetching the dashboard data every minute
@@ -72,7 +73,7 @@ export class DashboardComponent implements OnInit {
     project: new FormControl<SimpleProjectDto | undefined>(undefined, { nonNullable: true }),
   });
 
-  constructor(private dashboardControllerService: DashboardControllerService, private storageService: StorageService, private destroyRef: DestroyRef) {
+  constructor(private dashboardControllerService: DashboardControllerService, private storageService: StorageService, private destroyRef: DestroyRef, private messageService: MessageService) {
   }
 
   ngOnInit(): void {
@@ -98,7 +99,7 @@ export class DashboardComponent implements OnInit {
         },
       });
     } else {
-      this.messages = [{ severity: 'error', summary: 'Error', detail: 'Failed to load user' }];
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load user' })
     }
   }
 
@@ -108,11 +109,11 @@ export class DashboardComponent implements OnInit {
       project: this.form.controls.project.value,
     }).subscribe({
       next: data => {
-        this.messages = [{ severity: 'success', summary: 'Success', detail: 'Dashboard data updated successfully' }];
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Dashboard data updated successfully' });
       },
       error: err => {
         console.log(err);
-        this.messages = [{ severity: 'error', summary: 'Error', detail: 'Failed to update dashboard data' }];
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update dashboard data' });
       },
     });
   }
