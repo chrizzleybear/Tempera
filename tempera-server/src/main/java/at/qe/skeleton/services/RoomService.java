@@ -1,9 +1,6 @@
 package at.qe.skeleton.services;
 
-import at.qe.skeleton.model.AccessPoint;
-import at.qe.skeleton.model.Room;
-import at.qe.skeleton.model.Threshold;
-import at.qe.skeleton.model.ThresholdTip;
+import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.AccessPointRepository;
 import at.qe.skeleton.repositories.RoomRepository;
 import at.qe.skeleton.repositories.ThresholdRepository;
@@ -47,7 +44,9 @@ public class RoomService {
         Room room = new Room(roomId);
         // when a room is created, the default thresholds are added
         for (Threshold t : thresholdRepository.findDefaultThresholds()) {
-            room.addThreshold(t);
+            Threshold threshold = new Threshold(t.getSensorType(), t.getThresholdType(), t.getValue(), t.getModificationReason(), t.getTip());
+            this.thresholdRepository.save(threshold);
+            room.addThreshold(threshold);
         }
         return roomRepository.save(room);
     }
