@@ -1,5 +1,5 @@
 <p-toast></p-toast>
-<p-table #table [value]="tableEntries ?? []" [globalFilterFields]="filterFields"
+<p-table #table [value]="tableEntries" [globalFilterFields]="filterFields"
          (onFilter)="calculateTotalTime()" [rows]="7" [paginator]="true" sortField="startTime" [sortOrder]="1">
   <ng-template pTemplate="header">
     <tr>
@@ -98,8 +98,8 @@
     <p-calendar formControlName="time" class="pr-2"
                 [showTime]="true"
                 hourFormat="24"
-                [minDate]="(tableEntries?.[selectedRowIndex]?.startTime!)"
-                [maxDate]="(tableEntries?.[selectedRowIndex]?.endTime!)"
+                [minDate]="(tableEntries[selectedRowIndex].startTime)"
+                [maxDate]="(tableEntries[selectedRowIndex].endTime)"
     ></p-calendar>
     <p-message *ngIf="this.splitForm.controls.time.errors?.['notInRange'] && this.splitForm.touched"
                text="Time needs to be between start and end of existing time record" severity="error"
