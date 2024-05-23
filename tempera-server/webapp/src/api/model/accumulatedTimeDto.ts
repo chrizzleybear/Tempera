@@ -16,7 +16,7 @@ import { GroupDto } from './groupDto';
 export interface AccumulatedTimeDto { 
     project?: ProjectDto;
     group?: GroupDto;
-    startTimestamp?: string;
-    endTimestamp?: string;
+    startTimestamp: string;
+    endTimestamp: string;
 }
 

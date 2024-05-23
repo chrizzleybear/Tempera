@@ -32,7 +32,9 @@ public class AccumulatedTimeController {
                     new ProjectDto("1L", "Project 1"),
                     new GroupDto(1L, "Group 1", "Description 1", null, null),
                     "2024-01-01T00:00:00",
-                    "2024-01-01T05:00:00")));
+                    "2024-01-01T05:00:00")),
+            List.of(new ProjectDto("1L", "Project 1"), new ProjectDto("2L", "Project 2")),
+            List.of(new GroupDto(1L, "Group 1", "Description 1", null, null)));
     return ResponseEntity.ok(response);
   }
 }
