@@ -118,7 +118,7 @@ public class TimetableDataService {
     oldInternalRecord.setEnd(newEnd);
     timeRecordService.saveInternalRecord(oldInternalRecord);
 
-    InternalRecord newInternalRecord = new InternalRecord(newEnd.minusSeconds(1L));
+    InternalRecord newInternalRecord = new InternalRecord(newEnd);
     newInternalRecord.setEnd(oldEnd);
     ExternalRecord externalRecord = oldInternalRecord.getExternalRecord();
     externalRecord.addInternalRecord(newInternalRecord);
