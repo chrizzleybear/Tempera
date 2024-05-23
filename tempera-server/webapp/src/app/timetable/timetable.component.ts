@@ -85,6 +85,8 @@ export class TimetableComponent implements OnInit {
 
   public editDescriptionVisible: boolean = false;
 
+  public splitVisible: boolean = false;
+
   protected readonly Date = Date;
 
 
@@ -170,6 +172,7 @@ export class TimetableComponent implements OnInit {
   onOpenSplitForm(rowIndex: number) {
     this.selectedRowIndex = rowIndex;
     this.splitForm.controls.time.setValue((this.table.value as InternalTimetableEntryDto[])[rowIndex].startTime);
+    this.splitVisible = true;
   }
 
   onSplitFormSubmit() {
