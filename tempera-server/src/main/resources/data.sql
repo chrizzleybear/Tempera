@@ -66,10 +66,10 @@ INSERT INTO groupx (id, group_lead_username, description, name) VALUES
 
 -- Group members
 INSERT INTO groupx_members (groups_id, members_username) VALUES
-    (-1, 'johndoe'), (1, 'alicebrown'), (1, 'chriswilliams'), (1, 'admin'),
-    (-2, 'johndoe'), (2, 'bobjones'), (2, 'admin'), (2, 'chriswilliams'),
-    (-3, 'alicebrown'), (3, 'chriswilliams'), (3, 'admin'), (3, 'brucewayne'), (3, 'peterparker'), (3, 'tonystark'), (3, 'clarkkent'),
-    (-4, 'chriswilliams'), (4, 'admin'), (4, 'brucewayne'), (4, 'peterparker'), (4, 'tonystark'), (4, 'clarkkent'), (4, 'alicebrown');
+    (-1, 'johndoe'), (-1, 'alicebrown'), (-1, 'chriswilliams'), (-1, 'admin'),
+    (-2, 'johndoe'), (-2, 'bobjones'), (-2, 'admin'), (-2, 'chriswilliams'),
+    (-3, 'alicebrown'), (-3, 'chriswilliams'), (-3, 'admin'), (-3, 'brucewayne'), (-3, 'peterparker'), (-3, 'tonystark'), (-3, 'clarkkent'),
+    (-4, 'chriswilliams'), (-4, 'admin'), (-4, 'brucewayne'), (-4, 'peterparker'), (-4, 'tonystark'), (-4, 'clarkkent'), (-4, 'alicebrown');
 
 -- Rooms
 INSERT INTO room (room_id) VALUES
@@ -203,8 +203,8 @@ INSERT INTO internal_record (groupx_id, project_id, start, time_end, ext_rec_sta
 -- 2. add Modification reason
 -- 3. add Thresholds
 INSERT INTO threshold_tip (id, tip) VALUES
-    (-01, 'Heizen: Nutzen Sie Heizkörper beziehungsweise die entsprechenden Bedienfelder zur Raumklimasteuerung\nSchließen von Zugluftquellen: Überprüfen Sie Fenster und Türen und schließen Sie diese, um Zugluft zu reduzieren\nSchichtung von Kleidung: Im Fall z.B. eines technischen Defekts können vorübergehend mehrere Schichten warmer Kleidung Abhilfe schaffen\n'),
-    (-02, 'Lüften: Öffnen Sie Fenster und Türen in den kühleren Morgen- oder Abendstunden um frische Luft hereinzulassen\nVerwendung von Ventilatoren: Verwenden Sie Ventilatoren, um die Luftzirkulation zu verbessern und für eine kühlere Atmosphäre zu sorgen\nVerdunkelung: Schließen Sie Vorhänge oder Jalousien um die direkte Sonneneinstrahlung zu reduzieren\nVerwendung von Klimaanlagen: Wenn möglich, verwenden Sie Klimaanlagen um die Raumtemperatur effektiv zu senken.\nReduzierung interner Wärmequellen: Schalten Sie elektronische Geräte aus oder reduzieren Sie deren Nutzung, um die interne Wärmeabgabe im Raum zu minimieren.\n'),
+    (-1, 'Heizen: Nutzen Sie Heizkörper beziehungsweise die entsprechenden Bedienfelder zur Raumklimasteuerung\nSchließen von Zugluftquellen: Überprüfen Sie Fenster und Türen und schließen Sie diese, um Zugluft zu reduzieren\nSchichtung von Kleidung: Im Fall z.B. eines technischen Defekts können vorübergehend mehrere Schichten warmer Kleidung Abhilfe schaffen\n'),
+    (-2, 'Lüften: Öffnen Sie Fenster und Türen in den kühleren Morgen- oder Abendstunden um frische Luft hereinzulassen\nVerwendung von Ventilatoren: Verwenden Sie Ventilatoren, um die Luftzirkulation zu verbessern und für eine kühlere Atmosphäre zu sorgen\nVerdunkelung: Schließen Sie Vorhänge oder Jalousien um die direkte Sonneneinstrahlung zu reduzieren\nVerwendung von Klimaanlagen: Wenn möglich, verwenden Sie Klimaanlagen um die Raumtemperatur effektiv zu senken.\nReduzierung interner Wärmequellen: Schalten Sie elektronische Geräte aus oder reduzieren Sie deren Nutzung, um die interne Wärmeabgabe im Raum zu minimieren.\n'),
     (-10, 'Verwendung von Luftbefeuchtern: Platzieren Sie Luftbefeuchter im Raum, um die Luftfeuchtigkeit zu erhöhen\nPflanzen: Platzieren Sie Zimmerpflanzen da diese Feuchtigkeit abgeben\nVermeidung von Lufttrocknern/Klimaanlagen: Vermeiden Sie den Einsatz von Klimaanlagen, diese können die Luftfeuchte noch weiter senken.\n'),
     (-11, 'Verwendung von Entfeuchtern: Nutzen Sie Entfeuchter um überschüssige Feuchtigkeit aus der Luft zu entfernen\nBelüftung: Lüften Sie den Raum regelmäßig um Feuchtigkeit abzuführen und die Luftzirkulation zu verbessern\nVermeidung von Wasserquellen: Reduzieren Sie die Nutzung von Wasserdampf erzeugenden Geräten wie Wasserkochern oder Luftbefeuchtern\n'),
     (-20, 'Verwendung von Dimmern: Verwenden Sie, wenn gegeben, Dimmer-Schalter, um die Helligkeit der Beleuchtung flexibel anzupassen und bei Bedarf zu reduzieren\nVerwendung von Lampenschirmen oder Diffusoren: Platzieren Sie Lampenschirme oder Diffusoren über den Lichtquellen, um das Licht zu streuen und eine weichere Beleuchtung zu erzeugen\nReduzierung der Anzahl der Lichtquellen: Schalten Sie einige Lampen oder Leuchten aus\n'),
@@ -213,22 +213,22 @@ INSERT INTO threshold_tip (id, tip) VALUES
 INSERT INTO Modification (id, reason, time_stamp) VALUES
     (-1, 'Default threshold.', NULL);
 INSERT INTO Threshold (id, default_threshold, sensor_type, threshold_type, threshold_value, modification_id, tip_id) VALUES
-    (-11, TRUE, 0, 1, 20.0, 0, 00),
-    (-12, TRUE, 0, 3, 19.0, 0, 00),
-    (-13, TRUE, 0, 0, 24.0, 0, 01),
-    (-14, TRUE, 0, 2, 25.0, 0, 01),
-    (-21, TRUE, 2, 1, 50.0, 0, 10),
-    (-22, TRUE, 2, 3, 40.0, 0, 10),
-    (-23, TRUE, 2, 0, 60.0, 0, 11),
-    (-24, TRUE, 2, 2, 70.0, 0, 11),
-    (-31, TRUE, 1, 1, 220.0, 0, 20),
-    (-32, TRUE, 1, 3, 200.0, 0, 20),
-    (-33, TRUE, 1, 0, 540.0, 0, 21),
-    (-34, TRUE, 1, 2, 600.0, 0, 21),
-    (-41, TRUE, 3, 1, 11.0, 0, 30),
-    (-42, TRUE, 3, 3, 10.0, 0, 30),
-    (-43, TRUE, 3, 0, NULL, 0, 30),
-    (-44, TRUE, 3, 2, NULL, 0, 30);
+    (-11, TRUE, 0, 1, 20.0, -1, -1),
+    (-12, TRUE, 0, 3, 19.0, -1, -1),
+    (-13, TRUE, 0, 0, 24.0, -1, -2),
+    (-14, TRUE, 0, 2, 25.0, -1, -2),
+    (-21, TRUE, 2, 1, 50.0, -1, -10),
+    (-22, TRUE, 2, 3, 40.0, -1, -10),
+    (-23, TRUE, 2, 0, 60.0, -1, -11),
+    (-24, TRUE, 2, 2, 70.0, -1, -11),
+    (-31, TRUE, 1, 1, 220.0, -1, -20),
+    (-32, TRUE, 1, 3, 200.0, -1, -20),
+    (-33, TRUE, 1, 0, 540.0, -1, -21),
+    (-34, TRUE, 1, 2, 600.0, -1, -21),
+    (-41, TRUE, 3, 1, 11.0, -1, -30),
+    (-42, TRUE, 3, 3, 10.0, -1, -30),
+    (-43, TRUE, 3, 0, NULL, -1, -30),
+    (-44, TRUE, 3, 2, NULL, -1, -30);
 
 
 
