@@ -14,8 +14,11 @@ To build and visualize the documentation pages
 # Install the tempera access point python package "." i.e., the code in this directory
 # with the optional docs dependencies "[docs]".
 $ pip install .[docs]
-# Go to the docs directory where the documentation source is, and build it with the makefile
-# provided by sphinx.
+# Note: if you don't have python 3.11 installed locally, you can install sphinx separately
+# but you'll only be able to access the documentation and not run the code locally.
+$ pip install sphinx sphinx-rtd-theme
+
+# Go to the docs directory, and build it with the makefile provided by sphinx.
 $ cd ./docs
 $ make html
 # The output is found in ./docs/build/html, just go to that directory and open the index.html

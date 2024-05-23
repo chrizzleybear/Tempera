@@ -82,12 +82,3 @@ $ docker compose down
 > hostname >> http://back-end:8080.
 > If you want to connect from your machine to a container or from a container to your machine, use localhost:port as
 > usual.
-
-> :information_source:
-> If you know you want to run all services on the same machine, just uncomment the *depends on* key in the ble-service
-> of
-> the compose.yaml file. The same goes if you want to run the ble-app with the python testing api (also commented out).
-> If the database depends on the back-end, and the back-end on the ble-app, you just have to run the ble-app and every
-> thing else will be handled automatically by docker. This is why you never have to handle anything (docker-) related to
-> the database
-> explicitly, because it depends on the back-end.

@@ -46,8 +46,8 @@ as shown above.
     locally by specifying them after the . in the pip install command e.g., `pip install .[all]` to install all
     optional dependencies.
 
-Logfiles
-^^^^^^^^
+Logfiles and automatic restart at reboot
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The regular program logs are found in *access_point.log*.
 To enable application restart when your machine is turned off and on again, setup a crontab with
