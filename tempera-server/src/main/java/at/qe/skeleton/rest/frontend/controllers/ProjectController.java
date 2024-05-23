@@ -139,7 +139,7 @@ public class ProjectController {
 
   @DeleteMapping("/removeContributor/{projectId}/{groupId}/{contributorId}")
   public ResponseEntity<ExtendedProjectDto> removeContributor(
-      @RequestParam String projectId, @RequestParam String groupId, @RequestParam String contributorId) throws CouldNotFindEntityException {
+      @PathVariable String projectId, @PathVariable String groupId, @PathVariable String contributorId) throws CouldNotFindEntityException {
     try {
       projectService.removeContributor(Long.parseLong(groupId), Long.parseLong(projectId), contributorId);
       ExtendedProjectDto extendedProjectDto = projectMapperService.loadExtendedProjectDto(Long.parseLong(projectId));

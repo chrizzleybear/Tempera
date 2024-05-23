@@ -1,8 +1,8 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.rest.frontend.dtos.AccumulatedTimeDto;
-import at.qe.skeleton.rest.frontend.dtos.GroupDto;
-import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleGroupDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
 import at.qe.skeleton.rest.frontend.payload.response.AccumulatedTimeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,17 +26,19 @@ public class AccumulatedTimeController {
   public ResponseEntity<AccumulatedTimeResponse> getAccumulatedTimeData() {
     logger.info("getAccumulatedTimeData called");
     var response =
-        new AccumulatedTimeResponse(
-            List.of(
-                new AccumulatedTimeDto(
-                    new ProjectDto("1L", "Project 1"),
-                    new GroupDto(1L, "Group 1", "Description 1", null, null),
-                    "2024-01-01T00:00:00",
-                    "2024-01-01T05:00:00")),
-            List.of(new ProjectDto("1L", "Project 1"), new ProjectDto("2L", "Project 2")),
-            List.of(
-                new GroupDto(1L, "Group 1", "Description 1", null, null),
-                new GroupDto(2L, "Group 2", "Description 2", null, null)));
+            new AccumulatedTimeResponse(
+                    List.of(
+                            new AccumulatedTimeDto(
+                                    new SimpleProjectDto("1L", "Project 1", null, "manager1"),
+                                    new SimpleGroupDto("1L", "Group 1", "Description 1", null),
+                                    "2024-01-01T00:00:00",
+                                    "2024-01-01T05:00:00")),
+                    List.of(
+                            new SimpleProjectDto("1L", "Project 1", null, "manager1"),
+                            new SimpleProjectDto("2L", "Project 2", null, "manager1")),
+                    List.of(
+                            new SimpleGroupDto("1L", "Group 1", null, "grouplead1"),
+                            new SimpleGroupDto("2L", "Group 2", null, "grouplead1")));
     return ResponseEntity.ok(response);
   }
 }

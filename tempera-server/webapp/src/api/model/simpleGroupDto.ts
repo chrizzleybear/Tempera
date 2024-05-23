@@ -12,7 +12,7 @@
 
 
 export interface SimpleGroupDto { 
-    groupId?: number;
+    groupId?: string;
     name?: string;
     description?: string;
     groupLead?: string;

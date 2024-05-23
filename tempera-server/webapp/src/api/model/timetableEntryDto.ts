@@ -9,14 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ProjectDto } from './projectDto';
+import { SimpleProjectDto } from './simpleProjectDto';
 
 
 export interface TimetableEntryDto { 
     id: number;
     startTimestamp: string;
     endTimestamp: string;
-    assignedProject?: ProjectDto;
+    assignedProject?: SimpleProjectDto;
     state: TimetableEntryDto.StateEnum;
     description?: string;
 }

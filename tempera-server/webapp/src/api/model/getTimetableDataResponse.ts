@@ -9,12 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ProjectDto } from './projectDto';
+import { SimpleProjectDto } from './simpleProjectDto';
 import { TimetableEntryDto } from './timetableEntryDto';
 
 
 export interface GetTimetableDataResponse { 
     tableEntries?: Array<TimetableEntryDto>;
-    availableProjects?: Array<ProjectDto>;
+    availableProjects?: Array<SimpleProjectDto>;
 }
 

@@ -25,12 +25,14 @@ model/colleagueStateDto.ts
 model/contributorAssignmentDto.ts
 model/credentialsDto.ts
 model/dashboardDataResponse.ts
+model/extendedGroupDto.ts
+model/extendedProjectDto.ts
 model/externalRecordDto.ts
 model/getTimetableDataResponse.ts
 model/groupAssignmentDto.ts
-model/groupDto.ts
 model/groupx.ts
 model/groupxProject.ts
+model/groupxProjectDto.ts
 model/loginRequest.ts
 model/measurement.ts
 model/measurementDto.ts
@@ -40,7 +42,6 @@ model/messageResponse.ts
 model/models.ts
 model/modification.ts
 model/project.ts
-model/extendedProjectDto.ts
 model/room.ts
 model/scanOrderDto.ts
 model/sensor.ts
@@ -48,6 +49,7 @@ model/sensorId.ts
 model/signupRequest.ts
 model/simpleGroupDto.ts
 model/simpleProjectDto.ts
+model/simpleUserDto.ts
 model/splitTimeRecordRequest.ts
 model/temperaStation.ts
 model/threshold.ts

@@ -1,8 +1,8 @@
 package at.qe.skeleton.rest.frontend.payload.response;
 
 import at.qe.skeleton.rest.frontend.dtos.AccumulatedTimeDto;
-import at.qe.skeleton.rest.frontend.dtos.GroupDto;
-import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleGroupDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
 
 import java.util.List;
 
@@ -14,6 +14,6 @@ import java.util.List;
  * @param availableGroups The groups that a manager/group leader is assigned to
  */
 public record AccumulatedTimeResponse(
-    List<AccumulatedTimeDto> accumulatedTimes,
-    List<ProjectDto> availableProjects,
-    List<GroupDto> availableGroups) {}
+        List<AccumulatedTimeDto> accumulatedTimes,
+        List<SimpleProjectDto> availableProjects,
+        List<SimpleGroupDto> availableGroups) {}

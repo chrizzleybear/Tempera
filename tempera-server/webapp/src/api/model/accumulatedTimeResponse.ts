@@ -9,14 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ProjectDto } from './projectDto';
-import { GroupDto } from './groupDto';
+import { SimpleProjectDto } from './simpleProjectDto';
 import { AccumulatedTimeDto } from './accumulatedTimeDto';
+import { SimpleGroupDto } from './simpleGroupDto';
 
 
 export interface AccumulatedTimeResponse { 
     accumulatedTimes?: Array<AccumulatedTimeDto>;
-    availableProjects?: Array<ProjectDto>;
-    availableGroups?: Array<GroupDto>;
+    availableProjects?: Array<SimpleProjectDto>;
+    availableGroups?: Array<SimpleGroupDto>;
 }
 

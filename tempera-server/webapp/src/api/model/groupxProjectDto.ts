@@ -9,14 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { SimpleUserDto } from './simpleUserDto';
 import { SimpleProjectDto } from './simpleProjectDto';
 import { SimpleGroupDto } from './simpleGroupDto';
 
 
-export interface AccumulatedTimeDto { 
-    project?: SimpleProjectDto;
+export interface GroupxProjectDto { 
     group?: SimpleGroupDto;
-    startTimestamp: string;
-    endTimestamp: string;
+    project?: SimpleProjectDto;
+    managerDetails?: SimpleUserDto;
+    contributors?: Array<SimpleUserDto>;
 }
 
