@@ -104,7 +104,7 @@ export class TimetableComponent implements OnInit {
       return null;
     }
 
-    const entries = this.table.value as InternalTimetableEntryDto[];
+    const entries = this.getFilteredEntries();
 
     const minStartTime = entries[this.selectedRowIndex].startTime;
     const maxEndTime = entries[this.selectedRowIndex].endTime;
@@ -171,12 +171,12 @@ export class TimetableComponent implements OnInit {
 
   onOpenSplitForm(rowIndex: number) {
     this.selectedRowIndex = rowIndex;
-    this.splitForm.controls.time.setValue((this.table.value as InternalTimetableEntryDto[])[rowIndex].startTime);
+    this.splitForm.controls.time.setValue(this.getFilteredEntries()[rowIndex].startTime);
     this.splitVisible = true;
   }
 
   onSplitFormSubmit() {
-    const entries = this.table.value as InternalTimetableEntryDto[];
+    const entries = this.getFilteredEntries();
     const timeEntryId = entries[this.selectedRowIndex].id;
 
     const time = DateTime.fromJSDate(this.splitForm.controls.time.value!).toString();
@@ -204,11 +204,11 @@ export class TimetableComponent implements OnInit {
   onEditDescription(rowIndex: number) {
     this.editDescriptionVisible = true;
     this.selectedRowIndex = rowIndex;
-    this.descriptionForm.controls.description.setValue((this.table.value as InternalTimetableEntryDto[])[rowIndex].description);
+    this.descriptionForm.controls.description.setValue(this.getFilteredEntries()[rowIndex].description);
   }
 
   onDescriptionFormSubmit() {
-    const entries = this.table.value as InternalTimetableEntryDto[];
+    const entries = this.getFilteredEntries();
     const timeEntryId = entries[this.selectedRowIndex].id;
     const description = this.descriptionForm.controls.description.value!;
     this.timetableControllerService.updateDescription({ entryId: timeEntryId, description }).subscribe(
@@ -235,14 +235,8 @@ export class TimetableComponent implements OnInit {
    */
   calculateTotalTime() {
     let totalTimeTemp: number = 0;
-    let tempEntries: InternalTimetableEntryDto[];
-    const filters = this.table?.filters as any;
 
-    if (filters['startTime']?.value || filters['endTime']?.value || filters['state']?.value || filters['assignedProject.projectId']?.value || filters['description']?.value) {
-      tempEntries = this.table.filteredValue as InternalTimetableEntryDto[];
-    } else {
-      tempEntries = this.table.value as InternalTimetableEntryDto[];
-    }
+    const tempEntries = this.getFilteredEntries()
 
     tempEntries.forEach(entry => {
       totalTimeTemp += entry.endTime.getTime() - entry.startTime.getTime();
@@ -253,5 +247,17 @@ export class TimetableComponent implements OnInit {
 
     const minutes = Math.floor(remainingTime / 60000);
     this.totalTime = { hours: hours, minutes: minutes };
+  }
+
+  /*
+  * Returns the entries that are currently displayed in the table, depending on the active filters.
+   */
+  getFilteredEntries(): InternalTimetableEntryDto[] {
+    const filters = this.table?.filters as any;
+    if (filters['startTime']?.value || filters['endTime']?.value || filters['state']?.value || filters['assignedProject.projectId']?.value || filters['description']?.value) {
+      return this.table.filteredValue as InternalTimetableEntryDto[];
+    } else {
+      return  this.table.value as InternalTimetableEntryDto[];
+    }
   }
 }
