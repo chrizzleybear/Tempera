@@ -2,12 +2,6 @@
   margin: 20px;
 }
 
-.room-details-card {
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-}
-
 .room-info {
   margin-bottom: 20px;
 }
@@ -29,7 +23,9 @@
 }
 
 .thresholds-title {
+  margin-top: 10px;
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .thresholds-table {

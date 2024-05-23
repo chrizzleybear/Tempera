@@ -1,5 +1,6 @@
 <div *ngIf="user">
-<p-card header="User Details" class="user-details-card">
+<div class="details-card">
+  <h1 class="text-2xl font-bold mb-4 text-center">User Details</h1>
   <div class="user-info">
     <div><b>Username:</b> {{user.username}}</div>
     <div><b>Firstname:</b> {{user.firstName}}</div>
@@ -15,5 +16,5 @@
     <br>
     <p><b>Enabled:</b> {{user.enabled}}</p>
   </div>
-</p-card>
+</div>
 </div>
