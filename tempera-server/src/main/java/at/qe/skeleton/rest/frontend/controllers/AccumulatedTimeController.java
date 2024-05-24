@@ -41,11 +41,11 @@ public class AccumulatedTimeController {
     String username = auth.getName();
     if (( auth.getAuthorities().contains(UserxRole.MANAGER))){
       logger.info("detected Authorization: Manager");
-      return ResponseEntity.ok(accumulatedTimeMapper.getManagerTimeData());
+      return ResponseEntity.ok(accumulatedTimeMapper.getManagerTimeData(username));
     }
     if ((auth.getAuthorities().contains(UserxRole.GROUPLEAD) )) {
         logger.info("detected Authorization: GroupLead");
-      return ResponseEntity.ok(accumulatedTimeMapper.getGroupLeadTimeData());
+      return ResponseEntity.ok(accumulatedTimeMapper.getGroupLeadTimeData(username));
     }
     return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
