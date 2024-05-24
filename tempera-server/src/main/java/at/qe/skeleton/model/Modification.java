@@ -2,10 +2,11 @@ package at.qe.skeleton.model;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-public class Modification {
+public class Modification implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,6 +15,7 @@ public class Modification {
   private String reason;
 
   @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "time_stamp")
   private LocalDateTime timeStamp;
 
   public Modification(String reason) {

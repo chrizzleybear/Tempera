@@ -1,7 +1,7 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.Sensor;
-import at.qe.skeleton.model.SensorTemperaCompositeId;
+import at.qe.skeleton.model.SensorId;
 import at.qe.skeleton.repositories.SensorRepository;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ public class SensorService {
     this.sensorRepository = sensorRepository;
   }
 
-  public Sensor findSensorById(SensorTemperaCompositeId id) {
+  public Sensor findSensorById(SensorId id) {
     return sensorRepository
         .findById(id)
         .orElseThrow(() -> new IllegalArgumentException("Invalid Sensor ID: " + id));
@@ -32,6 +32,10 @@ public class SensorService {
     return sensorRepository.save(sensor);
   }
 
+  /**
+   * deletes the Sensor. Should not be called by itself, but only when deleting a whole TemperaStation.
+   * @param sensor
+   */
   public void deleteSensor(Sensor sensor) {
     sensorRepository.delete(sensor);
   }

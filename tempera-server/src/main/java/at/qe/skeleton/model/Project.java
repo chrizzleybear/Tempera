@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Project {
@@ -15,28 +16,36 @@ public class Project {
   private String name;
   private String description;
   @ManyToOne private Userx manager;
-  @ManyToMany private List<Userx> contributors;
+
+
+  @OneToMany(mappedBy = "project")
+  private Set<GroupxProject> groupxProjects;
+
 
   public Project(String name, String description, Userx manager) {
     this.name = name;
     this.description = description;
     this.manager = manager;
-    this.contributors = new ArrayList<>();
+//    this.contributors = new ArrayList<>();
   }
 
   public Project() {}
 
-  //    public List<SubordinateTimeRecord> getSubordinateTimeRecords() {
-  //        return subordinateTimeRecords;
-  //    }
+  public Set<GroupxProject> getGroupxProjects() {
+    return groupxProjects;
+  }
 
   public Userx getManager() {
     return manager;
   }
 
-  public List<Userx> getContributors() {
-    return contributors;
-  }
+//  public List<Userx> getContributors() {
+//    return contributors;
+//  }
+
+//  public List<Groupx> getGroups() {
+//    return groups;
+//  }
 
   public void setName(String name) {
     this.name = name;
@@ -53,12 +62,21 @@ public class Project {
     this.manager = manager;
   }
 
-  public void addContributor(Userx contributor) {
-    if (contributor == null) {
-      throw new NullPointerException("Contributor should not be null when added to Project");
-    }
-    this.contributors.add(contributor);
-  }
+//  public void addContributor(Userx contributor) {
+//    if (contributor == null) {
+//      throw new NullPointerException("Contributor should not be null when added to Project");
+//    }
+//    this.contributors.add(contributor);
+//    contributor.getProjects().add(this);
+//  }
+//
+//  public void removeContributor(Userx contributor) {
+//    if (contributor == null) {
+//      throw new NullPointerException("Contributor should not be null when removed from Project");
+//    }
+//    this.contributors.remove(contributor);
+//    contributor.getProjects().remove(this);
+//  }
 
   public String getName() {
     return name;
@@ -68,9 +86,13 @@ public class Project {
     return description;
   }
 
+  public Long getId() {
+    return id;
+  }
+
   @Override
   public int hashCode() {
-    return name.hashCode();
+    return id.hashCode();
   }
 
   @Override
@@ -81,7 +103,7 @@ public class Project {
     if (!(obj instanceof Project other)) {
       return false;
     }
-    return other.name.equals(this.name);
+    return other.id.equals(this.id);
   }
 
   @Override

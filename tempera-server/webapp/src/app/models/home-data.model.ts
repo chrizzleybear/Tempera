@@ -3,8 +3,8 @@ import { State, Visibility } from './user.model';
 export interface HomeData {
   temperature: number;
   humidity: number;
-  brightness: number;
-  co2: number;
+  irradiance: number;
+  nmvoc: number;
   visibility: Visibility;
   state: State;
   stateTimestamp: string;

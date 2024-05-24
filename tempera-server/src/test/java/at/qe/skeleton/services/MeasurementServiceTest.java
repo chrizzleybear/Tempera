@@ -2,15 +2,9 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.*;
-import at.qe.skeleton.model.enums.SensorType;
-import at.qe.skeleton.model.enums.Unit;
 import at.qe.skeleton.repositories.MeasurementRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -18,42 +12,45 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
-import static com.fasterxml.jackson.databind.type.LogicalType.DateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
 @SpringBootTest
 @WebAppConfiguration
+@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS, scripts = "classpath:measurementServiceTest.sql")
 class MeasurementServiceTest {
   @Autowired private MeasurementRepository measurementRepository;
   @Autowired private MeasurementService measurementService;
   @Autowired private SensorService sensorService;
 
   private Sensor getSensor() {
-    SensorTemperaCompositeId sensorId = new SensorTemperaCompositeId();
-    sensorId.setSensorId(-1L);
-    sensorId.setTemperaStationId("tempera_station_1");
+    SensorId sensorId = new SensorId();
+    sensorId.setSensorId(-10L);
+    sensorId.setTemperaId("TEMP123");
     return sensorService.findSensorById(sensorId);
   }
 
   @DirtiesContext
   @Test
   void loadMeasurement() throws CouldNotFindEntityException {
-    // loads a measurement Entity from the database (testdata in data.sql)
-    Measurement measurement = measurementService.loadMeasurement(-1L);
+    // loads a measurement Entity from the database
+    LocalDateTime timestamp = LocalDateTime.of(2024, 5, 10, 8, 30, 0);
+    String temperaId = "TEMP123";
+    Long sensorId = -10L;
+    Measurement measurement = measurementService.loadMeasurementByIdComponents(temperaId, sensorId, timestamp);
 
-    assertEquals(-1L, measurement.getId(), "Measurement ID should be 1");
-    assertEquals(-1L, measurement.getSensor().getId().getSensorId(), "Sensor Id should be 1");
+    assertEquals(-10L, measurement.getSensor().getId().getSensorId(), "Sensor Id should be 1");
     assertEquals(20.0, measurement.getValue(), "Measurement value should be 20.0");
     assertEquals(
-        LocalDateTime.of(2016, 1, 1, 0, 0, 0),
-        measurement.getTimestamp(),
-        "Measurement timestamp should be 2016-01-01 00:00:00");
+        LocalDateTime.of(2024, 5, 10, 8, 30, 0),
+        measurement.getId().getTimestamp(),
+        "Measurement timestamp should be 2024-05-10 08:30:00");
     assertEquals(
-        "tempera_station_1",
-        measurement.getSensor().getId().getTemperaStationId(),
-        "Tempera Station Id should be tempera_station_1");
+        "TEMP123",
+        measurement.getSensor().getId().getTemperaId(),
+        "Tempera Station Id should be TEMP123");
   }
 
   @DirtiesContext
@@ -78,7 +75,7 @@ class MeasurementServiceTest {
     Measurement savedMeasurement = measurementService.saveMeasurement(measurement);
     assertEquals(measurement.getSensor(), savedMeasurement.getSensor(), "sensor should be equal");
     assertEquals(
-        measurement.getTimestamp(), savedMeasurement.getTimestamp(), "timestamp should be equal");
+        measurement.getId().getTimestamp(), savedMeasurement.getId().getTimestamp(), "timestamp should be equal");
     assertEquals(measurement.getValue(), savedMeasurement.getValue(), "value should be equal");
 
     assertEquals(
@@ -89,25 +86,33 @@ class MeasurementServiceTest {
 
   @Test
   @DirtiesContext
+  @Sql(
+          executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+          scripts = "classpath:measurementServiceTest.sql")
   void deleteMeasurement() {
     assertEquals(
-        1,
+        4,
         measurementRepository.findAll().size(),
-        "before deleting, the db should hold exactly 1 measurement");
+        "before deleting, the db should hold exactly 4 measurements");
     Measurement measurement = measurementRepository.findAll().get(0);
     measurementService.deleteMeasurement(measurement);
     assertEquals(
-        0,
+        3,
         measurementRepository.findAll().size(),
-        "after deleting, the db should hold exactly 0 measurements");
+        "after deleting, the db should hold exactly 3 measurements");
   }
 
   @Test
   @DirtiesContext
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:measurementServiceTest.sql")
   void saveLoadDeleteMeasurement() throws CouldNotFindEntityException {
     measurementRepository.findAll().forEach(measurementRepository::delete);
 
-    LocalDateTime timestamp = LocalDateTime.now();
+    // We have to truncate the LocalDateTime to Milliseconds because some versions of postgres are messing with
+    // DateTime Objects that are stored more fine grained than Milliseconds (e.g. nano seconds)
+    // But since Leo will make sure that neither Measurement Timestamps nor TimeRecord Timestamps will be that finegrained,
+    // it shouldnt be a problem
+    LocalDateTime timestamp = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS);
 
     Sensor sensor = getSensor();
 

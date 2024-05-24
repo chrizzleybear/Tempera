@@ -1,8 +1,9 @@
-import asyncio
 import logging
+import sys
+from asyncio import TaskGroup
 from typing import Dict, Any, Sequence, Tuple, Literal
 
-import sqlalchemy.orm
+import requests
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -18,38 +19,45 @@ logger = logging.getLogger(f"tempera.{__name__}")
 DataType = Literal["TimeRecord", "Measurement"]
 
 
-def _get_tempera_station(session: sqlalchemy.orm.Session) -> TemperaStation:
-    tempera_station = session.scalars(
-        select(TemperaStation).where(TemperaStation.id == shared.current_station_id)
-    ).first()
-    if not tempera_station:
-        logger.critical(
-            f"Currently connected station {shared.current_station_id} not found in the database. "
-            "The station should have been saved upon first connection. Check the logs for possible errors."
-        )
-        raise ValueError
-
-    return tempera_station
-
-
 def _get_from_database(
-    session: sqlalchemy.orm.Session, *, kind: DataType
+    *, kind: DataType
 ) -> Tuple[Sequence[TimeRecord | Measurement], TemperaStation]:
-    tempera_station = _get_tempera_station(session)
+    """
+    Gets all measurements or time records associated to the currently connected tempera station in an
+    ascending time-ordered fashion.
 
-    result = None
-    if kind == "TimeRecord":
-        result = session.scalars(
-            select(TimeRecord)
-            .where(TimeRecord.tempera_station_id == shared.current_station_id)
-            .order_by(TimeRecord.start.desc())
-        ).all()
-    elif kind == "Measurement":
-        result = session.scalars(
-            select(Measurement)
-            .where(Measurement.tempera_station_id == shared.current_station_id)
-            .order_by(Measurement.timestamp.desc())
-        ).all()
+    :param kind: what kind of data (measurement or time record) to fetch from the database.
+    :return: an ascending time-ordered list of measurements or time records and the associated tempera station.
+    """
+    with Session(shared.db_engine) as session:
+        tempera_station = session.scalars(
+            select(TemperaStation).where(TemperaStation.id == shared.current_station_id)
+        ).first()
+        if not tempera_station:
+            logger.critical(
+                f"Currently connected station {shared.current_station_id} not found in the database. "
+                "The station should have been saved upon first connection. Check the logs for possible errors."
+            )
+            sys.exit(0)
+
+        result = None
+        match kind:
+            case "TimeRecord":
+                result = session.scalars(
+                    select(TimeRecord)
+                    .where(TimeRecord.tempera_station_id == shared.current_station_id)
+                    .order_by(TimeRecord.start.asc())
+                ).all()
+            case "Measurement":
+                result = session.scalars(
+                    select(Measurement)
+                    .where(Measurement.tempera_station_id == shared.current_station_id)
+                    .order_by(Measurement.timestamp.asc())
+                ).all()
+        if not result:
+            logger.warning(
+                f"No {kind}(s) found for station {shared.current_station_id}."
+            )
 
     return result, tempera_station
 
@@ -57,54 +65,64 @@ def _get_from_database(
 def _build_payload(
     tempera_station: TemperaStation,
     data: Measurement | TimeRecord,
-    *,
-    kind: DataType,
 ) -> Dict[str, Any]:
+    """
+    Builds the payload to send to the web server out of a measurement or time record.
+
+    :param tempera_station: The tempera station from whence the measurement/time record comes from.
+    :param data: the measurement/time record to send
+    :return: the payload as a dictionary to be sent as a json kwarg in a HTTP request.
+    """
+    if isinstance(data, Measurement):
+        return {
+            "access_point_id": shared.config["access_point_id"],
+            "tempera_station_id": tempera_station.id,
+            # datetime is not serializable -> to string
+            # web server expects 'T' separated date & time, not ' ' separated
+            # web server needs precision no higher than tenths of a second
+            "timestamp": data.timestamp.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-5],
+            "temperature": data.temperature,
+            "irradiance": data.irradiance,
+            "humidity": data.humidity,
+            "nmvoc": data.nmvoc,
+        }
+    elif isinstance(data, TimeRecord):
+        return {
+            "access_point_id": shared.config["access_point_id"],
+            "tempera_station_id": tempera_station.id,
+            "start": data.start.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-5],
+            # ms / 1_000 = seconds (cast back to int because division turns the value automatically to
+            # float)
+            "duration": int(data.duration / 1_000),
+            "mode": data.mode,
+            "auto_update": data.auto_update,
+        }
+
+
+async def send_data(*, kind: DataType) -> None:
+    """
+    Retrieves all measurements or time records from database and asynchronously sends them to the web server.
+
+    :param kind: type of data to send (measurement or time record).
+    :return: None
+    :raises requests.exceptions.ConnectionError: if the web server can't be reached
+    """
     match kind:
         case "Measurement":
-            return {
-                "access_point_id": shared.config["access_point_id"],
-                "tempera_station_id": tempera_station.id,
-                "timestamp": f"{data.timestamp}",  # datetime is not serializable -> to string
-                "temperature": data.temperature,
-                "irradiance": data.irradiance,
-                "humidity": data.humidity,
-                "nmvoc": data.nmvoc,
-            }
+            endpoint = "measurement"
         case "TimeRecord":
-            return {
-                "access_point_id": shared.config["access_point_id"],
-                "tempera_station_id": tempera_station.id,
-                "start": f"{data.start}",
-                # ms / 1_000 = seconds (cast back to int because division turns the value automatically to
-                # float)
-                "duration": int(data.duration / 1_000),
-                "mode": data.mode,
-                "auto_update": data.auto_update,
-            }
+            endpoint = "time_record"
+        case _:
+            logger.critical(f"Can't handle data of the {kind} type.")
+            sys.exit(0)
 
+    data, tempera_station = _get_from_database(kind=kind)
 
-async def send_data(*, kind: DataType):
-    if kind not in ["Measurement", "TimeRecord"]:
-        logger.critical(f"Can't handle data of the {kind} type.")
-        raise ValueError
+    payloads = [_build_payload(tempera_station, item) for item in data]
 
-    with Session(shared.db_engine) as session:
-        data, tempera_station = _get_from_database(session, kind=kind)
-
-        if not data:
-            logger.warning(f"No measurements found for station {tempera_station.id}")
-
-        payloads = [_build_payload(tempera_station, item, kind=kind) for item in data]
-
-        match kind:
-            case "Measurement":
-                endpoint = "measurement"
-            case "TimeRecord":
-                endpoint = "time_record"
-
-        async with asyncio.TaskGroup() as tg:
-            logger.info(f"Sending {len(data)} {kind}(s).")
+    logger.info(f"Sending {len(payloads)} {kind}(s).")
+    try:
+        async with TaskGroup() as tg:
             _ = [
                 tg.create_task(
                     make_request(
@@ -116,24 +134,42 @@ async def send_data(*, kind: DataType):
                 )
                 for payload in payloads
             ]
+    except* requests.exceptions.ConnectionError:
+        logger.error(
+            f"Failed to send data to the {endpoint} API endpoint. "
+            "Couldn't establish a connection to the web server "
+            f"at {shared.config['webserver_address']}."
+        )
+        raise requests.exceptions.ConnectionError
 
-        _safe_delete_data(session, data, kind=kind)
-
-
-def _safe_delete_data(
-    session, data: Sequence[Measurement | TimeRecord], *, kind: DataType
-) -> None:
-    # Remove the time_record with auto_update == True from the list of those to be deleted
-    # so that it keeps being updated at every etl cycle.
-    # ETL should ensure that only the very last time_record can have auto_update == True
-    if kind == "TimeRecord":
-        data = list(filter(lambda time_record: not time_record.auto_update, data))
-
-    [session.delete(item) for item in data]
-    session.commit()
+    _safe_delete_data(data)
 
 
-async def send_measurements_and_time_records():
-    async with asyncio.TaskGroup() as tg:
-        _ = tg.create_task(send_data(kind="Measurement"))
-        _ = tg.create_task(send_data(kind="TimeRecord"))
+def _safe_delete_data(data: Sequence[Measurement | TimeRecord]) -> None:
+    """
+    Delete all items of the sequence if they are of type measurement. If the items are of type time record,
+    the last one is always kept, as it is the only one that isn't concluded yet, meaning that it could be
+    updated any time with an auto update.
+
+    :param data: sequence of measurements or time records to send
+    :return: None
+    """
+    if len(data) > 0 and isinstance(data[0], TimeRecord):
+        data = data[:-1]
+
+    with Session(shared.db_engine) as session:
+        [session.delete(item) for item in data]
+        session.commit()
+
+
+async def send_measurements_and_time_records() -> None:
+    """
+    Wrapper around :func:`~send_data` to send measurements and time records with one function call.
+
+    :return: None
+    """
+    for kind in ["Measurement", "TimeRecord"]:
+        try:
+            await send_data(kind=kind)
+        except requests.exceptions.ConnectionError:
+            pass

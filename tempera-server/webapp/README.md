@@ -2,6 +2,16 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.2.
 
+## Generating the Api Client
+
+The Api Client is generated using the OpenAPI Generator.
+When the backend is running, it can be executed by using `npm run build-api`.
+
+For it to work, Java needs to be installed locally on the system and JAVA_HOME needs to be set as an environment variable.
+(At least Java 11 is required)
+
+Also note that for some reason JSON is not used by default for the generated API client so in every Controller the `RequestMapping` annotation needs to have `produces = "application/json"`.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.

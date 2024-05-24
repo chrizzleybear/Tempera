@@ -12,18 +12,14 @@ import java.util.Objects;
 
 @Entity
 public class Measurement {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @EmbeddedId
+  MeasurementId id;
 
   @Column(name = "measurement_value")
   private double value;
 
-  @Column(nullable = false)
-  @Temporal(TemporalType.TIMESTAMP)
-  private LocalDateTime timestamp;
-
   @ManyToOne(optional = false)
+    @MapsId("sensorId")
   private Sensor sensor;
 
   protected Measurement() {}
@@ -40,40 +36,38 @@ public class Measurement {
    */
   public Measurement(double value, @NotNull LocalDateTime timestamp, @NotNull Sensor sensor) {
     this.value = value;
-    this.timestamp = Objects.requireNonNull(timestamp, "timestamp must not be null");
+    this.id = new MeasurementId();
+    id.setSensorId(sensor.getId());
+    id.setTimestamp(Objects.requireNonNull(timestamp, "timestamp must not be null"));
     this.sensor = Objects.requireNonNull(sensor, "sensor must not be null");
   }
 
-  public void setId(@NotNull Long id) {
-    this.id = Objects.requireNonNull(id, "id must not be null");
+  public void setId(MeasurementId id){
+    this.id = id ;
   }
 
   public void setValue(double value) {
     this.value = value;
   }
 
-  public void setTimestamp(@NotNull LocalDateTime timestamp) {
-    this.timestamp = Objects.requireNonNull(timestamp, "timestamp must not be null");
-  }
 
-  public void setSensor(@NotNull Sensor sensor) {
-    this.sensor = Objects.requireNonNull(sensor, "sensor must not be null");
+  /**
+   * Sets the sensor of the measurement. To add a measurement to a sensor, use the addMeasurement in the sensor.
+   * @param sensor
+   */
+  public void setSensor(Sensor sensor) {
+    this.sensor = sensor;
   }
-
   public Sensor getSensor() {
     return sensor;
   }
 
-  public Long getId() {
+  public MeasurementId getId() {
     return id;
   }
 
   public double getValue() {
     return value;
-  }
-
-  public LocalDateTime getTimestamp() {
-    return timestamp;
   }
 
   @Override

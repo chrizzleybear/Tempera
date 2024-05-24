@@ -21,7 +21,8 @@ dependencies = [
     "PyYAML==6.0.1",
     "requests==2.31.0",
     "tenacity==8.2.3",
-    "SQLAlchemy==2.0.29"
+    "SQLAlchemy==2.0.29",
+    "rich==13.7.1"
 ]
 requires-python = ">=3.11"
 authors = [
@@ -42,8 +43,27 @@ Issues = "https://git.uibk.ac.at/informatik/qe/swess24/group4/g4t1/-/issues"
 [project.optional-dependencies]
 format = ["black>=24.3.0"]
 api_testing = ["fastapi[all]==0.110.0"]
+docs = [
+    "sphinx-rtd-theme==2.0.0",
+    "sphinxcontrib-applehelp==1.0.8",
+    "sphinxcontrib-devhelp==1.0.6",
+    "sphinxcontrib-htmlhelp==2.0.5",
+    "sphinxcontrib-jquery==4.1",
+    "sphinxcontrib-jsmath==1.0.1",
+    "sphinxcontrib-qthelp==1.0.7",
+    "sphinxcontrib-serializinghtml==1.1.10"
+]
 all = [
-    "black>=24.3.0", "fastapi[all]==0.110.0"
+    "black>=24.3.0",
+    "fastapi[all]==0.110.0",
+    "sphinx-rtd-theme==2.0.0",
+    "sphinxcontrib-applehelp==1.0.8",
+    "sphinxcontrib-devhelp==1.0.6",
+    "sphinxcontrib-htmlhelp==2.0.5",
+    "sphinxcontrib-jquery==4.1",
+    "sphinxcontrib-jsmath==1.0.1",
+    "sphinxcontrib-qthelp==1.0.7",
+    "sphinxcontrib-serializinghtml==1.1.10"
 ]
 
 

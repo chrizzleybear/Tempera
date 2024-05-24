@@ -1,27 +1,35 @@
 package at.qe.skeleton.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
-@Entity
-public class ThresholdTip {
+import java.io.Serializable;
+
+@Entity(name = "threshold_tip")
+public class ThresholdTip implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(length = 1000)
   private String tip;
 
   public ThresholdTip(String tip) {
     this.tip = tip;
   }
 
-  public ThresholdTip() {}
+  public ThresholdTip() {this.tip = "No tips given."; }
+
+  public Long getId() {
+    return id;
+  }
 
   public String getTip() {
     return tip;
+  }
+
+  public void setTip(String tip) {
+    this.tip = tip;
   }
 
   @Override

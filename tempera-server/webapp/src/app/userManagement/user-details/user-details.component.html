@@ -1,15 +1,20 @@
-<p-card>
-  <h2 style="font-size: 24px; font-weight: bold;">User Details: {{ user?.username }}</h2>
-  <div>
-    <div><b>Firstname:</b> {{ user?.firstName }}</div>
-    <div><b>Lastname:</b> {{ user?.lastName }}</div>
-    <div><b>Email:</b> {{ user?.email }}</div>
+<div *ngIf="user">
+<div class="details-card">
+  <h1 class="text-2xl font-bold mb-4 text-center">User Details</h1>
+  <div class="user-info">
+    <div><b>Username:</b> {{user.username}}</div>
+    <div><b>Firstname:</b> {{user.firstName}}</div>
+    <div><b>Lastname:</b> {{user.lastName}}</div>
+    <div><b>Email:</b> {{user.email}}</div>
+    <br>
     <div>
       <b>Roles:</b>
       <ul>
-        <li *ngFor="let role of user?.roles">{{ role }}</li>
+        <li *ngFor="let role of user.roles">{{role}}</li>
       </ul>
     </div>
-    <p><b>Active:</b> {{ user?.enabled }}</p>
+    <br>
+    <p><b>Enabled:</b> {{user.enabled}}</p>
   </div>
-</p-card>
+</div>
+</div>

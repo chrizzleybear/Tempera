@@ -4,6 +4,8 @@ import { AppMenuitemComponent } from './app.menuitem.component';
 import { NgFor, NgIf } from '@angular/common';
 import { AuthService } from '../_services/auth.service';
 import { StorageService } from '../_services/storage.service';
+import { UserxDto } from '../../api';
+import RolesEnum = UserxDto.RolesEnum;
 
 @Component({
   selector: 'app-menu',
@@ -32,11 +34,51 @@ export class AppMenuComponent implements OnInit {
         items: [
           { label: 'Logout', icon: 'pi pi-fw pi-id-card', command: () => this.logout() },
           {
-            label: 'User-Management',
-            icon: 'pi pi-fw pi-check-square',
-            routerLink: ['/users'],
-            visible: this.storageService.getUser()?.roles.includes('ADMIN'),
+            label: 'Timetable',
+            icon: 'pi pi-calendar-clock',
+            routerLink: ['/timetable'],
+            visible: this.storageService.getUser()?.roles.includes(RolesEnum.Employee),
           },
+          {
+            label: 'User-Management',
+            icon: 'pi pi-fw pi-user',
+            routerLink: ['/users'],
+            visible: this.storageService.getUser()?.roles.includes(RolesEnum.Admin),
+          },
+          {
+            label: 'Group-Management',
+            icon: 'pi pi-fw pi-users',
+            routerLink: ['/groups'],
+            visible: this.storageService.getUser()?.roles.includes(RolesEnum.Manager),
+          },
+          {
+            label: 'Project-Management',
+            icon: 'pi pi-fw pi-clipboard',
+            routerLink: ['/projects'],
+            visible: this.storageService.getUser()?.roles.includes(RolesEnum.Manager),
+          },
+          {
+            label: 'My Groups',
+            icon: 'pi pi-fw pi-users',
+            routerLink: ['/myGroups'],
+            visible: this.storageService.getUser()?.roles.includes(RolesEnum.Grouplead),
+          },
+          {
+            label: 'Room Management',
+            icon: 'pi pi-fw pi-home',
+            routerLink: ['/rooms'],
+            visible: this.storageService.getUser()?.roles.includes('ADMIN')
+          },
+          { label: 'Access Point Management',
+            icon: 'pi pi-fw pi-wifi',
+            routerLink: ['/accessPoints'],
+            visible: this.storageService.getUser()?.roles.includes('ADMIN')
+          },
+          { label: 'Tempera Stations',
+            icon: 'pi pi-fw pi-gauge',
+            routerLink: ['/temperaStations'],
+            visible: this.storageService.getUser()?.roles.includes('ADMIN')
+          }
         ],
       },
     ];

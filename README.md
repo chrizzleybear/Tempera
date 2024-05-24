@@ -1,74 +1,87 @@
 TEMPERA - next generation time tracking
 =======================================
 
-# Running the components (Web-Server & Raspberry)
+[![pipeline](https://git.uibk.ac.at/informatik/qe/swess24/group4/g4t1/badges/main/pipeline.svg)](https://git.uibk.ac.at/informatik/qe/swess24/group4/g4t1/-/commits/main/)
+
+# Running the components (Web-Server & Raspberry) with docker
+
+---
 
 > :rocket:
 > Pro tip: you can run and manage docker images & containers from your IDE like Intellij or Pycharm.
 > Just select the *services* widget on your sidebar and/or open any Dockerfile or compose.yaml in your IDE.
 
-To run the web-app back-end server and the Bluetooth-LE Raspberry app,
-docker containers are provided, so you don't have to install anything locally.
-If you don't already have docker on your machine, follow these [instructions](https://docs.docker.com/get-docker/).
+To run the web-server and the Bluetooth-LE Raspberry app,
+docker images are provided, so you don't have to install anything locally.
+If you don't already have docker on your machine, follow these [instructions](https://docs.docker.com/get-docker/) and
+come back. If you are having trouble installing docker or any other docker/ci-cd relaetd issue,
+you can always write an email to Leonardo.Pedri@uibk.ac.at :slight_smile:.
 
-If you have docker installed:
+---
 
-* If you want to run all the components
+### Secrets
+
+In order to run the web server docker, an email key and database password must be provided.
+To avoid saving them in plain text inside the compose.yaml, they are read from text files you
+have to create and write the password/key in. So, in the same directory as the compose.yaml file
+create a *secrets* directory and in it create these files with your password/key in them
+
+* database_password.txt
+* email_key.txt
+
+---
+
+The compose.yaml file is designed to have the back-end (with its database) and the BLE app to be independent from each
+other,
+because you'll likely want to run them on separate machines. Here, independent means that you can create the container
+of one
+service (services are defined in compose.yaml) without creating it for the other. The same goes for running the
+containers.
+
+In practice, it looks like this
 
 ```bash
 # In the project root directory (where the compose.yaml file is found)
+
+# 1. To build/pull the image and create the container for the back-end/ble-app services from the compose.yaml
+# If you want to use all services
+$ docker compose create
+
+# If you want to use only a specific service e.g., back-end
+$ docker compose create <service>
+
+# (Optional) Check the images you built
+$ docker image ls
+
+# 2. Start the container of the service created and all its dependencies
+# Back-end
+$ docker compose start back-end && docker compose attach back-end
+# Note: If you have postres running on your machine, the default port 5432
+# will be used by that process and you'll get an error like this:
+# Error response from daemon: driver failed programming external connectivity on 
+# endpoint app-postgres_db-1 (...): Error starting userland proxy: listen tcp4 0.0.0.0:5432: bind: address already in use
+# In this case switch to the postgres user and stop the process using that port
+$ su postgres
+$ pg_ctl stop -D /var/lib/postgres/data/
+
+# Ble-app
+# Note: the BLE app requires user input in the config file. To be run in interactive mode, you have to use docker run.
+# Important: if you are trying to send the data from the ble-app container to the back-end container, you have to set
+# the hostname in the BLE configure script to the name of the service you are trying to reach, i.e., back-end:8080.
+# If the server runs on your machine, set it to localhost:<port> as usual (see the note below for more info on this).
 $ docker compose run ble-app
 
-# When you're done, hit ctrl-c to stop the containers and then shut them down
-# (not shutting down or deleting the containers may lead to problems at the next start-up!)
+# 3. When you're done, hit ctrl-c to stop the containers currently active in your terminal. Then, delete the containers.
+# Note: not deleting up the containers after use may lead to problems at the next start-up!
 $ docker compose down
+
+# (4. If you want to start a sevice again, just repeat steps 1 to 3)
 ```
 
-> :bangbang:
+> :mega:
 > All docker containers started from a compose.yaml file share a common network. To use the API of the back-end
 > container in the ble-app container set the name of the target service as host ID, docker will match
-> the exact ID automatically. In other words, when prompted by the config script set e.g., hostname >> http://back-end.
-
-> :warning:
-> Don't forget to shut down all containers with *docker compose down* or else there might be database
-> integrity violations at the next start-up with *docker compose up*.
-
-> :information_source:
-> Here we use *docker compose run* because the BLE app requires user input and is thus interactive.
-> The BLE app depends on the back-end, which depends on the postgresql database. Therefore, each time
-> the ble-app is run, it automatically spins up all other containers beforehand.
-> Spin up means that docker builds the images defined for each component in the respective Dockerfiles across the
-> project.
-> Then, from each image a container is created at every *docker compose run* and destroyed at every
-> *docker compose down*.
-
-* If you want to run only the Bluetooth-LE Raspberry app
-
-Use the command from above and comment out *depends on* in the ble-app service of the compose.yaml file
-or run the Dockerfile in tempera-accesspoint directly like so
-
-```bash
-$ docker run -iv -v /var/run/dbus:/var/run/dbus tempera-ble-app
-```
-
-* If you want to run only the Web-server
-
-```bash
-# In the project root directory (where the compose.yaml file is found)
-
-# Create the containers for the service
-$ docker compose create back-end
-
-# Start the containers
-$ docker compose start back-end
-
-# Stop and remove all containers
-$ docker compose down
-
-# Pro tip: if you are stuck
-$ docker compose
-# wqill print all the commands at your disposal including descriptions 
-```
-
-> :information_source:
-> You can reach the web-server API at localhost as usual, even if started in a container. 
+> the exact ID automatically. In other words, when prompted by the config script set e.g.,
+> hostname >> http://back-end:8080.
+> If you want to connect from your machine to a container or from a container to your machine, use localhost:port as
+> usual.

@@ -1,0 +1,33 @@
+.room-details {
+  margin: 20px;
+}
+
+.room-info {
+  margin-bottom: 20px;
+}
+
+.room-info-item {
+  margin-bottom: 10px;
+}
+
+.access-point {
+  margin-bottom: 20px;
+}
+
+.access-point-item {
+  margin-bottom: 10px;
+}
+
+.access-point-table {
+  margin-bottom: 20px;
+}
+
+.thresholds-title {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.thresholds-table {
+  margin-bottom: 20px;
+}

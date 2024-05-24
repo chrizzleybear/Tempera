@@ -23,3 +23,8 @@ export enum State {
   OUT_OF_OFFICE = 'OUT_OF_OFFICE',
   DEEPWORK = 'DEEPWORK',
 }
+
+export interface DropdownOptionUser {
+  label: string;
+  value: User;
+}

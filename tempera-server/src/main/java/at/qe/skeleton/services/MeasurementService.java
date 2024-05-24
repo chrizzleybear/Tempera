@@ -2,13 +2,16 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.Measurement;
-import at.qe.skeleton.model.SensorTemperaCompositeId;
+import at.qe.skeleton.model.MeasurementId;
+import at.qe.skeleton.model.Sensor;
+import at.qe.skeleton.model.SensorId;
 import at.qe.skeleton.repositories.MeasurementRepository;
 import at.qe.skeleton.repositories.SensorRepository;
 import at.qe.skeleton.repositories.TemperaStationRepository;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,13 +28,25 @@ public class MeasurementService {
     this.measurementRepository = measurementRepository;
   }
 
-  public Measurement loadMeasurement(Long id) throws CouldNotFindEntityException {
+  public Measurement loadMeasurementByIdComponents(String temperaId, Long sensorId, LocalDateTime timestamp) throws CouldNotFindEntityException {
+    MeasurementId id = new MeasurementId();
+    id.setSensorId(new SensorId(temperaId, sensorId));
+    id.setTimestamp(timestamp);
+
+    return measurementRepository
+        .findById(id)
+        .orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id));
+  }
+  public Measurement loadMeasurement(MeasurementId id) throws CouldNotFindEntityException {
     return measurementRepository
         .findById(id)
         .orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id));
   }
 
+
   public Measurement saveMeasurement(Measurement measurement) {
+    LocalDateTime timestamp = measurement.getId().getTimestamp();
+    measurement.getId().setTimestamp(timestamp);
     return measurementRepository.save(measurement);
   }
 
@@ -40,10 +55,11 @@ public class MeasurementService {
     measurementRepository.delete(measurement);
   }
 
-  // todo: testen und informieren: wie setz ich das jetzt mit lazy loading um? will ja eine
-  // zusammenfassung der daten anzeigen aber vllt dauert es ewig alle zu laden?
-  // brauchen wir auch ne umsetzung für all from sensor? und wo gehören diese Methoden hin? hier
-  // oder in den tempera bzw. sensor service?
+
+  public Optional<Measurement> findLatestMeasurementBySensor(Sensor sensor) {
+    SensorId id = sensor.getSensorId();
+    return measurementRepository.findFirstBySensorIdOrderById_TimestampDesc(id);
+  }
   public List<Measurement> loadAllMeasurementsFromTempera() {
     return null;
   }

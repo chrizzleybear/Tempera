@@ -3,4 +3,7 @@
 /dist/
 /src/access_point.log
 /access_point.log
+/cron.log
 /src/conf.yaml
+/docs/build/
+/build/

@@ -1,17 +1,16 @@
 package at.qe.skeleton.model;
 
-import at.qe.skeleton.exceptions.TemperaStationIsNotEnabledException;
 import jakarta.persistence.*;
 import org.springframework.data.domain.Persistable;
 
-import java.io.Serial;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
 @Entity
-public class Room implements Persistable<String> {
+public class Room implements Persistable<String>, Serializable {
 
   // We need to implement Persistable since we set UUID manually
   // the following strategy for the isNew Method comes from spring documentation:
@@ -38,10 +37,12 @@ public class Room implements Persistable<String> {
 
   @OneToMany private Set<Threshold> thresholds;
 
+  @OneToOne private AccessPoint accessPoint;
+
   /**
    * User can choose roomid but RoomService must ensure, that this id is not yet taken.
    *
-   * @param roomId the id, the user assignes to this room. it should be unique.
+   * @param roomId the id, the user assigns to this room. it should be unique.
    */
   public Room(String roomId) {
     this.roomId = roomId;
@@ -49,11 +50,7 @@ public class Room implements Persistable<String> {
   }
 
   protected Room() {}
-  ;
 
-  public String getRoomId() {
-    return roomId;
-  }
 
   public Set<Threshold> getThresholds() {
     return thresholds;
@@ -99,5 +96,17 @@ public class Room implements Persistable<String> {
   @Override
   public String toString() {
     return this.roomId;
+  }
+
+  public AccessPoint getAccessPoint() {
+    return accessPoint;
+  }
+
+  public void setAccessPoint(AccessPoint accessPoint) {
+    this.accessPoint = accessPoint;
+  }
+
+  public void setThresholds(Set<Threshold> thresholds) {
+    this.thresholds = thresholds;
   }
 }

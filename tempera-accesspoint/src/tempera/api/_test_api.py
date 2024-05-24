@@ -10,12 +10,6 @@ from pydantic import BaseModel
 FAKE_ACCESS_POINT_ID = "123e4567-e89b-12d3-a456-426614174001"
 
 
-class ConnectionInfo(BaseModel):
-    established: bool
-    station_id: str
-    error: str | None
-
-
 class ValidDevices(BaseModel):
     access_point_allowed: bool
     stations_allowed: List[str]
@@ -23,10 +17,6 @@ class ValidDevices(BaseModel):
 
 class ScanOrder(BaseModel):
     scan: bool
-
-
-class GetRequestBody(BaseModel):
-    access_point_id: str
 
 
 class TemperaStation(BaseModel):
@@ -61,6 +51,14 @@ security = HTTPBasic()
 def check_credentials(
     credentials: Annotated[HTTPBasicCredentials, Depends(security)],
 ):
+    """
+    Basic authentication checker copied from the `FastAPI docs`_.
+
+    .. _FastAPI docs: https://fastapi.tiangolo.com/advanced/security/http-basic-auth/
+
+    :param credentials:
+    :return:
+    """
     current_username_bytes = credentials.username.encode("utf8")
     correct_username_bytes = b"admin"
     is_correct_username = secrets.compare_digest(
@@ -81,6 +79,11 @@ def check_credentials(
 
 
 def check_access_point_id(access_point_id: str):
+    """
+
+    :param access_point_id:
+    :return:
+    """
     if access_point_id != FAKE_ACCESS_POINT_ID:
         raise HTTPException(
             status_code=http.HTTPStatus.FORBIDDEN,
@@ -105,7 +108,7 @@ async def get_active_station_ids(
 
     return {
         "access_point_allowed": True,
-        "stations_allowed": ["123e4567-e89b-12d3-a456-426614174001", "add2"],
+        "stations_allowed": ["tempera_station_1", "add2"],
     }
 
 
@@ -114,20 +117,15 @@ async def get_scan_order(
     credentials: Annotated[HTTPBasicCredentials, Depends(security)],
     access_point_id: str,
 ) -> Any:
+    """
+
+    :param credentials:
+    :param access_point_id:
+    :return:
+    """
     check_access_point_id(access_point_id)
 
     return {"scan": False}
-
-
-# TODO: define custom errors (enums) in device discovery and send them to web server for displaying
-@app.post("/rasp/api/connection", status_code=201)
-async def post_connection(
-    credentials: Annotated[HTTPBasicCredentials, Depends(security)],
-    body: GetRequestBody,
-):
-    if body.access_point_id != FAKE_ACCESS_POINT_ID:
-        check_access_point_id(body.access_point_id)
-    return {"data sent"}
 
 
 @app.post("/rasp/api/measurement", status_code=201)
@@ -144,10 +142,20 @@ async def post_measurements(
     credentials: Annotated[HTTPBasicCredentials, Depends(security)],
     time_record: TimeRecord,
 ):
+    """
+
+    :param credentials:
+    :param time_record:
+    :return:
+    """
     check_access_point_id(time_record.access_point_id)
     return time_record
 
 
 @app.get("/")
 async def root():
+    """
+
+    :return:
+    """
     return {"message": "App up and running!"}
