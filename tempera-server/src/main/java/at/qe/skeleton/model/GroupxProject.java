@@ -1,6 +1,7 @@
 package at.qe.skeleton.model;
 
 import jakarta.persistence.*;
+import org.springframework.data.domain.Persistable;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -15,14 +16,35 @@ import java.util.Set;
 @Entity
 @IdClass(value = GroupxProjectId.class)
 @Table(name = "groupx_project_object")
-public class GroupxProject {
+public class GroupxProject implements Persistable<GroupxProjectId>{
+
+    @Transient private boolean isNew = true;
+
+    @Override
+    public GroupxProjectId getId() {
+        GroupxProjectId groupxProjectID = new GroupxProjectId();
+        groupxProjectID.setProject(project);
+        groupxProjectID.setGroup(group);
+        return groupxProjectID;
+    }
+
+    @Override
+    public boolean isNew() {
+        return isNew;
+    }
+
+    @PrePersist
+    @PostLoad
+    void markNotNew() {
+        this.isNew = false;
+    }
 
     @Id
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Groupx group;
 
     @Id
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Project project;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -43,7 +65,11 @@ public class GroupxProject {
 
     public void removeContributor(Userx contributor) {
         contributor.getGroupxProjects().remove(this);
-        contributors.remove(contributor);
+        //todo: removePolicyÜberlegen
+    }
+    public void removeInternalRecords(){
+        internalRecords.forEach(internalRecord -> internalRecord.setGroupxProject(null));
+        internalRecords.clear();
     }
 
 
@@ -58,7 +84,7 @@ public class GroupxProject {
 
     public void removeGroup(){
         this.group.getGroupxProjects().remove(this);
-        this.group = null;
+        //todo remove policy Überlegen
     }
 
     public Project getProject() {
