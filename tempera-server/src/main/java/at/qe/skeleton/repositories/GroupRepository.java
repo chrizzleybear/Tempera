@@ -1,15 +1,19 @@
 package at.qe.skeleton.repositories;
 
-import at.qe.skeleton.model.Group;
+import at.qe.skeleton.model.Groupx;
 import at.qe.skeleton.model.Userx;
+import org.hibernate.annotations.Parameter;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface GroupRepository extends AbstractRepository<Group, Long> {
+public interface GroupRepository extends AbstractRepository<Groupx, Long> {
 
-    List<Group> findAll();
+    List<Groupx> findAll();
 
-    List<Group> findByGroupLead(Userx groupLead);
+    List<Groupx> findByGroupLead(Userx groupLead);
 
-    List<Group> findAllByMembersContains(Userx user);
+    List<Groupx> findAllByMembersContains(Userx user);
 }

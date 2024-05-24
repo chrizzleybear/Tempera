@@ -1,4 +1,4 @@
-package at.qe.skeleton.rest.frontend.mappers;
+package at.qe.skeleton.rest.frontend.mappersAndFrontendServices;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.*;
@@ -6,7 +6,8 @@ import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
-import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.ExtendedProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateDashboardDataRequest;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
 import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
@@ -29,7 +30,8 @@ public class DashboardDataMapper {
       UserxService userService,
       TemperaStationService temperaService,
       MeasurementService measurementService,
-      TimeRecordService timeRecordService, UserxService userxService,
+      TimeRecordService timeRecordService,
+      UserxService userxService,
       ProjectService projectService) {
     this.temperaService = temperaService;
     this.measurementService = measurementService;
@@ -42,14 +44,13 @@ public class DashboardDataMapper {
   private List<ColleagueStateDto> mapUserToColleagueStateDto(Userx user) {
 
     // using hashmap for faster compare algorithm
-    Collection<Group> groups = user.getGroups();
-    Set<Group> userGroups = new HashSet<>(groups);
+    Set<Groupx> userGroups = new HashSet<>(user.getGroups());
 
     // we dont want user to be displayed as his own colleague
-    List<Userx> colleagues = userService.getAllUsers().stream().filter(col -> !col.equals(user)).toList();
+    List<Userx> colleagues =
+        userService.getAllUsers().stream().filter(col -> !col.equals(user)).toList();
 
     var colleagueStates = new ArrayList<ColleagueStateDto>();
-
 
     for (var colleague : colleagues) {
       State state = colleague.getState();
@@ -59,43 +60,46 @@ public class DashboardDataMapper {
       if (temperaService.findByUsername(username).isEmpty()) {
         throw new RuntimeException("User has no temperaStation assigned");
       }
-      TemperaStation temperaStation =
-          temperaService.findByUsername(username).get();
+      TemperaStation temperaStation = temperaService.findByUsername(username).get();
 
-      if (temperaStation.isEnabled()){
+      if (temperaStation.isEnabled()) {
         workplace = temperaStation.getAccessPoint().getRoom().toString();
 
         // for each colleague, check if the user is in one of the groups of the colleague
         List<String> groupOverlap = new ArrayList<>();
-        colleague.getGroups().forEach(
+        colleague
+            .getGroups()
+            .forEach(
                 colGroup -> {
-                  if(userGroups.contains(colGroup)){
+                  if (userGroups.contains(colGroup)) {
                     groupOverlap.add(colGroup.getName());
                   }
-                }
-        );
+                });
         // calculating whether user gets to see colleague state or not
         Visibility visibility = colleague.getStateVisibility();
         boolean isVisible = true;
-        if(visibility == Visibility.HIDDEN) isVisible = false;
-        if(groupOverlap.isEmpty() && visibility == Visibility.PRIVATE) isVisible = false;
+        if (visibility == Visibility.HIDDEN) isVisible = false;
+        if (groupOverlap.isEmpty() && visibility == Visibility.PRIVATE) isVisible = false;
 
-        colleagueStates.add(new ColleagueStateDto(username, workplace, state, isVisible, groupOverlap));
+        colleagueStates.add(
+            new ColleagueStateDto(username, workplace, state, isVisible, groupOverlap));
       }
     }
     return colleagueStates;
   }
 
   /**
-   * Maps a user to a HomeDataResponse object. This object contains all the data needed to display the
-   * home screen of the frontend. This includes the current measurements, the current state of the user
-   * itself and the states of the colleagues (if they are visible and their temperaStation is enabled).
-   *
+   * Maps a user to a HomeDataResponse object. This object contains all the data needed to display
+   * the home screen of the frontend. This includes the current measurements, the current state of
+   * the user itself and the states of the colleagues (if they are visible and their temperaStation
+   * is enabled).
    *
    * @param user
-   * @return DashboardDataResponse If there are no existing measurements for this user, it will return null as values. If there is no existing
-   *    * TimeRecord for this user, it will return null as stateTimeStamp. If there is no default project assigned to this user,
-   *    * it will return null as defaultProject. If there are no projects assigned to this user, it will return an empty list as projects.
+   * @return DashboardDataResponse If there are no existing measurements for this user, it will
+   *     return null as values. If there is no existing * TimeRecord for this user, it will return
+   *     null as stateTimeStamp. If there is no default project assigned to this user, * it will
+   *     return null as defaultProject. If there are no projects assigned to this user, it will
+   *     return an empty list as projects.
    */
   @Transactional
   public DashboardDataResponse mapUserToHomeDataResponse(Userx user) {
@@ -106,22 +110,22 @@ public class DashboardDataMapper {
         sensors.stream()
             .filter(sensor -> sensor.getSensorType().equals(SensorType.TEMPERATURE))
             .findFirst()
-            .get();
+            .orElseThrow(() -> new RuntimeException("No temperature sensor found"));
     Sensor humiditySensor =
         sensors.stream()
             .filter(sensor -> sensor.getSensorType().equals(SensorType.HUMIDITY))
             .findFirst()
-            .get();
+            .orElseThrow(() -> new RuntimeException("No humidity sensor found"));
     Sensor irradianceSensor =
         sensors.stream()
             .filter(sensor -> sensor.getSensorType().equals(SensorType.IRRADIANCE))
             .findFirst()
-            .get();
+            .orElseThrow(() -> new RuntimeException("No irradiance sensor found"));
     Sensor nmvocSensor =
         sensors.stream()
             .filter(sensor -> sensor.getSensorType().equals(SensorType.NMVOC))
             .findFirst()
-            .get();
+            .orElseThrow(() -> new RuntimeException("No nmvoc sensor found"));
 
 
     Optional<Measurement> temperatureMeasurement = measurementService.findLatestMeasurementBySensor(temperatureSensor);
@@ -139,42 +143,52 @@ public class DashboardDataMapper {
     String stateTimeStamp = externalRecordOptional.map(externalRecord -> externalRecord.getStart().toString()).orElse(null);
 
     Project defaultProject = user.getDefaultProject();
-    ProjectDto defaultProjectDto;
+    SimpleProjectDto defaultProjectDto;
     if (defaultProject == null) {
-      defaultProjectDto = new ProjectDto(null, "No default project assigned");
-    }
-    else {
-      defaultProjectDto = new ProjectDto(defaultProject.getId(), defaultProject.getName());
+      defaultProjectDto = new SimpleProjectDto(null, "No default project assigned", null, null);
+    } else {
+      defaultProjectDto =
+          new SimpleProjectDto(defaultProject.getId().toString(), defaultProject.getName(), defaultProject.getDescription(), defaultProject.getManager().getUsername());
     }
 
-
-    List<ProjectDto> projects =
-        projectService.getProjectsByContributor(user.getUsername()).stream()
-            .map(p -> new ProjectDto(p.getId(), p.getName()))
+    List<SimpleProjectDto> projects =
+        projectService.getProjectsByContributor(user).stream()
+            .map(
+                p ->
+                    new SimpleProjectDto(
+                        p.getId().toString(),
+                        p.getName(),
+                        p.getDescription(),
+                        p.getManager().getUsername()))
             .toList();
 
-    return
-        new DashboardDataResponse(
-            temperature,
-            humidity,
-            irradiance,
-            nmvoc,
-            user.getStateVisibility(),
-            user.getState(),
-            stateTimeStamp,
-            defaultProjectDto,
-            projects,
-            colleagueStateDtos);
+    return new DashboardDataResponse(
+        temperature,
+        humidity,
+        irradiance,
+        nmvoc,
+        user.getStateVisibility(),
+        user.getState(),
+        stateTimeStamp,
+        defaultProjectDto,
+        projects,
+        colleagueStateDtos);
   }
 
-
+  //todo fix with GroupxProject
+@Transactional
   public MessageResponse updateUserVisibilityAndTimeStampProject(UpdateDashboardDataRequest request, Userx user) throws CouldNotFindEntityException{
-    Project project = projectService.getProjectById(request.project().id()).orElseThrow(() -> new CouldNotFindEntityException("No project found for id"));
+    SimpleProjectDto projectDto = request.project();
+    List<GroupxProject> groupxProjectList = projectService.findAllGroupxProjectsByProjectId(Long.parseLong(projectDto.projectId()));
+    if (groupxProjectList.isEmpty()) {
+      throw new CouldNotFindEntityException("No groupxProject found for project");
+    }
     InternalRecord record = timeRecordService.findLatestInternalRecordByUser(user).orElseThrow(()-> new CouldNotFindEntityException("No external record found for user"));
-    record.setAssignedProject(project);
+    GroupxProject groupxProject= groupxProjectList.get(0);
+    groupxProject.addInternalRecord(record);
+    projectService.saveGroupxProject(groupxProject);
     user.setStateVisibility(request.visibility());
     userService.saveUser(user);
-    timeRecordService.saveInternalRecord(record);
 
     return new MessageResponse("Dashboard data updated successfully!");
   }

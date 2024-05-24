@@ -1,11 +1,12 @@
-package at.qe.skeleton.rest.frontend.mappers;
+package at.qe.skeleton.rest.frontend.mappersAndFrontendServices;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
+import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
-import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateDashboardDataRequest;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
 import at.qe.skeleton.services.*;
@@ -24,10 +25,12 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 @SpringBootTest
 @WebAppConfiguration
 class DashboardDataMapperTest {
-    @Autowired private UserxService userService;
+    @Autowired
+    private UserxService userService;
     @Autowired private TemperaStationService temperaService;
     @Autowired private MeasurementService measurementService;
     @Autowired private TimeRecordService timeRecordService;
@@ -36,11 +39,11 @@ class DashboardDataMapperTest {
 
     @BeforeEach
     void setUp() {
-      }
+    }
 
     @AfterEach
     void tearDown() {
-      }
+    }
 
     @Test
     @Transactional
@@ -64,18 +67,18 @@ class DashboardDataMapperTest {
         boolean chrisIsVisible = optionalColleague2.get().isVisible();
         assertTrue(chrisIsVisible, "chriswilliams should be visible, since his Visibility is set to Private, but he is in one of john does Groups.");
 
-Optional<ColleagueStateDto> optionalColleague3= homeDataResponse.colleagueStates().stream().filter(c -> c.name().equals("tonystark")).findAny();
+        Optional<ColleagueStateDto> optionalColleague3= homeDataResponse.colleagueStates().stream().filter(c -> c.name().equals("tonystark")).findAny();
         assertTrue(optionalColleague3.isPresent(), "Colleague tonystark should be present in the list");
         boolean tonyIsVisible = optionalColleague3.get().isVisible();
         assertFalse(tonyIsVisible, "tonystark should not be visible, since his Visibility is set to private and he is not in one of john does groups.");
 
-Optional<ColleagueStateDto> optionalColleague4= homeDataResponse.colleagueStates().stream().filter(c -> c.name().equals("manager")).findAny();
-        assertTrue(optionalColleague4.isPresent(), "Colleague manager should be present in the list");
-        List<String> managerGroups = optionalColleague4.get().groupOverlap();
-        assertEquals(2, managerGroups.size(), "overlap should be two groups");
-        assertTrue(managerGroups.contains("testGroup1"), "manager should be in group1");
-        assertTrue(managerGroups.contains("testGroup2"), "manager should be in group2");
-      }
+        Optional<ColleagueStateDto> optionalColleague4= homeDataResponse.colleagueStates().stream().filter(c -> c.name().equals("admin")).findAny();
+        assertTrue(optionalColleague4.isPresent(), "Colleague admin should be present in the list");
+        List<String> sharedGroupsOfManagerWithJohnDoe = optionalColleague4.get().groupOverlap();
+        assertEquals(2, sharedGroupsOfManagerWithJohnDoe.size(), "overlap should be two groups");
+        assertTrue(sharedGroupsOfManagerWithJohnDoe.contains("testGroup1"), "admin should be in group1");
+        assertTrue(sharedGroupsOfManagerWithJohnDoe.contains("testGroup2"), "admin should be in group2");
+    }
 
 
 
@@ -116,16 +119,16 @@ Optional<ColleagueStateDto> optionalColleague4= homeDataResponse.colleagueStates
     void mapUserToHomeDataResponseNoMeasurements() throws CouldNotFindEntityException {
         Userx johndoe = userService.loadUser("johndoe");
         assertEquals(Visibility.PUBLIC, johndoe.getStateVisibility(), "Visibility of johndoe should be PUBLIC before the update");
-        Project projectBefore = timeRecordService.findLatestInternalRecordByUser(johndoe).get().getAssignedProject();
+        GroupxProject projectBefore = timeRecordService.findLatestInternalRecordByUser(johndoe).get().getGroupxProject();
         assertNull(projectBefore, "Project of johndoe should be null before the update");
 
         // choose another visibility and project that John Doe is a member of
         Visibility visibilityUpdate = Visibility.HIDDEN;
-        ProjectDto projectUpdate = new ProjectDto(-12L, "Infrastructure Upgrade");
+    SimpleProjectDto projectUpdate = new SimpleProjectDto("-12", "Infrastructure Upgrade", "This project involves upgrading the company's IT infrastructure to improve efficiency and security." ,  "admin");
         UpdateDashboardDataRequest request = new UpdateDashboardDataRequest(visibilityUpdate, projectUpdate);
         dashboardDataMapper.updateUserVisibilityAndTimeStampProject(request, johndoe);
         assertEquals(Visibility.HIDDEN, johndoe.getStateVisibility(), "Visibility of johndoe should be HIDDEN after the update");
-        Project projectAfter = timeRecordService.findLatestInternalRecordByUser(johndoe).get().getAssignedProject();
+        Project projectAfter = timeRecordService.findLatestInternalRecordByUser(johndoe).get().getGroupxProject().getProject();
         assertEquals("Infrastructure Upgrade", projectAfter.getName(), "Project of johndoe should be Infrastructure Upgrade after the update");
     }
 
