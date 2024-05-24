@@ -18,7 +18,7 @@ encoder.ts
 git_push.sh
 index.ts
 model/accessPoint.ts
-model/accessPointDto.ts
+model/accessPointDtoInternal.ts
 model/accesspointDto.ts
 model/accumulatedTimeDto.ts
 model/accumulatedTimeResponse.ts
