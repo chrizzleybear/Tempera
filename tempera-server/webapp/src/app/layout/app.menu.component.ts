@@ -67,9 +67,18 @@ export class AppMenuComponent implements OnInit {
             label: 'Room Management',
             icon: 'pi pi-fw pi-home',
             routerLink: ['/rooms'],
-            visible: this.storageService.getUser()?.roles.includes(RolesEnum.Admin),
+            visible: this.storageService.getUser()?.roles.includes('ADMIN')
           },
-
+          { label: 'Access Point Management',
+            icon: 'pi pi-fw pi-wifi',
+            routerLink: ['/accessPoints'],
+            visible: this.storageService.getUser()?.roles.includes('ADMIN')
+          },
+          { label: 'Tempera Stations',
+            icon: 'pi pi-fw pi-gauge',
+            routerLink: ['/temperaStations'],
+            visible: this.storageService.getUser()?.roles.includes('ADMIN')
+          }
         ],
       },
     ];

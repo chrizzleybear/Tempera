@@ -34,7 +34,7 @@ export class ProjectService {
   }
 
   getProjectById(projectId: number): Observable<Project> {
-    return this.http.get<Project>(`${this.API_URL}load/${projectId}`);
+    return this.http.get<Project>(`${this.API_URL}loadExtendedProject/${projectId}`);
   }
 
   addGroupToProject(dto: GroupAssignmentDTO): Observable<void> {
@@ -42,11 +42,11 @@ export class ProjectService {
   }
 
     getGroups(projectId: number): Observable<Group[]> {
-    return this.http.get<Group[]>(`${this.API_URL}getGroups/${projectId}`);
+    return this.http.get<Group[]>(`${this.API_URL}getGroupsOfProject/${projectId}`);
   }
 
   deleteGroupFromProject(dto: GroupAssignmentDTO): Observable<void> {
-    return this.http.delete<void>(`${this.API_URL}deleteGroup/${dto.projectId}/${dto.groupId}`);
+    return this.http.delete<void>(`${this.API_URL}removeGroup/${dto.projectId}/${dto.groupId}`);
   }
 
   addMemberToProject(dto: ContributorAssignmentDTO): Observable<Project> {
@@ -54,10 +54,10 @@ export class ProjectService {
   }
 
   removeMemberFromProject(dto: ContributorAssignmentDTO): Observable<Project> {
-    return this.http.delete<Project>(`${this.API_URL}deleteContributor/${dto.projectId}/${dto.contributorId}`);
+    return this.http.delete<Project>(`${this.API_URL}removeContributor/${dto.projectId}/${dto.groupId}/${dto.contributorId}`);
   }
 
   getProjectsOfGroup(groupId: number): Observable<Project[]> {
-    return this.http.get<Project[]>(`${this.API_URL}allOfGroup/${groupId}`);
+    return this.http.get<Project[]>(`${this.API_URL}projectsOfGroup/${groupId}`);
   }
 }

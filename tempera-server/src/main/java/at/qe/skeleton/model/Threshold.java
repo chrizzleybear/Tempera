@@ -14,16 +14,41 @@ public class Threshold implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(name = "default_threshold")
+  private boolean defaultThreshold;
+
+  @Column(name = "sensor_type")
   private SensorType sensorType;
+
+  @Column(name = "threshold_type")
   private ThresholdType thresholdType;
 
   @Column(name = "threshold_value")
   private double value;
 
-  @OneToOne private Modification modification;
+  @ManyToOne
+  @JoinColumn(name = "modification_id")
+  private Modification modification;
 
-  @OneToOne private ThresholdTip tip;
+  @ManyToOne
+  @JoinColumn(name = "tip_id")
+  private ThresholdTip tip;
 
+  public Threshold(SensorType sensorType, ThresholdType thresholdType, double value, Modification modification, ThresholdTip tip) {
+    this.defaultThreshold = false;
+    this.sensorType = sensorType;
+    this.thresholdType = thresholdType;
+    this.value = value;
+    this.modification = modification;
+    this.tip = tip;
+  }
+
+  public Threshold() {
+  }
+
+  public Long getId() {
+    return id;
+  }
   public SensorType getSensorType() {
     return sensorType;
   }
@@ -35,6 +60,8 @@ public class Threshold implements Serializable {
   public ThresholdType getThresholdType() {
     return thresholdType;
   }
+
+  public boolean isDefaultThreshold() { return defaultThreshold; }
 
   public void setThresholdType(ThresholdType thresholdType) {
     this.thresholdType = thresholdType;
@@ -69,7 +96,7 @@ public class Threshold implements Serializable {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Threshold threshold = (Threshold) o;
-    return id == threshold.id;
+    return id.equals(threshold.id);
   }
 
   @Override

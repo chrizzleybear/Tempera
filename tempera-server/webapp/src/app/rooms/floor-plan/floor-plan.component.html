@@ -1,8 +1,10 @@
+<p-dropdown [options]="floors" (onChange)="selectFloor($event)" optionLabel="label"></p-dropdown>
 <svg width="400" height="600">
-  <g *ngFor="let room of rooms; let i = index">
+  <g *ngFor="let room of rooms[currentFloor]?? []; let i = index">
     <rect [attr.x]="room.x + 100" [attr.y]="room.y + 50" width="100" height="100"
           [attr.fill]="room.fillColor" (click)="viewDetails(i)" stroke="#000" stroke-width="2" />
     <text [attr.x]="room.x + 130" [attr.y]="room.y + 100">{{room.roomId}} </text>
+    <circle [attr.cx]="room.x + 120" [attr.cy]="room.y + 70" r="10" [attr.fill]="room.accessPoint" (click)="viewDetailsAccesspoint(i)"></circle>
   </g>
   <g *ngFor="let door of doors">
     <rect [attr.x]="door.x + 100" [attr.y]="door.y + 50" width="10" height="20"

@@ -11,13 +11,14 @@
       <th scope="col" pSortableColumn="groupLeadId">Group Lead ID <p-sortIcon field="groupLeadId"></p-sortIcon></th>
       <th></th>
       <th></th>
+      <th></th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-group>
     <tr (click)="viewGroupDetails(group)">
       <td>{{ group.name }}</td>
       <td>{{ group.description }}</td>
-      <td>{{ group.groupLead.firstName }} {{group.groupLead.lastName}}</td>
+      <td>{{ group.groupLead}}</td>
       <td>
         <p-button label="Members" (onClick)="members(group); $event.stopPropagation()" icon="pi pi-users"></p-button>
       </td>

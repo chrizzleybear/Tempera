@@ -26,7 +26,7 @@ public class ProjectMapperService {
     private UserxService userService;
 
 
-    public ProjectMapperService(ProjectService projectService, GroupService groupService, UserxService userService) {
+    public ProjectMapperService(ProjectService projectService) {
         this.projectService = projectService;
         this.groupService = groupService;
         this.userService = userService;
@@ -157,6 +157,15 @@ public class ProjectMapperService {
                 userx.getFirstName(),
                 userx.getLastName(),
                 userx.getEmail()
+        );
+    }
+
+    public GroupDetailsDto groupDetailsDto(Groupx groupx) {
+        return new GroupDetailsDto(
+                groupx.getId().toString(),
+                groupx.getName(),
+                groupx.getDescription(),
+                userDtoMapper(groupx.getGroupLead())
         );
     }
 }
