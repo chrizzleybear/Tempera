@@ -1,4 +1,6 @@
 <p-messages [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
+<h1 class="text-3xl font-semibold text-center text-gray-700 my-4">Projects from Group {{groupId}}</h1>
+<br>
 <p-table [value]="projects" [paginator]="true" [rows]="10" responsiveLayout="scroll">
   <ng-template pTemplate="header">
     <tr>
@@ -72,7 +74,7 @@
     <input type="text" pInputText placeholder="Search" (input)="applyFilterUsers($event)" class="mr-2">
     <button pButton type="button" label="Delete Selected" icon="pi pi-check" (click)="deleteContributorsFromProject()" class="p-mt-2"></button>
   </div>
-  <p-table [value]="availableProjectContributors" [paginator]="true" [rows]="10" responsiveLayout="scroll" [(selection)]="selectedMembers">
+  <p-table [value]="members" [paginator]="true" [rows]="10" responsiveLayout="scroll" [(selection)]="selectedMembers">
     <ng-template pTemplate="header">
       <tr>
         <th scope="col" pSortableColumn="username">Benutzername

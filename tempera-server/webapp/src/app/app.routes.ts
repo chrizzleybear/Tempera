@@ -19,6 +19,12 @@ import { RoomsComponent } from './roomManagement/rooms/rooms.component';
 import { FloorPlanComponent } from './rooms/floor-plan/floor-plan.component';
 import { RoomDetailsComponent } from './roomManagement/room-details/room-details.component';
 import { TimetableComponent } from './timetable/timetable.component';
+import {AccesspointsComponent} from "./accessPointManagement/access-points/accespoints.component";
+import {TemperaStationsComponent} from "./temperaManagement/tempera-stations/tempera-stations.component";
+import {
+  TemperaStationDetailsComponent
+} from "./temperaManagement/tempera-station-details/tempera-station-details.component";
+import {AccessPointDetailsComponent} from "./accessPointManagement/access-point-details/access-point-details.component";
 import { AccumulatedTimeComponent } from './accumulated-time/accumulated-time.component';
 
 export const routes: Routes = [
@@ -42,7 +48,10 @@ export const routes: Routes = [
           { path: 'group/projects/:id', component: GroupProjectsComponent },
           { path: 'timetable', component: TimetableComponent },
           { path: 'accumulated-time', component: AccumulatedTimeComponent },
-
+          { path: 'accessPoints', component: AccesspointsComponent},
+          { path: 'accessPoint/:id', component: AccessPointDetailsComponent},
+          { path: 'temperaStations', component: TemperaStationsComponent},
+          { path: 'temperaStation/:id', component: TemperaStationDetailsComponent},
         ],
       },
     ],

@@ -41,7 +41,7 @@ export class ProjectEditComponent implements OnChanges, OnInit {
   }
 
   ngOnInit() {
-    this.projectService.getProjectById(this.project?.id).subscribe({
+    this.projectService.getProjectById(this.project?.projectId).subscribe({
       next: (data) => {
         this.project = data;
         this.populateForm();
@@ -72,7 +72,7 @@ export class ProjectEditComponent implements OnChanges, OnInit {
   onSubmit() {
     if (this.projectForm.valid) {
       const dto: ProjectUpdateDTO = {
-        projectId: this.project.id,
+        projectId: this.project.projectId,
         name: this.projectForm.value.name,
         description: this.projectForm.value.description,
         manager: this.projectForm.value.manager.value.username

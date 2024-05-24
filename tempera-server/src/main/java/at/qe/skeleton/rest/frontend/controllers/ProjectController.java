@@ -44,6 +44,7 @@ public class ProjectController {
     return ResponseEntity.ok(createdProject);
   }
 
+  //todo: was ist hier mit?
   @DeleteMapping("/delete/{projectId}")
   public ResponseEntity<String> deleteProject(@PathVariable String projectId) {
     projectService.deleteProject(Long.parseLong(projectId));

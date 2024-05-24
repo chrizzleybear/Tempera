@@ -7,6 +7,9 @@ import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.GroupxProjectRepository;
 import at.qe.skeleton.repositories.UserxRepository;
+import at.qe.skeleton.rest.frontend.dtos.GroupDetailsDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleGroupDto;
+import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.ProjectMapperService;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -29,11 +32,19 @@ public class GroupService {
 
     @Autowired
     private GroupRepository groupRepository;
+
     @Autowired
     private GroupxProjectRepository groupxProjectRepository;
 
-    public List<Groupx> getAllGroups() {
-        return groupRepository.findAll();
+    @Autowired
+    private ProjectMapperService projectMapperService;
+
+    public List<SimpleGroupDto> getAllGroups() {
+        List<Groupx> groups = groupRepository.findAll();
+        List<SimpleGroupDto> dtos = groups.stream()
+                .map(group -> new SimpleGroupDto(String.valueOf(group.getId()), group.getName(), group.getDescription(), group.getGroupLead().getId()))
+                .toList();
+        return dtos;
     }
 
     @Transactional
@@ -78,8 +89,15 @@ public class GroupService {
         }
 
     public Groupx getGroup(Long groupId) {
-        return groupRepository.findById(groupId)
+                Groupx group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
+        return group;
+    }
+
+    public GroupDetailsDto getDetailsGroup(Long groupId) {
+        Groupx group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
+        return projectMapperService.groupDetailsDto(group);
     }
 
     public void removeMember(Long groupId, String memberId) {

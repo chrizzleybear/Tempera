@@ -37,10 +37,12 @@ public class Room implements Persistable<String>, Serializable {
 
   @OneToMany private Set<Threshold> thresholds;
 
+  @OneToOne private AccessPoint accessPoint;
+
   /**
    * User can choose roomid but RoomService must ensure, that this id is not yet taken.
    *
-   * @param roomId the id, the user assignes to this room. it should be unique.
+   * @param roomId the id, the user assigns to this room. it should be unique.
    */
   public Room(String roomId) {
     this.roomId = roomId;
@@ -49,10 +51,6 @@ public class Room implements Persistable<String>, Serializable {
 
   protected Room() {}
 
-
-  public String getRoomId() {
-    return roomId;
-  }
 
   public Set<Threshold> getThresholds() {
     return thresholds;
@@ -98,5 +96,17 @@ public class Room implements Persistable<String>, Serializable {
   @Override
   public String toString() {
     return this.roomId;
+  }
+
+  public AccessPoint getAccessPoint() {
+    return accessPoint;
+  }
+
+  public void setAccessPoint(AccessPoint accessPoint) {
+    this.accessPoint = accessPoint;
+  }
+
+  public void setThresholds(Set<Threshold> thresholds) {
+    this.thresholds = thresholds;
   }
 }

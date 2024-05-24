@@ -124,7 +124,7 @@ class DashboardDataMapperTest {
 
         // choose another visibility and project that John Doe is a member of
         Visibility visibilityUpdate = Visibility.HIDDEN;
-    SimpleProjectDto projectUpdate = new SimpleProjectDto("-12", "Infrastructure Upgrade", "This project involves upgrading the company's IT infrastructure to improve efficiency and security." ,  "admin");
+        SimpleProjectDto projectUpdate = new SimpleProjectDto("-12", "Infrastructure Upgrade", "This project involves upgrading the company's IT infrastructure to improve efficiency and security." ,  "admin");
         UpdateDashboardDataRequest request = new UpdateDashboardDataRequest(visibilityUpdate, projectUpdate);
         dashboardDataMapper.updateUserVisibilityAndTimeStampProject(request, johndoe);
         assertEquals(Visibility.HIDDEN, johndoe.getStateVisibility(), "Visibility of johndoe should be HIDDEN after the update");
