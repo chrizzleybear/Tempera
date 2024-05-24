@@ -2,6 +2,7 @@
 Database
 ========
 
+Here, an overview of the models used to store the data associated with tempera stations is provided.
 
 Entities
 ========

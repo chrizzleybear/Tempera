@@ -14,6 +14,7 @@ public class TemperaStation implements Persistable<String> {
   @Id private String id;
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY) private Userx user;
   private boolean enabled;
+  private boolean connected = false;
 
   private boolean isHealthy;
 
@@ -130,6 +131,15 @@ public class TemperaStation implements Persistable<String> {
 
   @Override
   public String toString() {
-    return this.id;
+    return "[Tempera station: id=%s; user=%s; enabled=%s; connected=%s]"
+        .formatted(this.id, this.user.getUsername(), this.enabled, this.connected);
+  }
+
+  public boolean isConnected() {
+    return connected;
+  }
+
+  public void setConnected(boolean connected) {
+    this.connected = connected;
   }
 }

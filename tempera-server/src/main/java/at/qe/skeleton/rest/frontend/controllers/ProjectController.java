@@ -24,47 +24,27 @@ public class ProjectController {
   private Logger logger = Logger.getLogger("ProjectController");
 
     @GetMapping("/all")
-    public ResponseEntity<List<SimpleProjectDto>> getAllProjects() {
-      List<SimpleProjectDto> projects = projectMapperService.getAllSimpleProjects();
+    public ResponseEntity<List<ProjectDetailsDto>> getAllProjects() {
+      List<ProjectDetailsDto> projects = projectMapperService.getAllDetailedProjects();
       return ResponseEntity.ok(projects);
     }
 
 
-//  @GetMapping("/manager/all")
-//  public ResponseEntity<List<GroupxProjectDto>> getAllProjectXGroups() {
-//    List<GroupxProjectDto> groupxProjectDtos = projectMapperService.getAllGroupxProjectsAsManager();
-//    return ResponseEntity.ok(groupxProjectDtos);
-//  }
-//
-//    @GetMapping("/grouplead/all")
-//    public ResponseEntity<List<GroupxProjectDto>> getAllGroupxProjectsAsGroupLead(@RequestParam("managerId") String managerId) {
-//      List<GroupxProjectDto> groupxProjectDtos = projectMapperService.getAllGroupxProjectsAsGrouplead(managerId);
-//      return ResponseEntity.ok(groupxProjectDtos);
-//    }
-
-
-
-
   @PutMapping("/update")
   public ResponseEntity<SimpleProjectDto> updateProject(@RequestBody SimpleProjectDto projectData) {
-    Project updatedProject =
-        projectService.updateProject(
-            Long.parseLong(projectData.projectId()),
-            projectData.name(),
-            projectData.description(),
-            projectData.manager());
-    SimpleProjectDto dto = projectMapperService.projectDtoMapper(updatedProject);
-    return ResponseEntity.ok(dto);
+
+    SimpleProjectDto updatedProject = projectMapperService.updateProject(projectData);
+    //todo: add method to projectMapperService
+    return ResponseEntity.ok(updatedProject);
   }
 
   @PostMapping("/create")
   public ResponseEntity<SimpleProjectDto> createProject(@RequestBody SimpleProjectDto projectData) {
-    Project createdProject =
-        projectService.createProject(
-                projectData.name(), projectData.description(), projectData.manager());
-    return ResponseEntity.ok(projectMapperService.projectDtoMapper(createdProject));
+    SimpleProjectDto createdProject = projectMapperService.createProject(projectData);
+    return ResponseEntity.ok(createdProject);
   }
 
+  //todo: was ist hier mit?
   @DeleteMapping("/delete/{projectId}")
   public ResponseEntity<String> deleteProject(@PathVariable String projectId) {
     projectService.deleteProject(Long.parseLong(projectId));
@@ -104,7 +84,6 @@ public class ProjectController {
   public ResponseEntity<ExtendedProjectDto> addGroupToProject(
       @RequestBody GroupAssignmentDto groupAssignmentDto) {
     try{
-      System.out.println(groupAssignmentDto);
       ExtendedProjectDto extendedProjectDto = projectMapperService.addGroupToProject(groupAssignmentDto);
       return ResponseEntity.ok(extendedProjectDto);
     } catch (Exception e) {

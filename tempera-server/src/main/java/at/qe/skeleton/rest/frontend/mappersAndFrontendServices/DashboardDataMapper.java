@@ -44,8 +44,7 @@ public class DashboardDataMapper {
   private List<ColleagueStateDto> mapUserToColleagueStateDto(Userx user) {
 
     // using hashmap for faster compare algorithm
-    Collection<Groupx> groups = user.getGroups();
-    Set<Groupx> userGroups = new HashSet<>(groups);
+    Set<Groupx> userGroups = new HashSet<>(user.getGroups());
 
     // we dont want user to be displayed as his own colleague
     List<Userx> colleagues =
@@ -177,15 +176,20 @@ public class DashboardDataMapper {
   }
 
   //todo fix with GroupxProject
+@Transactional
+  public MessageResponse updateUserVisibilityAndTimeStampProject(UpdateDashboardDataRequest request, Userx user) throws CouldNotFindEntityException{
+    SimpleProjectDto projectDto = request.project();
+    List<GroupxProject> groupxProjectList = projectService.findAllGroupxProjectsByProjectId(Long.parseLong(projectDto.projectId()));
+    if (groupxProjectList.isEmpty()) {
+      throw new CouldNotFindEntityException("No groupxProject found for project");
+    }
+    InternalRecord record = timeRecordService.findLatestInternalRecordByUser(user).orElseThrow(()-> new CouldNotFindEntityException("No external record found for user"));
+    GroupxProject groupxProject= groupxProjectList.get(0);
+    groupxProject.addInternalRecord(record);
+    projectService.saveGroupxProject(groupxProject);
+    user.setStateVisibility(request.visibility());
+    userService.saveUser(user);
 
-//  public MessageResponse updateUserVisibilityAndTimeStampProject(UpdateDashboardDataRequest request, Userx user) throws CouldNotFindEntityException{
-//    Project project = projectService.getProjectById(Long.parseLong(request.project().simpleProjectDto().projectId())).orElseThrow(() -> new CouldNotFindEntityException("No project found for id"));
-//    InternalRecord record = timeRecordService.findLatestInternalRecordByUser(user).orElseThrow(()-> new CouldNotFindEntityException("No external record found for user"));
-//    record.setAssignedProject(project);
-//    user.setStateVisibility(request.visibility());
-//    userService.saveUser(user);
-//    timeRecordService.saveInternalRecord(record);
-//
-//    return new MessageResponse("Dashboard data updated successfully!");
-//  }
+    return new MessageResponse("Dashboard data updated successfully!");
+  }
 }

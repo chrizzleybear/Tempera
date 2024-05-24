@@ -6,7 +6,7 @@
     <groupId>at.qe</groupId>
     <artifactId>skeleton</artifactId>
     <version>1.0.7</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <name>skeleton</name>
     <description>A skeleton project to be used as starting point for the course
@@ -182,6 +182,21 @@
                         <phase>prepare-package</phase>
                         <goals>
                             <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>at.qe.skeleton.Main</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
                         </goals>
                     </execution>
                 </executions>

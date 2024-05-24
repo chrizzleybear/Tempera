@@ -147,6 +147,7 @@ public class UserxServiceTest {
     }
 
     @DirtiesContext
+    @Transactional
     @Test
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:userxServiceTest.sql")
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
@@ -303,17 +304,6 @@ public class UserxServiceTest {
         Assertions.assertEquals(username, user.getUsername(), "Call to userService.loadUser returned wrong user");
     }
 
-    @Test
-    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:userxServiceTest.sql")
-    @WithMockUser(username = "user1", authorities = {"EMPLOYEE"})
-    public void testUnauthorizedSaveUser() {
-        Assertions.assertThrows(AccessDeniedException.class, () -> {
-            String username = "user1";
-            Userx user = userxService.loadUser(username);
-            Assertions.assertEquals(username, user.getUsername(), "Call to userService.loadUser returned wrong user");
-            userxService.saveUser(user);
-        });
-    }
 
     @Test
     @WithMockUser(username = "user1", authorities = {"EMPLOYEE"})

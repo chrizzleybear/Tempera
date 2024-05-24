@@ -21,8 +21,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
-public class
-ProjectService {
+public class ProjectService {
 
   @Autowired private ProjectRepository projectRepository;
   @Autowired private UserxRepository userxRepository;
@@ -35,7 +34,7 @@ ProjectService {
 
   private Logger logger = Logger.getLogger("groupxProjectServiceLogger");
 
-  //todo: write tests for project Service to test the functionality of GroupxProject in particular
+  // todo: write tests for project Service to test the functionality of GroupxProject in particular
 
   @Transactional
   public Project createProject(String name, String description, String manager) {
@@ -50,7 +49,7 @@ ProjectService {
     return projectRepository.save(project);
   }
 
-//  @Transactional(readOnly = true)
+  //  @Transactional(readOnly = true)
   public List<Project> getAllProjects() {
     return projectRepository.findAll();
   }
@@ -79,7 +78,7 @@ ProjectService {
   // todo: for the following methods develop queries in the groupxprojectRepository that make it
   // easy to handle everyting
   @Transactional
-  public GroupxProject  createGroupxProject (Long projectId, Long groupId) throws IOException {
+  public GroupxProject createGroupxProject(Long projectId, Long groupId) throws IOException {
     Project project =
         projectRepository
             .findById(projectId)
@@ -101,6 +100,7 @@ ProjectService {
     return projectRepository.findFirstById(projectId);
   }
 
+  @Transactional
   public void deleteProject(Long projectId) {
     List<GroupxProject> groupxProjects = groupxProjectRepository.findAllByProjectId(projectId);
     // todo: decide what happens to the groupxproject object if project gets deleted...
@@ -122,13 +122,31 @@ ProjectService {
               .formatted(groupId, projectId));
     } else {
       GroupxProject groupxProject = groupxProjectOptional.get();
-      groupxProject.removeGroup();
-      groupxProjectRepository.save(groupxProject);
+      // ohne Groupx kann das GroupxProject nicht existieren, da das Teil der Id ist. derweil
+      // löschen wir einfach mal das GroupxProject
+      // todo: eine geeignete lösch-policy überlegen: ein feld in GroupxProject setzen mit "is
+      // active" oder so
+      deleteGroupxProject(groupxProject);
     }
   }
 
+  public void deleteGroupxProject(GroupxProject groupxProject) {
+    groupxProject.removeGroup();
+    groupxProject.removeProject();
+    groupxProject
+        .getContributors()
+        .forEach(
+            contributor -> {
+              contributor.getGroupxProjects().remove(groupxProject);
+              userxRepository.save(contributor);
+            });
+    groupxProject.removeInternalRecords();
+    groupxProjectRepository.save(groupxProject);
+  }
+
   @Transactional
-  public void addContributor(Long groupId, Long projectId, String username) throws CouldNotFindEntityException {
+  public void addContributor(Long groupId, Long projectId, String username)
+      throws CouldNotFindEntityException {
     GroupxProject groupxProject =
         groupxProjectRepository
             .findByGroup_IdAndProject_Id(groupId, projectId)
@@ -145,8 +163,9 @@ ProjectService {
     if (groupxProject.getContributors().contains(contributor)) {
       throw new IllegalArgumentException("User is already a contributor");
     }
-    if (!(contributor.getGroups().contains(groupxProject.getGroup()))){
-      throw new IllegalArgumentException("User is not part of the group %s".formatted(groupxProject.getGroup()));
+    if (!(contributor.getGroups().contains(groupxProject.getGroup()))) {
+      throw new IllegalArgumentException(
+          "User is not part of the group %s".formatted(groupxProject.getGroup()));
     }
     groupxProject.addContributor(contributor);
     groupxProjectRepository.save(groupxProject);
@@ -165,14 +184,22 @@ ProjectService {
   }
 
   public List<Project> getProjectsByContributor(Userx user) {
-    List<GroupxProject> groupxProjects = groupxProjectRepository.findAllByContributorsContains(user);
+    List<GroupxProject> groupxProjects =
+        groupxProjectRepository.findAllByContributorsContains(user);
     return groupxProjects.stream().map(GroupxProject::getProject).toList();
   }
 
   @Transactional
-  public void removeContributor(Long groupId, Long projectId, String username) throws CouldNotFindEntityException {
-    GroupxProject groupxProject = groupxProjectRepository.findByGroup_IdAndProject_Id(groupId, projectId).orElseThrow(() -> new CouldNotFindEntityException("Could not find GroupxProject with GroupId %d and ProjectID %d"
-            .formatted(groupId, projectId)));
+  public void removeContributor(Long groupId, Long projectId, String username)
+      throws CouldNotFindEntityException {
+    GroupxProject groupxProject =
+        groupxProjectRepository
+            .findByGroup_IdAndProject_Id(groupId, projectId)
+            .orElseThrow(
+                () ->
+                    new CouldNotFindEntityException(
+                        "Could not find GroupxProject with GroupId %d and ProjectID %d"
+                            .formatted(groupId, projectId)));
 
     Userx contributor =
         userxRepository
@@ -192,11 +219,13 @@ ProjectService {
     projectRepository.save(project);
   }
 
-  public List<GroupxProject> findGroupxProjectsByContributorAndProjectId(Userx contributor, Long projectId){
-    return groupxProjectRepository.findAllByProjectIdAndContributorsContaining(projectId, contributor);
+  public List<GroupxProject> findGroupxProjectsByContributorAndProjectId(
+      Userx contributor, Long projectId) {
+    return groupxProjectRepository.findAllByProjectIdAndContributorsContaining(
+        projectId, contributor);
   }
 
-  public List<GroupxProject> findAllGroupxProjectsOfAUser(Userx user){
+  public List<GroupxProject> findAllGroupxProjectsOfAUser(Userx user) {
     return groupxProjectRepository.findAllByContributorsContains(user);
   }
 
@@ -208,15 +237,15 @@ ProjectService {
     return groupxProjectRepository.findAllByProjectId(projectId);
   }
 
-  public List<Project> findAllProjects(){
+  public List<Project> findAllProjects() {
     return projectRepository.findAll();
   }
 
-  public List<SimpleUserDto> findAllContributorsByProjectId(Long projectId){
+  public List<SimpleUserDto> findAllContributorsByProjectId(Long projectId) {
     return groupxProjectRepository.findAllContributorsByProject_Id(projectId);
   }
 
-  public List<GroupxProject> getGroupxProjectsByGroupId(Long groupId){
+  public List<GroupxProject> getGroupxProjectsByGroupId(Long groupId) {
     return groupxProjectRepository.findAllByGroup_Id(groupId);
   }
 }

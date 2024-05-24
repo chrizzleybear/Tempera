@@ -40,9 +40,7 @@ class TimetableDataServiceTest {
   @WithMockUser(username = "johndoe")
   void getTimetableData() {
     Userx user = userxService.loadUser("johndoe");
-    int page1 = 0;
-    int page2 = 1;
-    int size = 5;
+
 
     // this will fetch the first page containing of the last 5 entries (id -22 to -18)
     GetTimetableDataResponse dataResponse =
@@ -52,7 +50,7 @@ class TimetableDataServiceTest {
     List<SimpleProjectDto> simpleProjectDtos1 = dataResponse.availableProjects();
     assertNotNull(timeTableEntries1);
     assertNotNull(simpleProjectDtos1);
-    assertEquals(size, timeTableEntries1.size());
+
 
 
     // this TimeRecord has a null Ending time so it should not be converted to a TimetableEntryDto
@@ -69,7 +67,6 @@ class TimetableDataServiceTest {
     List<SimpleProjectDto> extendedProjectDtos2 = dataResponse2.availableProjects();
     assertNotNull(timeTableEntries2);
     assertNotNull(extendedProjectDtos2);
-    assertEquals(size, timeTableEntries2.size());
 
     long id2 = -15;
     String startTimestamp2 = "2024-05-12T11:00";

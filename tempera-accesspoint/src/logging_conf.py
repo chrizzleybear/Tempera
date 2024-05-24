@@ -1,3 +1,5 @@
+from pathlib import Path
+
 config = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -5,21 +7,21 @@ config = {
         "simple": {
             "format": "%(asctime)s - %(name)s - %(levelname)s: %(message)s",
             "datefmt": "%Y-%m-%d %H:%M:%S%z",
-        }
+        },
+        "rich": {"format": "%(message)s", "datefmt": "[%X]"},
     },
     "handlers": {
         "stdout": {
-            "class": "logging.StreamHandler",
+            "class": "rich.logging.RichHandler",
             "level": "INFO",
-            "formatter": "simple",
-            "stream": "ext://sys.stdout",
+            "formatter": "rich",
         },
         "file": {
             "class": "logging.handlers.RotatingFileHandler",
             "level": "INFO",
             "formatter": "simple",
-            "filename": "access_point.log",
-            "maxBytes": 10000000,
+            "filename": Path(__file__).parent.parent.resolve() / "access_point.log",
+            "maxBytes": 10_000_000,
             "backupCount": 1,
         },
     },

@@ -116,7 +116,7 @@ public class TimetableDataService {
   }
 
   @Transactional
-  public MessageResponse splitTimeRecord(String username, SplitTimeRecordRequest request)
+  public GetTimetableDataResponse splitTimeRecord(String username, SplitTimeRecordRequest request)
       throws CouldNotFindEntityException {
     InternalRecord oldInternalRecord = getInternalRecord(request.entryId());
     LocalDateTime oldEnd = oldInternalRecord.getEnd();
@@ -134,10 +134,7 @@ public class TimetableDataService {
       throw new InternalRecordOutOfBoundsException(
           "Freshly split internalTimeRecord is ending after the ExternalRecord");
     }
-
-    return new MessageResponse(
-        "Set End at %s for oldInternalRecord of User %s with id %d to %s and created new Internal Record"
-            .formatted(newEnd.toString(), username, oldInternalRecord.getId(), oldInternalRecord.getEnd()));
+    return getTimetableData(userxService.loadUser(username));
   }
 
   private InternalRecord getInternalRecord(Long id) throws CouldNotFindEntityException {
