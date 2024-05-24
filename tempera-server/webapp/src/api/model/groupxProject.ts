@@ -11,6 +11,7 @@
  */
 import { Project } from './project';
 import { Groupx } from './groupx';
+import { GroupxProjectId } from './groupxProjectId';
 import { Userx } from './userx';
 
 
@@ -18,5 +19,7 @@ export interface GroupxProject {
     group?: Groupx;
     project?: Project;
     contributors?: Set<Userx>;
+    id?: GroupxProjectId;
+    _new?: boolean;
 }
 

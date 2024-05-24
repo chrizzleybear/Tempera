@@ -27,7 +27,7 @@ import { ExtendedProjectDto } from '../model/extendedProjectDto';
 // @ts-ignore
 import { GroupAssignmentDto } from '../model/groupAssignmentDto';
 // @ts-ignore
-import { Project } from '../model/project';
+import { ProjectDetailsDto } from '../model/projectDetailsDto';
 // @ts-ignore
 import { SimpleGroupDto } from '../model/simpleGroupDto';
 // @ts-ignore
@@ -254,9 +254,9 @@ export class ProjectControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createProject(simpleProjectDto: SimpleProjectDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Project>;
-    public createProject(simpleProjectDto: SimpleProjectDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Project>>;
-    public createProject(simpleProjectDto: SimpleProjectDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Project>>;
+    public createProject(simpleProjectDto: SimpleProjectDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<SimpleProjectDto>;
+    public createProject(simpleProjectDto: SimpleProjectDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<SimpleProjectDto>>;
+    public createProject(simpleProjectDto: SimpleProjectDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<SimpleProjectDto>>;
     public createProject(simpleProjectDto: SimpleProjectDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (simpleProjectDto === null || simpleProjectDto === undefined) {
             throw new Error('Required parameter simpleProjectDto was null or undefined when calling createProject.');
@@ -308,7 +308,7 @@ export class ProjectControllerService {
         }
 
         let localVarPath = `/api/project/create`;
-        return this.httpClient.request<Project>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<SimpleProjectDto>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: simpleProjectDto,
@@ -389,9 +389,9 @@ export class ProjectControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getAllProjects(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<SimpleProjectDto>>;
-    public getAllProjects(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<SimpleProjectDto>>>;
-    public getAllProjects(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<SimpleProjectDto>>>;
+    public getAllProjects(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ProjectDetailsDto>>;
+    public getAllProjects(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ProjectDetailsDto>>>;
+    public getAllProjects(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ProjectDetailsDto>>>;
     public getAllProjects(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
@@ -431,7 +431,7 @@ export class ProjectControllerService {
         }
 
         let localVarPath = `/api/project/all`;
-        return this.httpClient.request<Array<SimpleProjectDto>>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<Array<ProjectDetailsDto>>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -838,9 +838,9 @@ export class ProjectControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateProject(simpleProjectDto: SimpleProjectDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Project>;
-    public updateProject(simpleProjectDto: SimpleProjectDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Project>>;
-    public updateProject(simpleProjectDto: SimpleProjectDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Project>>;
+    public updateProject(simpleProjectDto: SimpleProjectDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<SimpleProjectDto>;
+    public updateProject(simpleProjectDto: SimpleProjectDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<SimpleProjectDto>>;
+    public updateProject(simpleProjectDto: SimpleProjectDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<SimpleProjectDto>>;
     public updateProject(simpleProjectDto: SimpleProjectDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (simpleProjectDto === null || simpleProjectDto === undefined) {
             throw new Error('Required parameter simpleProjectDto was null or undefined when calling updateProject.');
@@ -892,7 +892,7 @@ export class ProjectControllerService {
         }
 
         let localVarPath = `/api/project/update`;
-        return this.httpClient.request<Project>('put', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<SimpleProjectDto>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: simpleProjectDto,

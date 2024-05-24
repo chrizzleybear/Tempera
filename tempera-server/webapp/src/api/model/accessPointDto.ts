@@ -11,9 +11,10 @@
  */
 
 
-export interface AccessPointDto { 
+export interface AccesspointDto { 
     id?: string;
-    access_point_allowed?: boolean;
-    stations_allowed?: Array<string>;
+    room?: string;
+    enabled?: boolean;
+    isHealthy?: boolean;
 }
 

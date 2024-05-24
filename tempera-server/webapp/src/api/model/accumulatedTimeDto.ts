@@ -9,14 +9,23 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { SimpleProjectDto } from './simpleProjectDto';
-import { SimpleGroupDto } from './simpleGroupDto';
 
 
 export interface AccumulatedTimeDto { 
-    project?: SimpleProjectDto;
-    group?: SimpleGroupDto;
+    projectId?: string;
+    groupId?: string;
+    state?: AccumulatedTimeDto.StateEnum;
     startTimestamp: string;
     endTimestamp: string;
 }
+export namespace AccumulatedTimeDto {
+    export type StateEnum = 'AVAILABLE' | 'MEETING' | 'OUT_OF_OFFICE' | 'DEEPWORK';
+    export const StateEnum = {
+        Available: 'AVAILABLE' as StateEnum,
+        Meeting: 'MEETING' as StateEnum,
+        OutOfOffice: 'OUT_OF_OFFICE' as StateEnum,
+        Deepwork: 'DEEPWORK' as StateEnum
+    };
+}
+
 
