@@ -5,10 +5,12 @@ import at.qe.skeleton.model.Groupx;
 import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.model.dtos.GroupxProjectStateTimeDto;
 import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.GroupxProjectRepository;
 import at.qe.skeleton.repositories.ProjectRepository;
 import at.qe.skeleton.repositories.UserxRepository;
+import at.qe.skeleton.rest.frontend.dtos.GroupxProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -207,6 +209,11 @@ public class ProjectService {
             .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND));
     groupxProject.removeContributor(contributor);
     groupxProjectRepository.save(groupxProject);
+  }
+
+  @PreAuthorize("hasAuthority('MANAGER')")
+  public List<GroupxProjectStateTimeDto> gxpStateTimeDtosByManager(String username) {
+    return groupxProjectRepository.getAllGroupxProjectStateTimeDtos(username);
   }
 
   @PreAuthorize("hasAuthority('MANAGER')")
