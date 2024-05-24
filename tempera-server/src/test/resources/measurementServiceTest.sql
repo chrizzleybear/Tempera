@@ -10,8 +10,9 @@ DELETE FROM groupx_project_object_contributors;
 DELETE FROM groupx_project_object;
 DELETE FROM groupx;
 DELETE FROM userx_userx_role;
-DELETE FROM userx;
+DELETE FROM userx WHERE default_project_id Is Not NULL;
 DELETE FROM project;
+DELETE FROM userx;
 
 INSERT INTO userx
 (enabled, default_project_id, state, state_visibility, create_date, update_date, create_user_username, update_user_username, username, email, first_name, last_name, password)
