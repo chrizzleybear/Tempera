@@ -16,7 +16,7 @@
   <ng-template pTemplate="body" let-accessPoint>
     <tr (click)="viewAccessPointDetails(accessPoint)">
       <td>{{ accessPoint.id }}</td>
-      <td>{{ accessPoint.room.id }}</td>
+      <td>{{ accessPoint.room }}</td>
       <td>{{ accessPoint.enabled ? 'Enabled' : 'Disabled' }}</td>
       <td>
         <p-button label="Edit" (onClick)="editAccessPoint(accessPoint); $event.stopPropagation()" icon="pi pi-pencil"></p-button>
