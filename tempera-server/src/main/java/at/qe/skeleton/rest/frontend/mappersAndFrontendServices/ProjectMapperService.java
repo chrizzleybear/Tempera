@@ -82,7 +82,7 @@ public class ProjectMapperService {
     }
 
 
-  private SimpleProjectDto projectDtoMapper(Project project) {
+  public SimpleProjectDto projectDtoMapper(Project project) {
         return new SimpleProjectDto(
                 project.getId().toString(),
                 project.getName(),

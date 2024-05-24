@@ -104,8 +104,8 @@ export class ProjectsComponent implements OnInit{
 
   viewProjectDetails(project: Project) {
     console.log("View project details:", project);
-    console.log("Project ID:", project.id);
-    this.router.navigate(['/project', project.id]);
+    console.log("Project ID:", project.projectId);
+    this.router.navigate(['/project', project.projectId]);
   }
 
   editProject(project: Project) {
@@ -115,8 +115,7 @@ export class ProjectsComponent implements OnInit{
   }
 
   addGroupToProject(project: Project) {
-    console.log("Add group to project:", project);
-    this.router.navigate(['/project/groups', project.id]);
+    this.router.navigate(['/project/groups', project.projectId]);
 
   }
 

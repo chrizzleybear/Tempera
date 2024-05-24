@@ -46,22 +46,23 @@ public class ProjectController {
 
 
   @PutMapping("/update")
-  public ResponseEntity<Project> updateProject(@RequestBody SimpleProjectDto projectData) {
+  public ResponseEntity<SimpleProjectDto> updateProject(@RequestBody SimpleProjectDto projectData) {
     Project updatedProject =
         projectService.updateProject(
             Long.parseLong(projectData.projectId()),
             projectData.name(),
             projectData.description(),
             projectData.manager());
-    return ResponseEntity.ok(updatedProject);
+    SimpleProjectDto dto = projectMapperService.projectDtoMapper(updatedProject);
+    return ResponseEntity.ok(dto);
   }
 
   @PostMapping("/create")
-  public ResponseEntity<Project> createProject(@RequestBody SimpleProjectDto projectData) {
+  public ResponseEntity<SimpleProjectDto> createProject(@RequestBody SimpleProjectDto projectData) {
     Project createdProject =
         projectService.createProject(
-            projectData.name(), projectData.description(), projectData.manager());
-    return ResponseEntity.ok(createdProject);
+                projectData.name(), projectData.description(), projectData.manager());
+    return ResponseEntity.ok(projectMapperService.projectDtoMapper(createdProject));
   }
 
   @DeleteMapping("/delete/{projectId}")
@@ -103,6 +104,7 @@ public class ProjectController {
   public ResponseEntity<ExtendedProjectDto> addGroupToProject(
       @RequestBody GroupAssignmentDto groupAssignmentDto) {
     try{
+      System.out.println(groupAssignmentDto);
       ExtendedProjectDto extendedProjectDto = projectMapperService.addGroupToProject(groupAssignmentDto);
       return ResponseEntity.ok(extendedProjectDto);
     } catch (Exception e) {

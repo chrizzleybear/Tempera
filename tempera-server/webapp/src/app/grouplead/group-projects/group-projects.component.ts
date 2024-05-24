@@ -80,8 +80,8 @@ export class GroupProjectsComponent implements OnInit {
 
   viewProjectDetails(project: Project) {
     console.log('View project details:', project);
-    console.log('Project ID:', project.id);
-    this.router.navigate(['/project', project.id]);
+    console.log('Project ID:', project.projectId);
+    this.router.navigate(['/project', project.projectId]);
   }
 
   addContributorsToProjectDialog(project: Project) {
@@ -95,7 +95,8 @@ export class GroupProjectsComponent implements OnInit {
 
   private addContributorToProject(memberId: string) {
     const dto: ContributorAssignmentDTO = {
-      projectId: this.selectedProject!.id,
+      projectId: this.selectedProject!.projectId,
+      groupId: this.groupId!,
       contributorId: memberId
     };
     return this.projectService.addMemberToProject(dto);
@@ -141,7 +142,7 @@ export class GroupProjectsComponent implements OnInit {
   deleteContributorsFromProject() {
     from(this.selectedMembers.map(member => member.username))
       .pipe(
-        concatMap(memberId => this.deleteContributorFromProject(this.selectedProject!.id, memberId)),
+        concatMap(memberId => this.deleteContributorFromProject(this.selectedProject!.projectId, memberId)),
         toArray()
       )
       .subscribe({
@@ -159,6 +160,7 @@ export class GroupProjectsComponent implements OnInit {
   private deleteContributorFromProject(projectId: number, memberId: string) {
     const dto: ContributorAssignmentDTO = {
       projectId: projectId,
+      groupId: this.groupId!,
       contributorId: memberId
     };
     return this.projectService.removeMemberFromProject(dto);

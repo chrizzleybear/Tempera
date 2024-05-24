@@ -2,7 +2,7 @@ import {User} from "./user.model";
 import {Group} from "./group.model";
 
 export interface Project {
-  id: number;
+  projectId: number;
   name: string;
   description: string;
   manager: User;
