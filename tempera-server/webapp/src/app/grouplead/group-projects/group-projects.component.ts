@@ -39,6 +39,7 @@ export class GroupProjectsComponent implements OnInit {
   displayDeleteMemberDialog: boolean = false;
   selectedProject: Project | undefined;
   members: User[] = [];
+  contributors: User[] = [];
   availableProjectContributors: User[] = [];
   filteredMembers: User[] = [];
   selectedMembers: User[] = [];
@@ -66,6 +67,22 @@ export class GroupProjectsComponent implements OnInit {
     });
   }
 
+  private loadProject(groupId: number) {
+    this.projectService.getProjectById(groupId).subscribe({
+      next: (projects) => {
+        console.log('Loaded go:', projects);
+        this.contributors = projects.contributors!;
+        this.availableProjectContributors = this.members.filter(member => !this.contributors!.some(contributor => contributor.username === member.username));
+        this.filteredMembers = [...this.availableProjectContributors];
+        console.log('Contributors:', this.contributors);
+      },
+      error: (error) => {
+        console.error('Error loading projects:', error);
+      }
+    });
+    }
+
+
   private loadGroupMembers(groupId: number) {
     this.groupService.getGroupMembers(groupId).subscribe({
       next: (members) => {
@@ -87,10 +104,7 @@ export class GroupProjectsComponent implements OnInit {
   addContributorsToProjectDialog(project: Project) {
     this.displayAddMemberDialog = true;
     this.selectedProject = project;
-    this.availableProjectContributors = this.members.filter((member: { username: string }) =>
-      !project.contributors!.some(projectMember => projectMember.username === member.username)
-    );
-    this.filteredMembers = [...this.availableProjectContributors];
+    this.loadProject(project.projectId);
   }
 
   private addContributorToProject(memberId: string) {
@@ -112,7 +126,6 @@ export class GroupProjectsComponent implements OnInit {
         next: responses => {
           console.log('All members added successfully:', responses);
           this.loadProjects(this.groupId!);
-          this.resetMembers();
           this.messages = [{ severity: 'success', summary: 'Success', detail: 'Contributors added successfully' }];
         },
         error: err => console.error('Error adding member:', err)
@@ -136,6 +149,7 @@ export class GroupProjectsComponent implements OnInit {
   deleteContributorDialog(project: Project) {
     this.displayDeleteMemberDialog = true;
     this.selectedProject = project;
+    this.loadProject(project.projectId);
     this.availableProjectContributors = project.contributors!;
   }
 

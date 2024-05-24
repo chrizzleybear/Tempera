@@ -54,7 +54,7 @@ export class ProjectService {
   }
 
   removeMemberFromProject(dto: ContributorAssignmentDTO): Observable<Project> {
-    return this.http.delete<Project>(`${this.API_URL}deleteContributor/${dto.projectId}/${dto.groupId}/${dto.contributorId}`);
+    return this.http.delete<Project>(`${this.API_URL}removeContributor/${dto.projectId}/${dto.groupId}/${dto.contributorId}`);
   }
 
   getProjectsOfGroup(groupId: number): Observable<Project[]> {
