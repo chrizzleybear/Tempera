@@ -37,8 +37,6 @@ public class GroupService {
     @Autowired
     private GroupxProjectRepository groupxProjectRepository;
 
-    @Autowired
-    private ProjectMapperService projectMapperService;
 
     public List<SimpleGroupDto> getAllGroups() {
         List<Groupx> groups = groupRepository.findAll();
@@ -98,11 +96,7 @@ public class GroupService {
         return group;
     }
 
-    public GroupDetailsDto getDetailsGroup(Long groupId) {
-        Groupx group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
-        return projectMapperService.groupDetailsDto(group);
-    }
+
 
     @PreAuthorize("hasAuthority('GROUPLEAD') or hasAnyAuthority('ADMIN')")
     public void removeMember(Long groupId, String memberId) {

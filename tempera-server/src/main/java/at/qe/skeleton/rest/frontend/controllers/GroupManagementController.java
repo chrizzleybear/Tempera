@@ -24,9 +24,10 @@ public class GroupManagementController {
   private final UserxService userxService;
   private GroupMapperService groupMapperService;
 
-  GroupManagementController(GroupService groupService, UserxService userxService) {
+  GroupManagementController(GroupService groupService, UserxService userxService, GroupMapperService groupMapperService) {
     this.groupService = groupService;
     this.userxService = userxService;
+    this.groupMapperService =  groupMapperService;
   }
 
   @GetMapping("/all")
@@ -55,7 +56,7 @@ public class GroupManagementController {
 
   @GetMapping("/load/{groupId}")
   public ResponseEntity<GroupDetailsDto> getGroup(@PathVariable String groupId) {
-    GroupDetailsDto group = groupService.getDetailsGroup(Long.parseLong(groupId));
+    GroupDetailsDto group = groupMapperService.getGroupDetailsDto(Long.parseLong(groupId));
     return ResponseEntity.ok(group);
   }
 
