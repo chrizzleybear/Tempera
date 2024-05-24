@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,7 +121,8 @@ public class TimetableDataService {
       throws CouldNotFindEntityException {
     InternalRecord oldInternalRecord = getInternalRecord(request.entryId());
     LocalDateTime oldEnd = oldInternalRecord.getEnd();
-    LocalDateTime newEnd = LocalDateTime.parse(request.splitTimestamp());
+    LocalDateTime newEnd =
+        LocalDateTime.parse(request.splitTimestamp(), DateTimeFormatter.ISO_DATE_TIME);
     oldInternalRecord.setEnd(newEnd);
     timeRecordService.saveInternalRecord(oldInternalRecord);
 

@@ -12,7 +12,7 @@
 
 
 export interface SimpleProjectDto { 
-    projectId?: number;
+    projectId?: string;
     name?: string;
     description?: string;
     manager?: string;

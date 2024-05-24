@@ -9,7 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Group } from './group';
+import { GroupxProject } from './groupxProject';
 import { Userx } from './userx';
 
 
@@ -18,7 +18,6 @@ export interface Project {
     name?: string;
     description?: string;
     manager?: Userx;
-    contributors?: Array<Userx>;
-    groups?: Array<Group>;
+    groupxProjects?: Set<GroupxProject>;
 }
 

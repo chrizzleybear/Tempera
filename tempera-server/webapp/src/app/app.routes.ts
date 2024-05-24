@@ -19,6 +19,7 @@ import { RoomsComponent } from './roomManagement/rooms/rooms.component';
 import { FloorPlanComponent } from './rooms/floor-plan/floor-plan.component';
 import { RoomDetailsComponent } from './roomManagement/room-details/room-details.component';
 import { TimetableComponent } from './timetable/timetable.component';
+import { AccumulatedTimeComponent } from './accumulated-time/accumulated-time.component';
 
 export const routes: Routes = [
   {
@@ -40,6 +41,8 @@ export const routes: Routes = [
           { path: 'myGroups', component: GroupsGroupleadComponent },
           { path: 'group/projects/:id', component: GroupProjectsComponent },
           { path: 'timetable', component: TimetableComponent },
+          { path: 'accumulated-time', component: AccumulatedTimeComponent },
+
         ],
       },
     ],

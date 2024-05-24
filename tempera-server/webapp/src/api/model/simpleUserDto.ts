@@ -11,10 +11,10 @@
  */
 
 
-export interface SimpleGroupDto { 
-    groupId?: string;
-    name?: string;
-    description?: string;
-    groupLead?: string;
+export interface SimpleUserDto { 
+    username?: string;
+    firstname?: string;
+    lastname?: string;
+    email?: string;
 }
 

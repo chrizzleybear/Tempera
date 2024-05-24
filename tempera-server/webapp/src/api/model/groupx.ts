@@ -9,12 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { GroupxProject } from './groupxProject';
+import { Userx } from './userx';
 
 
-export interface SimpleGroupDto { 
-    groupId?: string;
+export interface Groupx { 
+    id?: number;
     name?: string;
     description?: string;
-    groupLead?: string;
+    groupLead?: Userx;
+    members?: Array<Userx>;
+    groupxProjects?: Set<GroupxProject>;
 }
 

@@ -9,12 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { SimpleUserDto } from './simpleUserDto';
+import { SimpleProjectDto } from './simpleProjectDto';
+import { SimpleGroupDto } from './simpleGroupDto';
 
 
-export interface SimpleGroupDto { 
-    groupId?: string;
-    name?: string;
-    description?: string;
-    groupLead?: string;
+export interface ExtendedProjectDto { 
+    simpleProjectDto?: SimpleProjectDto;
+    connectedGroups?: Array<SimpleGroupDto>;
+    contributors?: Array<SimpleUserDto>;
 }
 
