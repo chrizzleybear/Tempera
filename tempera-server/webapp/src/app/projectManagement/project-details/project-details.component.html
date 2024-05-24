@@ -2,8 +2,8 @@
   <div class="details-card">
     <h1 class="text-xl font-bold mb-4 text-center">Project Details</h1>
   <div class="project-info">
-    <p><strong>Name:</strong> {{ project.name }}</p>
-    <p><strong>Description:</strong> {{ project.description }}</p>
+    <p><strong>Name:</strong> {{ project.simpleProjectDto.name }}</p>
+    <p><strong>Description:</strong> {{ project.simpleProjectDto.description }}</p>
   </div>
 
   <div class="manager-details">
@@ -17,7 +17,7 @@
   <div class="groups-section">
     <h3 class="text-xl font-bold mb-2 text-center">Groups</h3>
     <br>
-    <p-table [value]="project.groups!" [paginator]="true" [rows]="10" responsiveLayout="scroll" class="groups-table">
+    <p-table [value]="project.connectedGroups!" [paginator]="true" [rows]="10" responsiveLayout="scroll" class="groups-table">
       <ng-template pTemplate="header">
         <tr>
           <th scope="col">Group Name</th>
@@ -27,7 +27,7 @@
       <ng-template pTemplate="body" let-group>
         <tr>
           <td>{{ group.name }}</td>
-          <td>{{ group.groupLead.firstName }} {{ group.groupLead.lastName }}</td>
+          <td>{{ group.groupLead}}</td>
         </tr>
       </ng-template>
     </p-table>

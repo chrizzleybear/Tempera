@@ -84,7 +84,6 @@ public class AccessPointService {
     }
 
     TemperaStation station = queryStation.get();
-    station.setConnected(connectionStatus);
     return temperaStationService.save(station);
   }
 }

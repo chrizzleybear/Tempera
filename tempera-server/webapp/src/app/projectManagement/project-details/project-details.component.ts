@@ -20,7 +20,7 @@ import {CardModule} from "primeng/card";
 })
 export class ProjectDetailsComponent implements OnInit{
 
-  project: Project | undefined;
+  project: any | undefined;
 
   constructor(private projectService: ProjectService, private route: ActivatedRoute) {
 

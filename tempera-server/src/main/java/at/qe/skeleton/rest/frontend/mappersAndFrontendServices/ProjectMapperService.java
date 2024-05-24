@@ -55,7 +55,7 @@ public class ProjectMapperService {
     List<SimpleUserDto> contributors =
         projectService.findAllContributorsByProjectId(projectId);
 
-    return new ExtendedProjectDto(simpleProjectDto, connectedGroups, contributors);
+    return new ExtendedProjectDto(managerDetails, simpleProjectDto, connectedGroups, contributors);
     }
 
     public ExtendedGroupDto loadExtendedGroupDto(Long groupId)
