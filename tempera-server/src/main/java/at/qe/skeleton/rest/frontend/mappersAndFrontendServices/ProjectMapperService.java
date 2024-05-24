@@ -24,12 +24,14 @@ public class ProjectMapperService {
     private ProjectService projectService;
     private GroupService groupService;
     private UserxService userService;
+    private GroupMapperService groupMapperService;
 
 
-    public ProjectMapperService(ProjectService projectService) {
+    public ProjectMapperService(ProjectService projectService, GroupService groupService, UserxService userService, GroupMapperService groupMapperService) {
         this.projectService = projectService;
         this.groupService = groupService;
         this.userService = userService;
+        this.groupMapperService = groupMapperService;
     }
 
     @Transactional
@@ -50,7 +52,7 @@ public class ProjectMapperService {
     List<GroupxProject> groupxProjects =
         projectService.findAllGroupxProjectsByProjectId(projectId);
     List<SimpleGroupDto> connectedGroups =
-        groupxProjects.stream().map(this::groupDtoMapper).toList();
+        groupxProjects.stream().map(groupMapperService::groupDtoMapper).toList();
 
     List<SimpleUserDto> contributors =
         projectService.findAllContributorsByProjectId(projectId);
@@ -63,7 +65,7 @@ public class ProjectMapperService {
         Groupx group =
         groupService
             .getGroup(groupId);
-        SimpleGroupDto simpleGroupDto = groupDtoMapper(group);
+        SimpleGroupDto simpleGroupDto = groupMapperService.groupDtoMapper(group);
         List<GroupxProject> groupxProjects = projectService.getGroupxProjectsByGroupId(groupId);
         Set<GroupxProjectDto> groupxProjectsDto = groupxProjects.stream().map(this::groupxProjectDtoMapper).collect(Collectors.toSet());
         List<Userx> groupMembers = groupService.getMembers(groupId);
@@ -73,7 +75,7 @@ public class ProjectMapperService {
 
     public List<SimpleGroupDto> getAllSimpleGroups(String projectId){
         List<GroupxProject> groupxProjects = projectService.findAllGroupxProjectsByProjectId(Long.valueOf(projectId));
-        return groupxProjects.stream().map(this::groupDtoMapper).collect(toList());
+        return groupxProjects.stream().map(groupMapperService::groupDtoMapper).collect(toList());
     }
 
 
@@ -103,7 +105,7 @@ public class ProjectMapperService {
         SimpleUserDto managerDetails = userDtoMapper(project.getManager());
         List<SimpleUserDto> contributors = groupxProject.getContributors().stream().map(this::userDtoMapper).toList();
         return new GroupxProjectDto(
-                groupDtoMapper(groupxProject),
+                groupMapperService.groupDtoMapper(groupxProject),
                 projectDtoMapper(project),
                 managerDetails,
                 contributors
@@ -130,18 +132,7 @@ public class ProjectMapperService {
     }
 
 
-    private SimpleGroupDto groupDtoMapper(GroupxProject groupxProject) {
-        return groupDtoMapper(groupxProject.getGroup());
-    }
 
-    private SimpleGroupDto groupDtoMapper(Groupx groupx) {
-        return new SimpleGroupDto(
-                groupx.getId().toString(),
-                groupx.getName(),
-                groupx.getGroupLead().getUsername(),
-                groupx.getGroupLead().getUsername()
-        );
-    }
 
     private ProjectDetailsDto detailedProjectDtoMapper(Project project) {
         String projectId = project.getId().toString();
