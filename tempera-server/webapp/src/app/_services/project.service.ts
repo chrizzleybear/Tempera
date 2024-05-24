@@ -4,6 +4,7 @@ import {catchError, Observable, throwError} from 'rxjs';
 import {Project} from "../models/project.model";
 import {Group} from "../models/group.model";
 import {ContributorAssignmentDTO, GroupAssignmentDTO, ProjectCreateDTO, ProjectUpdateDTO} from "../models/projectDtos";
+import {User} from "../models/user.model";
 
 
 @Injectable({
@@ -59,5 +60,9 @@ export class ProjectService {
 
   getProjectsOfGroup(groupId: number): Observable<Project[]> {
     return this.http.get<Project[]>(`${this.API_URL}projectsOfGroup/${groupId}`);
+  }
+
+  getContributors(groupId: number, projectId: number | undefined): Observable<User[]> {
+    return this.http.get<User[]>(`${this.API_URL}contributors/${groupId}/${projectId}`);
   }
 }

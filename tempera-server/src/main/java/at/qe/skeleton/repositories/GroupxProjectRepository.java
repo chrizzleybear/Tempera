@@ -25,4 +25,5 @@ public interface GroupxProjectRepository extends AbstractRepository<GroupxProjec
 
     @Query("SELECT new at.qe.skeleton.rest.frontend.dtos.SimpleUserDto(u.username, u.firstName, u.lastName, u.email) From GroupxProject gxp JOIN gxp.contributors u where gxp.project.id = :projectId")
     public List<SimpleUserDto> findAllContributorsByProject_Id(Long projectId);
+
 }

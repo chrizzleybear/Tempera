@@ -35,7 +35,7 @@
   <app-group-create (createCompleted)="onCreateCompleted($event)"></app-group-create>
 </p-dialog>
 <div *ngIf="selectedGroup">
-<p-dialog header="Edit Group" [(visible)]="displayEditDialog" [modal]="true" [style]="{width: '50vw'}" [closable]="true">
-  <app-group-edit [group]="selectedGroup" (editComplete)="onEditCompleted($event)"></app-group-edit>
-</p-dialog>
+  <p-dialog header="Edit Group" [(visible)]="displayEditDialog" [modal]="true" [style]="{width: '50vw'}" [closable]="true">
+    <app-group-edit [group]="selectedGroup" (editComplete)="onEditCompleted($event)"></app-group-edit>
+  </p-dialog>
 </div>

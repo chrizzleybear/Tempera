@@ -89,8 +89,12 @@ public class ProjectMapperService {
         List<Project> projects = projectService.getProjectsByGroupId(groupId);
         return projects.stream().map(this::projectDtoMapper).collect(toList());
     }
-
-
+    public List<SimpleUserDto> findAllContributorsByGroupIdAndProjectId(Long groupId, Long projectId) {
+        GroupxProject groupxProject = projectService.findByGroupAndProject(groupId, projectId);
+        GroupxProjectDto groupxProjectdto = groupxProjectDtoMapper(groupxProject);
+        List<SimpleUserDto> simpleUserDtos =  groupxProjectdto.contributors();
+        return simpleUserDtos;
+    }
   private SimpleProjectDto projectDtoMapper(Project project) {
         return new SimpleProjectDto(
                 project.getId().toString(),
