@@ -65,7 +65,7 @@ public class GroupxProject implements Persistable<GroupxProjectId>{
 
     public void removeContributor(Userx contributor) {
         contributor.getGroupxProjects().remove(this);
-        //todo: removePolicyÜberlegen
+        contributors.remove(contributor);
     }
     public void removeInternalRecords(){
         internalRecords.forEach(internalRecord -> internalRecord.setGroupxProject(null));

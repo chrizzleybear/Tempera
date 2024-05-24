@@ -168,7 +168,6 @@ public class UserxService implements UserDetailsService {
       List <Groupx> groupsAsMember = groupRepository.findAllByMembersContains(user);
       for (var group : groupsAsMember) {
         user.removeGroup(group);
-
       }
       externalRecordRepository.deleteAllByUser(user);
       user.removeTemperaStation();
