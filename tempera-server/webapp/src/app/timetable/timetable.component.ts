@@ -36,6 +36,7 @@ import { CardModule } from 'primeng/card';
 import { DateTime } from 'luxon';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TotalTimeHelper } from '../_helpers/total-time-helper';
 
 interface InternalTimetableEntryDto extends TimetableEntryDto {
   startTime: Date;
@@ -242,38 +243,9 @@ export class TimetableComponent implements OnInit {
   Calculates the total work time with the current active filters
    */
   calculateTotalTime() {
-    let totalTimeTemp: number = 0;
-
-    const tempEntries = this.getFilteredEntries()
-
-    tempEntries.forEach(entry => {
-      totalTimeTemp += entry.endTime.getTime() - entry.startTime.getTime();
-    });
-    const hours = Math.floor(totalTimeTemp / 3600000);
-
-    const remainingTime = totalTimeTemp % 3600000;
-
-    const minutes = Math.floor(remainingTime / 60000);
-    this.totalTime = { hours: hours, minutes: minutes };
+    const filteredEntries = TotalTimeHelper.getFilteredEntries<InternalTimetableEntryDto>(this.table);
+    this.totalTime = TotalTimeHelper.calculate(filteredEntries);
 
     this.cd.detectChanges();
-  }
-
-  /*
-  * Returns the entries that are currently displayed in the table, depending on the active filters.
-   */
-  getFilteredEntries(): InternalTimetableEntryDto[] {
-    const filters = this.table?.filters as any;
-    if (filters === undefined) {
-      return [];
-    }
-
-    const hasActiveFilter = Object.keys(filters).some(key => filters[key]?.value);
-
-    if (hasActiveFilter) {
-      return this.table?.filteredValue ?? [] as InternalTimetableEntryDto[];
-    } else {
-      return  this.table?.value ?? [] as InternalTimetableEntryDto[];
-    }
   }
 }

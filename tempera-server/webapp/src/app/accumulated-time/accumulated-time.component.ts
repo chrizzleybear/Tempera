@@ -8,6 +8,7 @@ import {
 import { Table, TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
 import { CardModule } from 'primeng/card';
+import { TotalTimeHelper } from '../_helpers/total-time-helper';
 
 interface InternalAccumulatedTimeDto extends AccumulatedTimeDto {
   startTime: Date;
@@ -67,26 +68,8 @@ export class AccumulatedTimeComponent implements OnInit {
   Calculates the total work time with the current active filters
    */
   calculateTotalTime() {
-    let totalTimeTemp: number = 0;
-    let tempEntries: InternalAccumulatedTimeDto[];
-    const filters = this.table?.filters as any;
+    const filteredEntries = TotalTimeHelper.getFilteredEntries<InternalAccumulatedTimeDto>(this.table);
 
-    const hasActiveFilter = Object.keys(filters).some(key => filters[key]?.value);
-
-    if (this.table.filteredValue != null && hasActiveFilter) {
-      tempEntries = this.table?.filteredValue ?? [] as InternalAccumulatedTimeDto[];
-    } else {
-      tempEntries = this.table?.value ?? [] as InternalAccumulatedTimeDto[];
-    }
-
-    tempEntries.forEach(entry => {
-      totalTimeTemp += entry.endTime.getTime() - entry.startTime.getTime();
-    });
-    const hours = Math.floor(totalTimeTemp / 3600000);
-
-    const remainingTime = totalTimeTemp % 3600000;
-
-    const minutes = Math.floor(remainingTime / 60000);
-    this.totalTime = { hours: hours, minutes: minutes };
+    this.totalTime = TotalTimeHelper.calculate(filteredEntries);
   }
 }
