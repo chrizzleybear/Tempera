@@ -104,14 +104,14 @@
 </ng-template>
 
 <!-- Split time record dialog -->
-<p-dialog [(visible)]="this.splitVisible" (onHide)="splitForm.reset()" [modal]="true" position="bottomright">
+<p-dialog *ngIf="tableEntries" [(visible)]="this.splitVisible" (onHide)="splitForm.reset()" [modal]="true" position="bottomright">
   <form [formGroup]="splitForm" (ngSubmit)="this.splitForm.valid && this.onSplitFormSubmit()">
     <div class="text-lg pb-2"><strong>Split time record at:</strong></div>
     <p-calendar formControlName="time" class="pr-2"
                 [showTime]="true"
                 hourFormat="24"
-                [minDate]="(tableEntries?.[selectedRowIndex]?.startTime!)"
-                [maxDate]="(tableEntries?.[selectedRowIndex]?.endTime!)"
+                [minDate]="(getFilteredEntries()?.[selectedRowIndex]?.startTime!)"
+                [maxDate]="(getFilteredEntries()?.[selectedRowIndex]?.endTime!)"
                 appendTo="body"
     ></p-calendar>
     <p-button label="Confirm" type="submit" [disabled]="!this.splitForm.valid"></p-button>
