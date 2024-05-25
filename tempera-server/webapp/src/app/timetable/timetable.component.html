@@ -128,8 +128,8 @@
           (onHide)="this.descriptionForm.reset()">
   <form [formGroup]="descriptionForm" class="flex flex-col"
         (ngSubmit)="this.descriptionForm.value && this.onDescriptionFormSubmit()">
-    <textarea class="w-[50vw]" type="text" pInputTextarea formControlName="description"></textarea>
-    <p-button label="Save" type="submit" [disabled]="!this.descriptionForm.dirty" class="pt-2"></p-button>
+    <textarea class="w-[50vw] h-[10vw]" type="text" pInputTextarea formControlName="description"></textarea>
+    <p-button label="Save" type="submit" [disabled]="!this.descriptionForm.dirty" class="pt-4"></p-button>
   </form>
 </p-dialog>
 
