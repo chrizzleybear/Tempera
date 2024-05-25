@@ -14,7 +14,10 @@
   <p-message severity="error" text="Email is required."></p-message>
 </div>
 <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-  <p>Username: {{ username }}</p>
+  <div class="p-field">
+    <label>Username: {{ username }}</label>
+  </div>
+  <br>
   <div class="p-field">
     <label for="firstName">First Name: </label>
     <input id="firstName" type="text" pInputText formControlName="firstName" placeholder="First name">
