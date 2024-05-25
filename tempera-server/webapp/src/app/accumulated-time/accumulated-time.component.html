@@ -13,15 +13,15 @@
       <th id="endTimeFilter">
         <p-columnFilter type="date" field="endTime" placeholder="Search"></p-columnFilter>
       <th id="groupFilter">
-        <p-columnFilter field="groupWithStringId.stringId" [showMenu]="true" [showClearButton]="false">
+        <p-columnFilter field="groupId" [showMenu]="true" [showClearButton]="false">
           <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-            <p-dropdown [options]="availableGroups" [showClear]="true" (onChange)="filter($event.value?.stringId)"
+            <p-dropdown [options]="availableGroups" [showClear]="true" (onChange)="filter($event.value?.id)"
                         optionLabel="name" appendTo="body" placeholder="Select one"></p-dropdown>
           </ng-template>
         </p-columnFilter>
       </th>
       <th id="projectFilter">
-        <p-columnFilter field="project.projectId" [showMenu]="true" [showClearButton]="false">
+        <p-columnFilter field="projectId" [showMenu]="true" [showClearButton]="false">
           <ng-template pTemplate="filter" let-value let-filter="filterCallback">
             <p-dropdown [options]="availableProjects" [showClear]="true" (onChange)="filter($event.value?.projectId)"
                         optionLabel="name" appendTo="body" placeholder="Select one"></p-dropdown>

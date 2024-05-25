@@ -268,7 +268,13 @@ export class TimetableComponent implements OnInit {
    */
   getFilteredEntries(): InternalTimetableEntryDto[] {
     const filters = this.table?.filters as any;
-    if (filters?.['startTime']?.value || filters?.['endTime']?.value || filters?.['state']?.value || filters?.['assignedProject.projectId']?.value || filters?.['description']?.value) {
+    if (filters === undefined) {
+      return [];
+    }
+
+    const hasActiveFilter = Object.keys(filters).some(key => filters[key]?.value);
+
+    if (hasActiveFilter) {
       return this.table?.filteredValue ?? [] as InternalTimetableEntryDto[];
     } else {
       return  this.table?.value ?? [] as InternalTimetableEntryDto[];

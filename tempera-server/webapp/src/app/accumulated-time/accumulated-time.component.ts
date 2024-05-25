@@ -12,11 +12,6 @@ import { CardModule } from 'primeng/card';
 interface InternalAccumulatedTimeDto extends AccumulatedTimeDto {
   startTime: Date;
   endTime: Date;
-  groupWithStringId: GroupWithStringId;
-}
-
-interface GroupWithStringId extends SimpleGroupDto {
-  stringId: string;
 }
 
 @Component({
@@ -33,7 +28,7 @@ interface GroupWithStringId extends SimpleGroupDto {
 export class AccumulatedTimeComponent implements OnInit {
   public accumulatedTimes: InternalAccumulatedTimeDto[] = [];
   public availableProjects: SimpleProjectDto[] = [];
-  public availableGroups: GroupWithStringId[] = [];
+  public availableGroups: SimpleGroupDto[] = [];
 
   public totalTime: { hours: number, minutes: number } = { hours: 0, minutes: 0 };
 
@@ -54,19 +49,10 @@ export class AccumulatedTimeComponent implements OnInit {
               ...entry,
               startTime: new Date(entry.startTimestamp),
               endTime: new Date(entry.endTimestamp),
-              groupWithStringId: {
-                ...entry.group,
-                stringId: entry.group?.groupId?.toString() ?? '',
-              },
             }),
           ) ?? [];
           this.availableProjects = response.availableProjects ?? [];
-          this.availableGroups = response.availableGroups?.map(
-            group => ({
-              ...group,
-              stringId: group?.groupId?.toString() ?? '',
-            }),
-          ) ?? [];
+          this.availableGroups = response.availableGroups ?? [];
         },
         error: error => {
           console.error('Error while fetching accumulated time data', error);
@@ -85,10 +71,12 @@ export class AccumulatedTimeComponent implements OnInit {
     let tempEntries: InternalAccumulatedTimeDto[];
     const filters = this.table?.filters as any;
 
-    if (filters['startTime']?.value || filters['endTime']?.value || filters['group']?.value || filters['project.id']?.value) {
-      tempEntries = this.table.filteredValue as InternalAccumulatedTimeDto[];
+    const hasActiveFilter = Object.keys(filters).some(key => filters[key]?.value);
+
+    if (this.table.filteredValue != null && hasActiveFilter) {
+      tempEntries = this.table?.filteredValue ?? [] as InternalAccumulatedTimeDto[];
     } else {
-      tempEntries = this.table.value as InternalAccumulatedTimeDto[];
+      tempEntries = this.table?.value ?? [] as InternalAccumulatedTimeDto[];
     }
 
     tempEntries.forEach(entry => {
