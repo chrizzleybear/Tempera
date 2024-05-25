@@ -81,7 +81,7 @@ export class TimetableComponent implements OnInit {
 
   public stateOptions: StateEnum[] = (Object.values(StateEnum));
 
-  public selectedRowIndex: number = 0;
+  public selectedEntry?: InternalTimetableEntryDto;
 
   protected readonly DisplayHelper = DisplayHelper;
 
@@ -109,17 +109,15 @@ export class TimetableComponent implements OnInit {
 
   /*
     * Validates that the time is between the start and end time of the time entry.
-    * Time entry is selected by the selectedRowIndex.
+    * Time entry is selected by the selectedEntry.
    */
   inPermittedTimeRangeValidator: ValidatorFn = (control: AbstractControl<Date | undefined>): ValidationErrors | null => {
     if (!control.value) {
       return null;
     }
 
-    const entries = this.getFilteredEntries();
-
-    const minStartTime = entries[this.selectedRowIndex].startTime;
-    const maxEndTime = entries[this.selectedRowIndex].endTime;
+    const minStartTime = this.selectedEntry!.startTime;
+    const maxEndTime = this.selectedEntry!.endTime;
 
     if (control.value > minStartTime && control.value < maxEndTime) {
       return null;
@@ -181,15 +179,14 @@ export class TimetableComponent implements OnInit {
     });
   }
 
-  onOpenSplitForm(rowIndex: number) {
-    this.selectedRowIndex = rowIndex;
-    this.splitForm.controls.time.setValue(this.getFilteredEntries()[rowIndex].startTime);
+  onOpenSplitForm(entry: InternalTimetableEntryDto) {
+    this.selectedEntry = entry;
+    this.splitForm.controls.time.setValue(entry.startTime);
     this.splitVisible = true;
   }
 
   onSplitFormSubmit() {
-    const entries = this.getFilteredEntries();
-    const timeEntryId = entries[this.selectedRowIndex].id;
+    const timeEntryId = this.selectedEntry!.id;
 
     const time = DateTime.fromJSDate(this.splitForm.controls.time.value!).toString();
     this.timetableControllerService.splitTimeRecord({ entryId: timeEntryId, splitTimestamp: time }).subscribe(
@@ -213,15 +210,14 @@ export class TimetableComponent implements OnInit {
     );
   }
 
-  onEditDescription(rowIndex: number) {
+  onEditDescription(entry: InternalTimetableEntryDto) {
     this.editDescriptionVisible = true;
-    this.selectedRowIndex = rowIndex;
-    this.descriptionForm.controls.description.setValue(this.getFilteredEntries()[rowIndex].description);
+    this.selectedEntry = entry;
+    this.descriptionForm.controls.description.setValue(entry.description);
   }
 
   onDescriptionFormSubmit() {
-    const entries = this.getFilteredEntries();
-    const timeEntryId = entries[this.selectedRowIndex].id;
+    const timeEntryId = this.selectedEntry!.id;
     const description = this.descriptionForm.controls.description.value!;
     this.timetableControllerService.updateDescription({ entryId: timeEntryId, description }).subscribe(
       {

@@ -78,13 +78,13 @@
           <p-tag [value]="DisplayHelper.showState | wrapFn: timeEntry.state"
                  [severity]="DisplayHelper.getStateSeverity | wrapFn: timeEntry.state"></p-tag>
         </td>
-        <td (click)="onEditDescription(rowIndex)" class="cursor-pointer"
-            (keydown)="onEditDescription(rowIndex)"
+        <td (click)="onEditDescription(timeEntry)" class="cursor-pointer"
+            (keydown)="onEditDescription(timeEntry)"
             [tabindex]="rowIndex"
         >{{ timeEntry?.description ?? 'Enter a description' }}
         </td>
         <td>
-          <p-button (onClick)="this.onOpenSplitForm(rowIndex);">
+          <p-button (onClick)="this.onOpenSplitForm(timeEntry);">
             <i class="pi pi-pencil"></i>
           </p-button>
         </td>
@@ -104,14 +104,14 @@
 </ng-template>
 
 <!-- Split time record dialog -->
-<p-dialog *ngIf="tableEntries" [(visible)]="this.splitVisible" (onHide)="splitForm.reset()" [modal]="true" position="bottomright">
+<p-dialog *ngIf="this.selectedEntry" [(visible)]="this.splitVisible" (onHide)="splitForm.reset()" [modal]="true" position="bottomright">
   <form [formGroup]="splitForm" (ngSubmit)="this.splitForm.valid && this.onSplitFormSubmit()">
     <div class="text-lg pb-2"><strong>Split time record at:</strong></div>
     <p-calendar formControlName="time" class="pr-2"
                 [showTime]="true"
                 hourFormat="24"
-                [minDate]="(getFilteredEntries()?.[selectedRowIndex]?.startTime!)"
-                [maxDate]="(getFilteredEntries()?.[selectedRowIndex]?.endTime!)"
+                [minDate]="this.selectedEntry.startTime"
+                [maxDate]="this.selectedEntry.endTime"
                 appendTo="body"
     ></p-calendar>
     <p-button label="Confirm" type="submit" [disabled]="!this.splitForm.valid"></p-button>
