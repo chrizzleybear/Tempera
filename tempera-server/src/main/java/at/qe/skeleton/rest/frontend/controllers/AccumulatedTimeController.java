@@ -48,24 +48,5 @@ public class AccumulatedTimeController {
       return ResponseEntity.ok(accumulatedTimeMapper.getGroupLeadTimeData(username));
     }
     return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-
-    //    var response =
-    //            new AccumulatedTimeResponse(
-    //                    List.of(
-    //                            new AccumulatedTimeDto(
-    //                                     "projectId",
-    //                                     "groupId",
-    //                                    State.DEEPWORK,
-    //                                    "2024-01-01T00:00:00",
-    //                                    "2024-01-01T05:00:00"
-    //
-    //                    ),
-    //                    List.of(
-    //                            new SimpleProjectDto("1L", "Project 1", null, "manager1"),
-    //                            new SimpleProjectDto("2L", "Project 2", null, "manager1")),
-    //                    List.of(
-    //                            new SimpleGroupDto("1L", "Group 1", null, "grouplead1"),
-    //                            new SimpleGroupDto("2L", "Group 2", null, "grouplead1")));
-    //    return ResponseEntity.ok(response);
   }
 }
