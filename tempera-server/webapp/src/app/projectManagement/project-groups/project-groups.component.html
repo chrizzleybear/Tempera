@@ -35,7 +35,7 @@
       <tr>
         <th scope="col" pSortableColumn="name">Group Name <p-sortIcon field="name"></p-sortIcon></th>
         <th scope="col" pSortableColumn="description">Description <p-sortIcon field="description"></p-sortIcon></th>
-        <th scope="col" pSortableColumn="groupLeadId">Group Lead ID <p-sortIcon field="groupLeadId"></p-sortIcon></th>
+        <th scope="col" pSortableColumn="groupLeadId">Group Lead<p-sortIcon field="groupLeadId"></p-sortIcon></th>
         <th></th>
         <th></th>
       </tr>
@@ -44,7 +44,7 @@
       <tr>
         <td>{{ group.name }}</td>
         <td>{{ group.description }}</td>
-        <td>{{ group.groupLead.firstName }} {{group.groupLead.lastName}}</td>
+        <td>{{ group.groupLead }}</td>
         <td>
           <button type="button" pButton label="Add" icon="pi pi-plus"
                   (click)="addGroupToProject(group.id)" class="mr-2"></button>

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -255,4 +256,9 @@ public class ProjectService {
   public List<GroupxProject> getGroupxProjectsByGroupId(Long groupId) {
     return groupxProjectRepository.findAllByGroup_Id(groupId);
   }
+
+  public GroupxProject findByGroupAndProject(Long groupId, Long projectId) {
+    GroupxProject groupxProject = groupxProjectRepository.findByGroup_IdAndProject_Id(groupId, projectId).orElseThrow();
+    return groupxProject;
+    }
 }

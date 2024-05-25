@@ -67,14 +67,12 @@ export class GroupProjectsComponent implements OnInit {
     });
   }
 
-  private loadProject(groupId: number) {
-    this.projectService.getProjectById(groupId).subscribe({
-      next: (projects) => {
-        console.log('Loaded go:', projects);
-        this.contributors = projects.contributors!;
-        this.availableProjectContributors = this.members.filter(member => !this.contributors!.some(contributor => contributor.username === member.username));
+  private loadProjectContributors(groupId: number) {
+    this.projectService.getContributors(groupId, this.selectedProject?.projectId).subscribe({
+      next: (contributors) => {
+        this.contributors = contributors;
+        this.availableProjectContributors = this.members.filter(member => contributors.some(contributor => contributor.username === member.username));
         this.filteredMembers = [...this.availableProjectContributors];
-        console.log('Contributors:', this.contributors);
       },
       error: (error) => {
         console.error('Error loading projects:', error);
@@ -104,7 +102,7 @@ export class GroupProjectsComponent implements OnInit {
   addContributorsToProjectDialog(project: Project) {
     this.displayAddMemberDialog = true;
     this.selectedProject = project;
-    this.loadProject(project.projectId);
+    this.loadProjectContributors(project.projectId);
   }
 
   private addContributorToProject(memberId: string) {
@@ -149,7 +147,7 @@ export class GroupProjectsComponent implements OnInit {
   deleteContributorDialog(project: Project) {
     this.displayDeleteMemberDialog = true;
     this.selectedProject = project;
-    this.loadProject(project.projectId);
+    this.loadProjectContributors(project.projectId);
     this.availableProjectContributors = project.contributors!;
   }
 
