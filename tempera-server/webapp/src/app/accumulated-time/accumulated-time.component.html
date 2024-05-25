@@ -31,7 +31,9 @@
     </tr>
   </ng-template>
 </p-table>
-
-<p-card styleClass="text-lg text-center">
+<div class="card flex justify-center my-4">
+  <p-chart style="width: 30%" type="pie" [data]="data" [options]="options" />
+</div>
+<div class="card text-lg text-center">
   {{ "The total worked time with the current filters is " + this.totalTime.hours + " hours and " + this.totalTime.minutes + " minutes." }}
-</p-card>
+</div>

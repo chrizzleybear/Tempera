@@ -9,6 +9,7 @@ import { Table, TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
 import { CardModule } from 'primeng/card';
 import { TotalTimeHelper } from '../_helpers/total-time-helper';
+import { ChartModule} from 'primeng/chart';
 
 interface InternalAccumulatedTimeDto extends AccumulatedTimeDto {
   startTime: Date;
@@ -22,6 +23,7 @@ interface InternalAccumulatedTimeDto extends AccumulatedTimeDto {
     TableModule,
     DropdownModule,
     CardModule,
+    ChartModule,
   ],
   templateUrl: './accumulated-time.component.html',
   styleUrl: './accumulated-time.component.css',
@@ -38,6 +40,10 @@ export class AccumulatedTimeComponent implements OnInit {
   * This reference to the PrimeNG table is used because its entries also reflect the correct order if the table is sorted and the available entries when filtered.
   */
   @ViewChild('table') table!: Table;
+
+  data: any;
+
+  options: any;
 
   constructor(private accumulatedTimeControllerService: AccumulatedTimeControllerService) {
   }
@@ -60,6 +66,31 @@ export class AccumulatedTimeComponent implements OnInit {
         },
       },
     );
+
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--text-color');
+
+    this.data = {
+      labels: ['A', 'B', 'C'],
+      datasets: [
+        {
+          data: [540, 325, 702],
+          backgroundColor: [documentStyle.getPropertyValue('--blue-500'), documentStyle.getPropertyValue('--yellow-500'), documentStyle.getPropertyValue('--green-500')],
+          hoverBackgroundColor: [documentStyle.getPropertyValue('--blue-400'), documentStyle.getPropertyValue('--yellow-400'), documentStyle.getPropertyValue('--green-400')]
+        }
+      ]
+    };
+
+    this.options = {
+      plugins: {
+        legend: {
+          labels: {
+            usePointStyle: true,
+            color: textColor
+          }
+        }
+      }
+    };
   }
 
   // todo: change this logic so it can be used for a graph
