@@ -25,9 +25,9 @@ public class AccumulatedTimeMapper {
                 .map(this::mapToAccumulatedTimeDto)
                 .toList();
 
-        //all available Projects for this manager
+        //all available Projects for this manager -> all Projects where this manager is assigned
 
-        //all available Groups for this manager
+        //all available Groups for this manager -> all groups that are assigned to the projects where this manager is assigned
 
 
         return null;
