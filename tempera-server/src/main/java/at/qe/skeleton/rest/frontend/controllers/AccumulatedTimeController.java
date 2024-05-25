@@ -35,6 +35,7 @@ public class AccumulatedTimeController {
     this.accumulatedTimeMapper = accumulatedTimeMapper;
   }
 
+
   @GetMapping("/data")
   @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('GROUPLEAD')")
   public ResponseEntity<AccumulatedTimeResponse> getAccumulatedTimeData() {
