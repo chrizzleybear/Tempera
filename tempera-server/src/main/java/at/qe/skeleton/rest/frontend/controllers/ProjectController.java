@@ -136,4 +136,11 @@ public class ProjectController {
     List<SimpleProjectDto> projects = projectMapperService.getSimpleProjectsByGroupId(Long.parseLong(groupId));
     return ResponseEntity.ok(projects);
   }
+
+    @GetMapping("/contributors/{groupId}/{projectId}")
+    public ResponseEntity<List<SimpleUserDto>> getContributors(@PathVariable String groupId, @PathVariable String projectId) {
+      List<SimpleUserDto> contributors = projectMapperService.findAllContributorsByGroupIdAndProjectId(Long.parseLong(groupId), Long.parseLong(projectId));
+      return ResponseEntity.ok(contributors);
+}
+
 }
