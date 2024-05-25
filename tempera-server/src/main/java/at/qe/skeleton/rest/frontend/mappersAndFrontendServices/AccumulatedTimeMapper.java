@@ -19,14 +19,25 @@ public class AccumulatedTimeMapper {
 
   ProjectService projectService;
   ProjectMapperService projectMapper;
-
   GroupMapperService groupMapperService;
   GroupService groupService;
 
+  public AccumulatedTimeMapper(
+      ProjectService projectService,
+      ProjectMapperService projectMapper,
+      GroupMapperService groupMapperService,
+      GroupService groupService) {
+    this.projectService = projectService;
+    this.projectMapper = projectMapper;
+    this.groupMapperService = groupMapperService;
+    this.groupService = groupService;
+  }
+
   public AccumulatedTimeResponse getManagerTimeData(String username) {
       // all GroupxProjects for this manager -> all GroupxProjects that feature a project where this manager is assigned
+    // AND where the end is not null (meaning not currently still running
     List<GroupxProjectStateTimeDto> groupxProjectStateTimeDtos =
-        projectService.gxpStateTimeDtosByManager(username);
+        projectService.gxpStateTimeDtosByManager(username).stream().filter(dto -> dto.end() != null).toList();
     List<AccumulatedTimeDto> accumulatedTimeDtos =
         groupxProjectStateTimeDtos.stream().map(this::mapToAccumulatedTimeDto).toList();
     // all available Projects for this manager -> all Projects where this manager is assigned
@@ -45,9 +56,9 @@ public class AccumulatedTimeMapper {
 
   public AccumulatedTimeResponse getGroupLeadTimeData(String username) {
     // all available GroupxProjects for this group lead -> all GroupxProjects that have a group that
-    // this group lead is assigned
+    // this group lead is assigned AND where the end is not null (meaning not currently still running)
     List<GroupxProjectStateTimeDto> groupxProjectStateTimeDtos =
-        projectService.gxpStateTimeDtosByGroupLead(username);
+        projectService.gxpStateTimeDtosByGroupLead(username).stream().filter(dto -> dto.end() != null).toList();
     List<AccumulatedTimeDto> accumulatedTimeDtos =
         groupxProjectStateTimeDtos.stream().map(this::mapToAccumulatedTimeDto).toList();
     // all available Projects for this group lead -> all Projects that are assigned to groups that

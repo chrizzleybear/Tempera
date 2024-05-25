@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,8 @@ import java.util.List;
 public class AccumulatedTimeController {
   private static final Logger logger = LoggerFactory.getLogger(AccumulatedTimeController.class);
   private final AccumulatedTimeMapper accumulatedTimeMapper;
+  private static final SimpleGrantedAuthority GROUPLEAD = new SimpleGrantedAuthority("GROUPLEAD");
+  private static final SimpleGrantedAuthority MANAGER = new SimpleGrantedAuthority("MANAGER");
 
   public AccumulatedTimeController(AccumulatedTimeMapper accumulatedTimeMapper) {
     this.accumulatedTimeMapper = accumulatedTimeMapper;
@@ -39,11 +42,11 @@ public class AccumulatedTimeController {
     //check for permissions
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     String username = auth.getName();
-    if (( auth.getAuthorities().contains(UserxRole.MANAGER))){
+    if (( auth.getAuthorities().contains(MANAGER))){
       logger.info("detected Authorization: Manager");
       return ResponseEntity.ok(accumulatedTimeMapper.getManagerTimeData(username));
     }
-    if ((auth.getAuthorities().contains(UserxRole.GROUPLEAD) )) {
+    if ((auth.getAuthorities().contains(GROUPLEAD) )) {
         logger.info("detected Authorization: GroupLead");
       return ResponseEntity.ok(accumulatedTimeMapper.getGroupLeadTimeData(username));
     }
