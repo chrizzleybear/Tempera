@@ -68,7 +68,7 @@
         <td>{{ timeEntry.startTime | date: 'ccc, MMM dd, y, HH:mm' }}</td>
         <td>{{ timeEntry.endTime | date: 'ccc, MMM dd, y, HH:mm' }}</td>
         <td>
-          <p-dropdown [options]="availableProjects" [(ngModel)]="timeEntry.assignedProject"
+          <p-dropdown *ngIf="timeEntry.state !== StateEnum.OutOfOffice" [options]="availableProjects" [(ngModel)]="timeEntry.assignedProject"
                       (onChange)="updateProject($event.value, timeEntry.id)"
                       optionLabel="name"
                       placeholder="Select project"
@@ -78,10 +78,12 @@
           <p-tag [value]="DisplayHelper.showState | wrapFn: timeEntry.state"
                  [severity]="DisplayHelper.getStateSeverity | wrapFn: timeEntry.state"></p-tag>
         </td>
-        <td (click)="onEditDescription(timeEntry)" class="cursor-pointer"
-            (keydown)="onEditDescription(timeEntry)"
-            [tabindex]="rowIndex"
-        >{{ timeEntry?.description ?? 'Enter a description' }}
+        <td>
+          <div *ngIf="timeEntry.state !== StateEnum.OutOfOffice" (click)="onEditDescription(timeEntry)" class="cursor-pointer"
+               (keydown)="onEditDescription(timeEntry)"
+               [tabindex]="rowIndex">
+            {{ timeEntry?.description ?? 'Enter a description' }}
+          </div>
         </td>
         <td>
           <p-button (onClick)="this.onOpenSplitForm(timeEntry);">

@@ -93,6 +93,7 @@ export class TimetableComponent implements OnInit {
   public splitVisible: boolean = false;
 
   protected readonly Date = Date;
+  protected readonly StateEnum = StateEnum;
 
 
   /*
