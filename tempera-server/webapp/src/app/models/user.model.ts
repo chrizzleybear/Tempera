@@ -28,3 +28,10 @@ export interface DropdownOptionUser {
   label: string;
   value: User;
 }
+
+export interface SimpleUserDto {
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}

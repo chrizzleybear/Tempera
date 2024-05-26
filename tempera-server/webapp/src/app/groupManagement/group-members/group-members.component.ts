@@ -33,6 +33,7 @@ export class GroupMembersComponent implements OnInit{
   users: User[] = [];
   displayAddDialog: boolean = false;
   groupId: number | null | undefined;
+  groupName: string | null | undefined;
   filteredMembers: User[] = [];
   filteredUsers: User[] = [];
   selectedUsers: User[] = [];
@@ -43,6 +44,7 @@ export class GroupMembersComponent implements OnInit{
   }
   ngOnInit(): void {
     this.groupId = Number(this.route.snapshot.paramMap.get('id'));
+    this.groupName = this.route.snapshot.paramMap.get('name');
     this.loadMembersAndUsers(this.groupId!);
   }
 

@@ -29,15 +29,15 @@ public class TimeRecordService {
   private final Logger logger = Logger.getLogger("TimeRecordServiceLogger");
   private final InternalRecordRepository internalRecordRepository;
   private final ExternalRecordRepository externalRecordRepository;
-  private final UserxRepository userxRepository;
+  private final UserxService userService;
 
   public TimeRecordService(
       ExternalRecordRepository externalRecordRepository,
       InternalRecordRepository internalRecordRepository,
-      UserxRepository userxRepository) {
+      UserxService userService) {
     this.externalRecordRepository = externalRecordRepository;
     this.internalRecordRepository = internalRecordRepository;
-    this.userxRepository = userxRepository;
+    this.userService = userService;
   }
 
   public ExternalRecord findSuperiorTimeRecordByUserAndStart(Userx user, LocalDateTime start)
@@ -69,6 +69,8 @@ public class TimeRecordService {
     }
     Userx user = newExternalRecord.getUser();
     finalizeOldTimeRecord(user, newExternalRecord);
+    user.setState(newExternalRecord.getState());
+    userService.saveUser(user);
     return saveNewTimeRecord(newExternalRecord, user);
   }
 
@@ -110,7 +112,6 @@ public class TimeRecordService {
       return;
     }
     ExternalRecord oldExternalRecord = oldExternalRecordOptional.get();
-    logger.info("found old ExternalRecord %s".formatted(oldExternalRecord));
 
     ExternalRecordId incomingId = newExternalRecord.getId();
     if (oldExternalRecord.getId().equals(incomingId)) {
@@ -138,9 +139,7 @@ public class TimeRecordService {
 
     // persisting the Entities
     internalRecordRepository.save(oldInternalRecord);
-    logger.info("saved %s".formatted(oldInternalRecord.toString()));
     externalRecordRepository.save(oldExternalRecord);
-    logger.info("saved %s".formatted(oldExternalRecord.toString()));
   }
 
   public void delete(ExternalRecord externalRecord) {
