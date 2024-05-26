@@ -52,6 +52,7 @@ export const routes: Routes = [
           { path: 'accessPoint/:id', component: AccessPointDetailsComponent},
           { path: 'temperaStations', component: TemperaStationsComponent},
           { path: 'temperaStation/:id', component: TemperaStationDetailsComponent},
+          { path: 'accumulated-time', component: AccumulatedTimeComponent}
         ],
       },
     ],

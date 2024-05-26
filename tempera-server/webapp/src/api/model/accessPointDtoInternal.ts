@@ -11,10 +11,9 @@
  */
 
 
-export interface SimpleUserDto { 
-    username?: string;
-    firstName?: string;
-    lastName?: string;
-    email?: string;
+export interface AccessPointDtoInternal { 
+    id?: string;
+    access_point_allowed?: boolean;
+    stations_allowed?: Array<string>;
 }
 

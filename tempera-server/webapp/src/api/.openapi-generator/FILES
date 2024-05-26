@@ -18,6 +18,7 @@ encoder.ts
 git_push.sh
 index.ts
 model/accessPoint.ts
+model/accessPointAllowedDto.ts
 model/accessPointDto.ts
 model/accumulatedTimeDto.ts
 model/accumulatedTimeResponse.ts
@@ -30,9 +31,11 @@ model/extendedProjectDto.ts
 model/externalRecordDto.ts
 model/getTimetableDataResponse.ts
 model/groupAssignmentDto.ts
+model/groupDetailsDto.ts
 model/groupx.ts
 model/groupxProject.ts
 model/groupxProjectDto.ts
+model/groupxProjectId.ts
 model/loginRequest.ts
 model/measurement.ts
 model/measurementDto.ts
@@ -42,6 +45,7 @@ model/messageResponse.ts
 model/models.ts
 model/modification.ts
 model/project.ts
+model/projectDetailsDto.ts
 model/room.ts
 model/scanOrderDto.ts
 model/sensor.ts
@@ -53,7 +57,9 @@ model/simpleUserDto.ts
 model/splitTimeRecordRequest.ts
 model/temperaStation.ts
 model/threshold.ts
+model/thresholdDto.ts
 model/thresholdTip.ts
+model/thresholdUpdateDto.ts
 model/timetableEntryDto.ts
 model/updateDashboardDataRequest.ts
 model/updateDescriptionRequest.ts

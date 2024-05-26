@@ -8,15 +8,13 @@ import {
 import { Table, TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
 import { CardModule } from 'primeng/card';
+import { TotalTimeHelper, TotalTimeWithStates } from '../_helpers/total-time-helper';
+import { ChartModule} from 'primeng/chart';
+import { Chart } from 'chart.js';
 
 interface InternalAccumulatedTimeDto extends AccumulatedTimeDto {
   startTime: Date;
   endTime: Date;
-  groupWithStringId: GroupWithStringId;
-}
-
-interface GroupWithStringId extends SimpleGroupDto {
-  stringId: string;
 }
 
 @Component({
@@ -26,6 +24,7 @@ interface GroupWithStringId extends SimpleGroupDto {
     TableModule,
     DropdownModule,
     CardModule,
+    ChartModule,
   ],
   templateUrl: './accumulated-time.component.html',
   styleUrl: './accumulated-time.component.css',
@@ -33,15 +32,24 @@ interface GroupWithStringId extends SimpleGroupDto {
 export class AccumulatedTimeComponent implements OnInit {
   public accumulatedTimes: InternalAccumulatedTimeDto[] = [];
   public availableProjects: SimpleProjectDto[] = [];
-  public availableGroups: GroupWithStringId[] = [];
+  public availableGroups: SimpleGroupDto[] = [];
 
-  public totalTime: { hours: number, minutes: number } = { hours: 0, minutes: 0 };
+  public stateTimes: TotalTimeWithStates = {
+    AVAILABLE: 0,
+    MEETING: 0,
+    DEEPWORK: 0,
+    OUT_OF_OFFICE: 0,
+  }
+
+  public totalTime: number = 0;
 
   /*
   * The table is used for its filtering functionality
   * This reference to the PrimeNG table is used because its entries also reflect the correct order if the table is sorted and the available entries when filtered.
   */
   @ViewChild('table') table!: Table;
+
+  chart: any;
 
   constructor(private accumulatedTimeControllerService: AccumulatedTimeControllerService) {
   }
@@ -54,51 +62,63 @@ export class AccumulatedTimeComponent implements OnInit {
               ...entry,
               startTime: new Date(entry.startTimestamp),
               endTime: new Date(entry.endTimestamp),
-              groupWithStringId: {
-                ...entry.group,
-                stringId: entry.group?.groupId?.toString() ?? '',
-              },
             }),
           ) ?? [];
           this.availableProjects = response.availableProjects ?? [];
-          this.availableGroups = response.availableGroups?.map(
-            group => ({
-              ...group,
-              stringId: group?.groupId?.toString() ?? '',
-            }),
-          ) ?? [];
+          this.availableGroups = response.availableGroups ?? [];
         },
         error: error => {
           console.error('Error while fetching accumulated time data', error);
         },
       },
     );
-  }
 
-  // todo: change this logic so it can be used for a graph
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--text-color');
+
+
+    this.chart = new Chart("MyChart", {
+      type: 'pie', //this denotes tha type of chart
+
+      data: {
+        labels: ['Available', 'Deep Work', 'Meeting'],
+        datasets: [
+          {
+            data: [0, 0, 0],
+            backgroundColor: ['#22c55e', '#3b82f6', '#f59e0b'],
+            hoverBackgroundColor: ['#52cc7f', '#7396ea', '#efae5c']
+          }
+        ]
+      },
+      options: {
+        aspectRatio:2.5,
+        plugins: {
+          legend: {
+            labels: {
+              usePointStyle: true,
+              color: textColor
+            }
+          }
+        }
+      }
+    });
+  }
 
   /*
   Calculates the total work time with the current active filters
    */
   calculateTotalTime() {
-    let totalTimeTemp: number = 0;
-    let tempEntries: InternalAccumulatedTimeDto[];
-    const filters = this.table?.filters as any;
+    const filteredEntries = TotalTimeHelper.getFilteredEntries<InternalAccumulatedTimeDto>(this.table);
 
-    if (filters['startTime']?.value || filters['endTime']?.value || filters['group']?.value || filters['project.id']?.value) {
-      tempEntries = this.table.filteredValue as InternalAccumulatedTimeDto[];
-    } else {
-      tempEntries = this.table.value as InternalAccumulatedTimeDto[];
-    }
+    this.stateTimes = TotalTimeHelper.calculateWithState(filteredEntries);
+    this.totalTime = this.stateTimes.AVAILABLE + this.stateTimes.DEEPWORK + this.stateTimes.MEETING;
 
-    tempEntries.forEach(entry => {
-      totalTimeTemp += entry.endTime.getTime() - entry.startTime.getTime();
-    });
-    const hours = Math.floor(totalTimeTemp / 3600000);
+    this.chart.data.datasets[0].data = [];
 
-    const remainingTime = totalTimeTemp % 3600000;
+    this.chart.data.datasets[0].data.push(this.stateTimes.AVAILABLE);
+    this.chart.data.datasets[0].data.push(this.stateTimes.DEEPWORK);
+    this.chart.data.datasets[0].data.push(this.stateTimes.MEETING);
 
-    const minutes = Math.floor(remainingTime / 60000);
-    this.totalTime = { hours: hours, minutes: minutes };
+    this.chart.update();
   }
 }

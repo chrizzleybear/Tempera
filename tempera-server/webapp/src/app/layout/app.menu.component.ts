@@ -78,7 +78,13 @@ export class AppMenuComponent implements OnInit {
             icon: 'pi pi-fw pi-gauge',
             routerLink: ['/temperaStations'],
             visible: this.storageService.getUser()?.roles.includes('ADMIN')
-          }
+          },
+          {
+            label: 'Accumulated Time',
+            icon: 'pi pi-fw pi-clock',
+            routerLink: ['/accumulated-time'],
+            visible: this.storageService.getUser()?.roles.some(role=> role === RolesEnum.Manager || role === RolesEnum.Grouplead)
+          },
         ],
       },
     ];

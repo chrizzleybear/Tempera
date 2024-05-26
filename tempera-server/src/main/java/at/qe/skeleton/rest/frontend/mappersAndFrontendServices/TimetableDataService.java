@@ -3,9 +3,10 @@ package at.qe.skeleton.rest.frontend.mappersAndFrontendServices;
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.exceptions.InternalRecordOutOfBoundsException;
 import at.qe.skeleton.model.*;
-import at.qe.skeleton.model.enums.State;
+import at.qe.skeleton.model.dtos.GroupxProjectStateTimeDbDto;
+import at.qe.skeleton.model.dtos.SimpleProjectDbDto;
+import at.qe.skeleton.model.dtos.TimeTableRecordDBDto;
 import at.qe.skeleton.repositories.UserxRepository;
-import at.qe.skeleton.rest.frontend.dtos.ExtendedProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.TimetableEntryDto;
 import at.qe.skeleton.rest.frontend.payload.request.SplitTimeRecordRequest;
@@ -23,65 +24,48 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class TimetableDataService {
 
   private final ProjectService projectService;
   private final TimeRecordService timeRecordService;
-  private final UserxRepository userxRepository;
+  private final ProjectMapperService projectMapperService;
   private final UserxService userxService;
 
-  public TimetableDataService(ProjectService projectService, TimeRecordService timeRecordService, UserxRepository userxRepository, UserxService userxService) {
+  public TimetableDataService(ProjectService projectService, TimeRecordService timeRecordService, UserxRepository userxRepository, UserxService userxService, ProjectMapperService projectMapperService) {
     this.projectService = projectService;
     this.timeRecordService = timeRecordService;
-    this.userxRepository = userxRepository;
+    this.projectMapperService = projectMapperService;
     this.userxService = userxService;
   }
 
-  public GetTimetableDataResponse getTimetableData(Userx user) {
-    List<InternalRecord> timeRecords = timeRecordService.getInternalRecordsForUser(user);
+  public GetTimetableDataResponse getTimetableData(String username) {
+    Set<TimeTableRecordDBDto> timeTableRecordDBDtos = timeRecordService.getTimeTableRecordDtosByUser(username);
+    // eliminate timeTableRecord with end=null
+    timeTableRecordDBDtos.removeIf(record -> record.end() == null);
+    // now load a set of all projects the user is allowed to see or better even directly load the simpleProjectDtos (maybe the db version because of id long) and then connect them to the timeTableRecordDBDtos
+    Set<SimpleProjectDbDto> simpleProjectDbDtoSet = projectService.getSimpleProjectDbDtoByUser(username);
     List<TimetableEntryDto> tableEntries = new ArrayList<>();
-    //todo once frontend is ready add Groupx here as well (or just sent the entire Groupxproject.)
-    for (var timeRecord : timeRecords) {
-      String end;
-      // um die Arbeitszeitberechnung im Frontend nicht zu sprengen filtern wir den aktuellen TR raus.
-      if (timeRecord.getEnd() == null){
-        continue;
-      }
-        end = timeRecord.getEnd().toString();
-      Long id = timeRecord.getId();
-      String start = timeRecord.getStart().toString();
-      SimpleProjectDto simpleProjectDto = null;
-      if (timeRecord.getGroupxProject() != null){
-        Project project = timeRecord.getGroupxProject().getProject();
-        String projectId = project.getId().toString();
-        String projectName = project.getName();
-        String projectDescription = project.getDescription();
-        String projectManager = project.getManager().getUsername();
-
-        simpleProjectDto = new SimpleProjectDto(
-            projectId,
-            projectName,
-            projectDescription,
-            projectManager);
-      }
-      State state = timeRecord.getExternalRecord().getState();
-      String description = timeRecord.getDescription();
-      tableEntries.add(new TimetableEntryDto(id, start, end, simpleProjectDto, state, description));
+    for (TimeTableRecordDBDto record : timeTableRecordDBDtos) {
+      TimetableEntryDto entry = timeTableEntryDtoBuilder(record, simpleProjectDbDtoSet);
+      tableEntries.add(entry);
     }
-    List<SimpleProjectDto> availableProjects =
-        projectService.getProjectsByContributor(user).stream()
-            .map(
-                p ->
-                    new SimpleProjectDto(
-                        Long.toString(p.getId()),
-                        p.getName(),
-                        p.getDescription(),
-                        p.getManager().getUsername()))
-            .toList();
+    // todo: include GroupxProject once frontend is ready
+    List<SimpleProjectDto> availableProjects = simpleProjectDbDtoSet.stream().map(projectMapperService::mapSimpleProjectDbDtoToDto).toList();
     return new GetTimetableDataResponse(tableEntries, availableProjects);
+  }
 
+  private TimetableEntryDto timeTableEntryDtoBuilder(TimeTableRecordDBDto record, Set<SimpleProjectDbDto> simpleProjectDbDtoSet) {
+    SimpleProjectDto simpleProjectDto = simpleProjectDbDtoSet.stream().filter(project -> project.id().equals(record.assignedProjectId())).findFirst().map(projectMapperService::mapSimpleProjectDbDtoToDto).orElse(null);
+    return new TimetableEntryDto(
+        record.recordId(),
+        record.start().format(DateTimeFormatter.ISO_DATE_TIME),
+        record.end().format(DateTimeFormatter.ISO_DATE_TIME),
+        simpleProjectDto,
+        record.state(),
+        record.description());
   }
 
   //todo: testing and running the system
@@ -136,7 +120,7 @@ public class TimetableDataService {
       throw new InternalRecordOutOfBoundsException(
           "Freshly split internalTimeRecord is ending after the ExternalRecord");
     }
-    return getTimetableData(userxService.loadUser(username));
+    return getTimetableData(username);
   }
 
   private InternalRecord getInternalRecord(Long id) throws CouldNotFindEntityException {

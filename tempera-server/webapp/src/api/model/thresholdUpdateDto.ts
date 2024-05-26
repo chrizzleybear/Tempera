@@ -9,12 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ThresholdDto } from './thresholdDto';
 
 
-export interface SimpleUserDto { 
-    username?: string;
-    firstName?: string;
-    lastName?: string;
-    email?: string;
+export interface ThresholdUpdateDto { 
+    threshold?: ThresholdDto;
+    reason?: string;
 }
 

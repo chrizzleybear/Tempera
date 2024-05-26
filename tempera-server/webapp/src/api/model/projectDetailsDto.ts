@@ -9,12 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { SimpleUserDto } from './simpleUserDto';
 
 
-export interface SimpleUserDto { 
-    username?: string;
-    firstName?: string;
-    lastName?: string;
-    email?: string;
+export interface ProjectDetailsDto { 
+    projectId?: string;
+    name?: string;
+    description?: string;
+    manager?: SimpleUserDto;
 }
 
