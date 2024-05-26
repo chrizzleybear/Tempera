@@ -18,8 +18,8 @@ encoder.ts
 git_push.sh
 index.ts
 model/accessPoint.ts
-model/accessPointDtoRaspberry.ts
-model/accesspointDto.ts
+model/accessPointAllowedDto.ts
+model/accessPointDto.ts
 model/accumulatedTimeDto.ts
 model/accumulatedTimeResponse.ts
 model/colleagueStateDto.ts

@@ -3,11 +3,11 @@ package at.qe.skeleton.rest.raspberry.mappers;
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.AccessPoint;
 import at.qe.skeleton.model.TemperaStation;
-import at.qe.skeleton.rest.raspberry.dtos.AccessPointDto;
+import at.qe.skeleton.rest.raspberry.dtos.AccessPointAllowedDto;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AccessPointMapper implements DTOMapperStateless<AccessPoint, AccessPointDto> {
+public class AccessPointMapper implements DTOMapperStateless<AccessPoint, AccessPointAllowedDto> {
 
   /**
    * Maps an AccessPoint entity to an AccessPointDto.
@@ -18,7 +18,7 @@ public class AccessPointMapper implements DTOMapperStateless<AccessPoint, Access
    * @throws CouldNotFindEntityException If the entity is null or has no id or TemperaStations.
    */
   @Override
-  public AccessPointDto mapToDto(AccessPoint entity) throws CouldNotFindEntityException {
+  public AccessPointAllowedDto mapToDto(AccessPoint entity) throws CouldNotFindEntityException {
     if (entity == null) {
       throw new IllegalArgumentException(
           "Cannot map AccessPoint to AccessPointDto, because AccessPoint is null.");
@@ -32,7 +32,7 @@ public class AccessPointMapper implements DTOMapperStateless<AccessPoint, Access
           "Cannot map AccessPoint to AccessPointDto, because TemperaStations are null.");
     }
 
-    return new AccessPointDto(
+    return new AccessPointAllowedDto(
         entity.getId(),
         entity.isEnabled(),
         entity.getTemperaStations().stream()

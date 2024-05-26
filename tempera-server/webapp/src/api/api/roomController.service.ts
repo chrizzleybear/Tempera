@@ -19,7 +19,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { AccesspointDto } from '../model/accesspointDto';
+import { AccessPointDto } from '../model/accessPointDto';
 // @ts-ignore
 import { Room } from '../model/room';
 // @ts-ignore
@@ -319,9 +319,9 @@ export class RoomControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getAccessPoints(roomId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<AccesspointDto>;
-    public getAccessPoints(roomId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<AccesspointDto>>;
-    public getAccessPoints(roomId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<AccesspointDto>>;
+    public getAccessPoints(roomId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<AccessPointDto>;
+    public getAccessPoints(roomId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<AccessPointDto>>;
+    public getAccessPoints(roomId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<AccessPointDto>>;
     public getAccessPoints(roomId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (roomId === null || roomId === undefined) {
             throw new Error('Required parameter roomId was null or undefined when calling getAccessPoints.');
@@ -364,7 +364,7 @@ export class RoomControllerService {
         }
 
         let localVarPath = `/api/rooms/accesspoint/${this.configuration.encodeParam({name: "roomId", value: roomId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<AccesspointDto>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<AccessPointDto>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,

@@ -11,7 +11,7 @@
  */
 
 
-export interface AccesspointDto { 
+export interface AccessPointDto { 
     id?: string;
     room?: string;
     enabled?: boolean;
