@@ -27,6 +27,7 @@ public class GroupService {
     private static final String INVALID_GROUP_ID = "Invalid group lead ID";
     private static final String INVALID_GROUPLEAD_ID = "Invalid group lead ID";
     private static final String INVALID_MEMBER_ID = "Invalid member ID";
+    private static final String INVALID_MANAGER_ID = "Invalid manager ID";
 
     @Autowired
     private UserxRepository userxRepository;
@@ -111,6 +112,12 @@ public class GroupService {
         Userx groupLead = userxRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException(INVALID_GROUPLEAD_ID));
         List<Groupx> groups = groupRepository.findByGroupLead(groupLead);
         return groups;
+    }
+
+    @PreAuthorize("hasAuthority('MANAGER') or hasAnyAuthority('ADMIN')")
+    public List<Groupx> getGroupsByManager(String userId) {
+        Userx manager = userxRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException(INVALID_MANAGER_ID));
+        return groupRepository.findAllByManager(manager);
     }
 
     public List<Userx> getMembers(Long groupId) {

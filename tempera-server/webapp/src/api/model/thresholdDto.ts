@@ -10,19 +10,16 @@
  * Do not edit the class manually.
  */
 import { ThresholdTip } from './thresholdTip';
-import { Modification } from './modification';
 
 
-export interface Threshold { 
+export interface ThresholdDto { 
     id?: number;
-    defaultThreshold?: boolean;
-    sensorType?: Threshold.SensorTypeEnum;
-    thresholdType?: Threshold.ThresholdTypeEnum;
+    sensorType?: ThresholdDto.SensorTypeEnum;
+    thresholdType?: ThresholdDto.ThresholdTypeEnum;
     value?: number;
     tip?: ThresholdTip;
-    modificationReason?: Modification;
 }
-export namespace Threshold {
+export namespace ThresholdDto {
     export type SensorTypeEnum = 'TEMPERATURE' | 'IRRADIANCE' | 'HUMIDITY' | 'NMVOC';
     export const SensorTypeEnum = {
         Temperature: 'TEMPERATURE' as SensorTypeEnum,

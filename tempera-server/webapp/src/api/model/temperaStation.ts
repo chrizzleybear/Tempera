@@ -18,6 +18,7 @@ export interface TemperaStation {
     id?: string;
     user?: Userx;
     enabled?: boolean;
+    isHealthy?: boolean;
     accessPoint?: AccessPoint;
     sensors?: Array<Sensor>;
     _new?: boolean;

@@ -116,6 +116,7 @@ class DashboardDataMapperTest {
     @Test
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:DashboardDataMapper.sql")
     @WithMockUser(username = "johndoe", authorities = "EMPLOYEE")
+    @Transactional
     void mapUserToHomeDataResponseNoMeasurements() throws CouldNotFindEntityException {
         Userx johndoe = userService.loadUser("johndoe");
         assertEquals(Visibility.PUBLIC, johndoe.getStateVisibility(), "Visibility of johndoe should be PUBLIC before the update");

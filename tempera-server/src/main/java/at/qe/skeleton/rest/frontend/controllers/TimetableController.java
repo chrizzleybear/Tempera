@@ -1,6 +1,5 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
-import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.TimetableDataService;
 import at.qe.skeleton.rest.frontend.payload.request.SplitTimeRecordRequest;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateDescriptionRequest;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/api/timetable", produces = "application/json")
 public class TimetableController {
-  private static final Logger timeTabeControllerLogger =
+  private static final Logger LOGGER =
       LoggerFactory.getLogger(TimetableController.class);
   private final TimetableDataService timeTableDataService;
   private final UserxService userService;
@@ -32,17 +31,16 @@ public class TimetableController {
   @GetMapping("/data")
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<GetTimetableDataResponse> getTimetableData() {
+    LOGGER.info("getTimetableData");
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    Userx user = userService.loadUser(username);
-    GetTimetableDataResponse response = timeTableDataService.getTimetableData(user);
-    timeTabeControllerLogger.info(
-        "created TimeTableDataResponse with all entries for user %s".formatted(user.getUsername()));
+    GetTimetableDataResponse response = timeTableDataService.getTimetableData(username);
     return ResponseEntity.ok(response);
   }
 
   @PostMapping("/update/project")
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<MessageResponse> updateProject(@RequestBody UpdateProjectRequest request) {
+    LOGGER.info("updateProject");
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
     MessageResponse response;
     try {
@@ -50,7 +48,6 @@ public class TimetableController {
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
-    timeTabeControllerLogger.info(response.getMessage());
     return ResponseEntity.ok(response);
   }
 
@@ -58,6 +55,7 @@ public class TimetableController {
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<MessageResponse> updateDescription(
       @RequestBody UpdateDescriptionRequest request) {
+    LOGGER.info("updateDescription");
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
     MessageResponse response;
     try {
@@ -65,7 +63,6 @@ public class TimetableController {
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
     }
-    timeTabeControllerLogger.info(response.getMessage());
     return ResponseEntity.ok(response);
   }
 
@@ -73,6 +70,7 @@ public class TimetableController {
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<GetTimetableDataResponse> splitTimeRecord(
       @RequestBody SplitTimeRecordRequest request) {
+    LOGGER.info("splitTimeRecord");
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
     GetTimetableDataResponse response;
     try {
@@ -80,7 +78,6 @@ public class TimetableController {
     } catch (Exception e) {
       return ResponseEntity.badRequest().build();
     }
-    timeTabeControllerLogger.info("split TimeRecord");
     return ResponseEntity.ok(response);
   }
 }

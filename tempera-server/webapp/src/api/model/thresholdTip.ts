@@ -12,6 +12,7 @@
 
 
 export interface ThresholdTip { 
+    id?: number;
     tip?: string;
 }
 

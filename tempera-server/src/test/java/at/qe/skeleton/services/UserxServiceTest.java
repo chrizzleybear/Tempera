@@ -194,6 +194,7 @@ public class UserxServiceTest {
 
     @DirtiesContext
     @Test
+    @Transactional
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:userxServiceTest.sql")
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testUpdateUser() {
@@ -219,6 +220,7 @@ public class UserxServiceTest {
 
     @DirtiesContext
     @Test
+    @Transactional
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:userxServiceTest.sql")
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testCreateUser() {
