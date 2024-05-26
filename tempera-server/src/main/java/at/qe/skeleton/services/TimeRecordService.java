@@ -4,14 +4,12 @@ import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.exceptions.InternalRecordOutOfBoundsException;
 import at.qe.skeleton.exceptions.ExternalRecordOutOfBoundsException;
 import at.qe.skeleton.model.*;
+import at.qe.skeleton.model.dtos.TimeTableRecordDBDto;
 import at.qe.skeleton.repositories.InternalRecordRepository;
 import at.qe.skeleton.repositories.ExternalRecordRepository;
 import at.qe.skeleton.repositories.UserxRepository;
 
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Logger;
 
 @Component
@@ -170,8 +169,8 @@ public class TimeRecordService {
     return internalRecordRepository.findByStartAndExternalRecordUser(start, user);
   }
 
-  public List<InternalRecord> getInternalRecordsForUser(Userx user) {
-    return internalRecordRepository.findAllByUserOrderByStartDesc(user);
+  public Set<TimeTableRecordDBDto> getTimeTableRecordDtosByUser(Userx user) {
+    return internalRecordRepository.getTimeTableRecordDBDtoByUser(user);
   }
 
   public Optional<InternalRecord> findInternalRecordById(Long id) {
