@@ -1,9 +1,18 @@
 import { Table } from 'primeng/table';
+import { AccumulatedTimeDto } from '../../api';
+import StateEnum = AccumulatedTimeDto.StateEnum;
 
 export interface Duration {
   startTime: Date,
   endTime: Date,
 }
+
+export interface WithState {
+  state: StateEnum,
+
+}
+
+export type TotalTimeWithStates = Record<StateEnum, number>;
 
 export class TotalTimeHelper {
   /*
@@ -11,6 +20,7 @@ export class TotalTimeHelper {
  */
   public static calculate<T extends Duration>(entries: T[]) {
     let totalTimeTemp: number = 0;
+
     entries.forEach(entry => {
       totalTimeTemp += entry.endTime.getTime() - entry.startTime.getTime();
     });
@@ -20,6 +30,29 @@ export class TotalTimeHelper {
 
     const minutes = Math.floor(remainingTime / 60000);
     return  { hours: hours, minutes: minutes };
+  }
+
+  /*
+ * Calculates the total work time in hours of each state with the current active filters
+*/
+  public static calculateWithState<T extends Duration & WithState>(entries: T[]) {
+    let totalTimes: TotalTimeWithStates = {
+      AVAILABLE: 0,
+      MEETING: 0,
+      DEEPWORK: 0,
+      OUT_OF_OFFICE: 0,
+    };
+
+    entries.forEach(entry => {
+      totalTimes[entry.state] += entry.endTime.getTime() - entry.startTime.getTime();
+    });
+
+    Object.keys(totalTimes).forEach(state => {
+      const stateKey = state as StateEnum;
+      totalTimes[stateKey] = Math.floor(totalTimes[stateKey] / 3600000)
+    });
+
+    return  totalTimes;
   }
 
   /*

@@ -35,37 +35,49 @@ public class AccumulatedTimeController {
   @GetMapping("/data")
   @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('GROUPLEAD')")
   public ResponseEntity<AccumulatedTimeResponse> getAccumulatedTimeData() {
-    logger.info("getAccumulatedTimeData called");
-    //check for permissions
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    String username = auth.getName();
-    if (( auth.getAuthorities().contains(UserxRole.MANAGER))){
-      logger.info("detected Authorization: Manager");
-      return ResponseEntity.ok(accumulatedTimeMapper.getManagerTimeData(username));
-    }
-    if ((auth.getAuthorities().contains(UserxRole.GROUPLEAD) )) {
-        logger.info("detected Authorization: GroupLead");
-      return ResponseEntity.ok(accumulatedTimeMapper.getGroupLeadTimeData(username));
-    }
-    return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+//    logger.info("getAccumulatedTimeData called");
+//    //check for permissions
+//    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//    String username = auth.getName();
+//    if (( auth.getAuthorities().contains(UserxRole.MANAGER))){
+//      logger.info("detected Authorization: Manager");
+//      return ResponseEntity.ok(accumulatedTimeMapper.getManagerTimeData(username));
+//    }
+//    if ((auth.getAuthorities().contains(UserxRole.GROUPLEAD) )) {
+//        logger.info("detected Authorization: GroupLead");
+//      return ResponseEntity.ok(accumulatedTimeMapper.getGroupLeadTimeData(username));
+//    }
+//    return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
-    //    var response =
-    //            new AccumulatedTimeResponse(
-    //                    List.of(
-    //                            new AccumulatedTimeDto(
-    //                                     "projectId",
-    //                                     "groupId",
-    //                                    State.DEEPWORK,
-    //                                    "2024-01-01T00:00:00",
-    //                                    "2024-01-01T05:00:00"
-    //
-    //                    ),
-    //                    List.of(
-    //                            new SimpleProjectDto("1L", "Project 1", null, "manager1"),
-    //                            new SimpleProjectDto("2L", "Project 2", null, "manager1")),
-    //                    List.of(
-    //                            new SimpleGroupDto("1L", "Group 1", null, "grouplead1"),
-    //                            new SimpleGroupDto("2L", "Group 2", null, "grouplead1")));
-    //    return ResponseEntity.ok(response);
+        var response =
+                new AccumulatedTimeResponse(
+                        List.of(
+                                new AccumulatedTimeDto(
+                                         "1L",
+                                         "1L",
+                                        State.DEEPWORK,
+                                        "2024-01-01T00:00:00",
+                                        "2024-01-01T05:00:00"),
+                                new AccumulatedTimeDto(
+                                        "2L",
+                                        "2L",
+                                        State.AVAILABLE,
+                                        "2024-01-01T05:00:00",
+                                        "2024-01-01T13:00:00"),
+                                new AccumulatedTimeDto(
+                                        "3L",
+                                        "3L",
+                                        State.MEETING,
+                                        "2024-01-01T13:00:00",
+                                        "2024-01-01T14:00:00")
+
+                        ),
+                        List.of(
+                                new SimpleProjectDto("1L", "Project 1", null, "manager1"),
+                                new SimpleProjectDto("2L", "Project 2", null, "manager1")),
+                        List.of(
+                                new SimpleGroupDto("1L", "Group 1", null, "grouplead1"),
+                                new SimpleGroupDto("2L", "Group 2", null, "grouplead1")));
+        return ResponseEntity.ok(response);
   }
 }

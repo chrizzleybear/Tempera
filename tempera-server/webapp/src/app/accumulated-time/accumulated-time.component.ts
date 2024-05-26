@@ -8,7 +8,7 @@ import {
 import { Table, TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
 import { CardModule } from 'primeng/card';
-import { TotalTimeHelper } from '../_helpers/total-time-helper';
+import { TotalTimeHelper, TotalTimeWithStates } from '../_helpers/total-time-helper';
 import { ChartModule} from 'primeng/chart';
 import { Chart } from 'chart.js';
 
@@ -34,7 +34,14 @@ export class AccumulatedTimeComponent implements OnInit {
   public availableProjects: SimpleProjectDto[] = [];
   public availableGroups: SimpleGroupDto[] = [];
 
-  public totalTime: { hours: number, minutes: number } = { hours: 0, minutes: 0 };
+  public stateTimes: TotalTimeWithStates = {
+    AVAILABLE: 0,
+    MEETING: 0,
+    DEEPWORK: 0,
+    OUT_OF_OFFICE: 0,
+  }
+
+  public totalTime: number = 0;
 
   /*
   * The table is used for its filtering functionality
@@ -77,9 +84,9 @@ export class AccumulatedTimeComponent implements OnInit {
         labels: ['Available', 'Deep Work', 'Meeting'],
         datasets: [
           {
-            data: [540, 325, 702],
-            backgroundColor: [documentStyle.getPropertyValue('--blue-500'), documentStyle.getPropertyValue('--yellow-500'), documentStyle.getPropertyValue('--green-500')],
-            hoverBackgroundColor: [documentStyle.getPropertyValue('--blue-400'), documentStyle.getPropertyValue('--yellow-400'), documentStyle.getPropertyValue('--green-400')]
+            data: [0, 0, 0],
+            backgroundColor: ['#22c55e', '#3b82f6', '#f59e0b'],
+            hoverBackgroundColor: ['#52cc7f', '#7396ea', '#efae5c']
           }
         ]
       },
@@ -94,11 +101,8 @@ export class AccumulatedTimeComponent implements OnInit {
           }
         }
       }
-
     });
   }
-
-  // todo: change this logic so it can be used for a graph
 
   /*
   Calculates the total work time with the current active filters
@@ -106,6 +110,15 @@ export class AccumulatedTimeComponent implements OnInit {
   calculateTotalTime() {
     const filteredEntries = TotalTimeHelper.getFilteredEntries<InternalAccumulatedTimeDto>(this.table);
 
-    this.totalTime = TotalTimeHelper.calculate(filteredEntries);
+    this.stateTimes = TotalTimeHelper.calculateWithState(filteredEntries);
+    this.totalTime = this.stateTimes.AVAILABLE + this.stateTimes.DEEPWORK + this.stateTimes.MEETING;
+
+    this.chart.data.datasets[0].data = [];
+
+    this.chart.data.datasets[0].data.push(this.stateTimes.AVAILABLE);
+    this.chart.data.datasets[0].data.push(this.stateTimes.DEEPWORK);
+    this.chart.data.datasets[0].data.push(this.stateTimes.MEETING);
+
+    this.chart.update();
   }
 }
