@@ -6,6 +6,6 @@ import jakarta.validation.constraints.NotNull;
 public record AccumulatedTimeDto(
         String projectId,
         String groupId,
-        State state,
+        @NotNull State state,
         @NotNull String startTimestamp,
         @NotNull String endTimestamp) {}
