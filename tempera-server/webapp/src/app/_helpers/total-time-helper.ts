@@ -18,10 +18,10 @@ export class TotalTimeHelper {
   /*
   * Calculates the total work time with the current active filters
  */
-  public static calculate<T extends Duration>(entries: T[]) {
+  public static calculate<T extends Duration & WithState>(entries: T[]) {
     let totalTimeTemp: number = 0;
 
-    entries.forEach(entry => {
+    entries.filter(x => x.state !== StateEnum.OutOfOffice).forEach(entry => {
       totalTimeTemp += entry.endTime.getTime() - entry.startTime.getTime();
     });
     const hours = Math.floor(totalTimeTemp / 3600000);
