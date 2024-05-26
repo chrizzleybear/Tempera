@@ -98,6 +98,6 @@ export class GroupsComponent implements OnInit {
   }
 
   members(group: Group) {
-    this.router.navigate(['/group/members', group.id]);
+    this.router.navigate(['/group/members',group.name, group.id]);
   }
 }

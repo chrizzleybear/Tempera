@@ -1,5 +1,5 @@
 <p-messages [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
-<h1 class="text-3xl font-semibold text-center text-gray-700 my-4">Projects from Group {{groupId}}</h1>
+<h1 class="text-3xl font-semibold text-center text-gray-700 my-4">Projects from Group {{groupName}}</h1>
 <br>
 <p-table [value]="projects" [paginator]="true" [rows]="10" responsiveLayout="scroll">
   <ng-template pTemplate="header">
@@ -40,6 +40,7 @@
   <p-table [value]="availableProjectContributors" [paginator]="true" [rows]="10" responsiveLayout="scroll" [(selection)]="selectedMembers">
     <ng-template pTemplate="header">
       <tr>
+        <th scope="col"></th>
         <th scope="col" pSortableColumn="username">Benutzername
           <p-sortIcon field="username"></p-sortIcon>
         </th>
