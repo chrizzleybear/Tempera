@@ -2,10 +2,12 @@ package at.qe.skeleton.repositories;
 
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.model.dtos.SimpleProjectDbDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ProjectRepository extends AbstractRepository<Project, Long>{
 
@@ -17,6 +19,8 @@ public interface ProjectRepository extends AbstractRepository<Project, Long>{
 
     @Query("select p from Project p join p.groupxProjects gxp join gxp.group g where g.groupLead.username = :username")
     public List<Project> findAllByGroupLead(String username);
-
     public List<Project> findAll();
+
+    @Query("SELECT new at.qe.skeleton.model.dtos.SimpleProjectDbDto(p.id, p.name, p.description, p.manager.username) FROM Project p JOIN p.groupxProjects gxp JOIN gxp.contributors con  where con.username =  :username")
+    public Set<SimpleProjectDbDto> getSimpleProjectDbDtoByUser(String username);
 }

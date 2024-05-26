@@ -5,6 +5,7 @@ import at.qe.skeleton.model.Groupx;
 import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.model.dtos.SimpleProjectDbDto;
 import at.qe.skeleton.rest.frontend.dtos.*;
 import at.qe.skeleton.services.GroupService;
 import at.qe.skeleton.services.ProjectService;
@@ -149,5 +150,13 @@ public class ProjectMapperService {
                 groupx.getDescription(),
                 userMapper.getSimpleUser(groupx.getGroupLead())
         );
+    }
+
+    public SimpleProjectDto mapSimpleProjectDbDtoToDto(SimpleProjectDbDto simpleProjectDbDto) {
+        return new SimpleProjectDto(
+            simpleProjectDbDto.id().toString(),
+            simpleProjectDbDto.name(),
+            simpleProjectDbDto.description(),
+            simpleProjectDbDto.manager());
     }
 }

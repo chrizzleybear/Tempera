@@ -5,7 +5,8 @@ import at.qe.skeleton.model.Groupx;
 import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
-import at.qe.skeleton.model.dtos.GroupxProjectStateTimeDto;
+import at.qe.skeleton.model.dtos.GroupxProjectStateTimeDbDto;
+import at.qe.skeleton.model.dtos.SimpleProjectDbDto;
 import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.GroupxProjectRepository;
 import at.qe.skeleton.repositories.ProjectRepository;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Logger;
 
 @Service
@@ -215,13 +217,17 @@ public class ProjectService {
   }
 
   @PreAuthorize("hasAuthority('MANAGER')")
-  public List<GroupxProjectStateTimeDto> gxpStateTimeDtosByManager(String username) {
+  public List<GroupxProjectStateTimeDbDto> gxpStateTimeDtosByManager(String username) {
     return groupxProjectRepository.getAllgxpStateTimeDtosByManager(username);
   }
 
   @PreAuthorize("hasAuthority('GROUPLEAD')")
-    public List<GroupxProjectStateTimeDto> gxpStateTimeDtosByGroupLead(String username) {
+    public List<GroupxProjectStateTimeDbDto> gxpStateTimeDtosByGroupLead(String username) {
         return groupxProjectRepository.getAllgxpStateTimeDtosByGroupLead(username);
+    }
+
+    public Set<SimpleProjectDbDto> getSimpleProjectDbDtoByUser(String username) {
+         return projectRepository.getSimpleProjectDbDtoByUser(username);
     }
 
   @PreAuthorize("hasAuthority('MANAGER')")

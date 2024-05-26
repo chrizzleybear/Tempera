@@ -2,7 +2,7 @@ package at.qe.skeleton.rest.frontend.mappersAndFrontendServices;
 
 import at.qe.skeleton.model.Groupx;
 import at.qe.skeleton.model.Project;
-import at.qe.skeleton.model.dtos.GroupxProjectStateTimeDto;
+import at.qe.skeleton.model.dtos.GroupxProjectStateTimeDbDto;
 import at.qe.skeleton.rest.frontend.dtos.AccumulatedTimeDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleGroupDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
@@ -36,10 +36,10 @@ public class AccumulatedTimeMapper {
   public AccumulatedTimeResponse getManagerTimeData(String username) {
       // all GroupxProjects for this manager -> all GroupxProjects that feature a project where this manager is assigned
     // AND where the end is not null (meaning not currently still running
-    List<GroupxProjectStateTimeDto> groupxProjectStateTimeDtos =
+    List<GroupxProjectStateTimeDbDto> groupxProjectStateTimeDbDtos =
         projectService.gxpStateTimeDtosByManager(username).stream().filter(dto -> dto.end() != null).toList();
     List<AccumulatedTimeDto> accumulatedTimeDtos =
-        groupxProjectStateTimeDtos.stream().map(this::mapToAccumulatedTimeDto).toList();
+        groupxProjectStateTimeDbDtos.stream().map(this::mapToAccumulatedTimeDto).toList();
     // all available Projects for this manager -> all Projects where this manager is assigned
     List<Project> projects = projectService.getProjectsByManager(username);
     List<SimpleProjectDto> simpleProjectDtos =
@@ -57,10 +57,10 @@ public class AccumulatedTimeMapper {
   public AccumulatedTimeResponse getGroupLeadTimeData(String username) {
     // all available GroupxProjects for this group lead -> all GroupxProjects that have a group that
     // this group lead is assigned AND where the end is not null (meaning not currently still running)
-    List<GroupxProjectStateTimeDto> groupxProjectStateTimeDtos =
+    List<GroupxProjectStateTimeDbDto> groupxProjectStateTimeDbDtos =
         projectService.gxpStateTimeDtosByGroupLead(username).stream().filter(dto -> dto.end() != null).toList();
     List<AccumulatedTimeDto> accumulatedTimeDtos =
-        groupxProjectStateTimeDtos.stream().map(this::mapToAccumulatedTimeDto).toList();
+        groupxProjectStateTimeDbDtos.stream().map(this::mapToAccumulatedTimeDto).toList();
     // all available Projects for this group lead -> all Projects that are assigned to groups that
     // this group lead is assigned to
     List<Project> projects = projectService.getProjectsByGroupLead(username);
@@ -75,12 +75,12 @@ public class AccumulatedTimeMapper {
   }
 
   private AccumulatedTimeDto mapToAccumulatedTimeDto(
-      GroupxProjectStateTimeDto groupxProjectStateTimeDto) {
+      GroupxProjectStateTimeDbDto groupxProjectStateTimeDbDto) {
     return new AccumulatedTimeDto(
-        groupxProjectStateTimeDto.projectId().toString(),
-        groupxProjectStateTimeDto.groupId().toString(),
-        groupxProjectStateTimeDto.state(),
-        groupxProjectStateTimeDto.start().format(DateTimeFormatter.ISO_DATE_TIME),
-        groupxProjectStateTimeDto.end().format(DateTimeFormatter.ISO_DATE_TIME));
+        groupxProjectStateTimeDbDto.projectId().toString(),
+        groupxProjectStateTimeDbDto.groupId().toString(),
+        groupxProjectStateTimeDbDto.state(),
+        groupxProjectStateTimeDbDto.start().format(DateTimeFormatter.ISO_DATE_TIME),
+        groupxProjectStateTimeDbDto.end().format(DateTimeFormatter.ISO_DATE_TIME));
   }
 }

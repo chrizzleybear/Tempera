@@ -169,8 +169,8 @@ public class TimeRecordService {
     return internalRecordRepository.findByStartAndExternalRecordUser(start, user);
   }
 
-  public Set<TimeTableRecordDBDto> getTimeTableRecordDtosByUser(Userx user) {
-    return internalRecordRepository.getTimeTableRecordDBDtoByUser(user);
+  public Set<TimeTableRecordDBDto> getTimeTableRecordDtosByUser(String username) {
+    return internalRecordRepository.getTimeTableRecordDBDtoByUser(username);
   }
 
   public Optional<InternalRecord> findInternalRecordById(Long id) {

@@ -21,9 +21,11 @@ public interface InternalRecordRepository
 
     Optional<InternalRecord> findById(Long id);
 
-    @Query("SELECT new at.qe.skeleton.model.dtos.TimeTableRecordDBDto(i.id, i.start, i.end, gxp.project.id, e.state, i.Description) FROM InternalRecord i JOIN i.externalRecord e JOIN i.groupxProject gxp WHERE e.user = :user ORDER BY i.start DESC")
-    Set<TimeTableRecordDBDto> getTimeTableRecordDBDtoByUser(@Param("user") Userx user);
+    @Query("SELECT new at.qe.skeleton.model.dtos.TimeTableRecordDBDto(i.id, i.start, i.end, gxp.project.id, e.state, i.Description) FROM InternalRecord i JOIN i.externalRecord e LEFT JOIN i.groupxProject gxp WHERE e.user.username = :username")
+    Set<TimeTableRecordDBDto> getTimeTableRecordDBDtoByUser(@Param("username") String username);
 
     Optional<InternalRecord> findByExternalRecord_EndIsNullAndExternalRecord_User(Userx user);
+
+
 
 }

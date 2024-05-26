@@ -28,7 +28,7 @@ public class ExternalRecord {
   @Column(name = "time_end")
   private LocalDateTime end;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @MapsId("userName")
   Userx user;
 
