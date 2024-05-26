@@ -45,7 +45,7 @@ export const routes: Routes = [
           { path: 'projects', component: ProjectsComponent },
           { path: 'project/:id', component: ProjectDetailsComponent },
           { path: 'myGroups', component: GroupsGroupleadComponent },
-          { path: 'group/projects/:id', component: GroupProjectsComponent },
+          { path: 'group/projects/:name/:id', component: GroupProjectsComponent },
           { path: 'timetable', component: TimetableComponent },
           { path: 'accumulated-time', component: AccumulatedTimeComponent },
           { path: 'accessPoints', component: AccesspointsComponent},

@@ -44,11 +44,12 @@ export class GroupProjectsComponent implements OnInit {
   filteredMembers: User[] = [];
   selectedMembers: User[] = [];
   groupId: number | null | undefined;
-
+  groupName: string | null | undefined;
   constructor(private projectService: ProjectService, private groupService: GroupService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.groupId = Number(this.route.snapshot.paramMap.get('id'));
+    this.groupName = this.route.snapshot.paramMap.get('name');
     if (this.groupId) {
       this.loadProjects(this.groupId);
       this.loadGroupMembers(this.groupId);
