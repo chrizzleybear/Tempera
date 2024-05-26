@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -127,13 +126,18 @@ public class ProjectService {
       // löschen wir einfach mal das GroupxProject
       // todo: eine geeignete lösch-policy überlegen: ein feld in GroupxProject setzen mit "is
       // active" oder so
-      deleteGroupxProject(groupxProject);
+      deactivateGroupxProject(groupxProject);
     }
   }
 
-  public void deleteGroupxProject(GroupxProject groupxProject) {
-    groupxProject.removeGroup();
-    groupxProject.removeProject();
+  /**
+   * This Method deactivates a GroupxProject. It sets the active flag to false and removes the
+   * GroupxProject from all contributors, therefore making it unaccessable for them. This way,
+   * managers and projectLeaders can still see the stored timerecords but users can`t add new records.
+   * @param groupxProject
+   */
+  public void deactivateGroupxProject (GroupxProject groupxProject) {
+    groupxProject.setActive(false);
     groupxProject
         .getContributors()
         .forEach(
@@ -141,7 +145,6 @@ public class ProjectService {
               contributor.getGroupxProjects().remove(groupxProject);
               userxRepository.save(contributor);
             });
-    groupxProject.removeInternalRecords();
     groupxProjectRepository.save(groupxProject);
   }
 
