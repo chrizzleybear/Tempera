@@ -10,6 +10,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CardModule } from 'primeng/card';
 import { TotalTimeHelper } from '../_helpers/total-time-helper';
 import { ChartModule} from 'primeng/chart';
+import { Chart } from 'chart.js';
 
 interface InternalAccumulatedTimeDto extends AccumulatedTimeDto {
   startTime: Date;
@@ -41,9 +42,7 @@ export class AccumulatedTimeComponent implements OnInit {
   */
   @ViewChild('table') table!: Table;
 
-  data: any;
-
-  options: any;
+  chart: any;
 
   constructor(private accumulatedTimeControllerService: AccumulatedTimeControllerService) {
   }
@@ -70,27 +69,33 @@ export class AccumulatedTimeComponent implements OnInit {
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
 
-    this.data = {
-      labels: ['A', 'B', 'C'],
-      datasets: [
-        {
-          data: [540, 325, 702],
-          backgroundColor: [documentStyle.getPropertyValue('--blue-500'), documentStyle.getPropertyValue('--yellow-500'), documentStyle.getPropertyValue('--green-500')],
-          hoverBackgroundColor: [documentStyle.getPropertyValue('--blue-400'), documentStyle.getPropertyValue('--yellow-400'), documentStyle.getPropertyValue('--green-400')]
-        }
-      ]
-    };
 
-    this.options = {
-      plugins: {
-        legend: {
-          labels: {
-            usePointStyle: true,
-            color: textColor
+    this.chart = new Chart("MyChart", {
+      type: 'pie', //this denotes tha type of chart
+
+      data: {
+        labels: ['Available', 'Deep Work', 'Meeting'],
+        datasets: [
+          {
+            data: [540, 325, 702],
+            backgroundColor: [documentStyle.getPropertyValue('--blue-500'), documentStyle.getPropertyValue('--yellow-500'), documentStyle.getPropertyValue('--green-500')],
+            hoverBackgroundColor: [documentStyle.getPropertyValue('--blue-400'), documentStyle.getPropertyValue('--yellow-400'), documentStyle.getPropertyValue('--green-400')]
+          }
+        ]
+      },
+      options: {
+        aspectRatio:2.5,
+        plugins: {
+          legend: {
+            labels: {
+              usePointStyle: true,
+              color: textColor
+            }
           }
         }
       }
-    };
+
+    });
   }
 
   // todo: change this logic so it can be used for a graph
