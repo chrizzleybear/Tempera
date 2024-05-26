@@ -32,7 +32,7 @@ public class AccessPoint implements Persistable<UUID>, Serializable {
 
   @Id private UUID id;
   @OneToMany(mappedBy = "accessPoint") private Set<TemperaStation> temperaStations;
-  @ManyToOne private Room room;
+  @ManyToOne(fetch = FetchType.LAZY) private Room room;
   private boolean enabled;
   private boolean isHealthy;
 

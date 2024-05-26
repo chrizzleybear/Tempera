@@ -40,11 +40,11 @@ public class GroupxProject implements Persistable<GroupxProjectId>{
     }
 
     @Id
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private Groupx group;
 
     @Id
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private Project project;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})

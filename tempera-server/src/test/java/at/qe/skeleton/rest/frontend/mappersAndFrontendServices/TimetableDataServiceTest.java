@@ -69,7 +69,7 @@ class TimetableDataServiceTest {
     assertNotNull(extendedProjectDtos2);
 
     long id2 = -15;
-    String startTimestamp2 = "2024-05-12T11:00";
+    String startTimestamp2 = "2024-05-12T11:00:00";
     String endTimestamp2 = "2024-05-12T13:59:59";
     SimpleProjectDto simpleProjectDto2 = null;
     State state2 = State.AVAILABLE;
