@@ -40,7 +40,7 @@ export const routes: Routes = [
           { path: 'plan', component: FloorPlanComponent },
           { path: 'groups', component: GroupsComponent },
           { path: 'group/:id', component: GroupDetailsComponent },
-          { path: 'group/members/:id', component: GroupMembersComponent },
+          { path: 'group/members/:name/:id', component: GroupMembersComponent },
           { path: 'project/groups/:id', component: ProjectGroupsComponent },
           { path: 'projects', component: ProjectsComponent },
           { path: 'project/:id', component: ProjectDetailsComponent },
