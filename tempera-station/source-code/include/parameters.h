@@ -61,7 +61,7 @@
 #define UPDATE_INTERVAL_TIME 10000
 
 // Update interval in ms after which the station locally updates the current ROOM CLIMATE data
-#define UPDATE_INTERVAL_RC 60000
+#define UPDATE_INTERVAL_RC 10000
 
 // Device name and custom id
 #define DEVICE_NAME "G4T1-Tempera-Station #1"

@@ -192,8 +192,8 @@ void loop() {
         Serial.println("Tempera > [ERROR] Could not complete air quality measurement.");
       }
       // now write only the NMVOC to roomClimateData since the other measurements are skewed due to the heating
-      roomClimateData.nmvoc = bme.gas_resistance /  100.0;
-      roomClimateData.irradiance = analogRead(PT_PIN) / 0.01; // to-do: measure over longer time spans, use exponential smoothing, possibly moving average
+      roomClimateData.nmvoc = bme.gas_resistance / 100.0;
+      roomClimateData.irradiance = analogRead(PT_PIN)*100 / 0.01; // to-do: measure over longer time spans, use exponential smoothing, possibly moving average
     }
 
     // Confirm set values
