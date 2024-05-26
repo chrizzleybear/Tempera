@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 @RestController
 @RequestMapping("/rasp/api")
 public class PeripheryConnectionController {
-  private static final org.slf4j.Logger log = LoggerFactory.getLogger(PeripheryConnectionController.class);
   private final AccessPointMapper accessPointMapper;
   private final AccessPointService accessPointService;
   Logger logger = Logger.getLogger("raspberryLogger");

@@ -4,6 +4,7 @@ import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.repositories.*;
+import org.h2.engine.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,7 @@ class TimeRecordServiceTest {
 
   @Mock private ExternalRecordRepository externalRecordRepositoryMock;
   @Mock private InternalRecordRepository internalRecordRepositoryMock;
-    @Mock private UserxRepository mockedUserxRepository;
+    @Mock private UserxService mockedUserxService;
     private TimeRecordService timeRecordService;
 
 
@@ -50,9 +51,9 @@ class TimeRecordServiceTest {
   void setUp() {
     timeRecordServiceMockedDependencies =
         new TimeRecordService(
-                externalRecordRepositoryMock, internalRecordRepositoryMock, mockedUserxRepository);
+                externalRecordRepositoryMock, internalRecordRepositoryMock, mockedUserxService);
     sensorService = new SensorService(sensorRepository);
-    timeRecordServiceReal = new TimeRecordService(externalRecordRepository, internalRecordRepository, userxRepository);
+    timeRecordServiceReal = new TimeRecordService(externalRecordRepository, internalRecordRepository, mockedUserxService);
     temperaStationService = new TemperaStationService(temperaStationRepository, sensorService);
 
   }
