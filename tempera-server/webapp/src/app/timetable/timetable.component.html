@@ -68,7 +68,8 @@
         <td>{{ timeEntry.startTime | date: 'ccc, MMM dd, y, HH:mm' }}</td>
         <td>{{ timeEntry.endTime | date: 'ccc, MMM dd, y, HH:mm' }}</td>
         <td>
-          <p-dropdown *ngIf="timeEntry.state !== StateEnum.OutOfOffice" [options]="availableProjects" [(ngModel)]="timeEntry.assignedProject"
+          <p-dropdown *ngIf="timeEntry.state !== StateEnum.OutOfOffice" [options]="availableProjects"
+                      [(ngModel)]="timeEntry.assignedProject"
                       (onChange)="updateProject($event.value, timeEntry.id)"
                       optionLabel="name"
                       placeholder="Select project"
@@ -79,7 +80,8 @@
                  [severity]="DisplayHelper.getStateSeverity | wrapFn: timeEntry.state"></p-tag>
         </td>
         <td>
-          <div *ngIf="timeEntry.state !== StateEnum.OutOfOffice" (click)="onEditDescription(timeEntry)" class="cursor-pointer"
+          <div *ngIf="timeEntry.state !== StateEnum.OutOfOffice" (click)="onEditDescription(timeEntry)"
+               class="cursor-pointer"
                (keydown)="onEditDescription(timeEntry)"
                [tabindex]="rowIndex">
             {{ timeEntry?.description ?? 'Enter a description' }}
@@ -94,7 +96,7 @@
     </ng-template>
   </p-table>
   <div class="card mt-2 text-lg text-center">
-      {{ "The total worked time with the current filters is " + this.totalTime.hours + " hours and " + this.totalTime.minutes + " minutes." }}
+    {{ "The total worked time with the current filters is " + this.totalTime.hours + " hours and " + this.totalTime.minutes + " minutes." }}
   </div>
 </ng-container>
 <ng-template #loading>
@@ -104,21 +106,34 @@
 </ng-template>
 
 <!-- Split time record dialog -->
-<p-dialog *ngIf="this.selectedEntry" [(visible)]="this.splitVisible" (onHide)="splitForm.reset()" [modal]="true" position="bottomright">
+<p-dialog styleClass="w-fit" [draggable]="false" *ngIf="this.selectedEntry" [(visible)]="this.splitVisible"
+          (onHide)="splitForm.reset()"
+          [modal]="true" position="bottomright"
+          header="Split time record at:">
   <form [formGroup]="splitForm" (ngSubmit)="this.splitForm.valid && this.onSplitFormSubmit()">
-    <div class="text-lg pb-2"><strong>Split time record at:</strong></div>
-    <p-calendar formControlName="time" class="pr-2"
-                [showTime]="true"
-                hourFormat="24"
-                [minDate]="this.selectedEntry.startTime"
-                [maxDate]="this.selectedEntry.endTime"
-                appendTo="body"
-    ></p-calendar>
-    <p-button label="Confirm" type="submit" [disabled]="!this.splitForm.valid"></p-button>
-    <br>
-    <p-message *ngIf="this.splitForm.controls.time.errors?.['notInRange'] && this.splitForm.touched"
-               [text]="'Time needs to be between ' + (this.selectedEntry.startTime | date: 'MM/dd/y HH:mm') + ' and ' + (this.selectedEntry.endTime | date: 'MM/dd/y HH:mm')" severity="error"
-               styleClass="my-2"></p-message>
+    <div class="flex">
+      <p-message
+        *ngIf="this.splitForm.controls.time.errors?.['notInRange'] && this.splitForm.touched && !this.calendarVisible"
+        [text]="'Time needs to be between ' + (this.selectedEntry.startTime | date: 'MM/dd/y HH:mm') + ' and ' + (this.selectedEntry.endTime | date: 'MM/dd/y HH:mm')"
+        severity="error"
+        styleClass="mr-2"></p-message>
+      <p-calendar formControlName="time" class="pr-2"
+                  [showTime]="true"
+                  [hideOnDateTimeSelect]="false"
+                  hourFormat="24"
+                  appendTo="body"
+                  (onShow)="this.calendarVisible = true"
+                  (onClose)="this.calendarVisible = false"
+      >
+        <ng-template pTemplate="date" let-date>
+        <span
+          [ngStyle]="{textDecoration: (date.day < this.selectedEntry.startTime.getDate() || date.day > this.selectedEntry.endTime.getDate()) ? 'line-through' : 'inherit'}">
+            {{ date.day }}
+        </span>
+        </ng-template>
+      </p-calendar>
+      <p-button label="Confirm" type="submit" [disabled]="!this.splitForm.valid"></p-button>
+    </div>
   </form>
 </p-dialog>
 

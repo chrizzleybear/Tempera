@@ -6,7 +6,7 @@ import {
 } from '../../api';
 import { Table, TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe, NgIf, NgStyle } from '@angular/common';
 import { TagModule } from 'primeng/tag';
 import { DisplayHelper } from '../_helpers/display-helper';
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
@@ -69,6 +69,7 @@ interface InternalTimetableEntryDto extends TimetableEntryDto {
     CardModule,
     SkeletonModule,
     ProgressSpinnerModule,
+    NgStyle,
   ],
   templateUrl: './timetable.component.html',
   styleUrl: './timetable.component.css',
@@ -91,6 +92,7 @@ export class TimetableComponent implements OnInit {
   public editDescriptionVisible: boolean = false;
 
   public splitVisible: boolean = false;
+  public calendarVisible: boolean = false;
 
   protected readonly Date = Date;
   protected readonly StateEnum = StateEnum;
