@@ -29,7 +29,7 @@ export class TotalTimeHelper {
     const remainingTime = totalTimeTemp % 3600000;
 
     const minutes = Math.floor(remainingTime / 60000);
-    return  { hours: hours, minutes: minutes };
+    return { hours: hours, minutes: minutes };
   }
 
   /*
@@ -49,10 +49,10 @@ export class TotalTimeHelper {
 
     Object.keys(totalTimes).forEach(state => {
       const stateKey = state as StateEnum;
-      totalTimes[stateKey] = Math.floor(totalTimes[stateKey] / 3600000)
+      totalTimes[stateKey] = Math.floor(totalTimes[stateKey] / 3600000);
     });
 
-    return  totalTimes;
+    return totalTimes;
   }
 
   /*
@@ -68,10 +68,10 @@ export class TotalTimeHelper {
 
     const hasActiveFilter = Object.keys(filters).some(key => filters[key]?.value);
 
-    if (hasActiveFilter) {
+    if (hasActiveFilter && table?.filteredValue != null) {
       return table?.filteredValue ?? [] as T[];
     } else {
-      return  table?.value ?? [] as T[];
+      return table?.value ?? [] as T[];
     }
   }
 }
