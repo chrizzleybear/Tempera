@@ -5,12 +5,12 @@ import at.qe.skeleton.model.Groupx;
 import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
-import at.qe.skeleton.model.dtos.GroupxProjectStateTimeDto;
+import at.qe.skeleton.model.dtos.GroupxProjectStateTimeDbDto;
+import at.qe.skeleton.model.dtos.SimpleProjectDbDto;
 import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.GroupxProjectRepository;
 import at.qe.skeleton.repositories.ProjectRepository;
 import at.qe.skeleton.repositories.UserxRepository;
-import at.qe.skeleton.rest.frontend.dtos.GroupxProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Logger;
 
 @Service
@@ -185,6 +186,10 @@ public class ProjectService {
     return projectRepository.findAllByManager_Username(username);
   }
 
+  public List<Project> getProjectsByGroupLead(String username) {
+    return projectRepository.findAllByGroupLead(username);
+  }
+
   public List<Project> getProjectsByContributor(Userx user) {
     List<GroupxProject> groupxProjects =
         groupxProjectRepository.findAllByContributorsContains(user);
@@ -212,9 +217,18 @@ public class ProjectService {
   }
 
   @PreAuthorize("hasAuthority('MANAGER')")
-  public List<GroupxProjectStateTimeDto> gxpStateTimeDtosByManager(String username) {
-    return groupxProjectRepository.getAllGroupxProjectStateTimeDtos(username);
+  public List<GroupxProjectStateTimeDbDto> gxpStateTimeDtosByManager(String username) {
+    return groupxProjectRepository.getAllgxpStateTimeDtosByManager(username);
   }
+
+  @PreAuthorize("hasAuthority('GROUPLEAD')")
+    public List<GroupxProjectStateTimeDbDto> gxpStateTimeDtosByGroupLead(String username) {
+        return groupxProjectRepository.getAllgxpStateTimeDtosByGroupLead(username);
+    }
+
+    public Set<SimpleProjectDbDto> getSimpleProjectDbDtoByUser(String username) {
+         return projectRepository.getSimpleProjectDbDtoByUser(username);
+    }
 
   @PreAuthorize("hasAuthority('MANAGER')")
   public void deleteProject(Project project) {
@@ -255,4 +269,9 @@ public class ProjectService {
   public List<GroupxProject> getGroupxProjectsByGroupId(Long groupId) {
     return groupxProjectRepository.findAllByGroup_Id(groupId);
   }
+
+  public GroupxProject findByGroupAndProject(Long groupId, Long projectId) {
+    GroupxProject groupxProject = groupxProjectRepository.findByGroup_IdAndProject_Id(groupId, projectId).orElseThrow();
+    return groupxProject;
+    }
 }

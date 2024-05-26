@@ -11,6 +11,7 @@ import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.model.enums.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
 import org.springframework.data.domain.Persistable;
 
 /**
@@ -28,7 +29,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   @Column(length = 100)
   private String username;
 
-  @ManyToOne(optional = false)
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   @JsonIgnore
   private Userx createUser;
 
@@ -37,7 +38,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   @JsonIgnore
   private LocalDateTime createDate;
 
-  @ManyToOne(optional = true)
+  @ManyToOne(optional = true, fetch = FetchType.LAZY)
   @JsonIgnore
   private Userx updateUser;
 
@@ -45,7 +46,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   @JsonIgnore
   private LocalDateTime updateDate;
 
-  @OneToOne (mappedBy = "user") private TemperaStation temperaStation;
+  @OneToOne (mappedBy = "user", fetch = FetchType.LAZY) private TemperaStation temperaStation;
 
   @ManyToMany(mappedBy = "contributors")
   private Set<GroupxProject> groupxProjects;
@@ -63,7 +64,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   private State state;
   @Enumerated(EnumType.STRING)
   private Visibility stateVisibility;
-  @ManyToOne()
+  @ManyToOne(fetch = FetchType.LAZY)
   private Project defaultProject;
 
   @ElementCollection(targetClass = UserxRole.class, fetch = FetchType.EAGER)

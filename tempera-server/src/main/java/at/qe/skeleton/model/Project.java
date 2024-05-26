@@ -15,7 +15,7 @@ public class Project {
 
   private String name;
   private String description;
-  @ManyToOne private Userx manager;
+  @ManyToOne(fetch = FetchType.LAZY) private Userx manager;
 
 
   @OneToMany(mappedBy = "project")

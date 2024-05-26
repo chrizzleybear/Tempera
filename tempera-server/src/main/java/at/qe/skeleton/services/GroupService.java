@@ -13,6 +13,7 @@ import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.ProjectMapperServ
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ public class GroupService {
     private static final String INVALID_GROUP_ID = "Invalid group lead ID";
     private static final String INVALID_GROUPLEAD_ID = "Invalid group lead ID";
     private static final String INVALID_MEMBER_ID = "Invalid member ID";
+    private static final String INVALID_MANAGER_ID = "Invalid manager ID";
 
     @Autowired
     private UserxRepository userxRepository;
@@ -36,8 +38,6 @@ public class GroupService {
     @Autowired
     private GroupxProjectRepository groupxProjectRepository;
 
-    @Autowired
-    private ProjectMapperService projectMapperService;
 
     public List<SimpleGroupDto> getAllGroups() {
         List<Groupx> groups = groupRepository.findAll();
@@ -56,6 +56,7 @@ public class GroupService {
         return groupRepository.save(group);
     }
 
+    @PreAuthorize("hasAuthority('MANAGER') or hasAnyAuthority('ADMIN')")
     @Transactional
     public Groupx updateGroup(Long groupId, String name, String description, String groupLeadId) {
         Groupx group = groupRepository.findById(groupId)
@@ -69,6 +70,7 @@ public class GroupService {
         return groupRepository.save(group);
     }
 
+    @PreAuthorize("hasAuthority('MANAGER') or hasAnyAuthority('ADMIN')")
     @Transactional
     public void deleteGroup(Long groupId) {
         Groupx group = groupRepository.findById(groupId)
@@ -76,6 +78,7 @@ public class GroupService {
         groupRepository.delete(group);
     }
 
+    @PreAuthorize("hasAuthority('GROUPLEAD') or hasAnyAuthority('ADMIN')")
     @Transactional
     public Userx addMember(Long groupId, String memberId) {
         Groupx group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
@@ -94,12 +97,9 @@ public class GroupService {
         return group;
     }
 
-    public GroupDetailsDto getDetailsGroup(Long groupId) {
-        Groupx group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
-        return projectMapperService.groupDetailsDto(group);
-    }
 
+
+    @PreAuthorize("hasAuthority('GROUPLEAD') or hasAnyAuthority('ADMIN')")
     public void removeMember(Long groupId, String memberId) {
         Groupx group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
         Userx member = userxRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
@@ -107,10 +107,17 @@ public class GroupService {
         groupRepository.save(group);
     }
 
-    public List<Groupx> getGroupFromGroupLead(String userId) {
+    @PreAuthorize("hasAuthority('GROUPLEAD') or hasAnyAuthority('ADMIN')")
+    public List<Groupx> getGroupsByGroupLead(String userId) {
         Userx groupLead = userxRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException(INVALID_GROUPLEAD_ID));
         List<Groupx> groups = groupRepository.findByGroupLead(groupLead);
         return groups;
+    }
+
+    @PreAuthorize("hasAuthority('MANAGER') or hasAnyAuthority('ADMIN')")
+    public List<Groupx> getGroupsByManager(String userId) {
+        Userx manager = userxRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException(INVALID_MANAGER_ID));
+        return groupRepository.findAllByManager(manager);
     }
 
     public List<Userx> getMembers(Long groupId) {

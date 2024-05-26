@@ -13,7 +13,7 @@ public class Sensor {
 
   @EmbeddedId private SensorId sensorId;
 
-  @ManyToOne(optional = false)
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   @MapsId("temperaId")
   @JoinColumn(name = "tempera_id")
   private TemperaStation temperaStation;
