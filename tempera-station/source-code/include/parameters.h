@@ -39,6 +39,9 @@
 #define BME_CS 10
 #define SEALEVELPRESSURE_HPA (1013.25)
 
+// Temperature Calibration Factor (temporary solution to heavily biased measurements)
+#define TEMP_CALIBRATION_FACTOR (21.0/26.0)
+
 // ############### YOU MAY CHANGE THE PARAMETERS BELOW ###############
 
 // Toggle additional Informations in serial output:
@@ -52,10 +55,10 @@
 #define PT_COLOR {0, 64, 0}
 
 // Delay in ms after which a new button press will be accepted
-#define BUTTON_COOLDOWN 500
+#define BUTTON_COOLDOWN 600
 
 // Update interval in ms after which the station transmits the current time state
-#define UPDATE_INTERVAL_TIME 60000
+#define UPDATE_INTERVAL_TIME 10000
 
 // Update interval in ms after which the station locally updates the current ROOM CLIMATE data
 #define UPDATE_INTERVAL_RC 60000

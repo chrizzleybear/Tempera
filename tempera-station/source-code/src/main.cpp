@@ -34,7 +34,7 @@ BLECharacteristic currentElapsedTimeCharacteristic("2BF2", BLERead | BLEIndicate
 
 // Set up the environmental sensing service for room climate measurements
 BLEService environmentalSensingService("181A");
-roomClimateUnionStructure roomClimateData = {0, 0, 0, 0}; // explicit initialization is required for sizeof operations below
+roomClimateUnionStructure roomClimateData = {0, 0, 0, 0}; // explicit initialization simplifies sizeof operations
 BLECharacteristic temperatureCharacteristic("2A6E", BLERead, sizeof(roomClimateData.temperature));
 BLECharacteristic irradianceCharacteristic("2A77", BLERead, sizeof(roomClimateData.irradiance));
 BLECharacteristic humidityCharacteristic("2A6F", BLERead, sizeof(roomClimateData.humidity)); 
@@ -179,7 +179,7 @@ void loop() {
       Serial.println("Tempera > [ERROR]    Previously set values will be used.");
     } else {
       // Write temperature and humidity measurements with respective accuracies to roomClimateStructure
-      roomClimateData.temperature = bme.temperature / 0.01;
+      roomClimateData.temperature = bme.temperature / 0.01 * TEMP_CALIBRATION_FACTOR;
       roomClimateData.humidity = bme.humidity / 0.01;
       // start a new measurement to only measure NMVOC
       bme.setGasHeater(320, 150); // 320*C for 150 ms
@@ -241,7 +241,7 @@ void loop() {
 
     // Update the work session info so the duration and time etc since the last mode change
     writeElapsedTimeCharacteristicStructure(\
-      {0, (millis()-lastTimeUpdate), 0, 0, session.workMode, (uint8_t) 7},\
+      {0, (millis()-lastTimeUpdate), 0, 0, session.workMode, (uint8_t) b},\
       currentElapsedTimeCharacteristic\
     );
     session.workMode = b;
