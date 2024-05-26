@@ -1,5 +1,5 @@
 export * from './accessPoint';
-export * from './accessPointDtoInternal';
+export * from './accessPointDtoRaspberry';
 export * from './accesspointDto';
 export * from './accumulatedTimeDto';
 export * from './accumulatedTimeResponse';

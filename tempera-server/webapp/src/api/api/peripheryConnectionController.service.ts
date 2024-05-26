@@ -19,7 +19,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { AccessPointDtoInternal } from '../model/accessPointDtoInternal';
+import { AccessPointDtoRaspberry } from '../model/accessPointDtoRaspberry';
 // @ts-ignore
 import { ScanOrderDto } from '../model/scanOrderDto';
 
@@ -98,9 +98,9 @@ export class PeripheryConnectionControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getAccessPointDto(accessPointId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<AccessPointDtoInternal>;
-    public getAccessPointDto(accessPointId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<AccessPointDtoInternal>>;
-    public getAccessPointDto(accessPointId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<AccessPointDtoInternal>>;
+    public getAccessPointDto(accessPointId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<AccessPointDtoRaspberry>;
+    public getAccessPointDto(accessPointId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<AccessPointDtoRaspberry>>;
+    public getAccessPointDto(accessPointId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<AccessPointDtoRaspberry>>;
     public getAccessPointDto(accessPointId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (accessPointId === null || accessPointId === undefined) {
             throw new Error('Required parameter accessPointId was null or undefined when calling getAccessPointDto.');
@@ -149,7 +149,7 @@ export class PeripheryConnectionControllerService {
         }
 
         let localVarPath = `/rasp/api/valid_devices`;
-        return this.httpClient.request<AccessPointDtoInternal>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<AccessPointDtoRaspberry>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
