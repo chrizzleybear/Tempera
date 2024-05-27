@@ -219,6 +219,12 @@ async def measurements_handler(
         session.commit()
 
 
+@retry(
+    retry=retry_if_exception_type(bleak.exc.BleakError)
+    | retry_if_exception_type(bleak.exc.BleakDBusError),
+    wait=wait_fixed(5),
+    stop=stop_after_attempt(10),
+)
 async def filter_uuid(
     provider: BleakClient | BleakGATTService, uuid: str
 ) -> BleakGATTService | BleakGATTCharacteristic:
