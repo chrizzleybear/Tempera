@@ -23,39 +23,46 @@
           <p-columnFilter type="date" field="endTime" placeholder="Search"></p-columnFilter>
         </th>
         <th id="projectFilter">
-          <p-columnFilter field="assignedProject.projectId" [showMenu]="true"
-                          [showClearButton]="false">
+          <p-columnFilter field="assignedProject" [showMenu]="false" matchMode="in" [showClearButton]="false">
             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-              <p-dropdown
-                [options]="availableProjects" [showClear]="true"
-                (onChange)="filter($event.value?.projectId)"
-                optionLabel="name" appendTo="body" placeholder="Select one"></p-dropdown>
+
+              <p-multiSelect
+                [options]="availableProjects"
+                [showClear]="true"
+                (onChange)="filter($event.value)"
+                (onClear)="filter(null)"
+                optionLabel="name" appendTo="body" placeholder="Any"
+              ></p-multiSelect>
+
             </ng-template>
           </p-columnFilter>
         </th>
         <th id="stateFilter">
-          <p-columnFilter field="state" [showMenu]="true" [showClearButton]="false">
+          <p-columnFilter field="state" [showMenu]="false" matchMode="in" [showClearButton]="false">
             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-              <p-dropdown [options]="stateOptions"
-                          [showClear]="true"
-                          (onChange)="filter($event.value)"
-                          optionLabel="value"
-                          appendTo="body"
-                          placeholder="Select one">
-                <ng-template let-option pTemplate="item">
-                  <div class="flex">
-                    <p-tag [value]="DisplayHelper.showState | wrapFn: option"
-                           [severity]="DisplayHelper.getStateSeverity | wrapFn: option"></p-tag>
-                  </div>
-                </ng-template>
-                <ng-template let-option pTemplate="selectedItem">
-                  <div class="flex">
-                    <p-tag [value]="DisplayHelper.showState | wrapFn: option"
-                           [severity]="DisplayHelper.getStateSeverity | wrapFn: option"></p-tag>
-                  </div>
-                </ng-template>
 
-              </p-dropdown>
+              <p-multiSelect [options]="stateOptions"
+                             [showClear]="true"
+                             (onChange)="filter($event.value)"
+                             (onClear)="filter(null)"
+                             optionLabel="value"
+                             appendTo="body"
+                             placeholder="Any">
+                <ng-template let-value pTemplate="selectedItems">
+                  <div class="inline-flex items-center gap-2 px-1" *ngFor="let option of value">
+                    <p-tag [value]="DisplayHelper.showState | wrapFn: option"
+                           [severity]="DisplayHelper.getStateSeverity | wrapFn: option"></p-tag>
+                  </div>
+                  <div *ngIf="!value || value.length === 0">Any</div>
+                </ng-template>
+                <ng-template let-state pTemplate="item">
+                  <div class="flex items-center gap-2">
+                    <p-tag [value]="DisplayHelper.showState | wrapFn: state"
+                           [severity]="DisplayHelper.getStateSeverity | wrapFn: state"></p-tag>
+                  </div>
+                </ng-template>
+              </p-multiSelect>
+
             </ng-template>
           </p-columnFilter>
         </th>
@@ -68,12 +75,14 @@
         <td>{{ timeEntry.startTime | date: 'ccc, MMM dd, y, HH:mm' }}</td>
         <td>{{ timeEntry.endTime | date: 'ccc, MMM dd, y, HH:mm' }}</td>
         <td>
+
           <p-dropdown *ngIf="timeEntry.state !== StateEnum.OutOfOffice" [options]="availableProjects"
                       [(ngModel)]="timeEntry.assignedProject"
                       (onChange)="updateProject($event.value, timeEntry.id)"
                       optionLabel="name"
                       placeholder="Select project"
                       appendTo="body"></p-dropdown>
+
         </td>
         <td>
           <p-tag [value]="DisplayHelper.showState | wrapFn: timeEntry.state"

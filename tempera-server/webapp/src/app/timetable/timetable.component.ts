@@ -6,7 +6,7 @@ import {
 } from '../../api';
 import { Table, TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
-import { DatePipe, NgIf, NgStyle } from '@angular/common';
+import { DatePipe, NgForOf, NgIf, NgStyle } from '@angular/common';
 import { TagModule } from 'primeng/tag';
 import { DisplayHelper } from '../_helpers/display-helper';
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
@@ -70,6 +70,7 @@ interface InternalTimetableEntryDto extends TimetableEntryDto {
     SkeletonModule,
     ProgressSpinnerModule,
     NgStyle,
+    NgForOf,
   ],
   templateUrl: './timetable.component.html',
   styleUrl: './timetable.component.css',
@@ -102,10 +103,10 @@ export class TimetableComponent implements OnInit {
   * This reference to the PrimeNG table is used because its entries also reflect the correct order if the table is sorted and the available entries when filtered.
   * Setter is needed because of ngIf directive in the template (table is not available when component is initialized)
    */
- private table?: Table;
+  private table?: Table;
 
   @ViewChild('table') set tableRef(tableRef: Table) {
-    if(tableRef) {
+    if (tableRef) {
       this.table = tableRef;
       this.calculateTotalTime();
     }
@@ -144,7 +145,7 @@ export class TimetableComponent implements OnInit {
     }),
   });
 
-  constructor(public timetableControllerService: TimetableControllerService, private messageService: MessageService, private cd : ChangeDetectorRef) {
+  constructor(public timetableControllerService: TimetableControllerService, private messageService: MessageService, private cd: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
