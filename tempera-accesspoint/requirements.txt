@@ -4,3 +4,4 @@ requests==2.31.0
 tenacity==8.2.3
 SQLAlchemy==2.0.29
 rich==13.7.1
+pytz
