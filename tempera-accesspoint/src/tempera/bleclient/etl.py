@@ -1,8 +1,9 @@
 import logging
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta
 from typing import List
 
 import bleak.exc
+import pytz
 import sqlalchemy.orm
 from bleak import BleakClient, BleakGATTCharacteristic
 from bleak.backends.service import BleakGATTService
@@ -34,7 +35,7 @@ def _create_time_record(
     :param auto_update: whether the time recod was update automatically.
     :return: the saved time record.
     """
-    now = datetime.now(tz=timezone.utc)
+    now = datetime.now(tz=pytz.timezone("Europe/Vienna"))
     start_time = now - timedelta(milliseconds=elapsed_time)
     record = TimeRecord(
         tempera_station=tempera_station,
@@ -204,7 +205,7 @@ async def measurements_handler(
 
         measurement = Measurement(
             tempera_station=tempera_station,
-            timestamp=datetime.now(timezone.utc),
+            timestamp=datetime.now(tz=pytz.timezone("Europe/Vienna")),
             temperature=temperature,
             irradiance=irradiance,
             humidity=humidity,
