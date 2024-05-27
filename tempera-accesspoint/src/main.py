@@ -5,7 +5,7 @@ import sys
 import bleak
 import requests.exceptions
 from bleak import BleakClient
-from tenacity import retry, wait_fixed, retry_if_exception_type
+from tenacity import retry, wait_fixed, retry_if_exception_type, stop_after_attempt
 
 from logging_conf import config
 from tempera import bleclient, utils, api
@@ -16,6 +16,12 @@ logging.config.dictConfig(config)
 logger = logging.getLogger("tempera")
 
 
+@retry(
+    retry=retry_if_exception_type(bleak.exc.BleakError)
+    | retry_if_exception_type(bleak.exc.BleakDBusError),
+    wait=wait_fixed(10),
+    stop=stop_after_attempt(10),
+)
 async def get_notifications(client: BleakClient) -> None:
     elapsed_time_service = await bleclient.filter_uuid(client, "183f")
     elapsed_time_uuid = await bleclient.filter_uuid(elapsed_time_service, "2bf2")
@@ -27,6 +33,12 @@ async def get_notifications(client: BleakClient) -> None:
     logger.info("Subscribed to time record notifications.")
 
 
+@retry(
+    retry=retry_if_exception_type(bleak.exc.BleakError)
+    | retry_if_exception_type(bleak.exc.BleakDBusError),
+    wait=wait_fixed(10),
+    stop=stop_after_attempt(10),
+)
 async def get_measurements(client: BleakClient) -> None:
     measurement_service = await bleclient.filter_uuid(client, "181a")
     characteristics = ["2a6e", "2a77", "2a6f", "2bd3"]
