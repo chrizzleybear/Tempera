@@ -193,18 +193,12 @@ void loop() {
       }
       // now write only the NMVOC to roomClimateData since the other measurements are skewed due to the heating
       roomClimateData.nmvoc = bme.gas_resistance / 100.0;
-      // use exponential smoothing to reduce fluctuations
-      double luminosity = 0;
-      while (1) {
-            
-        luminosity = LUMINOSITY_SMOOTHING_FACTOR*analogRead(PT_PIN) + (1-LUMINOSITY_SMOOTHING_FACTOR)*luminosity;
-
-        Serial.println(luminosity);
-
-        delay(LUMINOSITY_MEASUREMENT_DELAY);
-      }
-
-      roomClimateData.irradiance = luminosity;
+      
+      // use exponential smoothing to reduce fluctuations  
+      roomClimateData.irradiance =\ 
+        LUMINOSITY_CONVERSION_FUNCTION(\
+          LUMINOSITY_SMOOTHING_FACTOR*analogRead(PT_PIN) + (1-LUMINOSITY_SMOOTHING_FACTOR)*roomClimateData.irradiance\
+        );
     }
 
     // Confirm set values
