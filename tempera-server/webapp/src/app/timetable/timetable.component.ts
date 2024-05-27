@@ -95,6 +95,15 @@ export class TimetableComponent implements OnInit {
   public splitVisible: boolean = false;
   public calendarVisible: boolean = false;
 
+  /*
+  Used for handling when a user is assigned to a project from multiple groups
+  Key is the projectId and value is an object containing the projects with the same projectId and the original name of the project
+   */
+  private duplicatedProjects: Map<string, { projects: SimpleProjectDto[], originalName: string }> = new Map<string, {
+    projects: SimpleProjectDto[],
+    originalName: string
+  }>();
+
   protected readonly Date = Date;
   protected readonly StateEnum = StateEnum;
 
@@ -158,6 +167,7 @@ export class TimetableComponent implements OnInit {
           })) ?? [];
 
           this.availableProjects = data.availableProjects ?? [];
+          this.renameOverlappingProjects();
 
           this.filterFields = Object.keys(this.tableEntries?.[0] ?? []);
         },
@@ -170,9 +180,16 @@ export class TimetableComponent implements OnInit {
   }
 
   updateProject(newProject: SimpleProjectDto, timeEntryId: number) {
+
+    // give the project back the original name if it is a duplicate
+    let submitProject = structuredClone(newProject);
+    if (this.duplicatedProjects.has(submitProject.projectId!)) {
+      submitProject.name = this.duplicatedProjects.get(submitProject.projectId!)?.originalName;
+    }
+
     this.timetableControllerService.updateProject1({
       entryId: timeEntryId,
-      project: newProject,
+      project: submitProject,
     }).subscribe({
       next: () => {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project updated successfully' });
@@ -251,5 +268,34 @@ export class TimetableComponent implements OnInit {
     this.totalTime = TotalTimeHelper.calculate(filteredEntries);
 
     this.cd.detectChanges();
+  }
+
+  /*
+  * Renames projects that have the same projectId (happens when a user is assigned to a project from multiple groups)
+  * Also fills the duplicatedProjects map with the projects that have the same projectId
+   */
+  renameOverlappingProjects() {
+    // Reset duplicated projects
+    this.duplicatedProjects = new Map<string, { projects: SimpleProjectDto[], originalName: string }>;
+
+    // Refill duplicated projects
+    this.availableProjects.map(x => x?.projectId!).forEach(id => {
+      const overlappingProjects = this.availableProjects?.filter(y => y.projectId === id);
+      if (overlappingProjects?.length > 1) {
+        this.duplicatedProjects.set(id, { projects: overlappingProjects, originalName: overlappingProjects[0].name! });
+      }
+    });
+
+    // Rename projects
+    if (this.duplicatedProjects.size > 0) {
+      const duplicatedIds = Array.from(this.duplicatedProjects.keys());
+
+      this.availableProjects.forEach(project => {
+        if (duplicatedIds.includes(project.projectId!)) {
+          // todo: replace project.description with group name
+          project.name = `${project.name} - ${project.description}`;
+        }
+      });
+    }
   }
 }
