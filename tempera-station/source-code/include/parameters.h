@@ -39,7 +39,11 @@
 #define BME_CS 10
 #define SEALEVELPRESSURE_HPA (1013.25)
 
-// Temperature Calibration Factor (temporary solution to heavily biased measurements)
+// Luminosity smoothing factor used for exponential smoothing
+#define LUMINOSITY_SMOOTHING_FACTOR 0.05
+#define LUMINOSITY_MEASUREMENT_DELAY 100
+
+// TO-DO: Temperature calibration factor (temporary solution to heavily biased measurements)
 #define TEMP_CALIBRATION_FACTOR (21.0/26.0)
 
 // ############### YOU MAY CHANGE THE PARAMETERS BELOW ###############
@@ -58,7 +62,7 @@
 #define BUTTON_COOLDOWN 600
 
 // Update interval in ms after which the station transmits the current time state
-#define UPDATE_INTERVAL_TIME 10000
+#define UPDATE_INTERVAL_TIME 60000
 
 // Update interval in ms after which the station locally updates the current ROOM CLIMATE data
 #define UPDATE_INTERVAL_RC 10000

@@ -121,3 +121,19 @@ void printRoomClimateDataUpdate(roomClimateUnionStructure roomClimateData) {
   Serial.print("Tempera > [INFO]    Gas resistance: ");
   Serial.println(roomClimateData.nmvoc);
 };
+
+/**
+ * @brief Conversion function which approximately converts the measured voltage to lux
+ * @param lum Luminsoity, measured from the analog readout pin, that should be converted.
+ */
+int convertAnalogReadoutToLux(double lum) {
+  int res = 0;
+  
+  return res;
+}
+3.5 100
+1.7 40
+4.5 200
+9 400
+22 800
+40 2000 
