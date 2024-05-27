@@ -2,7 +2,6 @@ package at.qe.skeleton.rest.frontend.mappersAndFrontendServices;
 
 import at.qe.skeleton.rest.frontend.dtos.SimpleGroupDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
-import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
 import at.qe.skeleton.rest.frontend.payload.response.AccumulatedTimeResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +29,6 @@ class AccumulatedTimeMapperTest {
         assertEquals(1, response.accumulatedTimes().stream().filter(timerecord -> timerecord.groupId().equals("-1") && timerecord.projectId().equals("-2")).toList().size(), "There should be exactly one timerecord with groupId -1 and projectId -2");
         assertEquals(1, response.accumulatedTimes().stream().filter(timerecord -> timerecord.groupId().equals("-3") && timerecord.projectId().equals("-6")).toList().size(), "There should be exactly one timerecord with groupId -3 and projectId -6");
 
-
-
-
         //projekte -1 bis -6 sollten zu MariaTheresa gehören
         assertEquals(6, response.availableProjects().size());
         SimpleProjectDto expectedProjectDto = new SimpleProjectDto("-1", "Serious Business", "This project beuts you aus", "MariaTheresa");
@@ -50,8 +46,42 @@ class AccumulatedTimeMapperTest {
     @WithMockUser(
         username = "peterparker",
         authorities = {"GROUPLEAD"})
+    @Sql(scripts = {"classpath:AccumulatedTimeMapper.sql"})
     void testGetGroupLeadTimeData() {
         //todo: write test for getGroupLeadTimeData
 
+        AccumulatedTimeResponse response = accumulatedTimeMapper.getGroupLeadTimeData("peterparker");
+
+        //test accumulatedTimes -> insg. 10 Timerecords mit gruppen -1 oder -2
+        assertEquals(9, response.accumulatedTimes().size());
+        assertEquals(2, response.accumulatedTimes().stream().filter(timerecord -> timerecord.projectId().equals("-1")).toList().size());
+        assertEquals(1, response.accumulatedTimes().stream().filter(timerecord -> timerecord.projectId().equals("-3")).toList().size());
+        assertEquals(1, response.accumulatedTimes().stream().filter(timerecord -> timerecord.projectId().equals("-7")).toList().size());
+        assertEquals(1, response.accumulatedTimes().stream().filter(timerecord -> timerecord.projectId().equals("-8")).toList().size());
+        assertEquals(1, response.accumulatedTimes().stream().filter(timerecord -> timerecord.projectId().equals("-9")).toList().size());
+        assertEquals(1, response.accumulatedTimes().stream().filter(timerecord -> timerecord.projectId().equals("-10")).toList().size());
+        assertEquals(0, response.accumulatedTimes().stream().filter(timerecord -> timerecord.projectId().equals("-6")).toList().size());
+        assertEquals(1, response.accumulatedTimes().stream().filter(timerecord -> timerecord.projectId().equals("-5")).toList().size());
+        assertEquals(1, response.accumulatedTimes().stream().filter(timerecord -> timerecord.projectId().equals("-2")).toList().size());
+
+        //test availableProjects -> alle projekte sind mit gruppe -1 & -2 verbunden über GroupxProjects
+        assertEquals(12, response.availableProjects().size());
+        assertEquals(1, response.availableProjects().stream().filter(p -> p.projectId().equals("-1")).toList().size());
+        assertEquals(1, response.availableProjects().stream().filter(p -> p.projectId().equals("-2")).toList().size());
+        assertEquals(1, response.availableProjects().stream().filter(p -> p.projectId().equals("-3")).toList().size());
+        assertEquals(1, response.availableProjects().stream().filter(p -> p.projectId().equals("-4")).toList().size());
+        assertEquals(1, response.availableProjects().stream().filter(p -> p.projectId().equals("-5")).toList().size());
+        assertEquals(1, response.availableProjects().stream().filter(p -> p.projectId().equals("-6")).toList().size());
+        assertEquals(1, response.availableProjects().stream().filter(p -> p.projectId().equals("-7")).toList().size());
+        assertEquals(1, response.availableProjects().stream().filter(p -> p.projectId().equals("-8")).toList().size());
+        assertEquals(1, response.availableProjects().stream().filter(p -> p.projectId().equals("-9")).toList().size());
+        assertEquals(1, response.availableProjects().stream().filter(p -> p.projectId().equals("-10")).toList().size());
+        assertEquals(1, response.availableProjects().stream().filter(p -> p.projectId().equals("-11")).toList().size());
+        assertEquals(1, response.availableProjects().stream().filter(p -> p.projectId().equals("-12")).toList().size());
+
+        //test availableGroups -> peterparker ist GroupLead von -1 & -2
+        assertEquals(2, response.availableGroups().size());
+        assertEquals(1, response.availableGroups().stream().filter(g -> g.id().equals("-1")).toList().size());
+        assertEquals(1, response.availableGroups().stream().filter(g -> g.id().equals("-2")).toList().size());
     }
 }

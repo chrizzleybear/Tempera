@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   AccumulatedTimeControllerService,
-  AccumulatedTimeDto,
+  AccumulatedTimeDto, ColleagueStateDto,
   SimpleGroupDto,
   SimpleProjectDto,
 } from '../../api';
@@ -9,8 +9,12 @@ import { Table, TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
 import { CardModule } from 'primeng/card';
 import { TotalTimeHelper, TotalTimeWithStates } from '../_helpers/total-time-helper';
-import { ChartModule} from 'primeng/chart';
+import { ChartModule } from 'primeng/chart';
 import { Chart } from 'chart.js';
+import { TagModule } from 'primeng/tag';
+import StateEnum = ColleagueStateDto.StateEnum;
+import { DisplayHelper } from '../_helpers/display-helper';
+import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
 
 interface InternalAccumulatedTimeDto extends AccumulatedTimeDto {
   startTime: Date;
@@ -25,6 +29,8 @@ interface InternalAccumulatedTimeDto extends AccumulatedTimeDto {
     DropdownModule,
     CardModule,
     ChartModule,
+    TagModule,
+    WrapFnPipe,
   ],
   templateUrl: './accumulated-time.component.html',
   styleUrl: './accumulated-time.component.css',
@@ -39,9 +45,12 @@ export class AccumulatedTimeComponent implements OnInit {
     MEETING: 0,
     DEEPWORK: 0,
     OUT_OF_OFFICE: 0,
-  }
+  };
 
   public totalTime: number = 0;
+
+  protected readonly StateEnum = StateEnum;
+  protected readonly DisplayHelper = DisplayHelper;
 
   /*
   * The table is used for its filtering functionality
@@ -77,7 +86,7 @@ export class AccumulatedTimeComponent implements OnInit {
     const textColor = documentStyle.getPropertyValue('--text-color');
 
 
-    this.chart = new Chart("MyChart", {
+    this.chart = new Chart('MyChart', {
       type: 'pie', //this denotes tha type of chart
 
       data: {
@@ -86,21 +95,21 @@ export class AccumulatedTimeComponent implements OnInit {
           {
             data: [0, 0, 0],
             backgroundColor: ['#22c55e', '#3b82f6', '#f59e0b'],
-            hoverBackgroundColor: ['#52cc7f', '#7396ea', '#efae5c']
-          }
-        ]
+            hoverBackgroundColor: ['#52cc7f', '#7396ea', '#efae5c'],
+          },
+        ],
       },
       options: {
-        aspectRatio:2.5,
+        aspectRatio: 2.5,
         plugins: {
           legend: {
             labels: {
               usePointStyle: true,
-              color: textColor
-            }
-          }
-        }
-      }
+              color: textColor,
+            },
+          },
+        },
+      },
     });
   }
 
