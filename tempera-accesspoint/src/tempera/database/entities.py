@@ -8,8 +8,8 @@ from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped, relationship
 
 class Mode(StrEnum):
     OUT_OF_OFFICE = "OUT_OF_OFFICE"
-    DEEP_WORK = "DEEP_WORK"
-    IN_MEETING = "IN_MEETING"
+    DEEP_WORK = "DEEPWORK"
+    IN_MEETING = "MEETING"
     AVAILABLE = "AVAILABLE"
 
 
