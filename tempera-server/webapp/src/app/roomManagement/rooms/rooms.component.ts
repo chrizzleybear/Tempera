@@ -33,7 +33,7 @@ import {RippleModule} from "primeng/ripple";
 })
 /**
  * @class RoomsComponent
- * This component is responsible for managing and displaying rooms.
+ * This component is responsible for managing and displaying all rooms.
  */
 export class RoomsComponent implements OnInit {
 
