@@ -128,6 +128,7 @@ private GroupxProject groupxProject;
     return other.getId().equals(this.id);
   }
 
+
   @Override
   public String toString() {
     return "[InternalRecord start: %s, end: %s, project: %s]"
