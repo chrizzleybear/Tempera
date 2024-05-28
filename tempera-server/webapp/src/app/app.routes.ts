@@ -16,7 +16,7 @@ import { ProjectGroupsComponent } from './projectManagement/project-groups/proje
 import { GroupsGroupleadComponent } from './grouplead/groups-grouplead.component';
 import { GroupProjectsComponent } from './grouplead/group-projects/group-projects.component';
 import { RoomsComponent } from './roomManagement/rooms/rooms.component';
-import { FloorPlanComponent } from './rooms/floor-plan/floor-plan.component';
+import { FloorPlanComponent } from './roomManagement/floor-plan/floor-plan.component';
 import { RoomDetailsComponent } from './roomManagement/room-details/room-details.component';
 import { TimetableComponent } from './timetable/timetable.component';
 import {AccesspointsComponent} from "./accessPointManagement/access-points/accespoints.component";

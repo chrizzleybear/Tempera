@@ -7,6 +7,10 @@ import {FormGroup, FormBuilder} from '@angular/forms';
   standalone: true,
   styleUrls: ['./room-thresholds.component.css']
 })
+/**
+ * @class RoomThresholdsComponent
+ * This component is responsible for managing and displaying room thresholds.
+ */
 export class RoomThresholdsComponent {
   thresholdForm: FormGroup;
 
@@ -17,10 +21,5 @@ export class RoomThresholdsComponent {
       irradiance: '',
       nmvoc: ''
     });
-  }
-
-  onSubmit(): void {
-
-    console.log(this.thresholdForm.value);
   }
 }
