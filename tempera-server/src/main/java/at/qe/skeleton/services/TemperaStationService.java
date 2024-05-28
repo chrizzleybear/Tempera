@@ -11,14 +11,13 @@ import at.qe.skeleton.repositories.TemperaStationRepository;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
 @Component
 @Scope("application")
 public class TemperaStationService {
-
-  private final Logger logger = Logger.getLogger("TemperaStationServiceLogger");
 
   private final TemperaStationRepository temperaStationRepository;
   private final SensorService sensorService;
@@ -41,8 +40,7 @@ public class TemperaStationService {
    * @return the newly created TemperaStation
    */
   public TemperaStation createTemperaStation(String id, boolean enabled, Userx user) {
-    logger.info("creating new Temperastation with id %s".formatted(id));
-    TemperaStation temperaStation = new TemperaStation(id, enabled, user);
+    TemperaStation temperaStation = new TemperaStation(id, enabled, user, false);
     save(temperaStation);
 
     Sensor temperatureSensor = new Sensor(SensorType.HUMIDITY, Unit.PERCENT, temperaStation);
@@ -60,6 +58,10 @@ public class TemperaStationService {
     return temperaStation;
   }
 
+  public List<TemperaStation> getAllTemperaStations() {
+    return temperaStationRepository.findAll();
+  }
+
   public TemperaStation findById(String id) throws CouldNotFindEntityException {
     return temperaStationRepository
         .findById(id)
@@ -75,7 +77,6 @@ public class TemperaStationService {
   }
 
   public TemperaStation save(TemperaStation temperaStation) {
-    logger.info("saving temperaStation %s".formatted(temperaStation.toString()));
     return temperaStationRepository.save(temperaStation);
 
   }
@@ -86,7 +87,6 @@ public class TemperaStationService {
  *  Measurements associated with that sensor and Temperastation.
  */
   public void delete(TemperaStation temperaStation) {
-    logger.info("deleting temperaStation %s".formatted(temperaStation.toString()));
     AccessPoint accessPoint = temperaStation.getAccessPoint();
     accessPoint.getTemperaStations().remove(temperaStation);
     temperaStationRepository.delete(temperaStation);

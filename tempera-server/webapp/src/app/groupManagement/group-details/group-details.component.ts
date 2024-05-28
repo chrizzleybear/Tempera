@@ -6,6 +6,7 @@ import {CardModule} from "primeng/card";
 import {NgForOf, NgIf} from "@angular/common";
 import {TableModule} from "primeng/table";
 import {ButtonModule} from "primeng/button";
+import {User} from "../../models/user.model";
 
 @Component({
   selector: 'app-group-details',
@@ -24,6 +25,7 @@ export class GroupDetailsComponent implements OnInit{
 
   group: Group | undefined;
   groupId: string | null | undefined;
+  members: User[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -35,6 +37,7 @@ export class GroupDetailsComponent implements OnInit{
     this.groupId = this.route.snapshot.paramMap.get('id');
     if (this.groupId) {
       this.fetchGroupDetails(this.groupId);
+      this.fetchGroupMembers(this.groupId);
     }
   }
 
@@ -46,6 +49,17 @@ export class GroupDetailsComponent implements OnInit{
       },
       error: (error) => {
         console.error('Failed to load group details:', error);
+      },
+    });
+  }
+  fetchGroupMembers(id: string) {
+    this.groupService.getGroupMembers(Number(id)).subscribe({
+      next: (data) => {
+        this.members = data;
+        console.log('Group members: ', this.members);
+      },
+      error: (error) => {
+        console.error('Failed to load group members:', error);
       },
     });
   }

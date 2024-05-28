@@ -1,8 +1,10 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
-import at.qe.skeleton.model.Room;
-import at.qe.skeleton.model.Threshold;
+import at.qe.skeleton.model.*;
+import at.qe.skeleton.rest.frontend.dtos.AccessPointDto;
+import at.qe.skeleton.rest.frontend.dtos.ThresholdUpdateDto;
 import at.qe.skeleton.services.RoomService;
+import at.qe.skeleton.services.TemperaStationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,21 +21,25 @@ public class RoomController {
 
   @Autowired private RoomService roomService;
 
-  @GetMapping("/all")
-  public ResponseEntity<List<Room>> getAllRooms() {
-    List<Room> rooms = roomService.getAllRooms();
-    return ResponseEntity.ok(rooms);
-  }
+  @Autowired private TemperaStationService temp;
 
-  @PostMapping("/create")
-  public ResponseEntity<String> createRoom(@RequestBody String roomId) {
-    try {
-      Room room = roomService.createRoom(roomId);
-      return ResponseEntity.ok("Room created successfully.");
-    } catch (IllegalArgumentException e) {
-      return ResponseEntity.badRequest().body(e.getMessage());
+
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Room>> getAllRooms() {
+        List<Room> rooms = roomService.getAllRooms();
+        return ResponseEntity.ok(rooms);
     }
-  }
+
+    @PostMapping("/create")
+    public ResponseEntity<String> createRoom(@RequestBody String roomId) {
+        try {
+            roomService.createRoom(roomId);
+            return ResponseEntity.ok("Room created successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
   @DeleteMapping("/delete/{roomId}")
   public ResponseEntity<String> deleteRoom(@PathVariable String roomId) {
@@ -71,12 +77,44 @@ public class RoomController {
     }
   }
 
-  @GetMapping("/load/{roomId}")
-  public ResponseEntity<Room> getRoomById(@PathVariable String roomId) {
-    Optional<Room> room = roomService.getRoomById(roomId);
-    if (room.isPresent()) {
-      return ResponseEntity.ok(room.get());
+    @GetMapping("/load/{roomId}")
+    public ResponseEntity<Room> getRoomById(@PathVariable String roomId) {
+        Optional<Room> room = roomService.getRoomById(roomId);
+        if (room.isPresent()) {
+            return ResponseEntity.ok(room.get());
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-  }
+
+    @GetMapping("/available")
+    public ResponseEntity<List<Room>> getAvailableRooms() {
+        List<Room> rooms = roomService.getAvailableRooms();
+        return ResponseEntity.ok(rooms);
+    }
+
+    @PutMapping("/threshold/update")
+    public ResponseEntity<Threshold> updateThreshold(@RequestBody ThresholdUpdateDto dto) {
+        Threshold updatedThreshold = roomService.updateThreshold(dto);
+        return ResponseEntity.ok(updatedThreshold);
+    }
+
+    @PutMapping("/threshold/tip/update")
+    public ResponseEntity<ThresholdTip> updateThresholdTip(@RequestBody ThresholdTip dto) {
+        ThresholdTip updatedThreshold = roomService.updateThresholdTip(dto);
+            return ResponseEntity.ok(updatedThreshold);
+    }
+  //dummy methods
+    @GetMapping("/temperaStations")
+    public ResponseEntity<List<TemperaStation>> getTemperaStations() {
+        List<TemperaStation> temp1 = temp.getAllTemperaStations();
+        return ResponseEntity.ok(temp1);
+    }
+
+    @GetMapping("/accesspoint/{roomId}")
+    public ResponseEntity<AccessPointDto> getAccessPoints(@PathVariable String roomId) {
+        AccessPoint ap = this.roomService.getAccesspoint(roomId);
+        AccessPointDto dto = new AccessPointDto(ap.getId().toString(), ap.getRoom().getId() ,ap.isEnabled(), ap.isHealthy());
+        return ResponseEntity.ok(dto);
+    }
+
 }

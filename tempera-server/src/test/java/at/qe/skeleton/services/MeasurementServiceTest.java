@@ -12,6 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -103,10 +104,15 @@ class MeasurementServiceTest {
 
   @Test
   @DirtiesContext
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:measurementServiceTest.sql")
   void saveLoadDeleteMeasurement() throws CouldNotFindEntityException {
     measurementRepository.findAll().forEach(measurementRepository::delete);
 
-    LocalDateTime timestamp = LocalDateTime.now();
+    // We have to truncate the LocalDateTime to Milliseconds because some versions of postgres are messing with
+    // DateTime Objects that are stored more fine grained than Milliseconds (e.g. nano seconds)
+    // But since Leo will make sure that neither Measurement Timestamps nor TimeRecord Timestamps will be that finegrained,
+    // it shouldnt be a problem
+    LocalDateTime timestamp = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS);
 
     Sensor sensor = getSensor();
 

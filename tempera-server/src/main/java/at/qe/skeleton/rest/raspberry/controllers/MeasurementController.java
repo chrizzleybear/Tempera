@@ -38,6 +38,7 @@ public class MeasurementController {
   @PostMapping("")
   public ResponseEntity<MeasurementDto> createMeasurement(
       @RequestBody MeasurementDto measurementDto) {
+    logger.info("incoming request: createMeasurement with body: %s".formatted(measurementDto));
     try {
       if (!accessPointService.isEnabled(measurementDto.access_point_id())) {
         logger.info("accessPoint %s is not enabled".formatted(measurementDto.access_point_id()));

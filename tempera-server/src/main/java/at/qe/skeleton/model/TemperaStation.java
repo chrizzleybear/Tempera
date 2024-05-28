@@ -1,14 +1,11 @@
 package at.qe.skeleton.model;
 
-import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Persistable;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
-
 
 @Entity
 public class TemperaStation implements Persistable<String> {
@@ -18,6 +15,8 @@ public class TemperaStation implements Persistable<String> {
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY) private Userx user;
   private boolean enabled;
 
+  private boolean isHealthy;
+
   @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY) private AccessPoint accessPoint;
   @OneToMany(mappedBy = "temperaStation", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, orphanRemoval = true) private List<Sensor> sensors;
 
@@ -25,6 +24,13 @@ public class TemperaStation implements Persistable<String> {
   // the following strategy for the isNew Method comes from spring documentation:
   // https://docs.spring.io/spring-data/jpa/reference/jpa/entity-persistence.html
   @Transient private boolean isNew = true;
+
+    public TemperaStation(String id, boolean enabled, Userx user) {
+    }
+
+  public TemperaStation() {
+
+  }
 
   @Override
   public String getId() {
@@ -46,14 +52,12 @@ public class TemperaStation implements Persistable<String> {
    * direct creation of TemperaStations should be avoided, use {@link
    * at.qe.skeleton.services.TemperaStationService#createTemperaStation} instead
    */
-  public TemperaStation(@NotNull String id, boolean enabled, Userx user) {
+  public TemperaStation(@NotNull String id, boolean enabled, Userx user, boolean isHealthy) {
     this.user = user;
     this.id = Objects.requireNonNull(id);
     this.enabled = enabled;
+    this.isHealthy = isHealthy;
   }
-
-  public TemperaStation() {}
-  ;
 
   public void setUser(Userx user) {
     this.user = user;
@@ -103,6 +107,14 @@ public class TemperaStation implements Persistable<String> {
     this.enabled = enabled;
   }
 
+    public boolean isIsHealthy() {
+        return isHealthy;
+    }
+
+    public void setIsHealthy(boolean active) {
+        this.isHealthy = active;
+    }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -118,6 +130,7 @@ public class TemperaStation implements Persistable<String> {
 
   @Override
   public String toString() {
-    return this.id;
+    return "[Tempera station: id=%s; user=%s; enabled=%s; isHealthy=%s]"
+        .formatted(this.id, this.user.getUsername(), this.enabled, this.isHealthy);
   }
 }

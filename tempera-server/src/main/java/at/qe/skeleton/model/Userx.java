@@ -11,6 +11,7 @@ import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.model.enums.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
 import org.springframework.data.domain.Persistable;
 
 /**
@@ -28,7 +29,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   @Column(length = 100)
   private String username;
 
-  @ManyToOne(optional = false)
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   @JsonIgnore
   private Userx createUser;
 
@@ -37,7 +38,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   @JsonIgnore
   private LocalDateTime createDate;
 
-  @ManyToOne(optional = true)
+  @ManyToOne(optional = true, fetch = FetchType.LAZY)
   @JsonIgnore
   private Userx updateUser;
 
@@ -45,12 +46,13 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   @JsonIgnore
   private LocalDateTime updateDate;
 
-  @OneToOne (mappedBy = "user") private TemperaStation temperaStation;
+  @OneToOne (mappedBy = "user", fetch = FetchType.LAZY) private TemperaStation temperaStation;
+
+  @ManyToMany(mappedBy = "contributors")
+  private Set<GroupxProject> groupxProjects;
 
   @ManyToMany(cascade = CascadeType.ALL, mappedBy = "members")
-  private List<Group> groups;
-  @ManyToMany(cascade = CascadeType.ALL, mappedBy = "contributors")
-  private List<Project> projects;
+  private List<Groupx> groups;
 
   private String password;
 
@@ -62,7 +64,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   private State state;
   @Enumerated(EnumType.STRING)
   private Visibility stateVisibility;
-  @ManyToOne()
+  @ManyToOne(fetch = FetchType.LAZY)
   private Project defaultProject;
 
   @ElementCollection(targetClass = UserxRole.class, fetch = FetchType.EAGER)
@@ -80,7 +82,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     this.createDate = createDate;
   }
 
-  public List<Group> getGroups() {
+  public List<Groupx> getGroups() {
     return groups;
   }
 
@@ -100,6 +102,9 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     }
   }
 
+  public Set<GroupxProject> getGroupxProjects() {
+    return this.groupxProjects;
+  }
   public String getUsername() {
     return username;
   }
@@ -163,20 +168,22 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     this.roles.add(role);
   }
 
+  public void addGroup(Groupx group) {
+    groups.add(group);
+    group.getMembers().add(this);
+  }
+
+  public void removeGroup(Groupx group) {
+    groups.remove(group);
+    group.getMembers().remove(this);
+  }
+
   public Project getDefaultProject() {
     return defaultProject;
   }
 
-  public void setGroups(List<Group> groups) {
-    this.groups = groups;
-  }
-
-  public List<Project> getProjects() {
-    return projects;
-  }
-
-  public void setProjects(List<Project> projects) {
-    this.projects = projects;
+  public void setGroups(List<Groupx> groupxes) {
+    this.groups = groupxes;
   }
 
   public void setDefaultProject(Project defaultProject) {

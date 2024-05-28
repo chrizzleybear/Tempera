@@ -3,9 +3,9 @@ services:
     build: ./tempera-accesspoint
     volumes:
       - /var/run/dbus:/var/run/dbus
-  #    depends_on:
-  #      - back-end
-  #      - test-api
+      # shared volume between host and docker, so that the config file will persist on
+      # the host machine, and you don't have to re-configure everything at each docker startup
+      - ./tempera-accesspoint:/home
 
   back-end:
     build:

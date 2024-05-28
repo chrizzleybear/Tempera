@@ -1,20 +1,16 @@
 package at.qe.skeleton.services;
 
-import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.repositories.ExternalRecordRepository;
 import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.rest.frontend.dtos.UserStateDto;
-import at.qe.skeleton.model.TemperaStation;
-import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.repositories.UserxRepository;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,7 +22,6 @@ import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -158,26 +153,28 @@ public class UserxService implements UserDetailsService {
           project.setManager(null);
           projectService.saveProject(project);
         }
-        List<Group> groups = groupRepository.findByGroupLead(user);
+        List<Groupx> groups = groupRepository.findByGroupLead(user);
         for (var group : groups) {
           group.setGroupLead(null);
           groupRepository.save(group);
         }
       }
 
-      List<Project> projects = projectService.getProjectsByContributor(user.getUsername());
-      for (var project : projects) {
-        project.getContributors().remove(user);
-        projectService.saveProject(project);
+      List<GroupxProject> groupxProjects = projectService.findAllGroupxProjectsOfAUser(user);
+      for (var groupxProject : groupxProjects) {
+        groupxProject.removeContributor(user);
+        projectService.saveGroupxProject(groupxProject);
       }
-      List <Group> groupsAsMember = groupRepository.findAllByMembersContains(user);
+      List <Groupx> groupsAsMember = groupRepository.findAllByMembersContains(user);
       for (var group : groupsAsMember) {
-        group.getMembers().remove(user);
-        groupRepository.save(group);
+        user.removeGroup(group);
       }
       externalRecordRepository.deleteAllByUser(user);
       user.removeTemperaStation();
-      userx.ifPresent(value -> userRepository.delete(value));
+      // we are saving the user so that all the other objects, where we set the user reference to null are being
+      // saved via cascading
+      saveUser(user);
+      userRepository.delete(user);
     }
   }
 

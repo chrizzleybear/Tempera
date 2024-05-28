@@ -1,4 +1,7 @@
 package at.qe.skeleton.rest.frontend.dtos;
 
-public record SimpleGroupDto(Long groupId, String name, String description, String groupLead) {
+
+public record SimpleGroupDto(String id, String name, String description, String groupLead) {
+
+
 }

@@ -1,15 +1,17 @@
 <p-messages [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
+<h1 class="text-3xl font-semibold text-center text-gray-700 my-4">Groups from Project {{projectId}}</h1>
+<br>
 <div class="mb-4">
+  <input type="text" pInputText placeholder="Search" (input)="applyFilter($event)" class="mr-2">
   <button type="button" pButton label="Add New Group" icon="pi pi-plus"
           (click)="addGroupDialog()" class="mr-2"></button>
 </div>
-<p-table [value]="groups" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+<p-table [value]="filteredGroups" [paginator]="true" [rows]="10" responsiveLayout="scroll">
   <ng-template pTemplate="header">
     <tr>
       <th scope="col" pSortableColumn="name">Group Name <p-sortIcon field="name"></p-sortIcon></th>
       <th scope="col" pSortableColumn="description">Description <p-sortIcon field="description"></p-sortIcon></th>
       <th scope="col" pSortableColumn="groupLeadId">Group Lead ID <p-sortIcon field="groupLeadId"></p-sortIcon></th>
-      <th></th>
       <th></th>
     </tr>
   </ng-template>
@@ -25,12 +27,15 @@
   </ng-template>
 </p-table>
 <p-dialog header="Add New Group" [(visible)]="displayAddDialog" [modal]="true" [responsive]="true" [style]="{width: '50vw'}">
-  <p-table [value]="allGroups" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+  <div class="mb-4">
+    <input type="text" pInputText placeholder="Search" (input)="applyFilter($event)" class="mr-2">
+  </div>
+  <p-table [value]="filteredAvailableGroups" [paginator]="true" [rows]="10" responsiveLayout="scroll">
     <ng-template pTemplate="header">
       <tr>
         <th scope="col" pSortableColumn="name">Group Name <p-sortIcon field="name"></p-sortIcon></th>
         <th scope="col" pSortableColumn="description">Description <p-sortIcon field="description"></p-sortIcon></th>
-        <th scope="col" pSortableColumn="groupLeadId">Group Lead ID <p-sortIcon field="groupLeadId"></p-sortIcon></th>
+        <th scope="col" pSortableColumn="groupLeadId">Group Lead<p-sortIcon field="groupLeadId"></p-sortIcon></th>
         <th></th>
         <th></th>
       </tr>
@@ -39,7 +44,7 @@
       <tr>
         <td>{{ group.name }}</td>
         <td>{{ group.description }}</td>
-        <td>{{ group.groupLead.firstName }} {{group.groupLead.lastName}}</td>
+        <td>{{ group.groupLead }}</td>
         <td>
           <button type="button" pButton label="Add" icon="pi pi-plus"
                   (click)="addGroupToProject(group.id)" class="mr-2"></button>

@@ -9,7 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ProjectDto } from './projectDto';
+import { SimpleProjectDto } from './simpleProjectDto';
 import { ColleagueStateDto } from './colleagueStateDto';
 
 
@@ -21,8 +21,8 @@ export interface DashboardDataResponse {
     visibility: DashboardDataResponse.VisibilityEnum;
     state?: DashboardDataResponse.StateEnum;
     stateTimestamp?: string;
-    defaultProject?: ProjectDto;
-    availableProjects?: Array<ProjectDto>;
+    defaultProject?: SimpleProjectDto;
+    availableProjects?: Array<SimpleProjectDto>;
     colleagueStates?: Array<ColleagueStateDto>;
 }
 export namespace DashboardDataResponse {

@@ -6,35 +6,42 @@ DELETE FROM tempera_station;
 DELETE FROM access_point;
 DELETE FROM room;
 DELETE FROM groupx_members;
+DELETE FROM groupx_project_object_contributors;
+DELETE FROM groupx_project_object;
 DELETE FROM groupx;
-DELETE FROM project_contributors;
 DELETE FROM userx_userx_role;
-DELETE FROM userx;
+DELETE FROM userx WHERE default_project_id Is Not NULL;
 DELETE FROM project;
+DELETE FROM userx;
 
 --Todo: add this data to the db for real frontend testing
 
--- projects
-INSERT INTO project (id, name, description) VALUES
-    (-1, 'Ausbeutung', 'This project beuts you aus'),
-    (-2, 'Expansion', 'This project aims to expand our operations globally.'),
-    (-3, 'Innovation', 'This project focuses on fostering innovation within the company.'),
-    (-4, 'Efficiency', 'This project aims to improve efficiency across all departments.'),
-    (-5, 'Sustainability Initiative', 'This project aims to make our operations more environmentally friendly.'),
-    (-6, 'Customer Satisfaction Improvement', 'This project focuses on enhancing customer experience and satisfaction.'),
-    (-7, 'Product Development', 'This project involves developing new products to meet market demands.'),
-    (-8, 'Cost Reduction Initiative', 'This project aims to identify and implement cost-saving measures across the organization.'),
-    (-9, 'Quality Assurance Enhancement', 'This project focuses on improving the quality control processes to ensure product quality and reliability.'),
-    (-10, 'Marketing Campaign Launch', 'This project involves planning and executing a new marketing campaign to attract customers.'),
-    (-11, 'Training and Development Program', 'This project focuses on providing training and development opportunities for employees to enhance their skills and performance.'),
-    (-12, 'Infrastructure Upgrade', 'This project involves upgrading the company''s IT infrastructure to improve efficiency and security.');
+
+INSERT INTO userx (enabled, default_project_id, state, state_visibility, create_date, update_date, create_user_username, update_user_username, username, email, first_name, last_name, password)
+VALUES
+    (True, null, 'OUT_OF_OFFICE', 'PRIVATE', '2024-05-09T09:00:00', '2024-05-09T10:15:00', 'admin', 'admin', 'admin', 'admini@example.com', 'Jane', 'Doe', 'hashed_password456');
+
+
+
+
+INSERT INTO project (id, name, description, manager_username) VALUES
+                                                                  (-1, 'Serious Business', 'This project beuts you aus', 'admin'),
+                                                                  (-2, 'Expansion', 'This project aims to expand our operations globally.', 'admin'),
+                                                                  (-3, 'Innovation', 'This project focuses on fostering innovation within the company.', 'admin'),
+                                                                  (-4, 'Efficiency', 'This project aims to improve efficiency across all departments.', 'admin'),
+                                                                  (-5, 'Sustainability Initiative', 'This project aims to make our operations more environmentally friendly.', 'admin'),
+                                                                  (-6, 'Customer Satisfaction Improvement', 'This project focuses on enhancing customer experience and satisfaction.', 'admin'),
+                                                                  (-7, 'Product Development', 'This project involves developing new products to meet market demands.', 'admin'),
+                                                                  (-8, 'Cost Reduction Initiative', 'This project aims to identify and implement cost-saving measures across the organization.', 'admin'),
+                                                                  (-9, 'Quality Assurance Enhancement', 'This project focuses on improving the quality control processes to ensure product quality and reliability.', 'admin'),
+                                                                  (-10, 'Marketing Campaign Launch', 'This project involves planning and executing a new marketing campaign to attract customers.', 'admin'),
+                                                                  (-11, 'Training and Development Program', 'This project focuses on providing training and development opportunities for employees to enhance their skills and performance.', 'admin'),
+                                                                  (-12, 'Infrastructure Upgrade', 'This project involves upgrading the company''s IT infrastructure to improve efficiency and security.', 'admin');
 
 
 -- these are in the same groups as the user (6 people)
-INSERT INTO userx
-(enabled, default_project_id, state, state_visibility, create_date, update_date, create_user_username, update_user_username, username, email, first_name, last_name, password)
+INSERT INTO userx (enabled, default_project_id, state, state_visibility, create_date, update_date, create_user_username, update_user_username, username, email, first_name, last_name, password)
 VALUES
-    (True, null, 'OUT_OF_OFFICE', 'PRIVATE', '2024-05-09T09:00:00', '2024-05-09T10:15:00', 'admin', 'admin', 'admin', 'admini@example.com', 'Jane', 'Doe', 'hashed_password456'),
     (TRUE, -1, 'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin', 'manager', 'manager@mail.com', 'Bob', 'Marley', 'hashed_password123'),
     (TRUE, -2, 'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin', 'johndoe', 'johndoe@example.com', 'John', 'Doe', 'hashed_password123'),
     (TRUE, null, 'MEETING', 'PUBLIC', '2024-05-10T10:00:00', '2024-05-10T11:45:00', 'bobjones', 'admin', 'bobjones', 'bobjones@example.com', 'Bob', 'Jones', 'hashed_password789'),
@@ -47,66 +54,64 @@ VALUES
 -- this one is in the same group but his temperastation is not enabled
     (TRUE, -4, 'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin', 'clarkkent', 'clarkkent@webmail.com', 'Clark', 'Kent', 'hashed_password123');
 
-INSERT INTO project_contributors (project_id, username) VALUES
-                                                                         (-1, 'admin'), (-1, 'manager'), (-1, 'johndoe'), (-1, 'alicebrown'), (-1, 'brucewayne'), (-1, 'clarkkent'),
-                                                                         (-2, 'admin'), (-2, 'manager'), (-2, 'johndoe'), (-2, 'alicebrown'), (-2, 'brucewayne'), (-2, 'clarkkent'),
-                                                                         (-3, 'admin'), (-3, 'manager'), (-3, 'johndoe'), (-3, 'alicebrown'), (-3, 'brucewayne'), (-3, 'clarkkent'),
-                                                                         (-4, 'admin'), (-4, 'manager'), (-4, 'johndoe'), (-4, 'alicebrown'), (-4, 'brucewayne'), (-4, 'clarkkent'),
-                                                                         (-5, 'admin'), (-5, 'manager'), (-5, 'johndoe'), (-5, 'alicebrown'), (-5, 'brucewayne'), (-5, 'clarkkent'),
-                                                                         (-6, 'admin'), (-6, 'manager'), (-6, 'johndoe'), (-6, 'alicebrown'), (-6, 'brucewayne'), (-6, 'clarkkent'),
-                                                                         (-7, 'admin'), (-7, 'manager'), (-7, 'johndoe'), (-7, 'alicebrown'), (-7, 'brucewayne'), (-7, 'clarkkent'),
-                                                                         (-8, 'admin'), (-8, 'manager'), (-8, 'johndoe'), (-8, 'alicebrown'), (-8, 'brucewayne'), (-8, 'clarkkent'),
-                                                                         (-9, 'admin'), (-9, 'manager'), (-9, 'johndoe'), (-9, 'alicebrown'), (-9, 'brucewayne'), (-9, 'clarkkent'),
-                                                                         (-10, 'admin'), (-10, 'manager'), (-10, 'johndoe'), (-10, 'alicebrown'), (-10, 'brucewayne'), (-10, 'clarkkent'),
-                                                                         (-11, 'admin'), (-11, 'manager'), (-11, 'johndoe'), (-11, 'alicebrown'), (-11, 'brucewayne'), (-11, 'clarkkent'),
-                                                                         (-12, 'admin'), (-12, 'manager'), (-12, 'johndoe'), (-12, 'alicebrown'), (-12, 'brucewayne'), (-12, 'clarkkent');
+
 -- add some Groups to test db
-INSERT INTO groupx (id, group_lead_username, description, name) VALUES (1,'manager', 'this is just for testing', 'testGroup1');
-INSERT INTO groupx (id, group_lead_username, description, name) VALUES (2,'manager', 'this is also just for testing', 'testGroup2');
-INSERT INTO groupx (id, group_lead_username, description, name) VALUES (3,'manager', 'this is also just for testing', 'outsiderGroup');
-INSERT INTO groupx (id, group_lead_username, description, name) VALUES (4,'manager', 'this is also just for testing', 'outsiderGroup2');
+INSERT INTO groupx (id, group_lead_username, description, name) VALUES (-1,'manager', 'this is just for testing', 'testGroup1');
+INSERT INTO groupx (id, group_lead_username, description, name) VALUES (-2,'manager', 'this is also just for testing', 'testGroup2');
+INSERT INTO groupx (id, group_lead_username, description, name) VALUES (-3,'manager', 'this is also just for testing', 'outsiderGroup');
+INSERT INTO groupx (id, group_lead_username, description, name) VALUES (-4,'manager', 'this is also just for testing', 'outsiderGroup2');
 -- add some more members to fill the groups
 
+-- add some of the created projects to some GroupxProject Objects:
+-- add Serious Business, Expansion, Innovation, Efficiency,Sustainability and Customer Satisfaction to testGroup1
+INSERT INTO groupx_project_object (group_id, project_id)
+VALUES (-1, -1), (-1, -2), (-1, -3), (-1, -4), (-1,-5), (-1, -6);
 
+-- add Product Development, Cost Reduction, Quality Assurance, Marketing Campaign Launch, Training and Development and Infrastructure Upgrade to testGroup2
+INSERT INTO groupx_project_object (group_id, project_id)
+Values (-2, -7), (-2, -8), (-2, -9), (-2, -10), (-2, -11), (-2, -12);
+
+INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username)
+VALUES (-1, -1, 'admin'), (-1, -2, 'admin'), (-1, -3, 'admin'), (-1, -4, 'admin'), (-1, -5, 'admin'), (-1, -6, 'admin');
+INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username)
+VALUES (-2, -7, 'johndoe'), (-2, -8, 'johndoe'), (-2, -9, 'johndoe'), (-2, -10, 'johndoe'), (-2, -11, 'johndoe'), (-2, -12, 'johndoe');
 -- add the members to the groups
 -- all in all 10 people
 -- 9 of them have active temperastations
 -- one of them is john doe himself
 -- so 8 people should be displayed as colleagues
-INSERT INTO groupx_members (groups_id, members_username) VALUES (1, 'johndoe'), (2, 'johndoe');
-INSERT INTO groupx_members (groups_id, members_username) VALUES (1, 'alicebrown'), (3, 'alicebrown'), (4, 'alicebrown');
-INSERT INTO groupx_members (groups_id, members_username) VALUES (1, 'chriswilliams'), (2, 'chriswilliams'), (3, 'chriswilliams'), (4, 'chriswilliams');
-INSERT INTO groupx_members (groups_id, members_username) VALUES (1, 'admin'), (2, 'admin'), (3, 'admin'), (4, 'admin');
-INSERT INTO groupx_members (groups_id, members_username) VALUES (1, 'manager'), (2, 'manager'), (3, 'manager'), (4, 'manager');
-INSERT INTO groupx_members (groups_id, members_username) VALUES (2, 'bobjones');
-INSERT INTO groupx_members (groups_id, members_username) VALUES (3, 'brucewayne'), (4, 'brucewayne');
-INSERT INTO groupx_members (groups_id, members_username) VALUES (3, 'peterparker'), (4, 'peterparker');
-INSERT INTO groupx_members (groups_id, members_username) VALUES (3, 'tonystark'), (4, 'tonystark');
-INSERT INTO groupx_members (groups_id, members_username) VALUES (3, 'clarkkent'), (4, 'clarkkent');
-
+INSERT INTO groupx_members (groups_id, members_username) VALUES (-1, 'johndoe'), (-2, 'johndoe');
+INSERT INTO groupx_members (groups_id, members_username) VALUES (-1, 'alicebrown'), (-3, 'alicebrown'), (-4, 'alicebrown');
+INSERT INTO groupx_members (groups_id, members_username) VALUES (-1, 'chriswilliams'), (-2, 'chriswilliams'), (-3, 'chriswilliams'), (-4, 'chriswilliams');
+INSERT INTO groupx_members (groups_id, members_username) VALUES (-1, 'admin'), (-2, 'admin'), (-3, 'admin'), (-4, 'admin');
+INSERT INTO groupx_members (groups_id, members_username) VALUES (-2, 'bobjones');
+INSERT INTO groupx_members (groups_id, members_username) VALUES (-3, 'brucewayne'), (-4, 'brucewayne');
+INSERT INTO groupx_members (groups_id, members_username) VALUES (-3, 'peterparker'), (-4, 'peterparker');
+INSERT INTO groupx_members (groups_id, members_username) VALUES (-3, 'tonystark'), (-4, 'tonystark');
+INSERT INTO groupx_members (groups_id, members_username) VALUES (-3, 'clarkkent'), (-4, 'clarkkent');
 
 
 INSERT INTO room (room_id) VALUES ('room_10');
 INSERT INTO room (room_id) VALUES ('room_11');
 INSERT INTO room (room_id) VALUES ('room_12');
 
-INSERT INTO access_point (enabled, id, room_room_id) VALUES (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'room_10');
-INSERT INTO access_point (enabled, id, room_room_id) VALUES (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'room_11');
-INSERT INTO access_point (enabled, id, room_room_id) VALUES (TRUE, '333e4567-e89b-12d3-a456-426614174001', 'room_12');
+INSERT INTO access_point (is_healthy, enabled, id, room_room_id) VALUES (TRUE, TRUE, '111e4567-e89b-12d3-a456-426614174001', 'room_10');
+INSERT INTO access_point (is_healthy, enabled, id, room_room_id) VALUES (TRUE, TRUE, '222e4567-e89b-12d3-a456-426614174001', 'room_11');
+INSERT INTO access_point (is_healthy, enabled, id, room_room_id) VALUES (TRUE, TRUE, '333e4567-e89b-12d3-a456-426614174001', 'room_12');
 
 INSERT INTO tempera_station
-(enabled, access_point_id, user_username, id)
+(is_healthy, enabled, access_point_id, user_username, id)
 VALUES
-    (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'johndoe', 'TEMP123'),
-    (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'admin', 'TEMP124'),
-    (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'bobjones', 'TEMP125'),
-    (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'alicebrown', 'TEMP126'),
-    (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'chriswilliams', 'TEMP127'),
-    (TRUE, '222e4567-e89b-12d3-a456-426614174001', 'peterparker', 'TEMP128'),
-    (TRUE, '333e4567-e89b-12d3-a456-426614174001', 'tonystark', 'TEMP129'),
-    (TRUE, '333e4567-e89b-12d3-a456-426614174001', 'brucewayne', 'TEMP130'),
-    (FALSE, '333e4567-e89b-12d3-a456-426614174001', 'clarkkent', 'TEMP131'),
-    (TRUE, '333e4567-e89b-12d3-a456-426614174001', 'manager', 'TEMP132');
+    (TRUE, TRUE, '111e4567-e89b-12d3-a456-426614174001', 'johndoe', 'TEMP123'),
+    (TRUE, TRUE, '111e4567-e89b-12d3-a456-426614174001', 'admin', 'TEMP124'),
+    (TRUE, TRUE, '111e4567-e89b-12d3-a456-426614174001', 'bobjones', 'TEMP125'),
+    (TRUE, TRUE, '222e4567-e89b-12d3-a456-426614174001', 'alicebrown', 'TEMP126'),
+    (TRUE, TRUE, '222e4567-e89b-12d3-a456-426614174001', 'chriswilliams', 'TEMP127'),
+    (TRUE, TRUE, '222e4567-e89b-12d3-a456-426614174001', 'peterparker', 'TEMP128'),
+    (TRUE, TRUE, '333e4567-e89b-12d3-a456-426614174001', 'tonystark', 'TEMP129'),
+    (TRUE, TRUE, '333e4567-e89b-12d3-a456-426614174001', 'brucewayne', 'TEMP130'),
+    (TRUE, FALSE, '333e4567-e89b-12d3-a456-426614174001', 'clarkkent', 'TEMP131'),
+    (TRUE, TRUE, '333e4567-e89b-12d3-a456-426614174001', 'manager', 'TEMP132');
 
 -- realized this is not necessary for all the colleagues for the tests but we can use it later
 INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES ('TEMPERATURE', -10, 'TEMP123', 'CELSIUS'),
@@ -203,7 +208,7 @@ INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_
 INSERT INTO external_record (duration, start, time_end, user_username, state) VALUES
 (3400, '2024-05-10 09:30:00', null, 'johndoe', 'DEEPWORK');
 
-INSERT INTO internal_record (groupx_id, project_id, start, time_end, ext_rec_start, user_name) VALUES
-(null, null, '2024-05-10 09:30:00', null, '2024-05-10 09:30:00', 'johndoe');
+INSERT INTO internal_record (id, group_id, project_id, start, time_end, ext_rec_start, user_name) VALUES
+(-1, null, -1, '2024-05-10 09:30:00', null, '2024-05-10 09:30:00', 'johndoe');
 
 -- possibly add older data
