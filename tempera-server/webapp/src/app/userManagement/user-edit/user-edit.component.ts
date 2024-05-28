@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UsersService } from '../../_services/users.service';
 import { NgForOf, NgIf } from '@angular/common';
@@ -19,7 +19,7 @@ import { User } from '../../models/user.model';
  * @class UserEditComponent
  * This component is responsible for editing a user.
  */
-export class UserEditComponent implements OnInit {
+export class UserEditComponent implements OnInit, OnChanges {
   userForm: FormGroup;
   username!: string;
   roles: string[];
@@ -62,6 +62,11 @@ export class UserEditComponent implements OnInit {
     });
   }
 
+  /**
+   * Called when the input properties of the component change.
+   * To check if the current value is not stored in the user object.
+   * @param changes
+   */
   ngOnChanges(changes: SimpleChanges) {
     // Check if 'user' input has changed
     if (changes['user']?.currentValue) {
