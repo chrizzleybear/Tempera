@@ -62,10 +62,10 @@
 #define BUTTON_COOLDOWN 600
 
 // Update interval in ms after which the station transmits the current time state
-#define UPDATE_INTERVAL_TIME 60000
+#define UPDATE_INTERVAL_TIME 30000
 
 // Update interval in ms after which the station locally updates the current ROOM CLIMATE data
-#define UPDATE_INTERVAL_RC 5000
+#define UPDATE_INTERVAL_RC 30000
 
 // Device name and custom id
 #define DEVICE_NAME "G4T1-Tempera-Station #1"
