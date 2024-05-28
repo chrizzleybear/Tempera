@@ -1,14 +1,16 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
-import at.qe.skeleton.model.AccessPoint;
-import at.qe.skeleton.model.TemperaStation;
+import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.AccessPointRepository;
+import at.qe.skeleton.repositories.RoomRepository;
 import at.qe.skeleton.repositories.TemperaStationRepository;
+import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,12 +20,26 @@ public class AccessPointService {
   private final AccessPointRepository accessPointRepository;
   private final TemperaStationService temperaStationService;
   private final TemperaStationRepository temperaStationRepository;
+  private final RoomService roomService;
 
   public AccessPointService(
-          AccessPointRepository accessPointRepository, TemperaStationService temperaStationService, TemperaStationRepository temperaStationRepository) {
+          AccessPointRepository accessPointRepository, TemperaStationService temperaStationService, TemperaStationRepository temperaStationRepository, RoomService roomService) {
     this.accessPointRepository = accessPointRepository;
     this.temperaStationService = temperaStationService;
     this.temperaStationRepository = temperaStationRepository;
+    this.roomService = roomService;
+  }
+
+  public AccessPoint createAccessPoint(String id, String roomId, boolean enabled, boolean isHealthy) {
+    // TO-DO: generate UUID internally?
+    UUID uuid = UUID.fromString(id);
+
+    if (accessPointRepository.existsById(uuid)) {
+      throw new IllegalArgumentException("AccesspointId already in use: " + id);
+    }
+    Room room = roomService.getRoomById(roomId);
+    AccessPoint a = new AccessPoint(uuid, room, enabled, isHealthy);
+    return accessPointRepository.save(a);
   }
 
   public AccessPoint getAccessPointById(UUID id) throws CouldNotFindEntityException {
@@ -45,6 +61,10 @@ public class AccessPointService {
             () ->
                 new CouldNotFindEntityException(
                     "AccessPoint containing TemperaStation %s".formatted(temperaStationId)));
+  }
+
+  public List<AccessPoint> getAllAccesspoints() {
+    return accessPointRepository.findAll();
   }
 
   /**

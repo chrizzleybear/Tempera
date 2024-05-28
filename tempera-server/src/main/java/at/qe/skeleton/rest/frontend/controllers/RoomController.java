@@ -79,11 +79,12 @@ public class RoomController {
 
     @GetMapping("/load/{roomId}")
     public ResponseEntity<Room> getRoomById(@PathVariable String roomId) {
-        Optional<Room> room = roomService.getRoomById(roomId);
-        if (room.isPresent()) {
-            return ResponseEntity.ok(room.get());
+        try {
+            Room room = roomService.getRoomById(roomId);
+            return ResponseEntity.ok(room);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @GetMapping("/available")

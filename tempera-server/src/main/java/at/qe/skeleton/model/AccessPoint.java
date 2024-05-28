@@ -57,6 +57,10 @@ public class AccessPoint implements Persistable<UUID>, Serializable {
         return isHealthy;
   }
 
+  public void setHealthy(boolean healthy) {
+    isHealthy = healthy;
+  }
+
   /**
    * returns true if TemperaStation was not already part of the Set. also sets this Accesspoint
    * as AccessPoint on the provided TemperaStation (bidirectional Relationship)
