@@ -49,7 +49,7 @@ public class AccessPointController {
         }
     }
 
-    @GetMapping("")
+    @GetMapping("/load/{roomId}")
     public ResponseEntity<AccessPoint> getAccesspointsByRoomId(@RequestBody String roomId) {
         try {
             AccessPoint a = accessPointService.getAccessPointByRoomId(roomId);
@@ -64,7 +64,7 @@ public class AccessPointController {
         // String id, String room, boolean enabled, boolean isHealthy
         try {
             AccessPoint a = accessPointService.createAccessPoint(accessPointDto);
-            return ResponseEntity.ok("Accesspoint for room " + a.getRoom().getId() + " has been set.");
+            return ResponseEntity.ok("Added accesspoint for room " + a.getRoom().getId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

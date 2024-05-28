@@ -30,7 +30,8 @@ public class AccessPointService {
   }
 
   public AccessPoint createAccessPoint(String id, String roomId, boolean enabled, boolean isHealthy) {
-    // TO-DO: generate UUID internally?
+
+    // TO-DO: generate a proper UUID
     UUID uuid = UUID.fromString(id);
 
     if (accessPointRepository.existsById(uuid)) {
