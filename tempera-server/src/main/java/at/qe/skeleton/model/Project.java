@@ -103,7 +103,7 @@ public class Project {
     if (!(obj instanceof Project other)) {
       return false;
     }
-    return other.id.equals(this.id);
+    return other.getId().equals(this.id);
   }
 
   @Override

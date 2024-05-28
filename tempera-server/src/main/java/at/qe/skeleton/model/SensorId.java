@@ -48,7 +48,7 @@ public class SensorId implements Serializable {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof SensorId other)) return false;
-    return sensorId.equals(other.sensorId) && temperaId.equals(other.temperaId);
+    return sensorId.equals(other.getSensorId()) && temperaId.equals(other.getTemperaId());
   }
 
   @Override

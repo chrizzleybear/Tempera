@@ -85,7 +85,7 @@ public class Room implements Persistable<String>, Serializable {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Room room = (Room) o;
-    return Objects.equals(roomId, room.roomId);
+    return Objects.equals(roomId, room.getId());
   }
 
   @Override
