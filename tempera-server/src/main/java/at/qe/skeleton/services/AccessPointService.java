@@ -3,9 +3,8 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.AccessPointRepository;
-import at.qe.skeleton.repositories.RoomRepository;
 import at.qe.skeleton.repositories.TemperaStationRepository;
-import at.qe.skeleton.rest.frontend.dtos.UserxDto;
+import at.qe.skeleton.rest.frontend.dtos.AccessPointDto;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +41,15 @@ public class AccessPointService {
     return accessPointRepository.save(a);
   }
 
+  public AccessPoint createAccessPoint(AccessPointDto accessPointDto) {
+    return createAccessPoint(
+            accessPointDto.id(),
+            accessPointDto.room(),
+            accessPointDto.enabled(),
+            accessPointDto.isHealthy()
+    );
+  }
+
   public AccessPoint getAccessPointById(UUID id) throws CouldNotFindEntityException {
     if (id == null) {
       throw new IllegalArgumentException("AccessPoint id is missing.");
@@ -63,6 +71,12 @@ public class AccessPointService {
                     "AccessPoint containing TemperaStation %s".formatted(temperaStationId)));
   }
 
+  public AccessPoint getAccessPointByRoomId(String roomId) throws CouldNotFindEntityException{
+    AccessPoint a = accessPointRepository.findByRoom(roomService.getRoomById(roomId))
+            .orElseThrow(() -> new CouldNotFindEntityException("Could not find an accesspoint."));
+    return a;
+  }
+
   public List<AccessPoint> getAllAccesspoints() {
     return accessPointRepository.findAll();
   }
@@ -78,6 +92,13 @@ public class AccessPointService {
     return accessPoint.isEnabled();
   }
 
+  public AccessPoint updateAccessPoint(AccessPointDto accessPointDto) throws IllegalArgumentException {
+    AccessPoint a = accessPointRepository.findById(UUID.fromString(accessPointDto.id())).orElseThrow(() -> new IllegalArgumentException("Could not find AccessPoint."));
+    a.setRoom(roomService.getRoomById(accessPointDto.room()));
+    a.setEnabled(accessPointDto.enabled());
+    a.setHealthy(accessPointDto.isHealthy());
+    return accessPointRepository.save(a);
+  }
 
   public void delete(AccessPoint accessPoint) {
     var tempStations = accessPoint.getTemperaStations();

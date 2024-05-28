@@ -49,18 +49,43 @@ public class AccessPointController {
         }
     }
 
+    @GetMapping("")
+    public ResponseEntity<AccessPoint> getAccesspointsByRoomId(@RequestBody String roomId) {
+        try {
+            AccessPoint a = accessPointService.getAccessPointByRoomId(roomId);
+            return ResponseEntity.ok(a);
+        } catch (CouldNotFindEntityException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
     @PutMapping("/create")
     public ResponseEntity<String> createAccesspoint(@RequestBody AccessPointDto accessPointDto) {
         // String id, String room, boolean enabled, boolean isHealthy
         try {
-            AccessPoint a = accessPointService.createAccessPoint(
-                    accessPointDto.id(),
-                    accessPointDto.room(),
-                    accessPointDto.enabled(),
-                    accessPointDto.isHealthy()
-            );
+            AccessPoint a = accessPointService.createAccessPoint(accessPointDto);
             return ResponseEntity.ok("Accesspoint for room " + a.getRoom().getId() + " has been set.");
         } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateAccesspoint(@RequestBody AccessPointDto accessPointDto) {
+        try {
+            AccessPoint a = accessPointService.updateAccessPoint(accessPointDto);
+            return ResponseEntity.ok("Accesspoint in room " + a.getRoom().getId() + " has been updated.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteAccesspoint(@RequestBody String accesspointId) {
+        try {
+            accessPointService.delete(accessPointService.getAccessPointById(UUID.fromString(accesspointId)));
+            return ResponseEntity.ok("Accesspoint deleted.");
+        } catch (CouldNotFindEntityException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
