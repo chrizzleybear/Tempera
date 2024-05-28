@@ -15,14 +15,22 @@ import { User } from '../../models/user.model';
   standalone: true,
   imports: [ReactiveFormsModule, NgForOf, DialogModule, InputTextModule, ButtonModule, MessageModule, NgIf],
 })
+/**
+ * @class UserEditComponent
+ * This component is responsible for editing a user.
+ */
 export class UserEditComponent implements OnInit {
   userForm: FormGroup;
   username!: string;
   roles: string[];
-  @Input({ required: true }) user!: User;
-  @Output() editCompleted = new EventEmitter<boolean>();
+  @Input({ required: true }) user!: User; // The user to edit from the users component
+  @Output() editCompleted = new EventEmitter<boolean>(); // Event emitter to notify the parent component that the edit is completed
 
-
+  /**
+   * Constructor for UserEditComponent that initializes the edit form.
+   * @param fb
+   * @param usersService
+   */
   constructor(private fb: FormBuilder, private usersService: UsersService) {
     this.roles = ['ADMIN', 'EMPLOYEE', 'MANAGER', 'GROUPLEAD'];
     this.userForm = this.fb.group({
@@ -73,12 +81,17 @@ export class UserEditComponent implements OnInit {
         enabled: this.user.enabled,
       });
       const rolesControl = this.userForm.get('roles') as FormGroup;
+      // Set the roles to true if the user has the role.
       this.roles.forEach(role => {
         rolesControl.get(role)?.setValue(this.user.roles.includes(role));
       });
     }
   }
 
+  /**
+   * Submits the user form to update the user.
+   * Roles are filtered to only include the selected roles.
+   */
   onSubmit() {
     this.userForm.value.roles = Object.keys(this.userForm.value.roles).filter((role) => this.userForm.value.roles[role]);
     console.log(this.userForm.value);
