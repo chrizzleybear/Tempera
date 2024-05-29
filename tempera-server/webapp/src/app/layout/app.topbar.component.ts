@@ -6,16 +6,22 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../_services/auth.service';
 import { StorageService } from '../_services/storage.service';
 import { TooltipModule } from 'primeng/tooltip';
+import { BadgeModule } from 'primeng/badge';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-topbar',
   templateUrl: './app.topbar.component.html',
   standalone: true,
-  imports: [RouterLink, NgClass, TooltipModule],
+  imports: [RouterLink, NgClass, TooltipModule, BadgeModule, OverlayPanelModule, TableModule, ButtonModule],
 })
 export class AppTopBarComponent {
 
   items!: MenuItem[];
+
+  public warningEntries: string[] = ['helloooooooooooooooooooooooooooooooooooooooooooooooooooo', 'world'];
 
   @ViewChild('menubutton') menuButton!: ElementRef;
 
