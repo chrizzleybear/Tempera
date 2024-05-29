@@ -115,7 +115,7 @@ public class Groupx {
 
   @Override
   public int hashCode() {
-    return name.hashCode();
+    return id.hashCode();
   }
 
   @Override
@@ -126,7 +126,7 @@ public class Groupx {
     if (!(obj instanceof Groupx other)) {
       return false;
     }
-    return other.name.equals(this.name);
+    return other.getId().equals(this.id);
   }
 
   @Override

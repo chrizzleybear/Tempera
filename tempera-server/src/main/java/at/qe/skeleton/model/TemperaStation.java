@@ -120,7 +120,7 @@ public class TemperaStation implements Persistable<String> {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     TemperaStation that = (TemperaStation) o;
-    return Objects.equals(id, that.id);
+    return Objects.equals(id, that.getId());
   }
 
   @Override

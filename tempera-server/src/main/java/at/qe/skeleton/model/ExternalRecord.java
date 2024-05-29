@@ -137,7 +137,7 @@ public class ExternalRecord {
     if (!(o instanceof ExternalRecord other)) {
       return false;
     }
-    return other.id.equals(this.id);
+    return other.getId().equals(this.id);
   }
 
   public void setId(ExternalRecordId id) {
