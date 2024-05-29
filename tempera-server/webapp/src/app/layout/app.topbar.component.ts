@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { LayoutService } from './service/app.layout.service';
-import { NgClass } from '@angular/common';
+import { AsyncPipe, NgClass, NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../_services/auth.service';
 import { StorageService } from '../_services/storage.service';
@@ -10,18 +10,17 @@ import { BadgeModule } from 'primeng/badge';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
+import { WarningStoreService } from '../_stores/warning.store.service';
 
 @Component({
   selector: 'app-topbar',
   templateUrl: './app.topbar.component.html',
   standalone: true,
-  imports: [RouterLink, NgClass, TooltipModule, BadgeModule, OverlayPanelModule, TableModule, ButtonModule],
+  imports: [RouterLink, NgClass, TooltipModule, BadgeModule, OverlayPanelModule, TableModule, ButtonModule, AsyncPipe, NgIf],
 })
 export class AppTopBarComponent {
 
   items!: MenuItem[];
-
-  public warningEntries: string[] = ['helloooooooooooooooooooooooooooooooooooooooooooooooooooo', 'world'];
 
   @ViewChild('menubutton') menuButton!: ElementRef;
 
@@ -29,7 +28,7 @@ export class AppTopBarComponent {
 
   @ViewChild('topbarmenu') menu!: ElementRef;
 
-  constructor(public layoutService: LayoutService, private authService: AuthService, private storageService: StorageService) {
+  constructor(public layoutService: LayoutService, private authService: AuthService, private storageService: StorageService, public warningStoreService: WarningStoreService) {
   }
 
   logout() {

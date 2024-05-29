@@ -22,6 +22,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DisplayHelper } from '../_helpers/display-helper';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { WarningStoreService } from '../_stores/warning.store.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -73,7 +74,7 @@ export class DashboardComponent implements OnInit {
     project: new FormControl<SimpleProjectDto | undefined>(undefined, { nonNullable: true }),
   });
 
-  constructor(private dashboardControllerService: DashboardControllerService, private storageService: StorageService, private destroyRef: DestroyRef, private messageService: MessageService) {
+  constructor(private dashboardControllerService: DashboardControllerService, private storageService: StorageService, private destroyRef: DestroyRef, private messageService: MessageService, private warningStoreService: WarningStoreService) {
   }
 
   ngOnInit(): void {
@@ -82,6 +83,8 @@ export class DashboardComponent implements OnInit {
     if (this.user) {
       this.getData$(this.user.username).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: data => {
+          this.warningStoreService.refreshWarnings();
+
           this.dashboardData = data;
           this.colleagueTableFilterFields = Object.keys(this.dashboardData?.colleagueStates?.[0] ?? []);
 
@@ -99,7 +102,7 @@ export class DashboardComponent implements OnInit {
         },
       });
     } else {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load user' })
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load user' });
     }
   }
 
@@ -109,7 +112,11 @@ export class DashboardComponent implements OnInit {
       project: this.form.controls.project.value,
     }).subscribe({
       next: data => {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Dashboard data updated successfully' });
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Dashboard data updated successfully',
+        });
       },
       error: err => {
         console.log(err);
