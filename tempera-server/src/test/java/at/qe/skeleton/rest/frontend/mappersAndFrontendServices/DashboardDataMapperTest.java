@@ -6,6 +6,7 @@ import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateDashboardDataRequest;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
@@ -138,14 +139,21 @@ class DashboardDataMapperTest {
         GroupxProject projectBefore = timeRecordService.findLatestInternalRecordByUser(johndoe).get().getGroupxProject();
         assertNull(projectBefore, "Project of johndoe should be null before the update");
 
-        // choose another visibility and project that John Doe is a member of
+        // choose another visibility and set a gxp that John Doe is a member of to the current timestamp
         Visibility visibilityUpdate = Visibility.HIDDEN;
-        SimpleProjectDto projectUpdate = new SimpleProjectDto("-12", "Infrastructure Upgrade", "This project involves upgrading the company's IT infrastructure to improve efficiency and security." ,  "admin");
-        UpdateDashboardDataRequest request = new UpdateDashboardDataRequest(visibilityUpdate, projectUpdate);
+    SimpleGroupxProjectDto gxpUpdate =
+        new SimpleGroupxProjectDto(
+                "-2",
+            "testGroup2",
+            "-12",
+            "Infrastructure Upgrade");
+        UpdateDashboardDataRequest request = new UpdateDashboardDataRequest(visibilityUpdate, gxpUpdate);
         dashboardDataMapper.updateUserVisibilityAndTimeStampProject(request, johndoe);
         assertEquals(Visibility.HIDDEN, johndoe.getStateVisibility(), "Visibility of johndoe should be HIDDEN after the update");
-        Project projectAfter = timeRecordService.findLatestInternalRecordByUser(johndoe).get().getGroupxProject().getProject();
-        assertEquals("Infrastructure Upgrade", projectAfter.getName(), "Project of johndoe should be Infrastructure Upgrade after the update");
+        GroupxProject gxpAfter = timeRecordService.findLatestInternalRecordByUser(johndoe).get().getGroupxProject();
+        assertEquals("Infrastructure Upgrade", gxpAfter.getProject().getName(), "Project of johndoe should be Infrastructure Upgrade after the update");
+        assertEquals("testGroup2", gxpAfter.getGroup().getName(), "Group of johndoe should be testGroup2 after the update");
+
     }
 
 

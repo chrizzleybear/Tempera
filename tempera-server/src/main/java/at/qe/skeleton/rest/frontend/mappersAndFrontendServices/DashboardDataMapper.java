@@ -178,7 +178,7 @@ availableGxps,
             colleagueStateDtos);
   }
 
-  // todo fix with GroupxProject
+
   @Transactional
   public MessageResponse updateUserVisibilityAndTimeStampProject(
       UpdateDashboardDataRequest request, Userx user) throws CouldNotFindEntityException {

@@ -97,7 +97,9 @@ class DashboardControllerTest {
     ResponseEntity<MessageResponse> response =
         dashboardController.updateDashboardData(
             new UpdateDashboardDataRequest(
-                Visibility.HIDDEN, new SimpleProjectDto("-1", "Projekt 1", "blabla", "johnathan hingeforth mc cringleberry")));
+                Visibility.HIDDEN,
+                new SimpleGroupxProjectDto(
+                    "-1", "Group1", "1", "Projekt1")));
     assertEquals(messageResponse, response.getBody());
     verify(userXService, times(1)).loadUser("johndoe");
     verify(dashboardDataMapper, times(1)).updateUserVisibilityAndTimeStampProject(any(), any());
