@@ -98,14 +98,11 @@ public class TimetableDataService {
     // Long entryId, ExtendedProjectDto project, String description, String splitTimestamp
     InternalRecord internalRecord = getInternalRecord(request.entryId());
     Userx user = userxService.loadUser(username);
-    Long projectId = Long.valueOf(request.project().projectId());
+    Long projectId = Long.valueOf(request.projectId());
+    Long groupId = Long.valueOf(request.groupId());
     // todo: add the group as parameter later on
     // then we need the findbyGroupIdAndProjectId...
-    List<GroupxProject> groupxProjects = projectService.findGroupxProjectsByContributorAndProjectId(user, projectId);
-    if(groupxProjects.isEmpty()){
-      throw new CouldNotFindEntityException("No Group with ProjectId %s and User %s found".formatted(projectId, username));
-    }
-    GroupxProject groupxProject = groupxProjects.get(0);
+    GroupxProject groupxProject= projectService.findByGroupAndProject(groupId, projectId);
     groupxProject.addInternalRecord(internalRecord);
     projectService.saveGroupxProject(groupxProject);
 
