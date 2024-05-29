@@ -18,5 +18,5 @@ RUN npm install
 #RUN sed -i s/localhost/back-end/g package.json;
 #RUN npm run build-api
 
-EXPOSE 4200
 ENTRYPOINT ["ng", "serve", "--host", "0.0.0.0"]
+EXPOSE 4200
