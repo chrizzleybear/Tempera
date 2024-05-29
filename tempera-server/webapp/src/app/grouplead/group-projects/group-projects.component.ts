@@ -59,7 +59,8 @@ export class GroupProjectsComponent implements OnInit {
   private loadProjects(groupId: number) {
     this.projectService.getProjectsOfGroup(groupId).subscribe({
       next: (projects) => {
-        console.log('Loaded projects:', projects);
+        console.log('Loaded projects:', groupId);
+        console.log('Project of group projects:', projects);
         this.projects = projects;
       },
       error: (error) => {
