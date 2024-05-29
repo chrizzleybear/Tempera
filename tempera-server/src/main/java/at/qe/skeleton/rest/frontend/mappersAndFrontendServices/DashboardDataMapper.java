@@ -7,6 +7,7 @@ import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
 import at.qe.skeleton.rest.frontend.dtos.ExtendedProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateDashboardDataRequest;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
@@ -39,7 +40,6 @@ public class DashboardDataMapper {
     this.userService = userxService;
     this.projectService = projectService;
   }
-
 
   private List<ColleagueStateDto> mapUserToColleagueStateDto(Userx user) {
 
@@ -94,7 +94,7 @@ public class DashboardDataMapper {
    * the user itself and the states of the colleagues (if they are visible and their temperaStation
    * is enabled).
    *
-   * @param user
+   * @param String username The username of the user for which the data should be mapped.
    * @return DashboardDataResponse If there are no existing measurements for this user, it will
    *     return null as values. If there is no existing * TimeRecord for this user, it will return
    *     null as stateTimeStamp. If there is no default project assigned to this user, * it will
@@ -102,7 +102,8 @@ public class DashboardDataMapper {
    *     return an empty list as projects.
    */
   @Transactional
-  public DashboardDataResponse mapUserToHomeDataResponse(Userx user) {
+  public DashboardDataResponse mapUserToHomeDataResponse(String username) {
+    Userx user = userService.loadUserDetailed(username);
     var colleagueStateDtos = mapUserToColleagueStateDto(user);
     // next up: current measurements
     var sensors = user.getTemperaStation().getSensors();
@@ -127,40 +128,42 @@ public class DashboardDataMapper {
             .findFirst()
             .orElseThrow(() -> new RuntimeException("No nmvoc sensor found"));
 
-
-    Optional<Measurement> temperatureMeasurement = measurementService.findLatestMeasurementBySensor(temperatureSensor);
-    Optional<Measurement> humidityMeasurement = measurementService.findLatestMeasurementBySensor(humiditySensor);
-    Optional<Measurement> irradianceMeasurement = measurementService.findLatestMeasurementBySensor(irradianceSensor);
-    Optional<Measurement> nmvocMeasurement = measurementService.findLatestMeasurementBySensor(nmvocSensor);
+    Optional<Measurement> temperatureMeasurement =
+        measurementService.findLatestMeasurementBySensor(temperatureSensor);
+    Optional<Measurement> humidityMeasurement =
+        measurementService.findLatestMeasurementBySensor(humiditySensor);
+    Optional<Measurement> irradianceMeasurement =
+        measurementService.findLatestMeasurementBySensor(irradianceSensor);
+    Optional<Measurement> nmvocMeasurement =
+        measurementService.findLatestMeasurementBySensor(nmvocSensor);
 
     Double temperature = temperatureMeasurement.map(Measurement::getValue).orElse(null);
     Double humidity = humidityMeasurement.map(Measurement::getValue).orElse(null);
     Double irradiance = irradianceMeasurement.map(Measurement::getValue).orElse(null);
     Double nmvoc = nmvocMeasurement.map(Measurement::getValue).orElse(null);
 
+    Optional<ExternalRecord> externalRecordOptional =
+        timeRecordService.findLatestExternalRecordByUser(user);
+    String stateTimeStamp =
+        externalRecordOptional
+            .map(externalRecord -> externalRecord.getStart().toString())
+            .orElse(null);
 
-    Optional<ExternalRecord> externalRecordOptional = timeRecordService.findLatestExternalRecordByUser(user);
-    String stateTimeStamp = externalRecordOptional.map(externalRecord -> externalRecord.getStart().toString()).orElse(null);
-
-    Project defaultProject = user.getDefaultProject();
-    SimpleProjectDto defaultProjectDto;
-    if (defaultProject == null) {
-      defaultProjectDto = new SimpleProjectDto(null, "No default project assigned", null, null);
+    GroupxProject defaultGroupxProject = user.getDefaultGroupxProject();
+    SimpleGroupxProjectDto defaultGxpDto;
+    if (defaultGroupxProject == null) {
+      defaultGxpDto = null;
     } else {
-      defaultProjectDto =
-          new SimpleProjectDto(defaultProject.getId().toString(), defaultProject.getName(), defaultProject.getDescription(), defaultProject.getManager().getUsername());
+      defaultGxpDto =
+          new SimpleGroupxProjectDto(
+                defaultGroupxProject.getGroup().getId().toString(),
+                defaultGroupxProject.getGroup().getName(),
+                defaultGroupxProject.getProject().getId().toString(),
+                defaultGroupxProject.getProject().getName());
     }
 
-    List<SimpleProjectDto> projects =
-        projectService.getProjectsByContributor(user).stream()
-            .map(
-                p ->
-                    new SimpleProjectDto(
-                        p.getId().toString(),
-                        p.getName(),
-                        p.getDescription(),
-                        p.getManager().getUsername()))
-            .toList();
+    List<SimpleGroupxProjectDto> availableGxps =
+        projectService.getSimpleGroupxProjectDtoByUser(user.getUsername()).stream().toList();
 
     return new DashboardDataResponse(
         temperature,
@@ -170,23 +173,29 @@ public class DashboardDataMapper {
         user.getStateVisibility(),
         user.getState(),
         stateTimeStamp,
-        defaultProjectDto,
-        projects,
-        colleagueStateDtos);
+        defaultGxpDto,
+availableGxps,
+            colleagueStateDtos);
   }
 
-  //todo fix with GroupxProject
-@Transactional
-  public MessageResponse updateUserVisibilityAndTimeStampProject(UpdateDashboardDataRequest request, Userx user) throws CouldNotFindEntityException{
-    SimpleProjectDto projectDto = request.project();
-    List<GroupxProject> groupxProjectList = projectService.findAllGroupxProjectsByProjectId(Long.parseLong(projectDto.projectId()));
-    if (groupxProjectList.isEmpty()) {
-      throw new CouldNotFindEntityException("No groupxProject found for project");
-    }
-    InternalRecord record = timeRecordService.findLatestInternalRecordByUser(user).orElseThrow(()-> new CouldNotFindEntityException("No external record found for user"));
-    GroupxProject groupxProject= groupxProjectList.get(0);
+  // todo fix with GroupxProject
+  @Transactional
+  public MessageResponse updateUserVisibilityAndTimeStampProject(
+      UpdateDashboardDataRequest request, Userx user) throws CouldNotFindEntityException {
+    SimpleGroupxProjectDto gxpDto = request.groupxProject();
+
+    InternalRecord record =
+            timeRecordService
+                    .findLatestInternalRecordByUser(user)
+                    .orElseThrow(
+                            () -> new CouldNotFindEntityException("No external record found for user"));
+
+    if (gxpDto != null) {
+    GroupxProject groupxProject = projectService.findByGroupAndProject(Long.valueOf(gxpDto.groupId()), Long.valueOf(gxpDto.projectId()));
     groupxProject.addInternalRecord(record);
     projectService.saveGroupxProject(groupxProject);
+    }
+
     user.setStateVisibility(request.visibility());
     userService.saveUser(user);
 
