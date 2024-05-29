@@ -7,6 +7,7 @@ import at.qe.skeleton.model.dtos.GroupxProjectStateTimeDbDto;
 import at.qe.skeleton.model.dtos.SimpleProjectDbDto;
 import at.qe.skeleton.model.dtos.TimeTableRecordDBDto;
 import at.qe.skeleton.repositories.UserxRepository;
+import at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.TimetableEntryDto;
 import at.qe.skeleton.rest.frontend.payload.request.SplitTimeRecordRequest;
@@ -43,27 +44,35 @@ public class TimetableDataService {
 
   public GetTimetableDataResponse getTimetableData(String username) {
     Set<TimeTableRecordDBDto> timeTableRecordDBDtos = timeRecordService.getTimeTableRecordDtosByUser(username);
-    // eliminate timeTableRecord with end=null
     timeTableRecordDBDtos.removeIf(record -> record.end() == null);
-    // now load a set of all projects the user is allowed to see or better even directly load the simpleProjectDtos (maybe the db version because of id long) and then connect them to the timeTableRecordDBDtos
-    Set<SimpleProjectDbDto> simpleProjectDbDtoSet = projectService.getSimpleProjectDbDtoByUser(username);
+    Set<SimpleGroupxProjectDto> simpleGroupxProjectDtoSet = projectService.getSimpleGroupxProjectDtoByUser(username);
     List<TimetableEntryDto> tableEntries = new ArrayList<>();
     for (TimeTableRecordDBDto record : timeTableRecordDBDtos) {
-      TimetableEntryDto entry = timeTableEntryDtoBuilder(record, simpleProjectDbDtoSet);
+      TimetableEntryDto entry = timeTableEntryDtoBuilder(record, simpleGroupxProjectDtoSet);
       tableEntries.add(entry);
     }
     // todo: include GroupxProject once frontend is ready
-    List<SimpleProjectDto> availableProjects = simpleProjectDbDtoSet.stream().map(projectMapperService::mapSimpleProjectDbDtoToDto).toList();
+    List<SimpleGroupxProjectDto> availableProjects = simpleGroupxProjectDtoSet.stream().toList();
     return new GetTimetableDataResponse(tableEntries, availableProjects);
   }
 
-  private TimetableEntryDto timeTableEntryDtoBuilder(TimeTableRecordDBDto record, Set<SimpleProjectDbDto> simpleProjectDbDtoSet) {
-    SimpleProjectDto simpleProjectDto = simpleProjectDbDtoSet.stream().filter(project -> project.id().equals(record.assignedProjectId())).findFirst().map(projectMapperService::mapSimpleProjectDbDtoToDto).orElse(null);
+  /**
+   * This method builds a TimetableEntryDto from a TimeTableRecordDBDto and a Set of SimpleGroupxProjectDto.
+   * The TimeTableRecordDBDto provides necessary information about which SimpleGroupxProjectDto to add to the TimetableEntryDto from the Set of SimpleGroupxProjectDtos.
+   * @param record
+   * @param simpleProjectDbDtoSet
+   * @return
+   */
+  private TimetableEntryDto timeTableEntryDtoBuilder(TimeTableRecordDBDto record, Set<SimpleGroupxProjectDto> simpleProjectDbDtoSet) {
+    SimpleGroupxProjectDto simpleGroupxProjectDto =
+            simpleProjectDbDtoSet
+                    .stream()
+                    .filter(gxp -> gxp.projectId().equals(record.projectId().toString()) && gxp.groupId().equals(record.groupId().toString())).findFirst().orElse(null);
     return new TimetableEntryDto(
         record.recordId(),
         record.start().format(DateTimeFormatter.ISO_DATE_TIME),
         record.end().format(DateTimeFormatter.ISO_DATE_TIME),
-        simpleProjectDto,
+        simpleGroupxProjectDto,
         record.state(),
         record.description());
   }

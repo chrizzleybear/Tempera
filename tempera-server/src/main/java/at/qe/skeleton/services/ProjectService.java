@@ -11,6 +11,7 @@ import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.GroupxProjectRepository;
 import at.qe.skeleton.repositories.ProjectRepository;
 import at.qe.skeleton.repositories.UserxRepository;
+import at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -227,8 +228,8 @@ public class ProjectService {
         return groupxProjectRepository.getAllgxpStateTimeDtosByGroupLead(username);
     }
 
-    public Set<SimpleProjectDbDto> getSimpleProjectDbDtoByUser(String username) {
-         return projectRepository.getSimpleProjectDbDtoByUser(username);
+    public Set<SimpleGroupxProjectDto> getSimpleGroupxProjectDtoByUser(String username) {
+         return groupxProjectRepository.getSimpleGroupxProjectDtoByUser(username);
     }
 
   @PreAuthorize("hasAuthority('MANAGER')")
@@ -275,4 +276,6 @@ public class ProjectService {
     GroupxProject groupxProject = groupxProjectRepository.findByGroup_IdAndProject_Id(groupId, projectId).orElseThrow();
     return groupxProject;
     }
+
+
 }

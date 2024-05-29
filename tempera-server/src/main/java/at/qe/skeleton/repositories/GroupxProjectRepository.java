@@ -4,12 +4,15 @@ import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.GroupxProjectId;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.dtos.GroupxProjectStateTimeDbDto;
+import at.qe.skeleton.model.dtos.SimpleProjectDbDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface GroupxProjectRepository extends AbstractRepository<GroupxProject, GroupxProjectId> {
 
@@ -32,4 +35,8 @@ public interface GroupxProjectRepository extends AbstractRepository<GroupxProjec
 
     @Query("SELECT new at.qe.skeleton.model.dtos.GroupxProjectStateTimeDbDto(gxp.project.id, gxp.group.id, er.state, ir.start, ir.end) From GroupxProject gxp JOIN gxp.internalRecords ir JOIN ir.externalRecord er JOIN gxp.group g where g.groupLead.username = :groupLead")
     public List<GroupxProjectStateTimeDbDto> getAllgxpStateTimeDtosByGroupLead(String groupLead);
+
+    @Query("SELECT new at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto(CAST(g.id AS string), g.name, CAST(p.id AS string), p.name) FROM GroupxProject gxp JOIN gxp.group g JOIN gxp.project p  JOin gxp.contributors con where con.username =  :username")
+    public Set<SimpleGroupxProjectDto> getSimpleGroupxProjectDtoByUser(String username);
+
 }
