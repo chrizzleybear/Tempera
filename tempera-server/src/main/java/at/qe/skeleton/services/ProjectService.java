@@ -6,7 +6,6 @@ import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.dtos.GroupxProjectStateTimeDbDto;
-import at.qe.skeleton.model.dtos.SimpleProjectDbDto;
 import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.GroupxProjectRepository;
 import at.qe.skeleton.repositories.ProjectRepository;
@@ -279,6 +278,23 @@ public class ProjectService {
   }
 
   /**
+   * Loads a GroupxProject by its group and project id while fetching Contributors List, rest is lazy loaded.
+   * @param groupId
+   * @param projectId
+   * @return
+   * @throws CouldNotFindEntityException
+   */
+  public GroupxProject findByGroupAndProjectDetailedC(Long groupId, Long projectId) throws CouldNotFindEntityException{
+    return groupxProjectRepository
+        .findByGroupAndProjectDetailedC(groupId, projectId)
+        .orElseThrow(
+            () ->
+                new CouldNotFindEntityException(
+                    "GroupxProject with groupId %s and projectId %s not found"
+                        .formatted(groupId, projectId)));
+  }
+
+  /**
    * Loads a GroupxProject by its group and project id while fetchin group and project details
    * (which are usually lazy loaded) thus enabling the GroupxProject to deliver all the needed
    * information in one go.
@@ -287,9 +303,9 @@ public class ProjectService {
    * @param projectId
    * @return
    */
-  public GroupxProject findByGroupAndProjectDetailed(Long groupId, Long projectId) throws CouldNotFindEntityException{
+  public GroupxProject findByGroupAndProjectDetailedGP(Long groupId, Long projectId) throws CouldNotFindEntityException{
     return groupxProjectRepository
-        .findByGroupAndProjectDetailed(groupId, projectId)
+        .findByGroupAndProjectDetailedGP(groupId, projectId)
         .orElseThrow(
             () ->
                 new CouldNotFindEntityException(

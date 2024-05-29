@@ -3,12 +3,9 @@ package at.qe.skeleton.rest.frontend.mappersAndFrontendServices;
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.exceptions.InternalRecordOutOfBoundsException;
 import at.qe.skeleton.model.*;
-import at.qe.skeleton.model.dtos.GroupxProjectStateTimeDbDto;
-import at.qe.skeleton.model.dtos.SimpleProjectDbDto;
 import at.qe.skeleton.model.dtos.TimeTableRecordDBDto;
 import at.qe.skeleton.repositories.UserxRepository;
 import at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto;
-import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.TimetableEntryDto;
 import at.qe.skeleton.rest.frontend.payload.request.SplitTimeRecordRequest;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateDescriptionRequest;
@@ -78,7 +75,7 @@ public class TimetableDataService {
 
     if(record.groupId() != null && record.projectId() != null){
       GroupxProject groupxProject =
-          projectService.findByGroupAndProjectDetailed(record.groupId(), record.projectId());
+          projectService.findByGroupAndProjectDetailedGP(record.groupId(), record.projectId());
        simpleGroupxProjectDto =
           projectMapperService.mapToSimpleGroupxProjectDto(groupxProject);
     }
@@ -102,7 +99,10 @@ public class TimetableDataService {
     Long groupId = Long.valueOf(request.groupId());
     // todo: add the group as parameter later on
     // then we need the findbyGroupIdAndProjectId...
-    GroupxProject groupxProject= projectService.findByGroupAndProject(groupId, projectId);
+    GroupxProject groupxProject= projectService.findByGroupAndProjectDetailedC(groupId, projectId);
+    if (!groupxProject.getContributors().contains(user)) {
+      throw new CouldNotFindEntityException("User is not a contributor to the gxp %s".formatted(groupxProject));
+    }
     groupxProject.addInternalRecord(internalRecord);
     projectService.saveGroupxProject(groupxProject);
 
