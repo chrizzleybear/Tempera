@@ -10,6 +10,9 @@ services:
   web-app:
     build:
       ./tempera-server/webapp/
+    volumes:
+      - '.:/home'
+      - '/home/node_modules'
     depends_on:
       - back-end
     ports:
