@@ -56,10 +56,7 @@ class TimetableDataServiceTest {
         timeTableEntries.stream().filter(e -> e.id().equals(id)).findFirst().orElse(null);
     assertNull(entryNull, "TimeRecord with null as End should not be int the list");
 
-    // this TimeRecord has a valid Ending time so it should be converted to a TimetableEntryDto
-    // id, group_id, project_id, start, time_end, ext_rec_start, user_name)
-    //    (-14, 2, -7, '2024-05-11 13:00:00', '2024-05-12 10:59:59', '2024-05-11 13:00:00',
-    // 'johndoe'), -> OUT_OF_OFFICE
+
     long id2 = -14;
     String startTimestamp = "2024-05-11T13:00:00";
     String endTimestamp = "2024-05-12T10:59:59";
@@ -69,12 +66,18 @@ class TimetableDataServiceTest {
     String description2 = null;
     TimetableEntryDto entryDto =
         timeTableEntries.stream().filter(e -> e.id().equals(id2)).findFirst().orElse(null);
+
     assertNotNull(entryDto);
     assertEquals(id2, entryDto.id());
     assertEquals(startTimestamp, entryDto.startTimestamp());
     assertEquals(endTimestamp, entryDto.endTimestamp());
     assertEquals(simpleGxp, entryDto.assignedGroupxProject());
     assertEquals(state2, entryDto.state());
+
+    assertEquals(10, timeTableEntries.size(), "Johndoe should have 10 TimeTableEntries, since he has 10 closed internalRecords");
+    assertEquals(6, dataResponse.availableProjects().size(), "Johndoe should have 6 available Projects, since he is assigned to 6 GroupxProjects");
+    assertTrue(dataResponse.availableProjects().stream().anyMatch(p -> p.projectName().equals("Cost Reduction Initiative")), "Johndoe should have the Project 'Cost Reduction Initiative' available");
+    assertFalse(dataResponse.availableProjects().stream().anyMatch(p -> p.projectName().equals("Efficiency")), "Johndoe should not have the Project 'Efficiency' available");
   }
 
   @Test
