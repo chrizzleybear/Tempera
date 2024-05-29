@@ -7,8 +7,10 @@ import at.qe.skeleton.model.dtos.GroupxProjectStateTimeDbDto;
 import at.qe.skeleton.model.dtos.SimpleProjectDbDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,4 +41,10 @@ public interface GroupxProjectRepository extends AbstractRepository<GroupxProjec
     @Query("SELECT new at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto(CAST(g.id AS string), g.name, CAST(p.id AS string), p.name) FROM GroupxProject gxp JOIN gxp.group g JOIN gxp.project p  JOin gxp.contributors con where con.username =  :username")
     public Set<SimpleGroupxProjectDto> getSimpleGroupxProjectDtoByUser(String username);
 
+    /**
+     * Loads a GroupxProject by its group and project id while fetchin group and project details.
+     */
+    @EntityGraph(value = "GroupxProject.detail", type= EntityGraph.EntityGraphType.FETCH)
+    @Query(value = "SELECT gxp FROM GroupxProject gxp WHERE gxp.group.id = :groupId AND gxp.project.id = :projectId")
+    public Optional<GroupxProject> findByGroupAndProjectDetailed(@Param(value = "groupId") Long groupId, @Param(value = "projectId") Long projectId);
 }

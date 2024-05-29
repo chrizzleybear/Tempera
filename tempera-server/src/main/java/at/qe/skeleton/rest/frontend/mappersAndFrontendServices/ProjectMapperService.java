@@ -104,6 +104,15 @@ public class ProjectMapperService {
         );
     }
 
+    public SimpleGroupxProjectDto mapToSimpleGroupxProjectDto(GroupxProject gxp) {
+        return new SimpleGroupxProjectDto(
+                gxp.getGroup().getId().toString(),
+                gxp.getGroup().getName(),
+                gxp.getProject().getId().toString(),
+                gxp.getProject().getName()
+        );
+    }
+
     public GroupxProjectDto groupxProjectDtoMapper(GroupxProject groupxProject) {
         Project project = groupxProject.getProject();
         SimpleUserDto managerDetails = userMapper.getSimpleUser(project.getManager());

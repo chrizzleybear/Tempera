@@ -32,9 +32,15 @@ public class TimetableController {
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<GetTimetableDataResponse> getTimetableData() {
     LOGGER.info("getTimetableData");
-    String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    GetTimetableDataResponse response = timeTableDataService.getTimetableData(username);
-    return ResponseEntity.ok(response);
+    try {
+      String username = SecurityContextHolder.getContext().getAuthentication().getName();
+      GetTimetableDataResponse response = timeTableDataService.getTimetableData(username);
+      return ResponseEntity.ok(response);
+    } catch (Exception e) {
+      LOGGER.warn("getTimetableData failed", e);
+      return ResponseEntity.badRequest().build();
+    }
+
   }
 
   @PostMapping("/update/project")

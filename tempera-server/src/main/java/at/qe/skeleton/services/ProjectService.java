@@ -224,13 +224,13 @@ public class ProjectService {
   }
 
   @PreAuthorize("hasAuthority('GROUPLEAD')")
-    public List<GroupxProjectStateTimeDbDto> gxpStateTimeDtosByGroupLead(String username) {
-        return groupxProjectRepository.getAllgxpStateTimeDtosByGroupLead(username);
-    }
+  public List<GroupxProjectStateTimeDbDto> gxpStateTimeDtosByGroupLead(String username) {
+    return groupxProjectRepository.getAllgxpStateTimeDtosByGroupLead(username);
+  }
 
-    public Set<SimpleGroupxProjectDto> getSimpleGroupxProjectDtoByUser(String username) {
-         return groupxProjectRepository.getSimpleGroupxProjectDtoByUser(username);
-    }
+  public Set<SimpleGroupxProjectDto> getSimpleGroupxProjectDtoByUser(String username) {
+    return groupxProjectRepository.getSimpleGroupxProjectDtoByUser(username);
+  }
 
   @PreAuthorize("hasAuthority('MANAGER')")
   public void deleteProject(Project project) {
@@ -273,9 +273,27 @@ public class ProjectService {
   }
 
   public GroupxProject findByGroupAndProject(Long groupId, Long projectId) {
-    GroupxProject groupxProject = groupxProjectRepository.findByGroup_IdAndProject_Id(groupId, projectId).orElseThrow();
+    GroupxProject groupxProject =
+        groupxProjectRepository.findByGroup_IdAndProject_Id(groupId, projectId).orElseThrow();
     return groupxProject;
-    }
+  }
 
-
+  /**
+   * Loads a GroupxProject by its group and project id while fetchin group and project details
+   * (which are usually lazy loaded) thus enabling the GroupxProject to deliver all the needed
+   * information in one go.
+   *
+   * @param groupId
+   * @param projectId
+   * @return
+   */
+  public GroupxProject findByGroupAndProjectDetailed(Long groupId, Long projectId) throws CouldNotFindEntityException{
+    return groupxProjectRepository
+        .findByGroupAndProjectDetailed(groupId, projectId)
+        .orElseThrow(
+            () ->
+                new CouldNotFindEntityException(
+                    "GroupxProject with groupId %s and projectId %s not found"
+                        .formatted(groupId, projectId)));
+  }
 }
