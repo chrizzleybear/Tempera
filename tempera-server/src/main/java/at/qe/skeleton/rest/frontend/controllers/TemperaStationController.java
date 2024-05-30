@@ -54,12 +54,9 @@ public class TemperaStationController {
     @PutMapping("/update")
     public ResponseEntity<MessageResponse> updateTemperaStation(@RequestBody TemperaStationDto temperaStationDto) {
         try {
-            TemperaStation t = temperaStationService.findById(temperaStationDto.id());
-            t.setEnabled(temperaStationDto.enabled());
-            t.setIsHealthy(temperaStationDto.isHealthy());
-            temperaStationService.save(t);
+            temperaStationService.updateTemperaStation(temperaStationDto.id(), temperaStationDto.enabled(), temperaStationDto.user());
             return ResponseEntity.ok(new MessageResponse("TemperaStation with id " + temperaStationDto.id() + " was updated."));
-        } catch (CouldNotFindEntityException e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("TemperaStation with id " + temperaStationDto.id() + " was not found."));
         }
     }

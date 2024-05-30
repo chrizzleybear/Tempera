@@ -126,4 +126,11 @@ public class TemperaStationService {
             .collect(Collectors.toList());
     return availableUsers;
   }
+
+    public void updateTemperaStation(String id, boolean enabled, String user) {
+        TemperaStation temperaStation = temperaStationRepository.findById(id).orElseThrow();
+        temperaStation.setEnabled(enabled);
+        temperaStation.setUser(userxRepository.findByUsername(user).orElse(null));
+        temperaStationRepository.save(temperaStation);
+    }
 }
