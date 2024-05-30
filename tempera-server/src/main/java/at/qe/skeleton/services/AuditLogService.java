@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -37,7 +37,7 @@ public class AuditLogService {
         return auditLogRepository.save(a);
     }
 
-    public Collection<AuditLog> getAll() {
+    public List<AuditLog> getAll() {
         return auditLogRepository.findAll();
     }
 }
