@@ -3,6 +3,8 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.model.Groupx;
 import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.model.enums.LogAffectedType;
+import at.qe.skeleton.model.enums.LogEvent;
 import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.GroupxProjectRepository;
@@ -38,6 +40,9 @@ public class GroupService {
     @Autowired
     private GroupxProjectRepository groupxProjectRepository;
 
+    @Autowired
+    private AuditLogService auditLogService;
+
 
     public List<SimpleGroupDto> getAllGroups() {
         List<Groupx> groups = groupRepository.findAll();
@@ -53,6 +58,8 @@ public class GroupService {
                 .orElseThrow(() -> new IllegalArgumentException(INVALID_GROUPLEAD_ID));
         groupLead.addRole(UserxRole.GROUPLEAD);
         Groupx group = new Groupx(name, description, groupLead);
+        auditLogService.logEvent(LogEvent.CREATE, LogAffectedType.GROUP,
+                "New Group with name " + group.getName() + " and group leader " + groupLead.getUsername() + ", " + groupLead.getId() + " was created.");
         return groupRepository.save(group);
     }
 
@@ -67,6 +74,8 @@ public class GroupService {
         group.setName(name);
         group.setDescription(description);
         group.setGroupLead(groupLead);
+        auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.GROUP,
+                "Group with name " + group.getName() + " was edited.");
         return groupRepository.save(group);
     }
 
@@ -75,6 +84,8 @@ public class GroupService {
     public void deleteGroup(Long groupId) {
         Groupx group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
+        auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.GROUP,
+                "New Group with name " + group.getName() + " was deleted.");
         groupRepository.delete(group);
     }
 
@@ -88,8 +99,10 @@ public class GroupService {
         }
         group.addMember(member);
         groupRepository.save(group);
+        auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.GROUP,
+                "Member " + member.getUsername() + ", " + member.getId() + " was added to group " + group.getName());
         return member;
-        }
+    }
 
     public Groupx getGroup(Long groupId) {
                 Groupx group = groupRepository.findById(groupId)
@@ -104,6 +117,8 @@ public class GroupService {
         Groupx group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
         Userx member = userxRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
         group.removeMember(member);
+        auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.GROUP,
+                "Member " + member.getUsername() + ", " + member.getId() + " was removed from group " + group.getName());
         groupRepository.save(group);
     }
 

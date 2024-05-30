@@ -7,6 +7,8 @@ import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.dtos.GroupxProjectStateTimeDbDto;
 import at.qe.skeleton.model.dtos.SimpleProjectDbDto;
+import at.qe.skeleton.model.enums.LogAffectedType;
+import at.qe.skeleton.model.enums.LogEvent;
 import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.GroupxProjectRepository;
 import at.qe.skeleton.repositories.ProjectRepository;
@@ -30,6 +32,7 @@ public class ProjectService {
   @Autowired private UserxRepository userxRepository;
   @Autowired private GroupRepository groupRepository;
   @Autowired private GroupxProjectRepository groupxProjectRepository;
+  @Autowired private AuditLogService auditLogService;
 
   private static final String USER_NOT_FOUND = "User not found";
   private static final String PROJECT_NOT_FOUND = "Project not found";
@@ -75,6 +78,8 @@ public class ProjectService {
         userxRepository
             .findById(manager)
             .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND)));
+    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.PROJECT,
+            "Project " + project.getName() + " was edited.");
     return projectRepository.save(project);
   }
 
@@ -96,6 +101,8 @@ public class ProjectService {
     GroupxProject groupxProject = new GroupxProject();
     groupxProject.addProject(project);
     groupxProject.addGroup(group);
+    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.PROJECT,
+            "Project " + project.getName() + " was linked to group " + group.getName() + ".");
     return groupxProjectRepository.save(groupxProject);
   }
 
@@ -129,6 +136,8 @@ public class ProjectService {
       // löschen wir einfach mal das GroupxProject
       // todo: eine geeignete lösch-policy überlegen: ein feld in GroupxProject setzen mit "is
       // active" oder so
+      auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.PROJECT,
+              "Group " + groupxProject.getGroup().getName() + " was removed from project " + groupxProject.getProject().getName() + ".");
       deleteGroupxProject(groupxProject);
     }
   }
@@ -172,6 +181,10 @@ public class ProjectService {
           "User is not part of the group %s".formatted(groupxProject.getGroup()));
     }
     groupxProject.addContributor(contributor);
+    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.PROJECT,
+            "User " + contributor.getUsername() + ", " + contributor.getId() +
+                    " was added to project " + groupxProject.getProject().getName() +
+                    " of group " + groupxProject.getGroup().getName() + ".");
     groupxProjectRepository.save(groupxProject);
   }
 
@@ -213,6 +226,10 @@ public class ProjectService {
         userxRepository
             .findByUsername(username)
             .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND));
+    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.PROJECT,
+            "User " + contributor.getUsername() + ", " + contributor.getId() +
+                    " was removed from project " + groupxProject.getProject().getName() +
+                    " of group " + groupxProject.getGroup().getName() + ".");
     groupxProject.removeContributor(contributor);
     groupxProjectRepository.save(groupxProject);
   }
@@ -233,6 +250,8 @@ public class ProjectService {
 
   @PreAuthorize("hasAuthority('MANAGER')")
   public void deleteProject(Project project) {
+    auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.PROJECT,
+            "Project " + project.getName() + "was deleted.");
     projectRepository.delete(project);
   }
 
