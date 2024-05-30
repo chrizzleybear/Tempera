@@ -34,7 +34,6 @@ export class TemperaStationEditComponent implements OnInit, OnChanges {
   constructor(
     private temperaStationService: TemperaStationService,
     private formBuilder: FormBuilder,
-    private userService: UsersService
   ) {
     this.temperaForm = this.formBuilder.group({
       user: [null, [Validators.required]],
@@ -64,9 +63,13 @@ export class TemperaStationEditComponent implements OnInit, OnChanges {
 
   onSubmit() {
     if (this.temperaForm?.valid) {
-      console.log(this.temperaForm.value);
-      this.temperaStation.user = this.temperaForm.value.user.value.username;
-      this.temperaStation.enabled = this.temperaForm.value.enabled;
+      if(this.temperaForm.value.user.value === undefined) {
+        this.temperaStation.enabled = this.temperaForm.value.enabled;
+      }
+      else {
+        this.temperaStation.user = this.temperaForm.value.user.value.username;
+        this.temperaStation.enabled = this.temperaForm.value.enabled;
+      }
       this.temperaStationService.updateTemperaStation(this.temperaStation).subscribe({
         next: () => {
           this.temperaForm?.reset();
@@ -98,7 +101,7 @@ export class TemperaStationEditComponent implements OnInit, OnChanges {
     console.log(this.temperaStation.user);
     console.log(this.users);
     this.temperaForm = this.formBuilder.group({
-      user: this.users?.find(user => user.value.username === this.temperaStation.user),
+      user: this.temperaStation.user,
       enabled: this.temperaStation.enabled
     });
   }
