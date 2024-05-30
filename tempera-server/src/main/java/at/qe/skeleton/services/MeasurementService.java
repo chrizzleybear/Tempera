@@ -33,6 +33,8 @@ public class MeasurementService {
     this.measurementRepository = measurementRepository;
   }
 
+
+
   public Measurement loadMeasurementByIdComponents(
       String temperaId, Long sensorId, LocalDateTime timestamp) throws CouldNotFindEntityException {
     MeasurementId id = new MeasurementId();
@@ -62,7 +64,10 @@ public class MeasurementService {
   }
 
   /**
-   * Reviews all measurements if they trigger an alert and if they do creates that alert and saves it.
+   * Reviews all measurements if they trigger an alert. If an alert is triggered the method looks for
+   * existing and unacknowledged alerts for the sensor of the measurement that match the threshold type
+   * that was violated and updates the alert with the new information. If no alert is found, a new alert
+   * is created and saved.
    * @param measurementIds List of 4 MeasurementIds, that came via the MeasurementController from the AccessPoint and
    *                       all belong to the same TemperaStation
    * @param temperaId
@@ -139,8 +144,34 @@ public class MeasurementService {
     }
   }
 
+  /**
+   * Builds an alert object based on the threshold and measurement. If an alert is already open for the
+   * sensor and threshold, the alert is updated with the new information. If no alert is open, a new alert
+   * is created.
+   * @param threshold
+   * @param measurement
+   * @return
+   */
   private Alert alertBuilder(Threshold threshold, Measurement measurement) {
-    return new Alert(AlertType.THRESHOLD_WARNING, threshold, measurement.getValue(), measurement.getId().getTimestamp());
+
+    Alert openAlert = alertService.findOpenAlertBySensorAndThreshold(measurement.getSensor(), threshold);
+    if (openAlert == null) {
+      openAlert = new Alert(threshold, measurement.getSensor());
+      openAlert.setFirstIncident(measurement.getId().getTimestamp());
+      openAlert.setLastIncident(measurement.getId().getTimestamp());
+      openAlert.setPeakDeviationValue(measurement.getValue());
+
+      return openAlert;
+    }
+    openAlert.setLastIncident(measurement.getId().getTimestamp());
+
+    if (threshold.isOfLowerBoundType() && measurement.getValue() < openAlert.getPeakDeviationValue()) {
+      openAlert.setPeakDeviationValue(measurement.getValue());
+    }
+    if (!threshold.isOfLowerBoundType() && measurement.getValue() > openAlert.getPeakDeviationValue()) {
+      openAlert.setPeakDeviationValue(measurement.getValue());
+    }
+    return openAlert;
   }
 
   public Optional<Measurement> findLatestMeasurementBySensor(Sensor sensor) {

@@ -272,23 +272,23 @@ INSERT INTO threshold_tip (id, tip) VALUES
                                         (-30, 'Regelmäßiges Lüften: Öffnen Sie Fenster und Türen mehrmals täglich für mindestens 10 Minuten, um frische Luft hereinzulassen und abgestandene Luft auszutauschen.\nVerwendung von Luftreinigern: Setzen Sie Luftreiniger ein, um Staub, Pollen und andere Schadstoffe aus der Luft zu filtern und die Raumluftqualität zu verbessern.\nPflanzen im Raum platzieren: Stellen Sie Zimmerpflanzen auf, die die Luftqualität verbessern können und das Wohlbefinden erhöhen.\n');
 INSERT INTO Modification (id, reason, time_stamp) VALUES
     (-1, 'Default threshold.', NULL);
-INSERT INTO Threshold (id, default_threshold, sensor_type, threshold_type, threshold_value, modification_id, tip_id) VALUES
-                                                                                                                         (-11, TRUE, 0, 1, 20.0, -1, -1),
-                                                                                                                         (-12, TRUE, 0, 3, 19.0, -1, -1),
-                                                                                                                         (-13, TRUE, 0, 0, 24.0, -1, -2),
-                                                                                                                         (-14, TRUE, 0, 2, 25.0, -1, -2),
-                                                                                                                         (-21, TRUE, 2, 1, 50.0, -1, -10),
-                                                                                                                         (-22, TRUE, 2, 3, 40.0, -1, -10),
-                                                                                                                         (-23, TRUE, 2, 0, 60.0, -1, -11),
-                                                                                                                         (-24, TRUE, 2, 2, 70.0, -1, -11),
-                                                                                                                         (-31, TRUE, 1, 1, 220.0, -1, -20),
-                                                                                                                         (-32, TRUE, 1, 3, 200.0, -1, -20),
-                                                                                                                         (-33, TRUE, 1, 0, 540.0, -1, -21),
-                                                                                                                         (-34, TRUE, 1, 2, 600.0, -1, -21),
-                                                                                                                         (-41, TRUE, 3, 1, 11.0, -1, -30),
-                                                                                                                         (-42, TRUE, 3, 3, 10.0, -1, -30),
-                                                                                                                         (-43, TRUE, 3, 0, 10.00, -1, -30),
-                                                                                                                         (-44, TRUE, 3, 2, 10.00, -1, -30);
 
+INSERT INTO Threshold (id, default_threshold, sensor_type, threshold_type, threshold_value, modification_id, tip_id) VALUES
+(-11, TRUE, 'TEMPERATURE', 'LOWERBOUND_INFO', 20.0, -1, -1),
+(-12, TRUE, 'TEMPERATURE', 'LOWERBOUND_WARNING', 19.0, -1, -1),
+(-13, TRUE, 'TEMPERATURE', 'UPPERBOUND_INFO', 24.0, -1, -2),
+(-14, TRUE, 'TEMPERATURE', 'UPPERBOUND_WARNING', 25.0, -1, -2),
+(-21, TRUE, 'HUMIDITY', 'LOWERBOUND_INFO', 50.0, -1, -10),
+(-22, TRUE, 'HUMIDITY', 'LOWERBOUND_WARNING', 40.0, -1, -10),
+(-23, TRUE, 'HUMIDITY', 'UPPERBOUND_INFO', 60.0, -1, -11),
+(-24, TRUE, 'HUMIDITY', 'UPPERBOUND_WARNING', 70.0, -1, -11),
+(-31, TRUE, 'IRRADIANCE', 'LOWERBOUND_INFO', 220.0, -1, -20),
+(-32, TRUE, 'IRRADIANCE', 'LOWERBOUND_WARNING', 200.0, -1, -20),
+(-33, TRUE, 'IRRADIANCE', 'UPPERBOUND_INFO', 540.0, -1, -21),
+(-34, TRUE, 'IRRADIANCE', 'UPPERBOUND_WARNING', 600.0, -1, -21),
+(-41, TRUE, 'NMVOC', 'LOWERBOUND_INFO', 11.0, -1, -30),
+(-42, TRUE, 'NMVOC', 'LOWERBOUND_WARNING', 10.0, -1, -30),
+(-43, TRUE, 'NMVOC', 'UPPERBOUND_INFO', 10.00, -1, -30),
+(-44, TRUE, 'NMVOC', 'UPPERBOUND_WARNING', 10.00, -1, -30);
 
 

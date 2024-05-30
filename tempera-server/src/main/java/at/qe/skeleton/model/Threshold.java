@@ -18,9 +18,11 @@ public class Threshold implements Serializable {
   private boolean defaultThreshold;
 
   @Column(name = "sensor_type")
+  @Enumerated(EnumType.STRING)
   private SensorType sensorType;
 
   @Column(name = "threshold_type")
+  @Enumerated(EnumType.STRING)
   private ThresholdType thresholdType;
 
   @Column(name = "threshold_value")
@@ -34,7 +36,12 @@ public class Threshold implements Serializable {
   @JoinColumn(name = "tip_id")
   private ThresholdTip tip;
 
-  public Threshold(SensorType sensorType, ThresholdType thresholdType, double value, Modification modification, ThresholdTip tip) {
+  public Threshold(
+      SensorType sensorType,
+      ThresholdType thresholdType,
+      double value,
+      Modification modification,
+      ThresholdTip tip) {
     this.defaultThreshold = false;
     this.sensorType = sensorType;
     this.thresholdType = thresholdType;
@@ -43,12 +50,17 @@ public class Threshold implements Serializable {
     this.tip = tip;
   }
 
-  public Threshold() {
+  public Threshold() {}
+
+  public boolean isOfLowerBoundType() {
+    return thresholdType == ThresholdType.LOWERBOUND_INFO
+        || thresholdType == ThresholdType.LOWERBOUND_WARNING;
   }
 
   public Long getId() {
     return id;
   }
+
   public SensorType getSensorType() {
     return sensorType;
   }
@@ -61,7 +73,9 @@ public class Threshold implements Serializable {
     return thresholdType;
   }
 
-  public boolean isDefaultThreshold() { return defaultThreshold; }
+  public boolean isDefaultThreshold() {
+    return defaultThreshold;
+  }
 
   public void setThresholdType(ThresholdType thresholdType) {
     this.thresholdType = thresholdType;

@@ -1,8 +1,13 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.Alert;
+import at.qe.skeleton.model.Sensor;
+import at.qe.skeleton.model.Threshold;
+import at.qe.skeleton.model.enums.ThresholdType;
 import at.qe.skeleton.repositories.AlertRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AlertService {
@@ -18,5 +23,13 @@ public class AlertService {
 
     public void saveAlert(Alert alert) {
         alertRepository.save(alert);
+    }
+
+    public Alert findOpenAlertBySensorAndThreshold(Sensor sensor, Threshold threshold) {
+        return alertRepository.findOpenAlertBySensorAndThresholdType(sensor, threshold).orElse(null);
+    }
+
+    public List<Alert> getAllAlerts() {
+        return alertRepository.findAll();
     }
 }
