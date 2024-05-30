@@ -2,15 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TemperaStationService } from '../../_services/tempera-station.service';
 import { TemperaStation } from '../../models/temperaStation.model';
-import {NgIf} from "@angular/common";
-import {Sensor} from "../../models/sensor";
+import {NgForOf, NgIf} from "@angular/common";
+import {Sensor} from "../../models/sensor.model";
+import {TableModule} from "primeng/table";
+
 
 @Component({
   selector: 'app-tempera-station-details',
   templateUrl: './tempera-station-details.component.html',
   standalone: true,
   imports: [
-    NgIf
+    NgIf,
+    NgForOf,
+    TableModule
   ],
   styleUrls: ['./tempera-station-details.component.css']
 })
@@ -18,7 +22,7 @@ export class TemperaStationDetailsComponent implements OnInit {
 
   temperaStationId: string | undefined;
   temperaStation: TemperaStation | undefined;
-  private sensors: Sensor[] = [];
+  sensors: Sensor[] = [];
 
   constructor(
     private route: ActivatedRoute,

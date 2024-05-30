@@ -11,7 +11,7 @@
  */
 import { AccessPoint } from './accessPoint';
 import { Userx } from './userx';
-import { Sensor } from '../../app/models/sensor';
+import { Sensor } from '../api/sensor';
 
 
 export interface TemperaStation {

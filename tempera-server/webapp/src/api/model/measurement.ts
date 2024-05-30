@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 import { MeasurementId } from './measurementId';
-import { Sensor } from '../../app/models/sensor';
+import { Sensor } from '../api/sensor';
 
 
 export interface Measurement {
