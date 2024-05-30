@@ -2,7 +2,7 @@ import {User} from "./user.model";
 
 export interface TemperaStation {
   id: string;
-  user: User;
+  user: string;
   enabled: boolean;
   isHealthy: boolean;
 }

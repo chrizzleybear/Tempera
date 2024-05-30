@@ -9,9 +9,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Measurement } from '../../api/model/measurement';
-import { SensorId } from '../../api/model/sensorId';
-import { TemperaStation } from '../../api/model/temperaStation';
+import { Measurement } from '../model/measurement';
+import { SensorId } from '../model/sensorId';
+import { TemperaStation } from '../model/temperaStation';
 
 
 export interface Sensor {

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {TemperaStationService} from "../../_services/tempera-station.service";
 import {DropdownModule} from "primeng/dropdown";
 import {CheckboxModule} from "primeng/checkbox";
@@ -25,16 +25,14 @@ export class TemperaStationCreateComponent implements OnInit{
   @Output() onCreateCompleted = new EventEmitter<boolean>();
   users: { label: string; value: User; }[] | undefined;
 
-
   constructor(
     private temperaStationService: TemperaStationService,
     private formBuilder: FormBuilder,
     private usersService: UsersService
   ) {
     this.temperaForm = this.formBuilder.group({
-      id: '',
-      user: '',
-      enabled: false
+      id: [null, [Validators.required]],
+      user: [null, []],
     });
   }
 
@@ -46,7 +44,6 @@ export class TemperaStationCreateComponent implements OnInit{
     if (this.temperaForm.valid) {
       this.temperaStationService.createTemperaStation(this.temperaForm.value).subscribe({
         next: () => {
-          console.log('TemperaStation created successfully');
           this.temperaForm.reset();
           this.onCreateCompleted.emit(true);
         },
