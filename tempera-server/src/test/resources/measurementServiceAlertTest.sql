@@ -52,4 +52,5 @@ INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_
     (100.0, -13, '2024-05-10T08:30:00', 'TEMP123');
 
 INSERT INTO threshold (default_threshold, sensor_type, threshold_type, threshold_value, id, modification_id, tip_id) VALUES
+   (True, 'TEMPERATURE', 'UPPERBOUND_INFO', 50.0, -1, null, null);
     --todo: add thresholds according to measurements
