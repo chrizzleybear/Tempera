@@ -5,6 +5,8 @@ import at.qe.skeleton.model.Measurement;
 import at.qe.skeleton.model.MeasurementId;
 import at.qe.skeleton.model.Sensor;
 import at.qe.skeleton.model.SensorId;
+import at.qe.skeleton.model.enums.LogAffectedType;
+import at.qe.skeleton.model.enums.LogEvent;
 import at.qe.skeleton.repositories.MeasurementRepository;
 import at.qe.skeleton.repositories.SensorRepository;
 import at.qe.skeleton.repositories.TemperaStationRepository;
@@ -21,11 +23,15 @@ public class MeasurementService {
 
   private final MeasurementRepository measurementRepository;
 
+  private final AuditLogService auditLogService;
+
   public MeasurementService(
       TemperaStationRepository temperaStationRepository,
       MeasurementRepository measurementRepository,
-      SensorRepository sensorRepository) {
+      SensorRepository sensorRepository,
+      AuditLogService auditLogService) {
     this.measurementRepository = measurementRepository;
+    this.auditLogService = auditLogService;
   }
 
   public Measurement loadMeasurementByIdComponents(String temperaId, Long sensorId, LocalDateTime timestamp) throws CouldNotFindEntityException {
@@ -33,14 +39,21 @@ public class MeasurementService {
     id.setSensorId(new SensorId(temperaId, sensorId));
     id.setTimestamp(timestamp);
 
-    return measurementRepository
-        .findById(id)
-        .orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id));
+    Measurement measurement = measurementRepository
+            .findById(id)
+            .orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id));
+    auditLogService.logEvent(LogEvent.LOAD, LogAffectedType.MEASUREMENT,
+            "Measurement of station " + temperaId + " and sensor " + sensorId + "was loaded.");
+    return measurement;
   }
+
   public Measurement loadMeasurement(MeasurementId id) throws CouldNotFindEntityException {
-    return measurementRepository
+    Measurement m =  measurementRepository
         .findById(id)
         .orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id));
+    auditLogService.logEvent(LogEvent.LOAD, LogAffectedType.MEASUREMENT,
+            "Measurement " + id + "was loaded.");
+    return m;
   }
 
 
@@ -58,6 +71,8 @@ public class MeasurementService {
 
   public Optional<Measurement> findLatestMeasurementBySensor(Sensor sensor) {
     SensorId id = sensor.getSensorId();
+    auditLogService.logEvent(LogEvent.LOAD, LogAffectedType.MEASUREMENT,
+            "Lastest measurement of sensor " + sensor.getId() + "was loaded.");
     return measurementRepository.findFirstBySensorIdOrderById_TimestampDesc(id);
   }
   public List<Measurement> loadAllMeasurementsFromTempera() {

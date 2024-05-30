@@ -3,6 +3,8 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.AccessPoint;
 import at.qe.skeleton.model.TemperaStation;
+import at.qe.skeleton.model.enums.LogAffectedType;
+import at.qe.skeleton.model.enums.LogEvent;
 import at.qe.skeleton.repositories.AccessPointRepository;
 import at.qe.skeleton.repositories.TemperaStationRepository;
 import org.springframework.context.annotation.Scope;
@@ -18,12 +20,14 @@ public class AccessPointService {
   private final AccessPointRepository accessPointRepository;
   private final TemperaStationService temperaStationService;
   private final TemperaStationRepository temperaStationRepository;
+  private final AuditLogService auditLogService;
 
   public AccessPointService(
-          AccessPointRepository accessPointRepository, TemperaStationService temperaStationService, TemperaStationRepository temperaStationRepository) {
+          AccessPointRepository accessPointRepository, TemperaStationService temperaStationService, TemperaStationRepository temperaStationRepository, AuditLogService auditLogService) {
     this.accessPointRepository = accessPointRepository;
     this.temperaStationService = temperaStationService;
     this.temperaStationRepository = temperaStationRepository;
+    this.auditLogService = auditLogService;
   }
 
   public AccessPoint getAccessPointById(UUID id) throws CouldNotFindEntityException {
@@ -62,6 +66,8 @@ public class AccessPointService {
   public void delete(AccessPoint accessPoint) {
     var tempStations = accessPoint.getTemperaStations();
     tempStations.stream().forEach(t -> t.setAccessPoint(null));
+    auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.ACCESS_POINT,
+            "Accesspoint of room " + accessPoint.getRoom() + " was deleted.");
     accessPointRepository.delete(accessPoint);
   }
 
@@ -84,6 +90,9 @@ public class AccessPointService {
     }
 
     TemperaStation station = queryStation.get();
+    station.setIsHealthy(connectionStatus);
+    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.ACCESS_POINT,
+            "Connection status to station " + temperaStationId + "was updated to " + connectionStatus + ".");
     return temperaStationService.save(station);
   }
 }

@@ -16,7 +16,7 @@ public class AuditLog {
   private Long id;
 
   @Temporal(TemporalType.TIMESTAMP)
-  private ZonedDateTime timeStamp;
+  private LocalDateTime timeStamp;
 
   @ManyToOne private Userx triggeringUser;
 
@@ -27,7 +27,7 @@ public class AuditLog {
   private String message;
 
   public AuditLog(Userx triggeringUser, LogEvent actionType, LogAffectedType affectedType, String message) {
-    this.timeStamp = ZonedDateTime.now();
+    this.timeStamp = LocalDateTime.now();
     this.triggeringUser = triggeringUser;
     this.actionType = actionType;
     this.affectedType = affectedType;

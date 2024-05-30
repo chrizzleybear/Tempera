@@ -1,5 +1,7 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.model.enums.LogAffectedType;
+import at.qe.skeleton.model.enums.LogEvent;
 import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.model.Userx;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +24,16 @@ public class AuthenticationService {
   @Autowired private PasswordEncoder encode;
   static int tokenLength = 6;
 
+  @Autowired private AuditLogService auditLogService;
+
   @Transactional
   @PreAuthorize("hasAuthority('ADMIN')")
   public UserxDto registerUser(UserxDto userxDTO) {
     Userx newUser = userxService.convertToEntity(userxDTO);
     userxService.saveUser(newUser);
     sendValidationEmail(newUser);
+    auditLogService.logEvent(LogEvent.CREATE, LogAffectedType.USER,
+            "New user " + newUser.getUsername() + ", " + newUser.getId() + " was registered.");
     return userxService.convertToDTO(newUser);
   }
 
@@ -53,6 +59,8 @@ public class AuthenticationService {
             + "\n\n"
             + "Best regards,\n"
             + "The Tempera Team");
+    auditLogService.logEvent(LogEvent.LOGIN, LogAffectedType.USER,
+            "Validation Email was sent to " + user.getUsername() + ", " + user.getId());
   }
 
   private String generateAndSaveActivationToken(Userx user) {
@@ -98,6 +106,8 @@ public class AuthenticationService {
             + "\n\n"
             + "Best regards,\n"
             + "The Tempera Team");
+    auditLogService.logEvent(LogEvent.LOGIN, LogAffectedType.USER,
+            "Resent Validation Email to " + user.getUsername() + ", " + user.getId());
   }
 
   public void validateUser(String username, String password) {
@@ -117,5 +127,7 @@ public class AuthenticationService {
     Userx user = userxService.loadUser(username);
     user.setPassword(encode.encode(password));
     userxService.saveUser(user);
+    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.USER,
+            "Password was changed for user " + user.getUsername() + ", " + user.getId());
   }
 }
