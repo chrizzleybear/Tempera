@@ -110,12 +110,12 @@ public class Threshold implements Serializable {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Threshold threshold = (Threshold) o;
-    return id.equals(threshold.getId());
+    return sensorType.equals(threshold.getSensorType()) && thresholdType.equals(threshold.getThresholdType()) && value == threshold.getValue();
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id);
+    return Objects.hash(sensorType, thresholdType, value);
   }
 
   @Override

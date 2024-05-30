@@ -29,6 +29,7 @@ class MeasurementServiceTest {
   @Autowired private SensorService sensorService;
   @Autowired private TemperaStationService temperaStationService;
   @Autowired private AlertService alertService;
+  @Autowired private ThresholdService thresholdService;
 
   private Sensor getSensor() {
     SensorId sensorId = new SensorId();
@@ -166,6 +167,12 @@ class MeasurementServiceTest {
     measurementService.reviewForAlerts(measurementIds, temperaStation.getId());
 
     alerts = alertService.getAllAlerts();
-    assertEquals(8, alerts.size(), "8 alerts should be in the database after reviewForAlerts");
+    assertEquals(3, alerts.size(), "3 alerts should be in the database after reviewForAlerts");
+    Threshold expectedThreshold = thresholdService.getThresholdById(-108L);
+    Sensor expectedSensor = sensorService.findSensorById(new SensorId("TEMP123", -10L));
+    Alert expectedAlert = new Alert(expectedThreshold, expectedSensor);
+    expectedAlert.setFirstIncident(LocalDateTime.of(2024, 5, 10, 8, 30, 0));
+    expectedAlert.setLastIncident(LocalDateTime.of(2024, 5, 10, 8, 30, 0));
+    assertTrue(alerts.contains(expectedAlert), "Expected alert should be in the database");
   }
 }

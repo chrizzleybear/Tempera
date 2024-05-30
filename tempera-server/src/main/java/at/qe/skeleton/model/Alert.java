@@ -133,11 +133,12 @@ public class Alert {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Alert alert = (Alert) o;
-    return Objects.equals(id, alert.getId());
+    return Objects.equals(sensor, alert.getSensor()) && Objects.equals(threshold, alert.getThreshold()) &&
+            Objects.equals(firstIncident, alert.getFirstIncident()) && Objects.equals(lastIncident, alert.getLastIncident());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id);
+    return Objects.hash(sensor, threshold, firstIncident, lastIncident);
   }
 }

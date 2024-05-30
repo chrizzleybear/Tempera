@@ -53,17 +53,17 @@ INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_
     (100.0, -13, '2024-05-10T08:30:00', 'TEMP123');
 
 INSERT INTO threshold (id, default_threshold, sensor_type, threshold_type, threshold_value, modification_id, tip_id) VALUES
-   (-100, True, 'TEMPERATURE', 'UPPERBOUND_INFO', 50.0, null, null),                   -- violation temp upperbound_info
+   (-100, True, 'TEMPERATURE', 'UPPERBOUND_INFO', 50.0, null, null),                   -- no violation (since UPPERBOUND_WARNING is overruling info
     (-101, True, 'IRRADIANCE', 'UPPERBOUND_INFO', 50.0, null, null),                      -- violation irradiance upperbound_info
     (-102, True, 'HUMIDITY', 'UPPERBOUND_INFO', 200.0, null, null),
     (-103, True, 'NMVOC', 'UPPERBOUND_INFO', 200.0, null, null),
     (-104, True, 'TEMPERATURE', 'LOWERBOUND_INFO', 0.0, null, null),
     (-105, True, 'IRRADIANCE', 'LOWERBOUND_INFO', 0.0, null, null),
-    (-106, True, 'HUMIDITY', 'LOWERBOUND_INFO', 200.0, null, null),                       -- violation humidity lowerbound_info
-    (-107, True, 'NMVOC', 'LOWERBOUND_INFO', 200.0, null, null),                          -- violation nmvoc lowerbound_info
-    (-108, True, 'TEMPERATURE', 'UPPERBOUND_WARNING', 60.0, null, null),            -- violation temp upperbound_warning
+    (-106, True, 'HUMIDITY', 'LOWERBOUND_INFO', 0.0, null, null),
+    (-107, True, 'NMVOC', 'LOWERBOUND_INFO', 200.0, null, null),                          -- no violation  since LOWERBOUND_WARNING is overruling info
+    (-108, True, 'TEMPERATURE', 'UPPERBOUND_WARNING', 0.0, null, null),            -- violation temp upperbound_warning
     (-109, True, 'IRRADIANCE', 'UPPERBOUND_WARNING', 2000.0, null, null),
-    (-110, True, 'HUMIDITY', 'UPPERBOUND_WARNING', 100.0, null, null),                   --violation humidity upperbound_warning
+    (-110, True, 'HUMIDITY', 'UPPERBOUND_WARNING', 1000.0, null, null),
     (-111, True, 'NMVOC', 'UPPERBOUND_WARNING', 200.0, null, null),
     (-112, True, 'TEMPERATURE', 'LOWERBOUND_WARNING', -10.0, null, null),
     (-113, True, 'IRRADIANCE', 'LOWERBOUND_WARNING', -10.0, null, null),

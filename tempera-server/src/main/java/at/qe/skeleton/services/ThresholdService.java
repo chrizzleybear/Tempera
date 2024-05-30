@@ -70,4 +70,8 @@ public class ThresholdService {
         Threshold t = thresholdRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Threshold not found: " + id));
         thresholdRepository.delete(t);
     }
+
+    public Threshold getThresholdById(Long id) {
+        return thresholdRepository.findById(id).orElse(null);
+    }
 }
