@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {TemperaStation} from "../models/temperaStation.model";
+import {Sensor} from "../models/sensor";
 
 
 @Injectable({
@@ -17,7 +18,7 @@ export class TemperaStationService {
   }
 
   getTemperaStationById(id: string): Observable<TemperaStation> {
-    return this.http.get<TemperaStation>(`${this.apiUrl}/${id}`);
+    return this.http.get<TemperaStation>(this.apiUrl+'load/'+id);
   }
 
   createTemperaStation(temperaStation: TemperaStation): Observable<TemperaStation> {
@@ -30,5 +31,10 @@ export class TemperaStationService {
 
   deleteTemperaStation(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  getTemperaStationSensors(id: string) {
+    return this.http.get<Sensor[]>(this.apiUrl+'sensors/'+id);
+
   }
 }

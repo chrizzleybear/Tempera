@@ -64,11 +64,7 @@ public class TemperaStationService {
     List<TemperaStation> temperaStations = temperaStationRepository.findAll();
     List<TemperaStationDto> temperaStationDtos = temperaStations.stream()
         .map(t -> new TemperaStationDto(
-            t.getId(),
-            t.isEnabled(),
-            t.isHealthy(),
-            t.getUser().getUsername()
-        ))
+            t.getId(), t.getUser().getUsername(), t.isEnabled(), t.isHealthy()))
         .collect(Collectors.toList());
     return temperaStationDtos;
   }
@@ -102,7 +98,6 @@ public class TemperaStationService {
     accessPoint.getTemperaStations().remove(temperaStation);
     temperaStationRepository.delete(temperaStation);
   }
-
   /**
    * Checks whether the tempera Station with the passed on ID is enabled or not.
    *

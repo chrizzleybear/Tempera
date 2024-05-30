@@ -28,7 +28,7 @@ export * from './project';
 export * from './projectDetailsDto';
 export * from './room';
 export * from './scanOrderDto';
-export * from './sensor';
+export * from '../../app/models/sensor';
 export * from './sensorId';
 export * from './signupRequest';
 export * from './simpleGroupDto';

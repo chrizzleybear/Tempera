@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TemperaStationService } from '../../_services/tempera-station.service';
 import { TemperaStation } from '../../models/temperaStation.model';
 import {NgIf} from "@angular/common";
+import {Sensor} from "../../models/sensor";
 
 @Component({
   selector: 'app-tempera-station-details',
@@ -17,6 +18,7 @@ export class TemperaStationDetailsComponent implements OnInit {
 
   temperaStationId: string | undefined;
   temperaStation: TemperaStation | undefined;
+  private sensors: Sensor[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -35,9 +37,21 @@ export class TemperaStationDetailsComponent implements OnInit {
       next: (data) => {
         console.log('TemperaStation details: ', data);
         this.temperaStation = data;
+        this.fetchSensors();
       },
       error: (error) => {
         console.error('Failed to load temperaStation details:', error);
+      },
+    });
+  }
+
+  fetchSensors() {
+    this.temperaStationService.getTemperaStationSensors(this.temperaStationId!).subscribe({
+      next: (data) => {
+        this.sensors = data;
+      },
+      error: (error) => {
+        console.error('Failed to load temperaStation sensors:', error);
       },
     });
   }
