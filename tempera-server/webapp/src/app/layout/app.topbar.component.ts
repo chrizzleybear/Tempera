@@ -7,7 +7,7 @@ import { AuthService } from '../_services/auth.service';
 import { StorageService } from '../_services/storage.service';
 import { TooltipModule } from 'primeng/tooltip';
 import { BadgeModule } from 'primeng/badge';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { AlertStoreService } from '../_stores/alert-store.service';
@@ -32,6 +32,8 @@ export class AppTopBarComponent {
 
   @ViewChild('topbarmenu') menu!: ElementRef;
 
+  @ViewChild('warningsPanel') warningsPanel!: OverlayPanel;
+
   constructor(public layoutService: LayoutService, private authService: AuthService, private storageService: StorageService, public warningStoreService: AlertStoreService) {
     setInterval(() => {
       this.warningStoreService.refreshAlerts();
@@ -52,8 +54,17 @@ export class AppTopBarComponent {
     });
   }
 
-  removeAlert(warningEntry: string) {
-    this.warningStoreService.removeAlert(warningEntry);
+  removeAlert(warningEntry: string, remainingAlerts: number) {
+    if (remainingAlerts < 1) {
+      this.warningsPanel.hide();
+      // workaround to prevent flickering of the overlay panel
+      setTimeout(() => {
+        this.warningStoreService.removeAlert(warningEntry);
+      }, 100);
+    } else
+    {
+      this.warningStoreService.removeAlert(warningEntry);
+    }
   }
 
   showAlertText(severity: SeverityEnum) {
