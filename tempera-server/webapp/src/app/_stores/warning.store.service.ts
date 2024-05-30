@@ -16,7 +16,7 @@ export class WarningStoreService {
 
   getWarnings() {
     // todo: remove logging
-    return this.warnings$.pipe(distinctUntilChanged(), tap(() => console.log('warnings updated')));
+    return this.warnings$.pipe(distinctUntilChanged());
   }
 
   removeWarning(id: string) {
