@@ -78,13 +78,18 @@ public class AccessPointController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<String> updateAccesspoint(@RequestBody AccessPointDto accessPointDto) {
+    public ResponseEntity<AccessPointDto> updateAccesspoint(@RequestBody AccessPointDto accessPointDto) {
         try {
             System.out.println("accessPointDto: " + accessPointDto);
             AccessPoint a = accessPointService.updateAccessPoint(accessPointDto);
-            return ResponseEntity.ok("Accesspoint " + accessPointDto.id() + " has been updated.");
+            return ResponseEntity.ok(new AccessPointDto(
+                    a.getId().toString(),
+                    a.getRoom().getId(),
+                    a.isEnabled(),
+                    a.isHealthy()
+            ));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
         }
     }
 

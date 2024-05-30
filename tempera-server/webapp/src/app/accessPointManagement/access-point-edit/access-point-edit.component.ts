@@ -80,9 +80,12 @@ export class AccessPointEditComponent implements OnInit, OnChanges{
 
   onSubmit() {
     if (this.accessPointForm.valid) {
+      if(this.accessPointForm.value.room.id === undefined) {
+        this.accessPointForm.value.room = this.accessPoint.room;
+      }
       const dto: AccessPointEditDto = {
         id : this.accessPoint.id,
-        room: this.accessPointForm.value.room.id,
+        room: this.accessPointForm.value.room,
         enabled: this.accessPointForm.value.enabled
       }
       console.log('Editing access point:', dto);
