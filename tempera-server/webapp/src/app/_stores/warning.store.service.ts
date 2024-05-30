@@ -10,8 +10,6 @@ export class WarningStoreService {
 
 
   constructor(private warningControllerService: WarningControllerService) {
-    // initial fetch
-    this.fetchWarnings();
   }
 
   getWarnings() {
