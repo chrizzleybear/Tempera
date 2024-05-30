@@ -105,9 +105,10 @@ public class ProjectController {
   }
 
   @PostMapping("/addContributor")
-  public ResponseEntity<ExtendedProjectDto> addContributor(
+  public ResponseEntity<ExtendedProjectDto> addContributßor(
       @RequestBody ContributorAssignmentDto contributorAssignmentDto) {
     try {
+      System.out.println(contributorAssignmentDto);
     projectService.addContributor(contributorAssignmentDto.groupId(),
         contributorAssignmentDto.projectId(), contributorAssignmentDto.contributorId());
     ExtendedProjectDto extendedProjectDtoproject = projectMapperService.loadExtendedProjectDto(contributorAssignmentDto.projectId());
