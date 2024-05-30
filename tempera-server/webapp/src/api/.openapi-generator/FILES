@@ -13,7 +13,7 @@ api/roomController.service.ts
 api/timeRecordController.service.ts
 api/timetableController.service.ts
 api/userManagementController.service.ts
-api/warningController.service.ts
+api/alertController.service.ts
 configuration.ts
 encoder.ts
 git_push.sh
@@ -67,6 +67,6 @@ model/updateDescriptionRequest.ts
 model/updateProjectRequest.ts
 model/userx.ts
 model/userxDto.ts
-model/warningDto.ts
+model/alertDto.ts
 param.ts
 variables.ts

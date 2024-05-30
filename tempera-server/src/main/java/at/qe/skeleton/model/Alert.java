@@ -25,6 +25,9 @@ public class Alert {
   private boolean acknowledged;
 
   @Temporal(TemporalType.TIMESTAMP)
+  private LocalDateTime acknowledgedAt;
+
+  @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime lastIncident;
 
   @Column(name = "peak_deviation_value")
@@ -64,8 +67,19 @@ public class Alert {
     return acknowledged;
   }
 
+  public LocalDateTime getAcknowledgedAt() {
+    return acknowledgedAt;
+  }
+
+  public void setAcknowledgedAt(LocalDateTime acknowledgedAt) {
+    this.acknowledgedAt = acknowledgedAt;
+  }
+
   public void acknowledge(boolean acknowledged) {
     this.acknowledged = acknowledged;
+    if (acknowledged) {
+      acknowledgedAt = LocalDateTime.now();
+    }
   }
 
   public long getId() {
