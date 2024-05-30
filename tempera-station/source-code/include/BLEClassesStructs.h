@@ -28,7 +28,7 @@
  * - workMode: (default: clock status) 
  *             Work mode represented by clock status bit (2-5 are DW, MT, OO, PT).
  * - manualUpdate: (default: clock capabilities) 
- *             Indicator for updates (0 for periodic updates, 7 for updates by button presses).
+ *             Indicator for updates (0 for periodic updates, work mode 2-5 for updates by button presses).
  */
 typedef struct __attribute__( (__packed__) ) {
   uint8_t flags = 0;
