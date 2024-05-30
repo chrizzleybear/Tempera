@@ -9,7 +9,12 @@ import { AirQualityPipe } from '../_pipes/air-quality.pipe';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
-import { DashboardControllerService, DashboardDataResponse, SimpleProjectDto, UserxDto } from '../../api';
+import {
+  DashboardControllerService,
+  DashboardDataResponse,
+  SimpleGroupxProjectDto,
+  UserxDto,
+} from '../../api';
 import VisibilityEnum = DashboardDataResponse.VisibilityEnum;
 import { StorageService } from '../_services/storage.service';
 import { ButtonModule } from 'primeng/button';
@@ -22,6 +27,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DisplayHelper } from '../_helpers/display-helper';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { OverlappingProjectHelper } from '../_helpers/overlapping-project-helper';
 
 @Component({
   selector: 'app-dashboard',
@@ -70,10 +76,26 @@ export class DashboardComponent implements OnInit {
 
   public form = new FormGroup({
     visibility: new FormControl<VisibilityEnum>(VisibilityEnum.Public, { nonNullable: true }),
-    project: new FormControl<SimpleProjectDto | undefined>(undefined, { nonNullable: true }),
+    project: new FormControl<SimpleGroupxProjectDto | undefined>(undefined, { nonNullable: true }),
   });
 
-  constructor(private dashboardControllerService: DashboardControllerService, private storageService: StorageService, private destroyRef: DestroyRef, private messageService: MessageService) {
+  /*
+  Used for handling when a user is assigned to a project from multiple groups
+  Key is the projectId and value is an object containing the projects with the same projectId and the original name of the project
+   */
+  private duplicatedProjects: Map<string, {
+    projects: SimpleGroupxProjectDto[],
+    originalName: string
+  }> = new Map<string, {
+    projects: SimpleGroupxProjectDto[],
+    originalName: string
+  }>();
+
+  constructor(
+    private dashboardControllerService: DashboardControllerService,
+    private storageService: StorageService,
+    private destroyRef: DestroyRef,
+    private messageService: MessageService) {
   }
 
   ngOnInit(): void {
@@ -84,6 +106,9 @@ export class DashboardComponent implements OnInit {
         next: data => {
           this.dashboardData = data;
           this.colleagueTableFilterFields = Object.keys(this.dashboardData?.colleagueStates?.[0] ?? []);
+
+          this.duplicatedProjects = OverlappingProjectHelper.getDuplicatedProjects(this.dashboardData.availableProjects ?? []);
+          OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, this.dashboardData.availableProjects ?? []);
 
           // set form values in case of existing data
           this.form.controls.visibility.setValue(this.dashboardData.visibility);
@@ -99,17 +124,21 @@ export class DashboardComponent implements OnInit {
         },
       });
     } else {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load user' })
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load user' });
     }
   }
 
   onSubmit() {
     this.dashboardControllerService.updateDashboardData({
       visibility: this.form.controls.visibility.value,
-      project: this.form.controls.project.value,
+      groupxProject: this.form.controls.project.value,
     }).subscribe({
       next: data => {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Dashboard data updated successfully' });
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Dashboard data updated successfully',
+        });
       },
       error: err => {
         console.log(err);

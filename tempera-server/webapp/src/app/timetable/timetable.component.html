@@ -23,7 +23,7 @@
           <p-columnFilter type="date" field="endTime" placeholder="Search"></p-columnFilter>
         </th>
         <th id="projectFilter">
-          <p-columnFilter field="assignedProject" [showMenu]="false" matchMode="in" [showClearButton]="false">
+          <p-columnFilter field="assignedGroupxProject" [showMenu]="false" matchMode="in" [showClearButton]="false">
             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
 
               <p-multiSelect
@@ -31,7 +31,7 @@
                 [showClear]="true"
                 (onChange)="filter($event.value)"
                 (onClear)="filter(null)"
-                optionLabel="name" appendTo="body" placeholder="Any"
+                optionLabel="projectName" appendTo="body" placeholder="Any"
               ></p-multiSelect>
 
             </ng-template>
@@ -77,9 +77,9 @@
         <td>
 
           <p-dropdown *ngIf="timeEntry.state !== StateEnum.OutOfOffice" [options]="availableProjects"
-                      [(ngModel)]="timeEntry.assignedProject"
+                      [(ngModel)]="timeEntry.assignedGroupxProject"
                       (onChange)="updateProject($event.value, timeEntry.id)"
-                      optionLabel="name"
+                      optionLabel="projectName"
                       placeholder="Select project"
                       appendTo="body"></p-dropdown>
 

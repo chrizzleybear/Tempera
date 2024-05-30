@@ -32,6 +32,7 @@ export * from './sensor';
 export * from './sensorId';
 export * from './signupRequest';
 export * from './simpleGroupDto';
+export * from './simpleGroupxProjectDto';
 export * from './simpleProjectDto';
 export * from './simpleUserDto';
 export * from './splitTimeRecordRequest';
