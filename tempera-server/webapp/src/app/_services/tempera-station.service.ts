@@ -31,11 +31,11 @@ export class TemperaStationService {
   }
 
   deleteTemperaStation(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(this.apiUrl + 'delete/' + id);
   }
 
   getTemperaStationSensors(id: string) {
-    return this.http.get<Sensor[]>(this.apiUrl+'sensors/'+id);
+    return this.http.get<Sensor[]>(this.apiUrl+'sensors/' + id);
 
   }
 

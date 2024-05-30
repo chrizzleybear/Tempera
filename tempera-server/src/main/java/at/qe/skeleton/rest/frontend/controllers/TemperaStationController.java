@@ -1,12 +1,10 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
-import at.qe.skeleton.model.Sensor;
 import at.qe.skeleton.model.TemperaStation;
 import at.qe.skeleton.rest.frontend.dtos.SensorDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
 import at.qe.skeleton.rest.frontend.dtos.TemperaStationDto;
-import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
 import at.qe.skeleton.services.TemperaStationService;
 import org.springframework.beans.factory.annotation.Autowired;
