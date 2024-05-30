@@ -11,7 +11,6 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { WarningStoreService } from '../_stores/warning.store.service';
-import { switchMap, tap, timer } from 'rxjs';
 
 @Component({
   selector: 'app-topbar',

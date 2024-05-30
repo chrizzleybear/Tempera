@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, tap } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
 import { WarningControllerService, WarningDto } from '../../api';
 
 @Injectable({
