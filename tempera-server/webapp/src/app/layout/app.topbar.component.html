@@ -13,23 +13,51 @@
     <i class="pi pi-ellipsis-v"></i>
   </button>
 
-  <div #topbarmenu class="layout-topbar-menu"
-       [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
-    <button class="p-link layout-topbar-button">
-      <i class="pi pi-calendar"></i>
-      <span>Calendar</span>
-    </button>
-    <button class="p-link layout-topbar-button">
-      <i class="pi pi-user"></i>
-      <span>Profile</span>
-    </button>
-    <button class="p-link layout-topbar-button" [routerLink]="'/documentation'">
-      <i class="pi pi-cog"></i>
-      <span>Settings</span>
-    </button>
-    <button class="p-link layout-topbar-button" pTooltip="Sign out" tooltipPosition="bottom" (mousedown)="this.logout()">
-      <i class="pi pi-sign-out"></i>
-      <span>Settings</span>
-    </button>
-  </div>
+  <ng-container *ngIf="{data: warningStoreService.getWarnings() | async} as warnings">
+    <div #topbarmenu class="layout-topbar-menu"
+         [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+      <button (click)="warningsPanel.toggle($event)" class="p-link layout-topbar-button pt-1" pTooltip="Warnings"
+              tooltipPosition="bottom">
+      <span class="p-overlay-badge">
+        <i class="p-overlay-badge pi pi-exclamation-triangle"></i>
+          <p-badge
+            [value]="warnings?.data?.length?.toString() ?? ''"
+            [badgeDisabled]="(warnings?.data?.length ?? 0) <= 0"
+            severity="danger"></p-badge>
+      </span>
+        <span class="hidden-span">Warning</span>
+      </button>
+      <p-overlayPanel appendTo="body" #warningsPanel>
+        <ng-container *ngIf="warnings.data && (warnings.data?.length ?? 0) > 0; else empty">
+          <p-table [value]="warnings.data">
+            <ng-template let-warningEntry pTemplate="body">
+              <tr>
+                <td>
+                  <span>{{ warningEntry.message }}</span>
+                </td>
+                <td>
+                  <p-button (onClick)="removeWarning(warningEntry.id)">
+                    <i class="pi pi-times"></i>
+                  </p-button>
+                </td>
+              </tr>
+
+            </ng-template>
+          </p-table>
+        </ng-container>
+        <ng-template #empty>
+          <div class="text-center">No warnings</div>
+        </ng-template>
+      </p-overlayPanel>
+      <button class="p-link layout-topbar-button" pTooltip="Settings" tooltipPosition="bottom">
+        <i class="pi pi-cog"></i>
+        <span class="hidden-span">Settings</span>
+      </button>
+      <button class="p-link layout-topbar-button" pTooltip="Sign out" tooltipPosition="bottom"
+              (click)="this.logout()">
+        <i class="pi pi-sign-out"></i>
+        <span class="hidden-span">Sign out</span>
+      </button>
+    </div>
+  </ng-container>
 </div>

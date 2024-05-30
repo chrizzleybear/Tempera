@@ -46,3 +46,4 @@ export * from './updateDescriptionRequest';
 export * from './updateProjectRequest';
 export * from './userx';
 export * from './userxDto';
+export * from './warningDto';

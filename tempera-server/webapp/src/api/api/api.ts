@@ -20,4 +20,6 @@ export * from './timetableController.service';
 import { TimetableControllerService } from './timetableController.service';
 export * from './userManagementController.service';
 import { UserManagementControllerService } from './userManagementController.service';
-export const APIS = [AccumulatedTimeControllerService, AuthControllerService, DashboardControllerService, GroupManagementControllerService, MeasurementControllerService, PeripheryConnectionControllerService, ProjectControllerService, RoomControllerService, TimeRecordControllerService, TimetableControllerService, UserManagementControllerService];
+export * from './warningController.service';
+import { WarningControllerService } from './warningController.service';
+export const APIS = [AccumulatedTimeControllerService, AuthControllerService, DashboardControllerService, GroupManagementControllerService, MeasurementControllerService, PeripheryConnectionControllerService, ProjectControllerService, RoomControllerService, TimeRecordControllerService, TimetableControllerService, UserManagementControllerService, WarningControllerService];

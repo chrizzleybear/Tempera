@@ -9,16 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { TemperaStation } from './temperaStation';
-import { Room } from './room';
 
 
-export interface AccessPoint { 
+export interface WarningDto { 
     id?: string;
-    temperaStations?: Set<TemperaStation>;
-    room?: Room;
-    enabled?: boolean;
-    _new?: boolean;
-    healthy?: boolean;
+    message?: string;
 }
 
