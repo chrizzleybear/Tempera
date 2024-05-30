@@ -55,12 +55,12 @@ VALUES (-1, -1), (-1, -2), (-1, -3), (-1, -4), (-1,-5), (-1, -6);
 
 -- add Product Development, Cost Reduction, Quality Assurance, Marketing Campaign Launch, Training and Development and Infrastructure Upgrade to testGroup2
 INSERT INTO groupx_project_object (group_id, project_id)
-Values (-2, -7), (-2, -8), (-2, -9), (-2, -10), (-2, -11), (-2, -12);
+Values (-1, -7), (-2, -7), (-2, -8), (-2, -9), (-2, -10), (-2, -11), (-2, -12);
 
 INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username)
 VALUES (-1, -1, 'admin'), (-1, -2, 'admin'), (-1, -3, 'admin'), (-1, -4, 'admin'), (-1, -5, 'admin'), (-1, -6, 'admin'), (-1, -6, 'bobjones'), (-1, -6, 'chriswilliams'), (-1, -6, 'peterparker'), (-1, -6, 'tonystark'), (-1, -6, 'brucewayne'), (-1, -6, 'clarkkent');
 INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username)
-VALUES (-2, -7, 'johndoe'), (-2, -8, 'johndoe'), (-2, -9, 'johndoe'), (-2, -10, 'johndoe'), (-2, -11, 'johndoe'), (-2, -12, 'johndoe');
+VALUES (-1, -7, 'johndoe'),(-2, -7, 'johndoe'), (-2, -8, 'johndoe'), (-2, -9, 'johndoe'), (-2, -10, 'johndoe'), (-2, -11, 'johndoe'), (-2, -12, 'johndoe');
 
 
 INSERT INTO groupx_members (groups_id, members_username) VALUES (-1, 'johndoe'), (-2, 'johndoe');
