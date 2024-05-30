@@ -26,6 +26,11 @@ interface Room {
   templateUrl: './floor-plan.component.html',
   styleUrl: './floor-plan.component.css'
 })
+/**
+ * @class FloorPlanComponent
+ * This component represents the floor plan of building.
+ * It fetches the room infos and transform them into a svd diagram data.
+ */
 export class FloorPlanComponent implements OnInit{
 
   private roomChangedSubscription: Subscription;

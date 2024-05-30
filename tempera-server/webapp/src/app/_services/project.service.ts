@@ -51,6 +51,7 @@ export class ProjectService {
   }
 
   addMemberToProject(dto: ContributorAssignmentDTO): Observable<Project> {
+    console.log('Adding member to project:', dto);
     return this.http.post<Project>(`${this.API_URL}addContributor`, dto);
   }
 

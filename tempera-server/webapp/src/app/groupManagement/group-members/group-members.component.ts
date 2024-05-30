@@ -27,6 +27,10 @@ import { concatMap } from 'rxjs/operators';
   templateUrl: './group-members.component.html',
   styleUrl: './group-members.component.css'
 })
+/**
+ * @class GroupMembersComponent
+ * This component is responsible for managing group members.
+ */
 export class GroupMembersComponent implements OnInit{
 
   members: User[] = [];
@@ -48,7 +52,10 @@ export class GroupMembersComponent implements OnInit{
     this.loadMembersAndUsers(this.groupId!);
   }
 
-
+  /**
+   * Load all members and users that are not members of the group.
+   * @param groupId
+   */
   loadMembersAndUsers(groupId: number) {
     // Load members
     this.groupService.getGroupMembers(groupId).subscribe({

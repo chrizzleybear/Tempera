@@ -27,6 +27,10 @@ import {MessagesModule} from "primeng/messages";
   ],
   styleUrls: ['./tempera-stations.component.css']
 })
+/**
+ * @class TemperaStationsComponent
+ * This component is responsible for managing and displaying a list of tempera stations.
+ */
 export class TemperaStationsComponent implements OnInit {
 
   temperaStations: TemperaStation[] | undefined;
