@@ -12,6 +12,7 @@ import {DialogModule} from "primeng/dialog";
 import {AccessPointCreateComponent} from "../access-point-create/access-point-create.component";
 import {AccessPointEditComponent} from "../access-point-edit/access-point-edit.component";
 import {InputTextModule} from "primeng/inputtext";
+import {AccessPointTemperaComponent} from "../access-point-tempera/access-point-tempera.component";
 
 
 @Component({
@@ -26,7 +27,8 @@ import {InputTextModule} from "primeng/inputtext";
     DialogModule,
     AccessPointCreateComponent,
     AccessPointEditComponent,
-    InputTextModule
+    InputTextModule,
+    AccessPointTemperaComponent
   ],
   templateUrl: './accespoints.component.html',
   styleUrl: './accespoints.component.css'
@@ -39,6 +41,7 @@ export class AccesspointsComponent implements OnInit{
   displayCreateDialog: boolean = false;
   displayEditDialog: boolean = false;
   messages: Message[] = [];
+  temperaDialogDisplay: boolean = false;
 
   constructor(private accessPointService: AccessPointService, private router: Router) {}
   ngOnInit(): void {
@@ -104,6 +107,11 @@ export class AccesspointsComponent implements OnInit{
 
   viewAccessPointDetails(accessPoint: AccessPoint) {
     this.router.navigate(['/accessPoint', accessPoint.id])
+  }
+
+  temperaDialog(accessPoint: AccessPoint) {
+    this.selectedAccessPoint = accessPoint;
+    this.temperaDialogDisplay = true;
   }
 }
 

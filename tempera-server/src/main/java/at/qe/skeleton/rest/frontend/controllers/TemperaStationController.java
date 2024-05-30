@@ -34,7 +34,7 @@ public class TemperaStationController {
     public ResponseEntity<TemperaStationDto> getTemperaStationById(@PathVariable String temperaStationId) {
         try {
             TemperaStation t = temperaStationService.findById(temperaStationId);
-            TemperaStationDto temperaStationDto = new TemperaStationDto(t.getId(), t.getUser().getUsername(), t.isEnabled(), t.isHealthy());
+            TemperaStationDto temperaStationDto = new TemperaStationDto(t.getId(), t.getUser().getUsername(), t.isEnabled(), t.isHealthy(), t.getAccessPoint().getId().toString());
             return ResponseEntity.ok(temperaStationDto);
         } catch (CouldNotFindEntityException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

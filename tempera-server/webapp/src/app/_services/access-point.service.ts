@@ -5,6 +5,7 @@ import {AccessPoint} from "../models/accessPoint.model";
 import {AccessPointCreateDto, AccessPointEditDto} from "../models/AccessPointDtos";
 import {Room} from "../models/room.model";
 import {MessageResponse} from "../../api";
+import {TemperaStation} from "../models/temperaStation.model";
 
 @Injectable({
   providedIn: 'root'
@@ -40,5 +41,12 @@ export class AccessPointService {
 
   getAvailableRooms(): Observable<Room[]> {
     return this.http.get<Room[]>(this.API_URL + 'availableRooms');
+  }
+  getTemperaStations(accessPointId: string): Observable<TemperaStation[]> {
+    return this.http.get<TemperaStation[]>(this.API_URL + 'tempera/' + accessPointId);
+  }
+
+  getAvailableTemperaStations(): Observable<TemperaStation[]> {
+    return this.http.get<TemperaStation[]>(this.API_URL + 'tempera/available');
   }
 }

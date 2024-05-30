@@ -3,6 +3,7 @@ package at.qe.skeleton.rest.frontend.controllers;
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.AccessPoint;
 import at.qe.skeleton.model.Room;
+import at.qe.skeleton.rest.frontend.dtos.TemperaStationDto;
 import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
 import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.TemperaStationService;
@@ -114,6 +115,31 @@ public class AccessPointController {
         return ResponseEntity.ok(rooms);
     }
 
+    @GetMapping("/tempera/{accesspointId}")
+    public ResponseEntity<List<TemperaStationDto>> getTemperaStations(@PathVariable String accesspointId) {
+        try {
+            AccessPoint a = accessPointService.getAccessPointById(UUID.fromString(accesspointId));
+            List<TemperaStationDto> temperaStations = a.getTemperaStations().stream()
+                    .map(t -> new TemperaStationDto(
+                            t.getId(),
+                            t.getUser().getUsername(),
+                            t.isEnabled(),
+                            t.isHealthy(),
+                            t.getAccessPoint().getId().toString()
+                    ))
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(temperaStations);
+        } catch (CouldNotFindEntityException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+    @GetMapping("/tempera/available")
+    public ResponseEntity<List<TemperaStationDto>> getAvailableTemperaStations() {
+        List<TemperaStationDto> temperaStations = temperaStationService.getAllTemperaStations().stream()
+                .filter(t -> t.accessPointId() == null)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(temperaStations);
+    }
 
 
 }

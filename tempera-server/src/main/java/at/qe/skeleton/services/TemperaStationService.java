@@ -70,7 +70,7 @@ public class TemperaStationService {
     List<TemperaStation> temperaStations = temperaStationRepository.findAll();
     List<TemperaStationDto> temperaStationDtos = temperaStations.stream()
         .map(t -> new TemperaStationDto(
-            t.getId(), t.getUser().getUsername(), t.isEnabled(), t.isHealthy()))
+            t.getId(), t.getUser().getUsername(), t.isEnabled(), t.isHealthy(), t.getAccessPoint().getId().toString()))
         .collect(Collectors.toList());
     return temperaStationDtos;
   }
