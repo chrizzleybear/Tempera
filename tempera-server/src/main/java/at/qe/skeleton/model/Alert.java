@@ -17,7 +17,11 @@ public class Alert {
 
   @Column(nullable = false)
   @Temporal(TemporalType.TIMESTAMP)
-  private LocalDateTime timeStamp;
+  private LocalDateTime timeOfEvent;
+
+  private boolean acknowledged;
+  @Temporal(TemporalType.TIMESTAMP)
+  private LocalDateTime timeOfAcknowledgement;
 
   private AlertType alertType;
 
@@ -26,8 +30,6 @@ public class Alert {
 
   private String message;
 
-  private boolean acknowledged;
-
   /**
    * Constructor for Alerts with AlertType Threshold_Warning
    *
@@ -35,11 +37,12 @@ public class Alert {
    * @param threshold that was violated
    * @param value the actual value of the measurement, that violated the threshold.
    */
-  public Alert(AlertType alertType, Threshold threshold, double value) {
-
+  public Alert(AlertType alertType, Threshold threshold, double value, LocalDateTime timeOfEvent) {
     this.threshold = threshold;
     this.alertType = alertType;
     this.value = value;
+    this.acknowledged = false;
+    this.timeOfEvent = timeOfEvent;
   }
 
   /**
@@ -49,20 +52,24 @@ public class Alert {
    * @param message the message, that is supposed to be shown to user about the nature of the error
    *     or anomaly.
    */
-  public Alert(AlertType alertType, String message) {
+  public Alert(AlertType alertType, String message, LocalDateTime timeOfEvent) {
     this.alertType = alertType;
     this.message = message;
+    acknowledged = false;
+    this.timeOfEvent = timeOfEvent;
   }
 
   /** Non-Arg protected Constructor for JPA only. */
-  protected Alert() {}
-  ;
+  protected Alert() {
+    acknowledged = false;
+  }
 
   public boolean isAcknowledged() {
     return acknowledged;
   }
 
-  public void setAcknowledged(boolean acknowledged) {
+  public void acknowledge(boolean acknowledged) {
+    timeOfAcknowledgement = LocalDateTime.now();
     this.acknowledged = acknowledged;
   }
 
@@ -74,8 +81,8 @@ public class Alert {
     return threshold;
   }
 
-  public LocalDateTime getTimeStamp() {
-    return timeStamp;
+  public LocalDateTime getTimeOfEvent() {
+    return timeOfEvent;
   }
 
   public AlertType getAlertType() {
@@ -95,11 +102,11 @@ public class Alert {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Alert alert = (Alert) o;
-    return Objects.equals(timeStamp, alert.getTimeStamp());
+    return Objects.equals(timeOfEvent, alert.getTimeOfEvent());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(timeStamp);
+    return Objects.hash(timeOfEvent);
   }
 }

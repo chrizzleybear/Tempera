@@ -178,7 +178,6 @@ public class MeasurementMapper implements DTOMultiMapper<Measurement, Measuremen
     if (temperature == null || irradiance == null || humidity == null || nmvoc == null) {
       throw new IllegalArgumentException("All Measurements must be present.");
     }
-
     return List.of(temperature, irradiance, humidity, nmvoc);
   }
 }
