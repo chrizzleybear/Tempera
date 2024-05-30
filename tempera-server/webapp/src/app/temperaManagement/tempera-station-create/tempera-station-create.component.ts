@@ -5,9 +5,10 @@ import {DropdownModule} from "primeng/dropdown";
 import {CheckboxModule} from "primeng/checkbox";
 import {ButtonModule} from "primeng/button";
 import {User} from "../../models/user.model";
-import {UsersService} from "../../_services/users.service";
 import {InputTextModule} from "primeng/inputtext";
 import {TemperaStation} from "../../models/temperaStation.model";
+import {AccessPoint} from "../../models/accessPoint.model";
+import {AccessPointService} from "../../_services/access-point.service";
 
 @Component({
   selector: 'app-tempera-station-create',
@@ -28,14 +29,17 @@ export class TemperaStationCreateComponent implements OnInit, OnChanges{
   newTemperaStation: TemperaStation | undefined;
   @Output() onCreateCompleted = new EventEmitter<boolean>();
   users: { label: string; value: User; }[] | undefined;
+  accessPoints:{ label: string; value: AccessPoint }[] = [];
 
   constructor(
     private temperaStationService: TemperaStationService,
+    private accessPointService: AccessPointService,
     private formBuilder: FormBuilder,
   ) {
     this.temperaForm = this.formBuilder.group({
       id: [null, [Validators.required]],
       user: [null, []],
+      accessPoint: [null, Validators.required]
     });
   }
 
@@ -54,6 +58,7 @@ export class TemperaStationCreateComponent implements OnInit, OnChanges{
         user: this.temperaForm.value.user.value.username,
         enabled: false,
         isHealthy: false,
+        accessPointId: this.temperaForm.value.accessPoint.value.id
       }
       console.log('Creating temperaStation:', this.newTemperaStation);
       this.temperaStationService.createTemperaStation(this.newTemperaStation).subscribe({
@@ -75,9 +80,21 @@ export class TemperaStationCreateComponent implements OnInit, OnChanges{
         this.users = users.map(user => ({
           label: `${user.firstName} ${user.lastName}`, value: user
         }));
+        this.fetchAccessPoints()
       },
       error: (error) => console.error('Error loading managers:', error)
     });
   }
 
+  private fetchAccessPoints() {
+    this.accessPointService.getAllAccesspoints().subscribe({
+      next: (accesspoints: AccessPoint[]) => {
+        this.accessPoints = accesspoints.map(accessPoint => ({
+          label: accessPoint.id, // Change this to any property you want to display
+          value: accessPoint
+        }));
+        console.log(this.accessPoints);
+      }
+    })
+  }
 }

@@ -133,13 +133,5 @@ public class AccessPointController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
-    @GetMapping("/tempera/available")
-    public ResponseEntity<List<TemperaStationDto>> getAvailableTemperaStations() {
-        List<TemperaStationDto> temperaStations = temperaStationService.getAllTemperaStations().stream()
-                .filter(t -> t.accessPointId() == null)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(temperaStations);
-    }
-
 
 }

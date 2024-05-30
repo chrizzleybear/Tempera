@@ -19,6 +19,11 @@
                 id="user"></p-dropdown>
   </div>
   <br>
+  <div class="p-field">
+    <label for="accessPoint">Access Point: </label>
+    <p-dropdown [options]="accessPoints" formControlName="accessPoint" optionLabel="label" placeholder="Select an AccessPoint" id="accessPoint"></p-dropdown>
+  </div>
+  <br>
   <p-button type="submit" label="Create"></p-button>
 </form>
 </div>

@@ -49,4 +49,12 @@ export class AccessPointService {
   getAvailableTemperaStations(): Observable<TemperaStation[]> {
     return this.http.get<TemperaStation[]>(this.API_URL + 'tempera/available');
   }
+
+  addTemperaStation(accessPointId: string, temperaId: string): Observable<MessageResponse> {
+    return this.http.put(this.API_URL + 'tempera/add/' + accessPointId + '/' + temperaId, {});
+  }
+
+  removeTemperaStation(accessPointId: string, temperaId: string): Observable<MessageResponse> {
+    return this.http.delete(this.API_URL + 'tempera/remove/' + accessPointId + '/' + temperaId);
+  }
 }
