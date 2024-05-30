@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, distinctUntilChanged, tap } from 'rxjs';
+import { WarningControllerService, WarningDto } from '../../api';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WarningStoreService {
-  private warnings$ = new BehaviorSubject<string[]>([]);
+  private warnings$ = new BehaviorSubject<WarningDto[]>([]);
 
-  constructor() {
-    // todo: call the api here to get initial warnings
-    this.warnings$.next(['oh helloooooooooooooooooooooooooooooooooooooooooooooooooooo', 'world']);
+
+  constructor(private warningControllerService: WarningControllerService) {
+    // initial fetch
+    this.fetchWarnings();
   }
 
   getWarnings() {
@@ -17,12 +19,32 @@ export class WarningStoreService {
     return this.warnings$.pipe(distinctUntilChanged(), tap(() => console.log('warnings updated')));
   }
 
-  removeWarning(warning: string) {
-    this.warnings$.next([...this.warnings$.value.filter(w => w !== warning)]);
+  removeWarning(id: string) {
+    // remove directly from the store and then call the api to increase responsiveness
+    this.warnings$.next([...this.warnings$.value.filter(w => w.id !== id)]);
+    this.warningControllerService.deleteWarning(id).subscribe({
+      error: err => {
+        // todo: handle /display error
+        console.log(err);
+      },
+    });
+
+
   }
 
   refreshWarnings() {
-    this.warnings$.next([...this.warnings$.value, 'new warning']);
+    this.fetchWarnings();
+  }
+
+  private fetchWarnings() {
+    this.warningControllerService.getWarnings().subscribe({
+      next: res => {
+        this.warnings$.next(res);
+      },
+      error: err => {
+        console.log(err);
+      },
+    });
   }
 
 }

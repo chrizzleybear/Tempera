@@ -33,10 +33,10 @@
             <ng-template let-warningEntry pTemplate="body">
               <tr>
                 <td>
-                  <span>{{ warningEntry }}</span>
+                  <span>{{ warningEntry.message }}</span>
                 </td>
                 <td>
-                  <p-button (onClick)="removeWarning(warningEntry)">
+                  <p-button (onClick)="removeWarning(warningEntry.id)">
                     <i class="pi pi-times"></i>
                   </p-button>
                 </td>
