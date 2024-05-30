@@ -22,7 +22,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DisplayHelper } from '../_helpers/display-helper';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { WarningStoreService } from '../_stores/warning.store.service';
+import { AlertStoreService } from '../_stores/alert-store.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -74,7 +74,7 @@ export class DashboardComponent implements OnInit {
     project: new FormControl<SimpleProjectDto | undefined>(undefined, { nonNullable: true }),
   });
 
-  constructor(private dashboardControllerService: DashboardControllerService, private storageService: StorageService, private destroyRef: DestroyRef, private messageService: MessageService, private warningStoreService: WarningStoreService) {
+  constructor(private dashboardControllerService: DashboardControllerService, private storageService: StorageService, private destroyRef: DestroyRef, private messageService: MessageService, private warningStoreService: AlertStoreService) {
   }
 
   ngOnInit(): void {

@@ -10,7 +10,7 @@ import { BadgeModule } from 'primeng/badge';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
-import { WarningStoreService } from '../_stores/warning.store.service';
+import { AlertStoreService } from '../_stores/alert-store.service';
 
 @Component({
   selector: 'app-topbar',
@@ -28,7 +28,7 @@ export class AppTopBarComponent {
 
   @ViewChild('topbarmenu') menu!: ElementRef;
 
-  constructor(public layoutService: LayoutService, private authService: AuthService, private storageService: StorageService, public warningStoreService: WarningStoreService) {
+  constructor(public layoutService: LayoutService, private authService: AuthService, private storageService: StorageService, public warningStoreService: AlertStoreService) {
     setInterval(() => {
       this.warningStoreService.refreshWarnings();
     }, 20 * 1000);

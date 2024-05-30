@@ -5,7 +5,7 @@ import { WarningControllerService, WarningDto } from '../../api';
 @Injectable({
   providedIn: 'root',
 })
-export class WarningStoreService {
+export class AlertStoreService {
   private warnings$ = new BehaviorSubject<WarningDto[]>([]);
 
 
