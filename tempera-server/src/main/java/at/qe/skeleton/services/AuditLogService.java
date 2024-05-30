@@ -32,7 +32,7 @@ public class AuditLogService {
         try {
             // User has to be set without using userxService to pervent cyclic dependencies
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            user = userxRepository.findById(auth.getName()).orElseThrow(() -> new UsernameNotFoundException("User" + auth.getName() + "not found, but has to exist."));
+            user = userxRepository.findById(auth.getName()).orElseThrow(() -> new UsernameNotFoundException("User " + auth.getName() + " not found, but has to exist."));
         } catch (NullPointerException e) {
             user = null;
         }
