@@ -1,14 +1,12 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.*;
-import at.qe.skeleton.model.enums.State;
-import at.qe.skeleton.model.enums.UserxRole;
+import at.qe.skeleton.model.enums.*;
 import at.qe.skeleton.repositories.ExternalRecordRepository;
 import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.rest.frontend.dtos.UserStateDto;
 import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.model.Userx;
-import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.repositories.UserxRepository;
 
 import java.util.Collection;
@@ -45,6 +43,7 @@ public class UserxService implements UserDetailsService {
   @Autowired private ExternalRecordRepository externalRecordRepository;
   @Autowired private GroupRepository groupRepository;
   @Autowired private ProjectService projectService;
+  @Autowired private AuditLogService auditLogService;
 
   /**
    * Returns a collection of all users.
@@ -91,15 +90,16 @@ public class UserxService implements UserDetailsService {
         throw new JpaSystemException(new RuntimeException("Password can't be empty"));
       }
       user.setPassword(passwordEncoder.encode(password));
-
+      auditLogService.logEvent(LogEvent.CREATE, LogAffectedType.USER,
+              "New user " + user.getUsername() + ", " + user.getId() + " was saved.");
     } else {
       user.setUpdateDate(LocalDateTime.now());
       user.setUpdateUser(getAuthenticatedUser());
+      auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.USER,
+              "User " + user.getUsername() + ", " + user.getId() + " was saved.");
     }
     return userRepository.save(user);
   }
-
-
 
   private Userx getAuthenticatedUser() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -144,6 +144,8 @@ public class UserxService implements UserDetailsService {
     if (userx.isPresent()) {
       Userx user = userx.get();
       if (user.getRoles().contains(UserxRole.ADMIN)) {
+        auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.USER,
+                "Deletion of user " + user.getUsername() + ", " + user.getId() + " failed. User is ADMIN.");
         return;
       }
       if (user.getRoles().contains(UserxRole.MANAGER)
@@ -169,13 +171,23 @@ public class UserxService implements UserDetailsService {
       for (var group : groupsAsMember) {
         user.removeGroup(group);
       }
+
       externalRecordRepository.deleteAllByUser(user);
+      auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.TIME_RECORD,
+              "External time records of user " + user.getUsername() + ", " + user.getId() + " were deleted.");
+
       user.removeTemperaStation();
+      auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.TEMPERA_STATION,
+              "Station of user " + user.getUsername() + ", " + user.getId() + " was deleted.");
+
       // we are saving the user so that all the other objects, where we set the user reference to null are being
       // saved via cascading
       saveUser(user);
+
+      auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.USER,
+              "User " + user.getUsername() + ", " + user.getId() + " was deleted.");
       userRepository.delete(user);
-    }
+      }
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
@@ -193,6 +205,8 @@ public class UserxService implements UserDetailsService {
     user.setEnabled(userxDTO.enabled());
     user.setUpdateDate(LocalDateTime.now());
     user.setUpdateUser(getAuthenticatedUser());
+    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.USER,
+            "User " + user.getUsername() + ", " + user.getId() + " with roles " + user.getRoles() + " was edited.");
     return userRepository.save(user);
   }
 
@@ -234,7 +248,8 @@ public class UserxService implements UserDetailsService {
     }
     user.setPassword(passwordEncoder.encode(password));
     user.setEnabled(true);
-    // log "Enable user with username: " + username
+    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.USER,
+            "User " + user.getUsername() + ", " + user.getId() + " was enabled.");
     userRepository.save(user);
   }
 

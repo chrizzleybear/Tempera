@@ -5,9 +5,12 @@ import at.qe.skeleton.model.AccessPoint;
 import at.qe.skeleton.model.Sensor;
 import at.qe.skeleton.model.TemperaStation;
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.model.enums.LogAffectedType;
+import at.qe.skeleton.model.enums.LogEvent;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.Unit;
 import at.qe.skeleton.repositories.TemperaStationRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +24,7 @@ public class TemperaStationService {
 
   private final TemperaStationRepository temperaStationRepository;
   private final SensorService sensorService;
+  @Autowired AuditLogService auditLogService;
 
   public TemperaStationService(
       TemperaStationRepository temperaStationRepository, SensorService sensorService) {
@@ -55,6 +59,9 @@ public class TemperaStationService {
     Sensor nmvocSensor = new Sensor(SensorType.NMVOC, Unit.OHM, temperaStation);
     sensorService.saveSensor(nmvocSensor);
 
+    auditLogService.logEvent(LogEvent.CREATE, LogAffectedType.TEMPERA_STATION,
+            "Station " + id + " for user " + user.getUsername() + ", " + user.getId() + " was created.");
+
     return temperaStation;
   }
 
@@ -78,7 +85,6 @@ public class TemperaStationService {
 
   public TemperaStation save(TemperaStation temperaStation) {
     return temperaStationRepository.save(temperaStation);
-
   }
 
 /**
@@ -89,6 +95,8 @@ public class TemperaStationService {
   public void delete(TemperaStation temperaStation) {
     AccessPoint accessPoint = temperaStation.getAccessPoint();
     accessPoint.getTemperaStations().remove(temperaStation);
+    auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.TEMPERA_STATION,
+            "Station " + temperaStation.getId() + " was deleted.");
     temperaStationRepository.delete(temperaStation);
   }
 

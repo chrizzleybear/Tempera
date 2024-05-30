@@ -1,6 +1,8 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.*;
+import at.qe.skeleton.model.enums.LogAffectedType;
+import at.qe.skeleton.model.enums.LogEvent;
 import at.qe.skeleton.repositories.AccessPointRepository;
 import at.qe.skeleton.repositories.RoomRepository;
 import at.qe.skeleton.repositories.ThresholdRepository;
@@ -27,6 +29,8 @@ public class RoomService {
 
     @Autowired private AccessPointRepository accessPointRepository;
 
+    @Autowired private AuditLogService auditLogService;
+
     @Autowired
     public RoomService(RoomRepository roomRepository) {
         this.roomRepository = roomRepository;
@@ -48,17 +52,23 @@ public class RoomService {
             this.thresholdRepository.save(threshold);
             room.addThreshold(threshold);
         }
+        auditLogService.logEvent(LogEvent.CREATE, LogAffectedType.ROOM,
+                "Room " + roomId + " was created with default thresholds.");
         return roomRepository.save(room);
     }
     @Transactional
     public void deleteRoom(String roomId) {
         Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException(ROOM_NOT_FOUND + roomId));
+        auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.ROOM,
+                "Room " + roomId + " was deleted.");
         roomRepository.delete(room);
     }
     @Transactional
     public boolean addThresholdToRoom(String roomId, Threshold threshold){
         Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException(ROOM_NOT_FOUND + roomId));
         room.addThreshold(threshold);
+        auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.ROOM,
+                "Threshold " + threshold.getThresholdType() + " was added to room " + roomId + ".");
         return roomRepository.save(room) != null;
     }
     @Transactional
@@ -66,6 +76,8 @@ public class RoomService {
         Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException(ROOM_NOT_FOUND + roomId));
         if(room.getThresholds().contains(threshold)){
             room.getThresholds().remove(threshold);
+            auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.ROOM,
+                    "Threshold " + threshold.getThresholdType() + " was removed from room " + roomId + ".");
             return roomRepository.save(room) != null;
         }
         return false;
@@ -83,19 +95,22 @@ public class RoomService {
         return accessPointRepository.findByRoom(room).orElseThrow(() -> new IllegalArgumentException("AccessPoint not found"));
     }
 
-    //TODO: Save modification reason in AuditLog
     @Transactional
     public Threshold updateThreshold(ThresholdUpdateDto dto) {
         Threshold updateThreshold = thresholdRepository.findById(dto.threshold().id()).orElseThrow(() -> new IllegalArgumentException("Threshold not found"));
         updateThreshold.setValue(dto.threshold().value());
         String reason = dto.reason();
+        auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.THRESHOLD,
+                "Threshold " + updateThreshold.getThresholdType() + " was updated. Reason: " +  reason);
         return thresholdRepository.save(updateThreshold);
     }
     @Transactional
     public ThresholdTip updateThresholdTip(ThresholdTip tip) {
         Threshold threshold = thresholdRepository.findById(tip.getId()).orElseThrow(() -> new IllegalArgumentException("Threshold not found"));
-        ThresholdTip updateTip= threshold.getTip();
+        ThresholdTip updateTip = threshold.getTip();
         updateTip.setTip(tip.getTip());
+        auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.THRESHOLD,
+                "Tip of threshold " + threshold.getThresholdType() + " was updated to " + updateTip.getTip() + ".");
         return thresholdTipRepository.save(updateTip);
     }
 }
