@@ -45,7 +45,7 @@ public class ThresholdTip implements Serializable {
     if (!(o instanceof ThresholdTip other)) {
       return false;
     }
-    return other.tip.equals(this.tip);
+    return other.getTip().equals(this.tip);
   }
 
   @Override

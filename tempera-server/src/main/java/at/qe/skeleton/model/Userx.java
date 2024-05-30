@@ -51,7 +51,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   @ManyToMany(mappedBy = "contributors")
   private Set<GroupxProject> groupxProjects;
 
-  @ManyToMany(cascade = CascadeType.ALL, mappedBy = "members")
+  @ManyToMany(mappedBy = "members", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   private List<Groupx> groups;
 
   private String password;
@@ -65,7 +65,12 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   @Enumerated(EnumType.STRING)
   private Visibility stateVisibility;
   @ManyToOne(fetch = FetchType.LAZY)
-  private Project defaultProject;
+  @JoinColumns({
+    @JoinColumn(name = "default_group_id", referencedColumnName = "group_id"),
+    @JoinColumn(name = "default_project_id", referencedColumnName = "project_id")
+
+  })
+  private GroupxProject defaultGroupxProject;
 
   @ElementCollection(targetClass = UserxRole.class, fetch = FetchType.EAGER)
   @CollectionTable(name = "Userx_UserxRole")
@@ -178,16 +183,16 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     group.getMembers().remove(this);
   }
 
-  public Project getDefaultProject() {
-    return defaultProject;
+  public GroupxProject getDefaultGroupxProject() {
+    return defaultGroupxProject;
   }
 
   public void setGroups(List<Groupx> groupxes) {
     this.groups = groupxes;
   }
 
-  public void setDefaultProject(Project defaultProject) {
-    this.defaultProject = defaultProject;
+  public void setDefaultGroupxProject(GroupxProject defaultGroupxProject) {
+    this.defaultGroupxProject = defaultGroupxProject;
   }
 
   public Userx getCreateUser() {
@@ -258,7 +263,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
       return false;
     }
     final Userx other = (Userx) obj;
-    if (!Objects.equals(this.username, other.username)) {
+    if (!Objects.equals(this.username, other.getUsername())) {
       return false;
     }
     return true;

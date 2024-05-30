@@ -16,6 +16,10 @@ import java.util.Set;
 @Entity
 @IdClass(value = GroupxProjectId.class)
 @Table(name = "groupx_project_object")
+@NamedEntityGraph(name = "GroupxProject.detail", attributeNodes = {
+        @NamedAttributeNode("group"),
+        @NamedAttributeNode("project"),
+})
 public class GroupxProject implements Persistable<GroupxProjectId>{
 
     @Transient private boolean isNew = true;
@@ -122,7 +126,7 @@ public class GroupxProject implements Persistable<GroupxProjectId>{
         if (this == obj) return true;
         if (obj == null) return false;
         if (!(obj instanceof GroupxProject other)) return false;
-        return Objects.equals(group, other.group) && Objects.equals(project, other.project);
+        return Objects.equals(group, other.getGroup()) && Objects.equals(project, other.getProject());
     }
 
     @Override

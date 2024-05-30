@@ -70,6 +70,12 @@ public class UserxService implements UserDetailsService {
     return userRepository.findFirstByUsername(username);
   }
 
+  @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #username")
+  public Userx loadUserDetailed(String username) {
+    return userRepository.findFirstByUsernameDetailed(username).orElseThrow();
+  }
+
+
   /**
    * Saves the user. This method will also set {@link Userx#createDate} for new entities or {@link
    * Userx#updateDate} for updated entities. The user requesting this operation will also be stored
