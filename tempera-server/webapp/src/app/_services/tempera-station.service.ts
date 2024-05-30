@@ -25,8 +25,8 @@ export class TemperaStationService {
     return this.http.post<TemperaStation>(this.apiUrl, temperaStation);
   }
 
-  updateTemperaStation(id: string, temperaStation: TemperaStation): Observable<TemperaStation> {
-    return this.http.put<TemperaStation>(`${this.apiUrl}/${id}`, temperaStation);
+  updateTemperaStation(temperaStation: TemperaStation): Observable<TemperaStation> {
+    return this.http.put<TemperaStation>(this.apiUrl + 'update', temperaStation);
   }
 
   deleteTemperaStation(id: string): Observable<void> {

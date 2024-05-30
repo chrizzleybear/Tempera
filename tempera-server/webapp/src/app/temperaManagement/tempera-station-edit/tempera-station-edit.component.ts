@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import { TemperaStationService } from '../../_services/tempera-station.service';
 import { TemperaStation } from '../../models/temperaStation.model';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
@@ -23,7 +23,7 @@ import {UsersService} from "../../_services/users.service";
   ],
   styleUrls: ['./tempera-station-edit.component.css']
 })
-export class TemperaStationEditComponent implements OnInit {
+export class TemperaStationEditComponent implements OnInit, OnChanges {
 
   temperaForm: FormGroup;
 
@@ -43,7 +43,10 @@ export class TemperaStationEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.fetchUsers();
+    this.fetchTemperaStationDetails(this.temperaStation.id);
+  }
+
+  ngOnChanges() {
     this.fetchTemperaStationDetails(this.temperaStation.id);
   }
 
@@ -51,7 +54,7 @@ export class TemperaStationEditComponent implements OnInit {
     this.temperaStationService.getTemperaStationById(temperaStationId).subscribe({
       next: (data) => {
        this.temperaStation = data;
-        this.populateForm();
+        this.fetchUsers();
       },
       error: (error) => {
         console.error('Failed to load temperaStation details:', error);
@@ -61,9 +64,11 @@ export class TemperaStationEditComponent implements OnInit {
 
   onSubmit() {
     if (this.temperaForm?.valid) {
-      this.temperaStationService.updateTemperaStation(this.temperaStation.id, this.temperaForm.value).subscribe({
+      console.log(this.temperaForm.value);
+      this.temperaStation.user = this.temperaForm.value.user.value.username;
+      this.temperaStation.enabled = this.temperaForm.value.enabled;
+      this.temperaStationService.updateTemperaStation(this.temperaStation).subscribe({
         next: () => {
-          console.log('TemperaStation updated successfully');
           this.temperaForm?.reset();
           this.onEditComplete.emit(true);
 
