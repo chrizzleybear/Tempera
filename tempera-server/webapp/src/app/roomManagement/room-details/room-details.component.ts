@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {RoomService} from "../../_services/room.service";
 import {Room} from "../../models/room.model";
@@ -29,18 +29,19 @@ import {InputTextModule} from "primeng/inputtext";
   templateUrl: './room-details.component.html',
   styleUrl: './room-details.component.css'
 })
-export class RoomDetailsComponent {
+/**
+ * @class RoomDetailsComponent
+ * This component is for managing thresholds and displaying room details.
+ */
+export class RoomDetailsComponent implements OnInit{
   private roomId!: string;
   room: Room | undefined;
   displayEditThresholdDialog = false;
   expandedRows: { [key: string]: boolean } = {};
   selectedThreshold: Threshold | undefined;
-  reason: string = '';
+  reason: string = ''; // Reason for editing threshold
   filteredThresholds: Threshold[] = [];
-  constructor(
-    private route: ActivatedRoute,
-    private roomService: RoomService,
-  ) {
+  constructor( private route: ActivatedRoute, private roomService: RoomService) {
   }
 
   ngOnInit() {
@@ -49,7 +50,6 @@ export class RoomDetailsComponent {
       this.fetchRoomDetails(this.roomId);
     }
   }
-
   private fetchRoomDetails(roomId: string) {
     this.roomService.getRoomById(roomId).subscribe({
       next: (data) => {
@@ -64,6 +64,11 @@ export class RoomDetailsComponent {
     });
   }
 
+  /**
+   * This method is called when a row is toggled.
+   * It expands or collapses the row.
+   * @param threshold
+   */
   onRowToggle(threshold: Threshold): void {
     console.log('Row toggled:', threshold);
     if (this.expandedRows[threshold.id]) {
@@ -73,11 +78,19 @@ export class RoomDetailsComponent {
     }
     console.log('Expanded rows:', this.expandedRows);
   }
+  /**
+   * This method is called when a threshold is edited.
+   * It sets the selected threshold and displays the edit threshold dialog.
+   * @param threshold
+   */
   onCellEditSave(threshold: Threshold) {
     this.displayEditThresholdDialog = true;
     this.selectedThreshold = threshold;
   }
-
+  /**
+   * This method is called when the edit threshold dialog is closed.
+   * It resets the selected threshold and reason.
+   */
   editThreasholdSave() {
     if (this.selectedThreshold && this.reason !== '') {
       const dto : ThresholdUpdateDto = {
@@ -97,6 +110,19 @@ export class RoomDetailsComponent {
       });
     }
   }
+  /**
+   * This method is used to edit a threshold tip.
+   * It sets the selected threshold and displays the edit threshold tip dialog.
+   * @param threshold
+   */
+  onCellEditSaveTip(threshold: Threshold) {
+    this.selectedThreshold = threshold;
+    this.editThresholdTipSave();
+  }
+  /**
+   * This method is called when the edit threshold tip dialog is closed.
+   * It resets the selected threshold and reason.
+   */
   editThresholdTipSave() {
     if (this.selectedThreshold) {
     const dto : ThresholdTipUpdateDto = {
@@ -114,11 +140,7 @@ export class RoomDetailsComponent {
       this.selectedThreshold = undefined;
       this.reason = '';
       this.displayEditThresholdDialog = false;
-  }
-  }
-  onCellEditSaveTip(threshold: Threshold) {
-    this.selectedThreshold = threshold;
-    this.editThresholdTipSave();
+    }
   }
   globalFilter(event: any) {
     const filterValue = event.target.value.toLowerCase();
