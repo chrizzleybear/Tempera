@@ -36,6 +36,7 @@ import { DateTime } from 'luxon';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TotalTimeHelper } from '../_helpers/total-time-helper';
+import { OverlappingProjectHelper } from '../_helpers/overlapping-project-helper';
 
 interface InternalTimetableEntryDto extends TimetableEntryDto {
   startTime: Date;
@@ -169,7 +170,12 @@ export class TimetableComponent implements OnInit {
           })) ?? [];
 
           this.availableProjects = data.availableProjects ?? [];
-          this.renameOverlappingProjects();
+
+          // Rename projects that have the same projectId
+          this.duplicatedProjects = OverlappingProjectHelper.getDuplicatedProjects(this.availableProjects);
+          OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, this.availableProjects);
+          const assignedProjects = this.tableEntries.filter(x => x?.assignedGroupxProject).map(entry => entry.assignedGroupxProject!)
+          OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, assignedProjects);
 
           this.filterFields = Object.keys(this.tableEntries?.[0] ?? []);
         },
@@ -271,42 +277,5 @@ export class TimetableComponent implements OnInit {
     this.totalTime = TotalTimeHelper.calculate(filteredEntries);
 
     this.cd.detectChanges();
-  }
-
-  /*
-  * Renames projects that have the same projectId (happens when a user is assigned to a project from multiple groups)
-  * Also fills the duplicatedProjects map with the projects that have the same projectId
-   */
-  renameOverlappingProjects() {
-    // Reset duplicated projects
-    this.duplicatedProjects = new Map<string, { projects: SimpleGroupxProjectDto[], originalName: string }>;
-
-    // Refill duplicated projects
-    this.availableProjects.map(x => x?.projectId!).forEach(id => {
-      const overlappingProjects = this.availableProjects?.filter(y => y.projectId === id);
-      if (overlappingProjects?.length > 1) {
-        this.duplicatedProjects.set(id, {
-          projects: overlappingProjects,
-          originalName: overlappingProjects[0].projectName!,
-        });
-      }
-    });
-
-    // Rename projects (in availableProjects and tableEntries)
-    if (this.duplicatedProjects.size > 0) {
-      const duplicatedIds = Array.from(this.duplicatedProjects.keys());
-
-      this.availableProjects.forEach(project => {
-        if (duplicatedIds.includes(project.projectId!)) {
-          project.projectName = `${project.projectName} - ${project.groupName}`;
-        }
-      });
-
-      this.tableEntries?.forEach(entry => {
-        if (duplicatedIds.includes(entry.assignedGroupxProject?.projectId!)) {
-          entry.assignedGroupxProject!.projectName = `${entry.assignedGroupxProject?.projectName} - ${entry.assignedGroupxProject?.groupName}`;
-        }
-      });
-    }
   }
 }
