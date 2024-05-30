@@ -78,6 +78,18 @@ export class DashboardComponent implements OnInit {
     project: new FormControl<SimpleGroupxProjectDto | undefined>(undefined, { nonNullable: true }),
   });
 
+  /*
+  Used for handling when a user is assigned to a project from multiple groups
+  Key is the projectId and value is an object containing the projects with the same projectId and the original name of the project
+   */
+  private duplicatedProjects: Map<string, {
+    projects: SimpleGroupxProjectDto[],
+    originalName: string
+  }> = new Map<string, {
+    projects: SimpleGroupxProjectDto[],
+    originalName: string
+  }>();
+
   constructor(private dashboardControllerService: DashboardControllerService, private storageService: StorageService, private destroyRef: DestroyRef, private messageService: MessageService) {
   }
 
@@ -89,6 +101,8 @@ export class DashboardComponent implements OnInit {
         next: data => {
           this.dashboardData = data;
           this.colleagueTableFilterFields = Object.keys(this.dashboardData?.colleagueStates?.[0] ?? []);
+
+          this.renameOverlappingProjects();
 
           // set form values in case of existing data
           this.form.controls.visibility.setValue(this.dashboardData.visibility);
@@ -125,5 +139,36 @@ export class DashboardComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update dashboard data' });
       },
     });
+  }
+
+  /*
+  * Renames projects that have the same projectId (happens when a user is assigned to a project from multiple groups)
+  * Also fills the duplicatedProjects map with the projects that have the same projectId
+   */
+  renameOverlappingProjects() {
+    // Reset duplicated projects
+    this.duplicatedProjects = new Map<string, { projects: SimpleGroupxProjectDto[], originalName: string }>;
+
+    // Refill duplicated projects
+    this.dashboardData?.availableProjects?.map(x => x?.projectId!).forEach(id => {
+      const overlappingProjects = this.dashboardData?.availableProjects?.filter(y => y.projectId === id) ?? [];
+      if (overlappingProjects?.length > 1) {
+        this.duplicatedProjects.set(id, {
+          projects: overlappingProjects,
+          originalName: overlappingProjects[0].projectName!,
+        });
+      }
+    });
+
+    // Rename projects (in availableProjects and tableEntries)
+    if (this.duplicatedProjects.size > 0) {
+      const duplicatedIds = Array.from(this.duplicatedProjects.keys());
+
+      this.dashboardData?.availableProjects?.forEach(project => {
+        if (duplicatedIds.includes(project.projectId!)) {
+          project.projectName = `${project.projectName} - ${project.groupName}`;
+        }
+      });
+    }
   }
 }

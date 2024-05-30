@@ -298,7 +298,6 @@ export class TimetableComponent implements OnInit {
 
       this.availableProjects.forEach(project => {
         if (duplicatedIds.includes(project.projectId!)) {
-          // todo: replace project.description with group name
           project.projectName = `${project.projectName} - ${project.groupName}`;
         }
       });
