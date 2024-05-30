@@ -31,7 +31,7 @@
                 [showClear]="true"
                 (onChange)="filter($event.value)"
                 (onClear)="filter(null)"
-                optionLabel="name" appendTo="body" placeholder="Any"
+                optionLabel="projectName" appendTo="body" placeholder="Any"
               ></p-multiSelect>
 
             </ng-template>
@@ -77,9 +77,9 @@
         <td>
 
           <p-dropdown *ngIf="timeEntry.state !== StateEnum.OutOfOffice" [options]="availableProjects"
-                      [(ngModel)]="timeEntry.assignedProject"
+                      [(ngModel)]="timeEntry.assignedGroupxProject"
                       (onChange)="updateProject($event.value, timeEntry.id)"
-                      optionLabel="name"
+                      optionLabel="projectName"
                       placeholder="Select project"
                       appendTo="body"></p-dropdown>
 

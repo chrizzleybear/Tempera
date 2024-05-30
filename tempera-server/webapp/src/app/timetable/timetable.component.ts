@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import {
-  ColleagueStateDto,
-  SimpleProjectDto,
+  ColleagueStateDto, SimpleGroupxProjectDto,
   TimetableControllerService, TimetableEntryDto,
 } from '../../api';
 import { Table, TableModule } from 'primeng/table';
@@ -78,7 +77,7 @@ interface InternalTimetableEntryDto extends TimetableEntryDto {
 export class TimetableComponent implements OnInit {
   public tableEntries?: InternalTimetableEntryDto[];
 
-  public availableProjects: SimpleProjectDto[] = [];
+  public availableProjects: SimpleGroupxProjectDto[] = [];
 
   public filterFields: string[] = [];
 
@@ -99,8 +98,11 @@ export class TimetableComponent implements OnInit {
   Used for handling when a user is assigned to a project from multiple groups
   Key is the projectId and value is an object containing the projects with the same projectId and the original name of the project
    */
-  private duplicatedProjects: Map<string, { projects: SimpleProjectDto[], originalName: string }> = new Map<string, {
-    projects: SimpleProjectDto[],
+  private duplicatedProjects: Map<string, {
+    projects: SimpleGroupxProjectDto[],
+    originalName: string
+  }> = new Map<string, {
+    projects: SimpleGroupxProjectDto[],
     originalName: string
   }>();
 
@@ -179,17 +181,18 @@ export class TimetableComponent implements OnInit {
     );
   }
 
-  updateProject(newProject: SimpleProjectDto, timeEntryId: number) {
+  updateProject(newProject: SimpleGroupxProjectDto, timeEntryId: number) {
 
     // give the project back the original name if it is a duplicate
     let submitProject = structuredClone(newProject);
-    if (this.duplicatedProjects.has(submitProject.projectId!)) {
-      submitProject.name = this.duplicatedProjects.get(submitProject.projectId!)?.originalName;
+    if (this.duplicatedProjects.has(submitProject.projectId ?? '')) {
+      submitProject.projectName = this.duplicatedProjects.get(submitProject.projectId!)?.originalName;
     }
 
     this.timetableControllerService.updateProject1({
       entryId: timeEntryId,
-      project: submitProject,
+      projectId: submitProject.projectId!,
+      groupId: submitProject.groupId!,
     }).subscribe({
       next: () => {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project updated successfully' });
@@ -276,24 +279,33 @@ export class TimetableComponent implements OnInit {
    */
   renameOverlappingProjects() {
     // Reset duplicated projects
-    this.duplicatedProjects = new Map<string, { projects: SimpleProjectDto[], originalName: string }>;
+    this.duplicatedProjects = new Map<string, { projects: SimpleGroupxProjectDto[], originalName: string }>;
 
     // Refill duplicated projects
     this.availableProjects.map(x => x?.projectId!).forEach(id => {
       const overlappingProjects = this.availableProjects?.filter(y => y.projectId === id);
       if (overlappingProjects?.length > 1) {
-        this.duplicatedProjects.set(id, { projects: overlappingProjects, originalName: overlappingProjects[0].name! });
+        this.duplicatedProjects.set(id, {
+          projects: overlappingProjects,
+          originalName: overlappingProjects[0].projectName!,
+        });
       }
     });
 
-    // Rename projects
+    // Rename projects (in availableProjects and tableEntries)
     if (this.duplicatedProjects.size > 0) {
       const duplicatedIds = Array.from(this.duplicatedProjects.keys());
 
       this.availableProjects.forEach(project => {
         if (duplicatedIds.includes(project.projectId!)) {
           // todo: replace project.description with group name
-          project.name = `${project.name} - ${project.description}`;
+          project.projectName = `${project.projectName} - ${project.groupName}`;
+        }
+      });
+
+      this.tableEntries?.forEach(entry => {
+        if (duplicatedIds.includes(entry.assignedGroupxProject?.projectId!)) {
+          entry.assignedGroupxProject!.projectName = `${entry.assignedGroupxProject?.projectName} - ${entry.assignedGroupxProject?.groupName}`;
         }
       });
     }

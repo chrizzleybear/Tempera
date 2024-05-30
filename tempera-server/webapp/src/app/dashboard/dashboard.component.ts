@@ -9,7 +9,12 @@ import { AirQualityPipe } from '../_pipes/air-quality.pipe';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
-import { DashboardControllerService, DashboardDataResponse, SimpleProjectDto, UserxDto } from '../../api';
+import {
+  DashboardControllerService,
+  DashboardDataResponse,
+  SimpleGroupxProjectDto,
+  UserxDto,
+} from '../../api';
 import VisibilityEnum = DashboardDataResponse.VisibilityEnum;
 import { StorageService } from '../_services/storage.service';
 import { ButtonModule } from 'primeng/button';
@@ -70,7 +75,7 @@ export class DashboardComponent implements OnInit {
 
   public form = new FormGroup({
     visibility: new FormControl<VisibilityEnum>(VisibilityEnum.Public, { nonNullable: true }),
-    project: new FormControl<SimpleProjectDto | undefined>(undefined, { nonNullable: true }),
+    project: new FormControl<SimpleGroupxProjectDto | undefined>(undefined, { nonNullable: true }),
   });
 
   constructor(private dashboardControllerService: DashboardControllerService, private storageService: StorageService, private destroyRef: DestroyRef, private messageService: MessageService) {
@@ -99,17 +104,21 @@ export class DashboardComponent implements OnInit {
         },
       });
     } else {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load user' })
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load user' });
     }
   }
 
   onSubmit() {
     this.dashboardControllerService.updateDashboardData({
       visibility: this.form.controls.visibility.value,
-      project: this.form.controls.project.value,
+      groupxProject: this.form.controls.project.value,
     }).subscribe({
       next: data => {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Dashboard data updated successfully' });
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Dashboard data updated successfully',
+        });
       },
       error: err => {
         console.log(err);
