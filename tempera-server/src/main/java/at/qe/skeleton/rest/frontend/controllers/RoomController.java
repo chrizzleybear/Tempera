@@ -2,7 +2,9 @@ package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.rest.frontend.dtos.AccessPointDto;
+import at.qe.skeleton.rest.frontend.dtos.FloorComponent;
 import at.qe.skeleton.rest.frontend.dtos.ThresholdUpdateDto;
+import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.FloorMapper;
 import at.qe.skeleton.services.RoomService;
 import at.qe.skeleton.services.TemperaStationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ public class RoomController {
   @Autowired private RoomService roomService;
 
   @Autowired private TemperaStationService temp;
+
+  @Autowired private FloorMapper flo;
 
 
 
@@ -104,6 +108,13 @@ public class RoomController {
         ThresholdTip updatedThreshold = roomService.updateThresholdTip(dto);
             return ResponseEntity.ok(updatedThreshold);
     }
+
+    @GetMapping("/floor")
+    public ResponseEntity<List<FloorComponent>> getFloorComponents() {
+        List<FloorComponent> floorComponents = flo.getAllFloorComponents();
+        return ResponseEntity.ok(floorComponents);
+    }
+
   //dummy methods
     @GetMapping("/accesspoint/{roomId}")
     public ResponseEntity<AccessPointDto> getAccessPoints(@PathVariable String roomId) {
