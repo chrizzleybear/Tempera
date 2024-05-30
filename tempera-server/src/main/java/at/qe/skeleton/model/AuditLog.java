@@ -5,6 +5,7 @@ import at.qe.skeleton.model.enums.LogEvent;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 @Entity
@@ -15,15 +16,23 @@ public class AuditLog {
   private Long id;
 
   @Temporal(TemporalType.TIMESTAMP)
-  private LocalDateTime timeStamp;
-
-  private String message;
-
-  private LogAffectedType affectedType;
+  private ZonedDateTime timeStamp;
 
   @ManyToOne private Userx triggeringUser;
 
-  private LogEvent event;
+  private LogEvent actionType;
+
+  private LogAffectedType affectedType;
+
+  private String message;
+
+  public AuditLog(Userx triggeringUser, LogEvent actionType, LogAffectedType affectedType, String message) {
+    this.timeStamp = ZonedDateTime.now();
+    this.triggeringUser = triggeringUser;
+    this.actionType = actionType;
+    this.affectedType = affectedType;
+    this.message = message;
+  }
 
   /**
    * For creating AuditLogs only this Constructor should be used.
@@ -34,18 +43,9 @@ public class AuditLog {
    * @param triggeringUser The Userx that initiated the Action that is being logged.
    * @param event A categorization of the Action that is being logged.
    */
-  public AuditLog(
-      String message, LogAffectedType affectedType, Userx triggeringUser, LogEvent event) {
-    this.message = message;
-    this.affectedType = affectedType;
-    this.triggeringUser = triggeringUser;
-    this.event = event;
-    this.timeStamp = LocalDateTime.now();
-  }
+
 
   protected AuditLog() {}
-
-
 
   public long getId() {
     return id;
@@ -67,8 +67,8 @@ public class AuditLog {
     return triggeringUser;
   }
 
-  public LogEvent getEvent() {
-    return event;
+  public LogEvent getActionType() {
+    return actionType;
   }
 
 
