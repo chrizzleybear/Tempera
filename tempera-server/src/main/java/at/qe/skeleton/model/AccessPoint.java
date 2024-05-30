@@ -102,7 +102,7 @@ public class AccessPoint implements Persistable<UUID>, Serializable {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     AccessPoint that = (AccessPoint) o;
-    return Objects.equals(id, that.id);
+    return Objects.equals(id, that.getId());
   }
 
   @Override

@@ -40,22 +40,10 @@ export class AppMenuComponent implements OnInit {
             visible: this.storageService.getUser()?.roles.includes(RolesEnum.Employee),
           },
           {
-            label: 'User-Management',
-            icon: 'pi pi-fw pi-user',
-            routerLink: ['/users'],
-            visible: this.storageService.getUser()?.roles.includes(RolesEnum.Admin),
-          },
-          {
-            label: 'Group-Management',
-            icon: 'pi pi-fw pi-users',
-            routerLink: ['/groups'],
-            visible: this.storageService.getUser()?.roles.includes(RolesEnum.Manager),
-          },
-          {
-            label: 'Project-Management',
-            icon: 'pi pi-fw pi-clipboard',
-            routerLink: ['/projects'],
-            visible: this.storageService.getUser()?.roles.includes(RolesEnum.Manager),
+            label: 'Accumulated Time',
+            icon: 'pi pi-fw pi-clock',
+            routerLink: ['/accumulated-time'],
+            visible: this.storageService.getUser()?.roles.some(role=> role === RolesEnum.Manager || role === RolesEnum.Grouplead)
           },
           {
             label: 'My Groups',
@@ -64,12 +52,30 @@ export class AppMenuComponent implements OnInit {
             visible: this.storageService.getUser()?.roles.includes(RolesEnum.Grouplead),
           },
           {
+            label: 'User Management',
+            icon: 'pi pi-fw pi-user',
+            routerLink: ['/users'],
+            visible: this.storageService.getUser()?.roles.includes(RolesEnum.Admin),
+          },
+          {
+            label: 'Group Management',
+            icon: 'pi pi-fw pi-users',
+            routerLink: ['/groups'],
+            visible: this.storageService.getUser()?.roles.includes(RolesEnum.Manager),
+          },
+          {
+            label: 'Project Management',
+            icon: 'pi pi-fw pi-clipboard',
+            routerLink: ['/projects'],
+            visible: this.storageService.getUser()?.roles.includes(RolesEnum.Manager),
+          },
+          {
             label: 'Room Management',
             icon: 'pi pi-fw pi-home',
             routerLink: ['/rooms'],
             visible: this.storageService.getUser()?.roles.includes('ADMIN')
           },
-          { label: 'Access Point Management',
+          { label: 'Access Points',
             icon: 'pi pi-fw pi-wifi',
             routerLink: ['/accessPoints'],
             visible: this.storageService.getUser()?.roles.includes('ADMIN')
@@ -78,12 +84,6 @@ export class AppMenuComponent implements OnInit {
             icon: 'pi pi-fw pi-gauge',
             routerLink: ['/temperaStations'],
             visible: this.storageService.getUser()?.roles.includes('ADMIN')
-          },
-          {
-            label: 'Accumulated Time',
-            icon: 'pi pi-fw pi-clock',
-            routerLink: ['/accumulated-time'],
-            visible: this.storageService.getUser()?.roles.some(role=> role === RolesEnum.Manager || role === RolesEnum.Grouplead)
           },
         ],
       },

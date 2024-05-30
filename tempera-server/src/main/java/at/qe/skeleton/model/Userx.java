@@ -258,7 +258,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
       return false;
     }
     final Userx other = (Userx) obj;
-    if (!Objects.equals(this.username, other.username)) {
+    if (!Objects.equals(this.username, other.getUsername())) {
       return false;
     }
     return true;
