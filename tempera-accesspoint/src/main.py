@@ -16,6 +16,12 @@ logging.config.dictConfig(config)
 logger = logging.getLogger("tempera")
 
 
+@retry(
+    retry=retry_if_exception_type(BluetoothConnectionLostException)
+    | retry_if_exception_type(bleak.exc.BleakDBusError)
+    | retry_if_exception_type(RuntimeError),
+    wait=wait_fixed(10),
+)
 async def get_notifications(client: BleakClient) -> None:
     elapsed_time_service = await bleclient.filter_uuid(client, "183f")
     elapsed_time_uuid = await bleclient.filter_uuid(elapsed_time_service, "2bf2")
@@ -27,6 +33,12 @@ async def get_notifications(client: BleakClient) -> None:
     logger.info("Subscribed to time record notifications.")
 
 
+@retry(
+    retry=retry_if_exception_type(BluetoothConnectionLostException)
+    | retry_if_exception_type(bleak.exc.BleakDBusError)
+    | retry_if_exception_type(RuntimeError),
+    wait=wait_fixed(10),
+)
 async def get_measurements(client: BleakClient) -> None:
     measurement_service = await bleclient.filter_uuid(client, "181a")
     characteristics = ["2a6e", "2a77", "2a6f", "2bd3"]
@@ -162,8 +174,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    try:
-        asyncio.run(main(), debug=False)
-    except bleak.exc.BleakDBusError:
-        logger.error("Connection failed. Retrying")
-        asyncio.run(main(), debug=False)
+    asyncio.run(main(), debug=False)
