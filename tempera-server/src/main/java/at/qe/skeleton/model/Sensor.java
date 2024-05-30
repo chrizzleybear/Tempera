@@ -101,7 +101,7 @@ public class Sensor {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof Sensor other)) return false;
-    return sensorId.equals(other.sensorId);
+    return sensorId.equals(other.getSensorId());
   }
 
   @Override

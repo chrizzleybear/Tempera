@@ -96,7 +96,7 @@ public class Threshold implements Serializable {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Threshold threshold = (Threshold) o;
-    return id.equals(threshold.id);
+    return id.equals(threshold.getId());
   }
 
   @Override

@@ -166,7 +166,8 @@ public class ProjectService {
     if (groupxProject.getContributors().contains(contributor)) {
       throw new IllegalArgumentException("User is already a contributor");
     }
-    if (!(contributor.getGroups().contains(groupxProject.getGroup()))) {
+    List<Groupx> groups = contributor.getGroups();
+    if (!(groups.contains(groupxProject.getGroup()))) {
       throw new IllegalArgumentException(
           "User is not part of the group %s".formatted(groupxProject.getGroup()));
     }

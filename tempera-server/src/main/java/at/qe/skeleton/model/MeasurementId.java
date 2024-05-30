@@ -37,8 +37,8 @@ public class MeasurementId implements Serializable {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof MeasurementId other)) return false;
-    return sensorId.equals(other.sensorId)
-        && timestamp.equals(other.timestamp);
+    return sensorId.equals(other.getSensorId())
+        && timestamp.equals(other.getTimestamp());
   }
 
   @Override
