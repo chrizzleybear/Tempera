@@ -43,7 +43,7 @@ export class GroupProjectsComponent implements OnInit {
   availableProjectContributors: User[] = [];
   filteredMembers: User[] = [];
   selectedMembers: User[] = [];
-  groupId: number | null | undefined;
+  groupId!: number;
   groupName: string | null | undefined;
   constructor(private projectService: ProjectService, private groupService: GroupService, private route: ActivatedRoute, private router: Router) { }
 
@@ -69,11 +69,9 @@ export class GroupProjectsComponent implements OnInit {
     });
   }
 
-  private loadProjectContributors(groupId: number) {
-    this.projectService.getContributors(groupId, this.selectedProject?.projectId).subscribe({
+  private loadProjectContributors(projectId: number) {
+    this.projectService.getContributors(this.groupId, projectId).subscribe({
       next: (contributors) => {
-        console.log('Loaded project contributors:', contributors);
-        console.log('Members:', this.members);
         this.contributors = contributors;
         this.availableProjectContributors = this.members.filter(member => !contributors.some(contributor => contributor.username === member.username));
         this.filteredMembers = [...this.availableProjectContributors];
