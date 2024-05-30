@@ -8,12 +8,14 @@ import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.Unit;
 import at.qe.skeleton.repositories.TemperaStationRepository;
+import at.qe.skeleton.rest.frontend.dtos.TemperaStationDto;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Component
 @Scope("application")
@@ -58,8 +60,17 @@ public class TemperaStationService {
     return temperaStation;
   }
 
-  public List<TemperaStation> getAllTemperaStations() {
-    return temperaStationRepository.findAll();
+  public List<TemperaStationDto> getAllTemperaStations() {
+    List<TemperaStation> temperaStations = temperaStationRepository.findAll();
+    List<TemperaStationDto> temperaStationDtos = temperaStations.stream()
+        .map(t -> new TemperaStationDto(
+            t.getId(),
+            t.isEnabled(),
+            t.isHealthy(),
+            t.getUser().getUsername()
+        ))
+        .collect(Collectors.toList());
+    return temperaStationDtos;
   }
 
   public TemperaStation findById(String id) throws CouldNotFindEntityException {

@@ -8,12 +8,12 @@ import {TemperaStation} from "../models/temperaStation.model";
   providedIn: 'root'
 })
 export class TemperaStationService {
-  private apiUrl = 'http://localhost:8080/api/temperaStations'; // replace with your API endpoint
+  private apiUrl = 'http://localhost:8080/api/temperastation/'; // replace with your API endpoint
 
   constructor(private http: HttpClient) { }
 
   getAllTemperaStations(): Observable<TemperaStation[]> {
-    return this.http.get<TemperaStation[]>('http://localhost:8080/api/rooms/temperaStations');
+    return this.http.get<TemperaStation[]>(this.apiUrl+'all');
   }
 
   getTemperaStationById(id: string): Observable<TemperaStation> {
