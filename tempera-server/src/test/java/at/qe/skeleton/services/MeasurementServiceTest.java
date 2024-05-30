@@ -175,4 +175,41 @@ class MeasurementServiceTest {
     expectedAlert.setLastIncident(LocalDateTime.of(2024, 5, 10, 8, 30, 0));
     assertTrue(alerts.contains(expectedAlert), "Expected alert should be in the database");
   }
+
+  @Test
+  @DirtiesContext
+  @Sql(
+          executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+          scripts = "classpath:measurementServiceExistingAlertTest.sql")
+  public void reviewForAlertsExistingAlerts() throws CouldNotFindEntityException {
+    TemperaStation temperaStation = temperaStationService.findById("TEMP123");
+    List<Measurement> measurements = measurementRepository.findAll();
+    List<MeasurementId> measurementIds =
+            List.of(
+                    measurements.get(0).getId(),
+                    measurements.get(1).getId(),
+                    measurements.get(2).getId(),
+                    measurements.get(3).getId());
+    assertEquals(4, measurements.size(), "4 measurements should be in the database");
+    List<Alert> alerts = alertService.getAllAlerts();
+    assertEquals(1, alerts.size(), "1 alert should be in the database");
+
+    // test call
+    measurementService.reviewForAlerts(measurementIds, temperaStation.getId());
+
+    alerts = alertService.getAllAlerts();
+    assertEquals(1, alerts.size(), "1 alert should be in the database after reviewForAlerts");
+    Alert alert = alerts.get(0);
+    LocalDateTime firstIncident = LocalDateTime.of(2024, 5, 10, 8, 00, 0);
+    LocalDateTime lastIncident = LocalDateTime.of(2024, 5, 10, 8, 30, 0);
+    assertEquals(firstIncident, alert.getFirstIncident(), "First incident should be 2024-05-10 08:00:00");
+    assertEquals(lastIncident, alert.getLastIncident(), "Last incident should be 2024-05-10 08:30:00");
+    assertFalse(alert.isAcknowledged(), "Alert should not be acknowledged");
+  }
+
+  public void reviewForAlertsExistingAcknowledgedAlerts() throws CouldNotFindEntityException {
+
+  }
+
+
 }
