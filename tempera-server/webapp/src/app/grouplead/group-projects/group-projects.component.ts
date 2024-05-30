@@ -32,6 +32,10 @@ import { concatMap, toArray } from 'rxjs/operators';
   templateUrl: './group-projects.component.html',
   styleUrls: ['./group-projects.component.css']
 })
+/**
+ * @class GroupProjectsComponent
+ * This component is responsible for managing projects of groups.
+ */
 export class GroupProjectsComponent implements OnInit {
   projects: Project[] = [];
   messages: any;
@@ -68,7 +72,6 @@ export class GroupProjectsComponent implements OnInit {
       }
     });
   }
-
   private loadProjectContributors(projectId: number) {
     this.projectService.getContributors(this.groupId, projectId).subscribe({
       next: (contributors) => {
@@ -81,7 +84,6 @@ export class GroupProjectsComponent implements OnInit {
       }
     });
     }
-
 
   private loadGroupMembers(groupId: number) {
     this.groupService.getGroupMembers(groupId).subscribe({
@@ -115,6 +117,11 @@ export class GroupProjectsComponent implements OnInit {
     };
     return this.projectService.addMemberToProject(dto);
   }
+
+  /**
+   * Add selected members to the project.
+   * Pipe the selected members to addContributorToProject method and subscribe to the responses.
+   */
 
   addContributorsToProject() {
     from(this.selectedMembers.map(member => member.username))
