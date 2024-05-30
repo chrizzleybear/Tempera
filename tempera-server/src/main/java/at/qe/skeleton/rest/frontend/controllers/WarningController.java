@@ -1,6 +1,8 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
-import at.qe.skeleton.rest.frontend.dtos.WarningDto;
+import at.qe.skeleton.model.enums.AlertSeverity;
+import at.qe.skeleton.model.enums.SensorType;
+import at.qe.skeleton.rest.frontend.dtos.AlertDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +19,13 @@ public class WarningController {
 
   @GetMapping("/all")
   @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'GROUPLEAD', 'EMPLOYEE')")
-  public ResponseEntity<List<WarningDto>> getWarnings() {
+  public ResponseEntity<List<AlertDto>> getWarnings() {
     logger.info("getAllWarnings called");
     return ResponseEntity.ok(
         List.of(
-            new WarningDto("1", "Warning 1"),
-            new WarningDto("2", "Warning 2"),
-            new WarningDto("3", "Warning 3")));
+            new AlertDto("1", "Warning 1", "2021-08-01T12:00:00", "2021-08-01T13:00:00", AlertSeverity.WARNING, SensorType.HUMIDITY),
+            new AlertDto("2", "Warning 2", "2021-08-01T10:00:00", "2021-08-01T10:30:00", AlertSeverity.WARNING, SensorType.IRRADIANCE),
+            new AlertDto("3", "Warning 3", "2021-08-02T12:00:00", "2021-08-02T14:00:00", AlertSeverity.WARNING, SensorType.TEMPERATURE)));
   }
 
   @DeleteMapping("/delete/{id}")
