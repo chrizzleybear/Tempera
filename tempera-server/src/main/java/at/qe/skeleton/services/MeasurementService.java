@@ -61,6 +61,13 @@ public class MeasurementService {
     measurementRepository.delete(measurement);
   }
 
+  /**
+   * Reviews all measurements if they trigger an alert and if they do creates that alert and saves it.
+   * @param measurementIds List of 4 MeasurementIds, that came via the MeasurementController from the AccessPoint and
+   *                       all belong to the same TemperaStation
+   * @param temperaId
+   * @throws CouldNotFindEntityException
+   */
   public void reviewForAlerts(List<MeasurementId> measurementIds, String temperaId)
       throws CouldNotFindEntityException {
     Set<Threshold> thresholds = thresholdService.getThresholdsByTemperaId(temperaId);

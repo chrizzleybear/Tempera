@@ -13,6 +13,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,6 +25,7 @@ class MeasurementServiceTest {
   @Autowired private MeasurementRepository measurementRepository;
   @Autowired private MeasurementService measurementService;
   @Autowired private SensorService sensorService;
+  @Autowired private TemperaStationService temperaStationService;
 
   private Sensor getSensor() {
     SensorId sensorId = new SensorId();
@@ -131,4 +133,12 @@ class MeasurementServiceTest {
         measurementRepository.findAll().size(),
         "after deleting, the db should hold exactly 0 measurements");
   }
+
+    @Test
+    @DirtiesContext
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:measurementServiceAlertTest.sql")
+  public void reviewForAlerts() throws CouldNotFindEntityException {
+       TemperaStation temperaStation = temperaStationService.findById("TEMP123");
+       List<Measurement> measurements =
+    }
 }
