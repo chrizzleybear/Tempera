@@ -14,8 +14,8 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 @RestController
 @RequestMapping(value = "/api/warnings", produces = "application/json")
-public class WarningController {
-  private static final Logger logger = LoggerFactory.getLogger(WarningController.class);
+public class AlertController {
+  private static final Logger logger = LoggerFactory.getLogger(AlertController.class);
 
   @GetMapping("/all")
   @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'GROUPLEAD', 'EMPLOYEE')")
