@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import {TemperaStation} from "../../models/temperaStation.model";
 import {AccessPoint} from "../../models/accessPoint.model";
 import {AccessPointService} from "../../_services/access-point.service";
@@ -20,7 +20,7 @@ import {TemperaStationService} from "../../_services/tempera-station.service";
   templateUrl: './access-point-tempera.component.html',
   styleUrl: './access-point-tempera.component.css'
 })
-export class AccessPointTemperaComponent implements OnInit{
+export class AccessPointTemperaComponent implements OnInit, OnChanges{
 
   tempera: TemperaStation[] = [];
 
@@ -33,6 +33,10 @@ export class AccessPointTemperaComponent implements OnInit{
 
   ngOnInit(): void {
     this.fetchTempera();
+    }
+
+    ngOnChanges() {
+      this.fetchTempera();
     }
 
     fetchTempera() {
