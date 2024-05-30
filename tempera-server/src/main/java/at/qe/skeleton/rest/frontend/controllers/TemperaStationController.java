@@ -4,7 +4,9 @@ import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.Sensor;
 import at.qe.skeleton.model.TemperaStation;
 import at.qe.skeleton.rest.frontend.dtos.SensorDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
 import at.qe.skeleton.rest.frontend.dtos.TemperaStationDto;
+import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
 import at.qe.skeleton.services.TemperaStationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,9 +66,9 @@ public class TemperaStationController {
         }
     }
 
-    @GetMapping("/create")
+    @PutMapping("/create")
     public ResponseEntity<MessageResponse> createTemperaStation(@RequestBody TemperaStationDto temperaStationDto) {
-        temperaStationService.createTemperaStation(temperaStationDto.id(), false, null);
+        temperaStationService.createTemperaStation(temperaStationDto.id(), temperaStationDto.enabled(), temperaStationDto.user());
         return ResponseEntity.ok(new MessageResponse("TemperaStation was created."));
     }
 
@@ -81,5 +83,11 @@ public class TemperaStationController {
         } catch (CouldNotFindEntityException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+    }
+
+    @GetMapping("availableUsers")
+    public ResponseEntity<List<SimpleUserDto>> getAvailableUsers() {
+        List<SimpleUserDto> users = temperaStationService.getAvailableUsers();
+        return ResponseEntity.ok(users);
     }
 }

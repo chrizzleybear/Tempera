@@ -82,7 +82,7 @@ export class TemperaStationEditComponent implements OnInit, OnChanges {
   }
 
   private fetchUsers() {
-    this.userService.getAllUsers().subscribe({
+    this.temperaStationService.getAvailableUsers().subscribe({
       next: (users: User[]) => {
         this.users = users.map(user => ({
           label: `${user.firstName} ${user.lastName}`,

@@ -8,7 +8,10 @@ import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.Unit;
 import at.qe.skeleton.repositories.TemperaStationRepository;
+import at.qe.skeleton.repositories.UserxRepository;
+import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
 import at.qe.skeleton.rest.frontend.dtos.TemperaStationDto;
+import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -23,11 +26,13 @@ public class TemperaStationService {
 
   private final TemperaStationRepository temperaStationRepository;
   private final SensorService sensorService;
+  private final UserxRepository userxRepository;
 
   public TemperaStationService(
-      TemperaStationRepository temperaStationRepository, SensorService sensorService) {
+      TemperaStationRepository temperaStationRepository, SensorService sensorService, UserxRepository userxRepository) {
     this.temperaStationRepository = temperaStationRepository;
     this.sensorService = sensorService;
+    this.userxRepository = userxRepository;
   }
 
   /**
@@ -41,7 +46,8 @@ public class TemperaStationService {
    * @param user the user that is the owner of the TemperaStation (may be null if not yet assigned)
    * @return the newly created TemperaStation
    */
-  public TemperaStation createTemperaStation(String id, boolean enabled, Userx user) {
+  public TemperaStation createTemperaStation(String id, boolean enabled, String username) {
+    Userx user = userxRepository.findByUsername(username).orElse(null);
     TemperaStation temperaStation = new TemperaStation(id, enabled, user, false);
     save(temperaStation);
 
@@ -107,5 +113,17 @@ public class TemperaStationService {
   public boolean isEnabled(String id) throws CouldNotFindEntityException {
     TemperaStation station = findById(id);
     return station.isEnabled();
+  }
+
+  public List<SimpleUserDto> getAvailableUsers() {
+    List<Userx> users = userxRepository.findAll();
+    List<Userx> assignedUsers = temperaStationRepository.findAll().stream()
+            .map(TemperaStation::getUser)
+            .collect(Collectors.toList());
+    List<SimpleUserDto> availableUsers = users.stream()
+            .filter(u -> !assignedUsers.contains(u))
+            .map(u -> new SimpleUserDto(u.getUsername(), u.getFirstName(), u.getLastName(), u.getEmail()))
+            .collect(Collectors.toList());
+    return availableUsers;
   }
 }
