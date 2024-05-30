@@ -38,8 +38,11 @@ public class AlertController {
   @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'GROUPLEAD', 'EMPLOYEE')")
   public ResponseEntity<String> deleteAlert(@PathVariable String id) {
     logger.info("deleteAlert called with id: {} ", id);
-    String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    alertMapper.deleteAlert(id, username);
-    return ResponseEntity.ok("Alert ");
+    try {
+    alertMapper.deleteAlert(id);
+    return ResponseEntity.ok("Alert " + id + " deleted successfully.");
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
   }
 }
