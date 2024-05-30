@@ -97,7 +97,6 @@ public class AccessPointService {
     AccessPoint a = accessPointRepository.findById(UUID.fromString(accessPointDto.id())).orElseThrow(() -> new IllegalArgumentException("Could not find AccessPoint."));
     a.setRoom(roomService.getRoomById(accessPointDto.room()));
     a.setEnabled(accessPointDto.enabled());
-    a.setHealthy(accessPointDto.isHealthy());
     return accessPointRepository.save(a);
   }
 

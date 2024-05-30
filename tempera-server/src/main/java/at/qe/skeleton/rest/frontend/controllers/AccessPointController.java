@@ -40,16 +40,22 @@ public class AccessPointController {
     }
 
     @GetMapping("/load/{accesspointId}")
-    public ResponseEntity<AccessPoint> getAccesspointById(@RequestBody String accesspointId) {
+    public ResponseEntity<AccessPointDto> getAccesspointById(@PathVariable String accesspointId) {
         try {
             AccessPoint a = accessPointService.getAccessPointById(UUID.fromString(accesspointId));
-            return ResponseEntity.ok(a);
+            AccessPointDto accessPointDto = new AccessPointDto(
+                    a.getId().toString(),
+                    a.getRoom().getId(),
+                    a.isEnabled(),
+                    a.isHealthy()
+            );
+            return ResponseEntity.ok(accessPointDto);
         } catch (CouldNotFindEntityException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
-    @GetMapping("/load/{roomId}")
+    @GetMapping("/load/room/{roomId}")
     public ResponseEntity<AccessPoint> getAccesspointsByRoomId(@RequestBody String roomId) {
         try {
             AccessPoint a = accessPointService.getAccessPointByRoomId(roomId);
@@ -73,8 +79,9 @@ public class AccessPointController {
     @PutMapping("/update")
     public ResponseEntity<String> updateAccesspoint(@RequestBody AccessPointDto accessPointDto) {
         try {
+            System.out.println("accessPointDto: " + accessPointDto);
             AccessPoint a = accessPointService.updateAccessPoint(accessPointDto);
-            return ResponseEntity.ok("Accesspoint in room " + a.getRoom().getId() + " has been updated.");
+            return ResponseEntity.ok("Accesspoint " + accessPointDto.id() + " has been updated.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

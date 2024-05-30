@@ -47,9 +47,9 @@ export class AccesspointsComponent implements OnInit{
 
 
   private loadAccessPoints() {
-    this.accessPointService.getAccesspointsByRoomId("room_1").subscribe({
+    this.accessPointService.getAllAccesspoints().subscribe({
       next: (accessPoints) => {
-        this.accessPoints = [accessPoints];
+        this.accessPoints = accessPoints;
         this.filteredAccessPoints = this.accessPoints;
         console.log("Loaded accesspoints:", accessPoints);
       },

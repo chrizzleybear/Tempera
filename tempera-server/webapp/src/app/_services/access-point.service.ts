@@ -24,8 +24,8 @@ export class AccessPointService {
     return this.http.post<AccessPoint>(this.API_URL + 'create', dto);
   }
 
-  updateAccesspoint(dto: AccessPointEditDto): Observable<AccessPoint> {
-    return this.http.put<AccessPoint>(this.API_URL + 'update', dto);
+  updateAccesspoint(dto: AccessPointEditDto): Observable<String> {
+    return this.http.put<String>(this.API_URL + 'update', dto);
   }
 
   deleteAccesspoint(accesspointId: number) {
