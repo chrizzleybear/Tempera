@@ -82,7 +82,7 @@ public class Alert {
     }
   }
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
