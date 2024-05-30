@@ -18,21 +18,14 @@ public class AuditLog {
   @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime timeStamp;
 
-  @ManyToOne private Userx triggeringUser;
+  @ManyToOne
+  private Userx triggeringUser;
 
   private LogEvent actionType;
 
   private LogAffectedType affectedType;
 
   private String message;
-
-  public AuditLog(Userx triggeringUser, LogEvent actionType, LogAffectedType affectedType, String message) {
-    this.timeStamp = LocalDateTime.now();
-    this.triggeringUser = triggeringUser;
-    this.actionType = actionType;
-    this.affectedType = affectedType;
-    this.message = message;
-  }
 
   /**
    * For creating AuditLogs only this Constructor should be used.
@@ -41,11 +34,15 @@ public class AuditLog {
    *     exactly happened.
    * @param affectedType The Class that was affected by the action which is being logged.
    * @param triggeringUser The Userx that initiated the Action that is being logged.
-   * @param event A categorization of the Action that is being logged.
+   * @param actionType A categorization of the Action that is being logged.
    */
-
-
-  protected AuditLog() {}
+  public AuditLog(Userx triggeringUser, LogEvent actionType, LogAffectedType affectedType, String message) {
+    this.triggeringUser = triggeringUser;
+    this.timeStamp = LocalDateTime.now();
+    this.actionType = actionType;
+    this.affectedType = affectedType;
+    this.message = message;
+  }
 
   public long getId() {
     return id;
@@ -61,10 +58,6 @@ public class AuditLog {
 
   public LogAffectedType getAffectedType() {
     return affectedType;
-  }
-
-  public Userx getTriggeringUser() {
-    return triggeringUser;
   }
 
   public LogEvent getActionType() {

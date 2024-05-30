@@ -205,8 +205,8 @@ public class UserxService implements UserDetailsService {
     user.setEnabled(userxDTO.enabled());
     user.setUpdateDate(LocalDateTime.now());
     user.setUpdateUser(getAuthenticatedUser());
-    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.USER,
-            "User " + user.getUsername() + ", " + user.getId() + " with roles " + user.getRoles() + " was edited.");
+    //auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.USER,
+    //        "User " + user.getUsername() + ", " + user.getId() + " with roles " + user.getRoles() + " was edited.");
     return userRepository.save(user);
   }
 

@@ -6,35 +6,38 @@ import at.qe.skeleton.model.enums.LogAffectedType;
 import at.qe.skeleton.model.enums.LogEvent;
 import at.qe.skeleton.repositories.AuditLogRepository;
 import at.qe.skeleton.repositories.UserxRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @Scope("application")
 public class AuditLogService {
 
     private final AuditLogRepository auditLogRepository;
+
     private final UserxRepository userxRepository;
 
-    @Autowired
-    public AuditLogService(AuditLogRepository auditLogRepository, UserxRepository userxRepository, UserxService userxService) {
+    public AuditLogService(AuditLogRepository auditLogRepository, UserxRepository userxRepository) {
         this.auditLogRepository = auditLogRepository;
         this.userxRepository = userxRepository;
     }
 
-    public AuditLog logEvent(LogEvent actionType, LogAffectedType affectedType, String message) {
-        Optional<Userx> userx = userxRepository.findById(
-                SecurityContextHolder.getContext().getAuthentication().getName());
-        if (userx.isEmpty()) {
-            message = "User was not found. " + message;
+    public boolean logEvent(LogEvent actionType, LogAffectedType affectedType, String message) {
+        Userx user;
+        try {
+            // User has to be set without using userxService to pervent cyclic dependencies
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            user = userxRepository.findById(auth.getName()).orElseThrow(() -> new UsernameNotFoundException("User" + auth.getName() + "not found, but has to exist."));
+        } catch (NullPointerException e) {
+            user = null;
         }
-        AuditLog a = new AuditLog(userx.get(), actionType, affectedType, message);
-        return auditLogRepository.save(a);
+        AuditLog a = new AuditLog(user, actionType, affectedType, message);
+        return auditLogRepository.save(a) != null;
     }
 
     public List<AuditLog> getAll() {

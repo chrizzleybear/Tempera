@@ -1,10 +1,7 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
-import at.qe.skeleton.model.AccessPoint;
-import at.qe.skeleton.model.Sensor;
-import at.qe.skeleton.model.TemperaStation;
-import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.LogAffectedType;
 import at.qe.skeleton.model.enums.LogEvent;
 import at.qe.skeleton.model.enums.SensorType;
@@ -24,10 +21,10 @@ public class TemperaStationService {
 
   private final TemperaStationRepository temperaStationRepository;
   private final SensorService sensorService;
-  @Autowired AuditLogService auditLogService;
+  @Autowired private AuditLogService auditLogService;
 
   public TemperaStationService(
-      TemperaStationRepository temperaStationRepository, SensorService sensorService) {
+          TemperaStationRepository temperaStationRepository, SensorService sensorService) {
     this.temperaStationRepository = temperaStationRepository;
     this.sensorService = sensorService;
   }

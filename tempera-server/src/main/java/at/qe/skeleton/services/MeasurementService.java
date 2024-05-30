@@ -10,6 +10,7 @@ import at.qe.skeleton.model.enums.LogEvent;
 import at.qe.skeleton.repositories.MeasurementRepository;
 import at.qe.skeleton.repositories.SensorRepository;
 import at.qe.skeleton.repositories.TemperaStationRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +24,7 @@ public class MeasurementService {
 
   private final MeasurementRepository measurementRepository;
 
-  private final AuditLogService auditLogService;
+  @Autowired private AuditLogService auditLogService;
 
   public MeasurementService(
       TemperaStationRepository temperaStationRepository,
@@ -31,7 +32,6 @@ public class MeasurementService {
       SensorRepository sensorRepository,
       AuditLogService auditLogService) {
     this.measurementRepository = measurementRepository;
-    this.auditLogService = auditLogService;
   }
 
   public Measurement loadMeasurementByIdComponents(String temperaId, Long sensorId, LocalDateTime timestamp) throws CouldNotFindEntityException {
@@ -52,7 +52,7 @@ public class MeasurementService {
         .findById(id)
         .orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id));
     auditLogService.logEvent(LogEvent.LOAD, LogAffectedType.MEASUREMENT,
-            "Measurement " + id + "was loaded.");
+            "Measurement from sensor " + id.getSensorId() + " at " + id.getTimestamp() + "was loaded.");
     return m;
   }
 
