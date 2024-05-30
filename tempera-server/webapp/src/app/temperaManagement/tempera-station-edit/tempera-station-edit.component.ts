@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { TemperaStationService } from '../../_services/tempera-station.service';
 import { TemperaStation } from '../../models/temperaStation.model';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgIf} from "@angular/common";
 import {CheckboxModule} from "primeng/checkbox";
 import {ButtonModule} from "primeng/button";
@@ -37,14 +37,14 @@ export class TemperaStationEditComponent implements OnInit {
     private userService: UsersService
   ) {
     this.temperaForm = this.formBuilder.group({
-      user: '',
-      enabled: ''
+      user: [null, [Validators.required]],
+      enabled: [false, [Validators.required]],
     });
   }
 
   ngOnInit() {
     this.fetchUsers();
-    //this.fetchTemperaStationDetails(this.temperaStation.id);
+    this.fetchTemperaStationDetails(this.temperaStation.id);
   }
 
   private fetchTemperaStationDetails(temperaStationId: string) {
@@ -90,10 +90,10 @@ export class TemperaStationEditComponent implements OnInit {
   }
 
   populateForm() {
-    console.log(this.temperaStation.user.username);
+    console.log(this.temperaStation.user);
     console.log(this.users);
     this.temperaForm = this.formBuilder.group({
-      user: this.users?.find(user => user.value.username === this.temperaStation.user.username),
+      user: this.users?.find(user => user.value.username === this.temperaStation.user),
       enabled: this.temperaStation.enabled
     });
   }
