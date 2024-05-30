@@ -39,4 +39,8 @@ public class AlertService {
     public List<Alert> getAllAlerts() {
         return alertRepository.findAll();
     }
+
+    public Alert loadAlertById(Long id) {
+        return alertRepository.findById(id).orElse(null);
+    }
 }

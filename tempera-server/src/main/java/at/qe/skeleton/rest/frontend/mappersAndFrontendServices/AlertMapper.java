@@ -1,5 +1,6 @@
 package at.qe.skeleton.rest.frontend.mappersAndFrontendServices;
 
+import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.Alert;
 import at.qe.skeleton.model.enums.AlertSeverity;
 import at.qe.skeleton.rest.frontend.dtos.AlertDto;
@@ -42,10 +43,14 @@ public class AlertMapper {
     return alerts.stream().map(this::mapAlertToAlertDto).toList();
   }
 
-  public void deleteAlert(String id, String username) {
-    // TODO implement
-
-    // todo: set Alert to acknowledged && set acknowledgedAt to now
+  public void deleteAlert(String id) throws CouldNotFindEntityException {
+    Alert alert = alertService.loadAlertById(Long.parseLong(id));
+    if (alert == null) {
+      throw new CouldNotFindEntityException("Alert not found");
+    }
+    alert.setAcknowledged(true);
+    alert.setAcknowledgedAt(LocalDateTime.now());
+    alertService.saveAlert(alert);
   }
 
   private AlertDto mapAlertToAlertDto(Alert alert) {
