@@ -34,7 +34,7 @@ BLECharacteristic currentElapsedTimeCharacteristic("2BF2", BLERead | BLEIndicate
 
 // Set up the environmental sensing service for room climate measurements
 BLEService environmentalSensingService("181A");
-roomClimateUnionStructure roomClimateData = {0, 0, 0, 0}; // explicit initialization is required for sizeof operations below
+roomClimateUnionStructure roomClimateData = {0, 0, 0, 0}; // explicit initialization simplifies sizeof operations
 BLECharacteristic temperatureCharacteristic("2A6E", BLERead, sizeof(roomClimateData.temperature));
 BLECharacteristic irradianceCharacteristic("2A77", BLERead, sizeof(roomClimateData.irradiance));
 BLECharacteristic humidityCharacteristic("2A6F", BLERead, sizeof(roomClimateData.humidity)); 
@@ -49,7 +49,7 @@ unsigned long lastTimeUpdate = millis();
 unsigned long lastRoomClimateUpdate = millis();
 LED led;
 timedSession session;
-elapsedTimeCharacteristicUnion currentElapsedTime = {0, 0, 0, 0, (uint8_t) 1, (uint8_t) 7};
+elapsedTimeCharacteristicUnion currentElapsedTime = {0, 0, 0, 0, (uint8_t) 1, (uint8_t) 0};
 Adafruit_BME680 bme; // get an I2C-Instance
 
 
@@ -179,7 +179,7 @@ void loop() {
       Serial.println("Tempera > [ERROR]    Previously set values will be used.");
     } else {
       // Write temperature and humidity measurements with respective accuracies to roomClimateStructure
-      roomClimateData.temperature = bme.temperature / 0.01;
+      roomClimateData.temperature = bme.temperature / 0.01 * TEMP_CALIBRATION_FACTOR;
       roomClimateData.humidity = bme.humidity / 0.01;
       // start a new measurement to only measure NMVOC
       bme.setGasHeater(320, 150); // 320*C for 150 ms
@@ -192,8 +192,13 @@ void loop() {
         Serial.println("Tempera > [ERROR] Could not complete air quality measurement.");
       }
       // now write only the NMVOC to roomClimateData since the other measurements are skewed due to the heating
-      roomClimateData.nmvoc = bme.gas_resistance /  100.0;
-      roomClimateData.irradiance = analogRead(PT_PIN) / 0.01; // to-do: measure over longer time spans, use exponential smoothing, possibly moving average
+      roomClimateData.nmvoc = bme.gas_resistance / 100.0;
+      
+      // use exponential smoothing to reduce fluctuations  
+      roomClimateData.irradiance =\ 
+        LUMINOSITY_CONVERSION_FUNCTION(\
+          LUMINOSITY_SMOOTHING_FACTOR*analogRead(PT_PIN) + (1-LUMINOSITY_SMOOTHING_FACTOR)*roomClimateData.irradiance\
+        );
     }
 
     // Confirm set values
@@ -241,7 +246,7 @@ void loop() {
 
     // Update the work session info so the duration and time etc since the last mode change
     writeElapsedTimeCharacteristicStructure(\
-      {0, (millis()-lastTimeUpdate), 0, 0, session.workMode, (uint8_t) 7},\
+      {0, (millis()-lastTimeUpdate), 0, 0, session.workMode, (uint8_t) b},\
       currentElapsedTimeCharacteristic\
     );
     session.workMode = b;

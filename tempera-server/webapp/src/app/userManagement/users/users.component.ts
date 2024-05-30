@@ -28,6 +28,10 @@ import { MessagesModule } from 'primeng/messages';
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
 })
+/**
+ * @class UsersComponent
+ * This component is responsible for managing all users.
+ */
 export class UsersComponent implements OnInit {
 
   users: User[] = [];
@@ -38,13 +42,16 @@ export class UsersComponent implements OnInit {
   messages: any;
 
   constructor(private usersService: UsersService, private router: Router) {
-
   }
 
   ngOnInit(): void {
     this.loadUsers();
   }
 
+  /**
+   * Filters users based on the input value.
+   * @param event
+   */
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     if (filterValue) {
@@ -58,6 +65,10 @@ export class UsersComponent implements OnInit {
     }
   }
 
+  /**
+   * Deletes a user based on the user ID.
+   * @param userId The ID of the user to delete.
+   */
   deleteSelectedUser(userId: string): void {
     console.log('Delete user with ID: ', userId);
     this.usersService.deleteUser(userId).subscribe({
@@ -79,6 +90,10 @@ export class UsersComponent implements OnInit {
     });
   }
 
+  /**
+   * Opens the edit user dialog.
+   * @param user
+   */
   editUser(user: any) {
     this.selectedUser = { ...user };
     this.displayEditDialog = true;
@@ -86,11 +101,17 @@ export class UsersComponent implements OnInit {
 
   }
 
+  /**
+   * Opens the create user dialog.
+   */
   createUser() {
     this.displayCreateDialog = true;
 
   }
 
+  /**
+   * Closes the edit or create user dialog to go back to overview.
+   */
   returnToUsers() {
     this.loadUsers();
     this.displayEditDialog = false;
@@ -112,6 +133,10 @@ export class UsersComponent implements OnInit {
     }
   }
 
+  /**
+   * Navigates to the user details page.
+   * @param userId The ID of the user to view details of.
+   */
   viewUserDetails(userId: string) {
     this.router.navigate(['/user', userId]);
   }

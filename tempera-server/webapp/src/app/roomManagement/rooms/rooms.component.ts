@@ -9,7 +9,7 @@ import {NgForOf, NgIf} from "@angular/common";
 import {DialogModule} from "primeng/dialog";
 import {UserCreateComponent} from "../../userManagement/user-create/user-create.component";
 import {FormsModule} from "@angular/forms";
-import {FloorPlanComponent} from "../../rooms/floor-plan/floor-plan.component";
+import {FloorPlanComponent} from "../floor-plan/floor-plan.component";
 import {RippleModule} from "primeng/ripple";
 
 @Component({
@@ -31,8 +31,11 @@ import {RippleModule} from "primeng/ripple";
   templateUrl: './rooms.component.html',
   styleUrls: ['./rooms.component.css']
 })
+/**
+ * @class RoomsComponent
+ * This component is responsible for managing and displaying all rooms.
+ */
 export class RoomsComponent implements OnInit {
-
 
   rooms: Room[] = [];
   newRoomId: string = '';

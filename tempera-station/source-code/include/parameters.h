@@ -39,6 +39,13 @@
 #define BME_CS 10
 #define SEALEVELPRESSURE_HPA (1013.25)
 
+// Luminosity smoothing factor used for exponential smoothing and conversion function
+#define LUMINOSITY_SMOOTHING_FACTOR 0.2
+#define LUMINOSITY_CONVERSION_FUNCTION(lum) (43*lum+4)
+
+// TO-DO: Temperature calibration factor (temporary solution to heavily biased measurements)
+#define TEMP_CALIBRATION_FACTOR (21.0/26.0)
+
 // ############### YOU MAY CHANGE THE PARAMETERS BELOW ###############
 
 // Toggle additional Informations in serial output:
@@ -52,13 +59,13 @@
 #define PT_COLOR {0, 64, 0}
 
 // Delay in ms after which a new button press will be accepted
-#define BUTTON_COOLDOWN 500
+#define BUTTON_COOLDOWN 600
 
 // Update interval in ms after which the station transmits the current time state
-#define UPDATE_INTERVAL_TIME 60000
+#define UPDATE_INTERVAL_TIME 30000
 
 // Update interval in ms after which the station locally updates the current ROOM CLIMATE data
-#define UPDATE_INTERVAL_RC 60000
+#define UPDATE_INTERVAL_RC 30000
 
 // Device name and custom id
 #define DEVICE_NAME "G4T1-Tempera-Station #1"
