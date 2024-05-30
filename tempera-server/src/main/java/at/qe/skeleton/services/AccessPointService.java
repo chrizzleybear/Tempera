@@ -46,8 +46,8 @@ public class AccessPointService {
     return createAccessPoint(
             accessPointDto.id(),
             accessPointDto.room(),
-            accessPointDto.enabled(),
-            accessPointDto.isHealthy()
+            false,
+            true
     );
   }
 
@@ -82,6 +82,10 @@ public class AccessPointService {
     return accessPointRepository.findAll();
   }
 
+  public List<Room> getAvailableRooms() {
+    List<Room> rooms = accessPointRepository.findAll().stream().map(AccessPoint::getRoom).toList();
+    return roomService.getAllRooms().stream().filter(r -> !rooms.contains(r)).toList();
+  }
   /**
    * Checks whether the access point with the passed on ID is enabled or not.
    *

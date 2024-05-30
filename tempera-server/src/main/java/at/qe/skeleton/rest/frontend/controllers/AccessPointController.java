@@ -2,6 +2,7 @@ package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.AccessPoint;
+import at.qe.skeleton.model.Room;
 import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.TemperaStationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,10 +68,10 @@ public class AccessPointController {
 
     @PutMapping("/create")
     public ResponseEntity<String> createAccesspoint(@RequestBody AccessPointDto accessPointDto) {
-        // String id, String room, boolean enabled, boolean isHealthy
+        // String id, String roomId
         try {
             AccessPoint a = accessPointService.createAccessPoint(accessPointDto);
-            return ResponseEntity.ok("Added accesspoint for room " + a.getRoom().getId());
+            return ResponseEntity.ok("Added accesspoint " + a.getId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -95,6 +96,11 @@ public class AccessPointController {
         } catch (CouldNotFindEntityException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+    @GetMapping("/availableRooms")
+    public ResponseEntity<List<Room>> getAvailableRooms() {
+        List<Room> rooms = accessPointService.getAvailableRooms();
+        return ResponseEntity.ok(rooms);
     }
 
 
