@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { LayoutService } from './service/app.layout.service';
-import { AsyncPipe, NgClass, NgIf } from '@angular/common';
+import { AsyncPipe, DatePipe, NgClass, NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../_services/auth.service';
 import { StorageService } from '../_services/storage.service';
@@ -11,12 +11,16 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { AlertStoreService } from '../_stores/alert-store.service';
+import { TagModule } from 'primeng/tag';
+import { AlertDto } from '../../api';
+import SeverityEnum = AlertDto.SeverityEnum;
+import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
 
 @Component({
   selector: 'app-topbar',
   templateUrl: './app.topbar.component.html',
   standalone: true,
-  imports: [RouterLink, NgClass, TooltipModule, BadgeModule, OverlayPanelModule, TableModule, ButtonModule, AsyncPipe, NgIf],
+  imports: [RouterLink, NgClass, TooltipModule, BadgeModule, OverlayPanelModule, TableModule, ButtonModule, AsyncPipe, NgIf, DatePipe, TagModule, WrapFnPipe],
 })
 export class AppTopBarComponent {
 
@@ -50,5 +54,27 @@ export class AppTopBarComponent {
 
   removeAlert(warningEntry: string) {
     this.warningStoreService.removeAlert(warningEntry);
+  }
+
+  showAlertText(severity: SeverityEnum) {
+    switch (severity) {
+      case SeverityEnum.Info:
+        return 'Info';
+      case SeverityEnum.Warning:
+        return 'Warning';
+      default:
+        return 'Unknown';
+    }
+  }
+
+  getAlertSeverity(severity: SeverityEnum) {
+    switch (severity) {
+      case SeverityEnum.Info:
+        return 'warning';
+      case SeverityEnum.Warning:
+        return 'danger';
+      default:
+        return 'primary';
+    }
   }
 }

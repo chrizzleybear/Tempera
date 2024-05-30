@@ -30,11 +30,22 @@
       <p-overlayPanel appendTo="body" #warningsPanel>
         <ng-container *ngIf="alerts.data && (alerts.data?.length ?? 0) > 0; else empty">
           <p-table [value]="alerts.data">
+            <ng-template pTemplate="header">
+              <tr>
+                <th id="message">Message</th>
+                <th id="start">Start</th>
+                <th id="end">End</th>
+                <th id="severity">Severity</th>
+                <th id="filler"></th>
+              </tr>
+            </ng-template>
             <ng-template let-alertEntry pTemplate="body">
               <tr>
+                <td class="w-80">{{ alertEntry.message }}</td>
+                <td>{{ alertEntry.start | date: 'short' }}</td>
+                <td> {{ alertEntry.end | date: 'short' }} </td>
                 <td>
-                  <span>{{ alertEntry.message }}</span>
-                </td>
+                  <p-tag [value]="showAlertText | wrapFn: alertEntry.severity" [severity]="getAlertSeverity | wrapFn: alertEntry.severity"></p-tag>
                 <td>
                   <p-button (onClick)="removeAlert(alertEntry.id)">
                     <i class="pi pi-times"></i>
