@@ -105,6 +105,7 @@ export class GroupProjectsComponent implements OnInit {
 
   addContributorsToProjectDialog(project: Project) {
     this.displayAddMemberDialog = true;
+    this.selectedMembers = [];
     this.selectedProject = project;
     this.loadProjectContributors(project.projectId);
   }
