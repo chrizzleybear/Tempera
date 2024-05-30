@@ -28,21 +28,26 @@
         <span class="hidden-span">Warning</span>
       </button>
       <p-overlayPanel appendTo="body" #warningsPanel>
-        <p-table [value]="warnings.data ?? []" class="min-w-10">
-          <ng-template let-warningEntry pTemplate="body">
-            <tr>
-              <td>
-                <span>{{ warningEntry }}</span>
-              </td>
-              <td>
-                <p-button (onClick)="warningStoreService.removeWarning(warningEntry)">
-                  <i class="pi pi-times"></i>
-                </p-button>
-              </td>
-            </tr>
+        <ng-container *ngIf="warnings.data && (warnings.data?.length ?? 0) > 0; else empty">
+          <p-table [value]="warnings.data">
+            <ng-template let-warningEntry pTemplate="body">
+              <tr>
+                <td>
+                  <span>{{ warningEntry }}</span>
+                </td>
+                <td>
+                  <p-button (onClick)="removeWarning(warningEntry)">
+                    <i class="pi pi-times"></i>
+                  </p-button>
+                </td>
+              </tr>
 
-          </ng-template>
-        </p-table>
+            </ng-template>
+          </p-table>
+        </ng-container>
+        <ng-template #empty>
+          <div class="text-center">No warnings</div>
+        </ng-template>
       </p-overlayPanel>
       <button class="p-link layout-topbar-button" pTooltip="Settings" tooltipPosition="bottom">
         <i class="pi pi-cog"></i>

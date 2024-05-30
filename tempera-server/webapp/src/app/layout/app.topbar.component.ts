@@ -44,4 +44,8 @@ export class AppTopBarComponent {
       },
     });
   }
+
+  removeWarning(warningEntry: string) {
+    this.warningStoreService.removeWarning(warningEntry);
+  }
 }
