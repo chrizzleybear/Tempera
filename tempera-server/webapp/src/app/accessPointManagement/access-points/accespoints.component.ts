@@ -58,14 +58,17 @@ export class AccesspointsComponent implements OnInit{
       }
     });
   }
-  deleteAccesspoints(accessPoint: AccessPoint) {
+  deleteAccesspoint(accessPoint: AccessPoint) {
     if (accessPoint) {
         this.accessPointService.deleteAccesspoint(accessPoint.id).subscribe({
           next: () => {
             console.log(`Deleted access point with id: ${accessPoint.id}`);
+            this.loadAccessPoints();
+            this.messages = [{severity: 'success', summary: 'Success', detail: 'Access Point deleted successfully'}];
           },
           error: (error) => {
             console.error(`Error deleting access point with id: ${accessPoint.id}`, error);
+            this.messages = [{severity: 'error', summary: 'Error', detail: 'Error deleting Access Point'}];
           }
         });
     }

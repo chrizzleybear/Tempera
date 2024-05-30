@@ -4,6 +4,7 @@ import {Observable} from "rxjs";
 import {AccessPoint} from "../models/accessPoint.model";
 import {AccessPointCreateDto, AccessPointEditDto} from "../models/AccessPointDtos";
 import {Room} from "../models/room.model";
+import {MessageResponse} from "../../api";
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class AccessPointService {
   }
 
   createAccesspoint(dto: AccessPointCreateDto): Observable<AccessPoint>{
-    return this.http.post<AccessPoint>(this.API_URL + 'create', dto);
+    return this.http.put<AccessPoint>(this.API_URL + 'create', dto);
   }
 
   updateAccesspoint(dto: AccessPointEditDto): Observable<AccessPoint> {
@@ -30,7 +31,7 @@ export class AccessPointService {
   }
 
   deleteAccesspoint(accesspointId: string) {
-    return this.http.delete(this.API_URL + 'delete/' + accesspointId);
+    return this.http.delete<MessageResponse>(this.API_URL + 'delete/' + accesspointId);
   }
 
   getAccesspointsByRoomId(roomId: string): Observable<AccessPoint> {

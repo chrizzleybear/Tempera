@@ -3,6 +3,7 @@ package at.qe.skeleton.rest.frontend.controllers;
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.AccessPoint;
 import at.qe.skeleton.model.Room;
+import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
 import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.TemperaStationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,13 +68,18 @@ public class AccessPointController {
     }
 
     @PutMapping("/create")
-    public ResponseEntity<String> createAccesspoint(@RequestBody AccessPointDto accessPointDto) {
+    public ResponseEntity<AccessPointDto> createAccesspoint(@RequestBody AccessPointDto accessPointDto) {
         // String id, String roomId
         try {
             AccessPoint a = accessPointService.createAccessPoint(accessPointDto);
-            return ResponseEntity.ok("Added accesspoint " + a.getId());
+            return ResponseEntity.ok(new AccessPointDto(
+                    a.getId().toString(),
+                    a.getRoom().getId(),
+                    a.isEnabled(),
+                    a.isHealthy()
+            ));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
         }
     }
 
@@ -93,13 +99,13 @@ public class AccessPointController {
         }
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteAccesspoint(@RequestBody String accesspointId) {
+    @DeleteMapping("/delete/{accesspointId}")
+    public ResponseEntity<MessageResponse> deleteAccesspoint(@PathVariable String accesspointId) {
         try {
             accessPointService.delete(accessPointService.getAccessPointById(UUID.fromString(accesspointId)));
-            return ResponseEntity.ok("Accesspoint deleted.");
+            return ResponseEntity.ok(new MessageResponse("Accesspoint deleted successfully"));
         } catch (CouldNotFindEntityException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new MessageResponse("Accesspoint not found"));
         }
     }
     @GetMapping("/availableRooms")
