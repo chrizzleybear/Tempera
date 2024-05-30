@@ -125,8 +125,9 @@ private GroupxProject groupxProject;
     if (!(o instanceof InternalRecord other)) {
       return false;
     }
-    return other.start.equals(this.start) && other.externalRecord.equals(this.externalRecord);
+    return other.getStart().equals(this.start) && other.getExternalRecord().equals(this.externalRecord);
   }
+
 
   @Override
   public String toString() {

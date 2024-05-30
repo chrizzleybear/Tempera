@@ -46,7 +46,7 @@ public class Modification implements Serializable {
     if (!(o instanceof Modification other)) {
       return false;
     }
-    return other.reason.equals(this.reason);
+    return other.getReason().equals(this.getReason());
   }
 
   @Override

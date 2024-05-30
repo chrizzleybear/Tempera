@@ -92,7 +92,7 @@ public class Project {
 
   @Override
   public int hashCode() {
-    return id.hashCode();
+    return name.hashCode();
   }
 
   @Override
@@ -103,7 +103,7 @@ public class Project {
     if (!(obj instanceof Project other)) {
       return false;
     }
-    return other.id.equals(this.id);
+    return other.getName().equals(this.name);
   }
 
   @Override

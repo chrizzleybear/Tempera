@@ -122,7 +122,7 @@ public class GroupxProject implements Persistable<GroupxProjectId>{
         if (this == obj) return true;
         if (obj == null) return false;
         if (!(obj instanceof GroupxProject other)) return false;
-        return Objects.equals(group, other.group) && Objects.equals(project, other.project);
+        return Objects.equals(group, other.getGroup()) && Objects.equals(project, other.getProject());
     }
 
     @Override

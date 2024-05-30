@@ -126,7 +126,7 @@ public class Groupx {
     if (!(obj instanceof Groupx other)) {
       return false;
     }
-    return other.name.equals(this.name);
+    return other.getName().equals(this.name);
   }
 
   @Override

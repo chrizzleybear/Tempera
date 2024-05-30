@@ -1,15 +1,23 @@
 services:
   ble-app:
-    build: ./tempera-accesspoint
+    build: ./tempera-accesspoint/
     volumes:
       - /var/run/dbus:/var/run/dbus
       # shared volume between host and docker, so that the config file will persist on
       # the host machine, and you don't have to re-configure everything at each docker startup
       - ./tempera-accesspoint:/home
 
+  web-app:
+    build:
+      ./tempera-server/webapp/
+    depends_on:
+      - back-end
+    ports:
+      - 4200:4200
+
   back-end:
     build:
-      ./tempera-server
+      ./tempera-server/
     environment:
       - POSTGRES_USER=g4t1
       - POSTGRES_PASSWORD=/run/secrets/database_password
