@@ -122,7 +122,6 @@ export class GroupProjectsComponent implements OnInit {
    * Add selected members to the project.
    * Pipe the selected members to addContributorToProject method and subscribe to the responses.
    */
-
   addContributorsToProject() {
     from(this.selectedMembers.map(member => member.username))
       .pipe(
