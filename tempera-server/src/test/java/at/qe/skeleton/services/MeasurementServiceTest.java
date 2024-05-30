@@ -207,9 +207,42 @@ class MeasurementServiceTest {
     assertFalse(alert.isAcknowledged(), "Alert should not be acknowledged");
   }
 
+
+  @Test
+  @DirtiesContext
+  @Sql(
+          executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+          scripts = "classpath:measurementServiceExistingAlertTest.sql")
   public void reviewForAlertsExistingAcknowledgedAlerts() throws CouldNotFindEntityException {
+    TemperaStation temperaStation = temperaStationService.findById("TEMP123");
+    List<Measurement> measurements = measurementRepository.findAll();
+    List<MeasurementId> measurementIds =
+            List.of(
+                    measurements.get(0).getId(),
+                    measurements.get(1).getId(),
+                    measurements.get(2).getId(),
+                    measurements.get(3).getId());
+    assertEquals(4, measurements.size(), "4 measurements should be in the database");
+    List<Alert> alerts = alertService.getAllAlerts();
+    assertEquals(1, alerts.size(), "1 alert should be in the database");
+    //setting the alert to acknowledged
+    alerts.get(0).setAcknowledged(true);
+    alertService.saveAlert(alerts.get(0));
 
+    // test call
+    measurementService.reviewForAlerts(measurementIds, temperaStation.getId());
+
+    alerts = alertService.getAllAlerts();
+    assertEquals(2, alerts.size(), "1 alert should be in the database after reviewForAlerts");
+
+
+    Threshold expectedThreshold = thresholdService.getThresholdById(-101L);
+    Sensor expectedSensor = sensorService.findSensorById(new SensorId("TEMP123", -11L));
+    Alert expectedAlert = new Alert(expectedThreshold, expectedSensor);
+    LocalDateTime firstIncident = LocalDateTime.of(2024, 5, 10, 8, 30, 0);
+    LocalDateTime lastIncident = LocalDateTime.of(2024, 5, 10, 8, 30, 0);
+    expectedAlert.setFirstIncident(firstIncident);
+    expectedAlert.setLastIncident(lastIncident);
+    assertEquals(1, alerts.stream().filter(alert -> alert.equals(expectedAlert)).count(), "Expected alert should be in the database");
   }
-
-
 }
