@@ -83,7 +83,7 @@ export class DashboardComponent implements OnInit {
     if (this.user) {
       this.getData$(this.user.username).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: data => {
-          this.warningStoreService.refreshWarnings();
+          this.warningStoreService.refreshAlerts();
 
           this.dashboardData = data;
           this.colleagueTableFilterFields = Object.keys(this.dashboardData?.colleagueStates?.[0] ?? []);

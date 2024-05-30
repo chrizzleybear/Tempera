@@ -6,20 +6,20 @@ import { WarningControllerService, WarningDto } from '../../api';
   providedIn: 'root',
 })
 export class AlertStoreService {
-  private warnings$ = new BehaviorSubject<WarningDto[]>([]);
+  private alerts$ = new BehaviorSubject<WarningDto[]>([]);
 
 
   constructor(private warningControllerService: WarningControllerService) {
   }
 
-  getWarnings() {
+  getAlerts() {
     // todo: remove logging
-    return this.warnings$.pipe(distinctUntilChanged());
+    return this.alerts$.pipe(distinctUntilChanged());
   }
 
-  removeWarning(id: string) {
+  removeAlert(id: string) {
     // remove directly from the store and then call the api to increase responsiveness
-    this.warnings$.next([...this.warnings$.value.filter(w => w.id !== id)]);
+    this.alerts$.next([...this.alerts$.value.filter(w => w.id !== id)]);
     this.warningControllerService.deleteWarning(id).subscribe({
       error: err => {
         // todo: handle /display error
@@ -30,14 +30,14 @@ export class AlertStoreService {
 
   }
 
-  refreshWarnings() {
-    this.fetchWarnings();
+  refreshAlerts() {
+    this.fetchAlerts();
   }
 
-  private fetchWarnings() {
+  private fetchAlerts() {
     this.warningControllerService.getWarnings().subscribe({
       next: res => {
-        this.warnings$.next(res);
+        this.alerts$.next(res);
       },
       error: err => {
         console.log(err);

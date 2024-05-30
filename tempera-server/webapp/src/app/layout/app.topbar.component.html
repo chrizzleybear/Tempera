@@ -13,7 +13,7 @@
     <i class="pi pi-ellipsis-v"></i>
   </button>
 
-  <ng-container *ngIf="{data: warningStoreService.getWarnings() | async} as warnings">
+  <ng-container *ngIf="{data: warningStoreService.getAlerts() | async} as alerts">
     <div #topbarmenu class="layout-topbar-menu"
          [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
       <button (click)="warningsPanel.toggle($event)" class="p-link layout-topbar-button pt-1" pTooltip="Warnings"
@@ -21,22 +21,22 @@
       <span class="p-overlay-badge">
         <i class="p-overlay-badge pi pi-exclamation-triangle"></i>
           <p-badge
-            [value]="warnings?.data?.length?.toString() ?? ''"
-            [badgeDisabled]="(warnings?.data?.length ?? 0) <= 0"
+            [value]="alerts?.data?.length?.toString() ?? ''"
+            [badgeDisabled]="(alerts?.data?.length ?? 0) <= 0"
             severity="danger"></p-badge>
       </span>
         <span class="hidden-span">Warning</span>
       </button>
       <p-overlayPanel appendTo="body" #warningsPanel>
-        <ng-container *ngIf="warnings.data && (warnings.data?.length ?? 0) > 0; else empty">
-          <p-table [value]="warnings.data">
-            <ng-template let-warningEntry pTemplate="body">
+        <ng-container *ngIf="alerts.data && (alerts.data?.length ?? 0) > 0; else empty">
+          <p-table [value]="alerts.data">
+            <ng-template let-alertEntry pTemplate="body">
               <tr>
                 <td>
-                  <span>{{ warningEntry.message }}</span>
+                  <span>{{ alertEntry.message }}</span>
                 </td>
                 <td>
-                  <p-button (onClick)="removeWarning(warningEntry.id)">
+                  <p-button (onClick)="removeAlert(alertEntry.id)">
                     <i class="pi pi-times"></i>
                   </p-button>
                 </td>

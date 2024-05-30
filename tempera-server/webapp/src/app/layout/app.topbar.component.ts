@@ -30,7 +30,7 @@ export class AppTopBarComponent {
 
   constructor(public layoutService: LayoutService, private authService: AuthService, private storageService: StorageService, public warningStoreService: AlertStoreService) {
     setInterval(() => {
-      this.warningStoreService.refreshWarnings();
+      this.warningStoreService.refreshAlerts();
     }, 20 * 1000);
   }
 
@@ -48,7 +48,7 @@ export class AppTopBarComponent {
     });
   }
 
-  removeWarning(warningEntry: string) {
-    this.warningStoreService.removeWarning(warningEntry);
+  removeAlert(warningEntry: string) {
+    this.warningStoreService.removeAlert(warningEntry);
   }
 }
