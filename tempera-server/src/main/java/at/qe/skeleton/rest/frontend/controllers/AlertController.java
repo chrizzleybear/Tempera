@@ -31,11 +31,7 @@ public class AlertController {
     logger.info("getAlerts called");
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
     List<AlertDto> alerts = alertMapper.getAlerts(username);
-    return ResponseEntity.ok(
-        List.of(
-            new AlertDto("1", "Warning 1", "2021-08-01T12:00:00", "2021-08-01T13:00:00", AlertSeverity.WARNING, SensorType.HUMIDITY),
-            new AlertDto("2", "Warning 2", "2021-08-01T10:00:00", "2021-08-01T10:30:00", AlertSeverity.WARNING, SensorType.IRRADIANCE),
-            new AlertDto("3", "Warning 3", "2021-08-02T12:00:00", "2021-08-02T14:00:00", AlertSeverity.WARNING, SensorType.TEMPERATURE)));
+    return  ResponseEntity.ok(alerts);
   }
 
   @DeleteMapping("/delete/{id}")

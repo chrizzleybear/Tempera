@@ -31,7 +31,7 @@ public class AlertMapper {
       Alert lastAcknowledgedAlert =
           alertService.findLastAcknowledgedAlertBySensorAndThreshold(
               alert.getSensor(), alert.getThreshold());
-      if (lastAcknowledgedAlert != null) {
+      if (lastAcknowledgedAlert == null) {
         continue;
       }
       LocalDateTime acknowledgedAt = alert.getAcknowledgedAt();
