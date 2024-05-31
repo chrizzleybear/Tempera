@@ -2,7 +2,7 @@ import {Room} from "./room.model";
 import {TemperaStation} from "./temperaStation.model";
 
 export interface AccessPoint {
-  id: number;
+  id: string;
   temperaStations: TemperaStation[];
   room: Room;
   enabled: boolean;

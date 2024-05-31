@@ -7,13 +7,18 @@ import at.qe.skeleton.model.TemperaStation;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.Unit;
+import at.qe.skeleton.repositories.AccessPointRepository;
 import at.qe.skeleton.repositories.TemperaStationRepository;
+import at.qe.skeleton.repositories.UserxRepository;
+import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
+import at.qe.skeleton.rest.frontend.dtos.TemperaStationDto;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 @Scope("application")
@@ -21,11 +26,16 @@ public class TemperaStationService {
 
   private final TemperaStationRepository temperaStationRepository;
   private final SensorService sensorService;
+  private final UserxRepository userxRepository;
+  private final AccessPointRepository accessPointRepository;
 
   public TemperaStationService(
-      TemperaStationRepository temperaStationRepository, SensorService sensorService) {
+      TemperaStationRepository temperaStationRepository, SensorService sensorService,
+      UserxRepository userxRepository, AccessPointRepository accessPointRepository) {
     this.temperaStationRepository = temperaStationRepository;
     this.sensorService = sensorService;
+    this.userxRepository = userxRepository;
+    this.accessPointRepository = accessPointRepository;
   }
 
   /**
@@ -36,11 +46,14 @@ public class TemperaStationService {
    *
    * @param id of the new TemperaStation, has to be unique
    * @param enabled whether the TemperaStation is enabled or not
-   * @param user the user that is the owner of the TemperaStation (may be null if not yet assigned)
+   * @param username the user that is the owner of the TemperaStation (may be null if not yet assigned)
    * @return the newly created TemperaStation
    */
-  public TemperaStation createTemperaStation(String id, boolean enabled, Userx user) {
+  public TemperaStation createTemperaStation(String id, boolean enabled, String username, String accessPointId) {
+    Userx user = userxRepository.findByUsername(username).orElse(null);
+    AccessPoint accessPoint = accessPointRepository.findById(UUID.fromString(accessPointId)).orElse(null);
     TemperaStation temperaStation = new TemperaStation(id, enabled, user, false);
+    temperaStation.setAccessPoint(accessPoint);
     save(temperaStation);
 
     Sensor temperatureSensor = new Sensor(SensorType.HUMIDITY, Unit.PERCENT, temperaStation);
@@ -58,8 +71,13 @@ public class TemperaStationService {
     return temperaStation;
   }
 
-  public List<TemperaStation> getAllTemperaStations() {
-    return temperaStationRepository.findAll();
+  public List<TemperaStationDto> getAllTemperaStations() {
+    List<TemperaStation> temperaStations = temperaStationRepository.findAll();
+    List<TemperaStationDto> temperaStationDtos = temperaStations.stream()
+        .map(t -> new TemperaStationDto(
+            t.getId(), t.getUser().getUsername(), t.isEnabled(), t.isHealthy(), t.getAccessPoint().getId().toString()))
+        .collect(Collectors.toList());
+    return temperaStationDtos;
   }
 
   public TemperaStation findById(String id) throws CouldNotFindEntityException {
@@ -91,7 +109,6 @@ public class TemperaStationService {
     accessPoint.getTemperaStations().remove(temperaStation);
     temperaStationRepository.delete(temperaStation);
   }
-
   /**
    * Checks whether the tempera Station with the passed on ID is enabled or not.
    *
@@ -102,4 +119,23 @@ public class TemperaStationService {
     TemperaStation station = findById(id);
     return station.isEnabled();
   }
+
+  public List<SimpleUserDto> getAvailableUsers() {
+    List<Userx> users = userxRepository.findAll();
+    List<Userx> assignedUsers = temperaStationRepository.findAll().stream()
+            .map(TemperaStation::getUser)
+            .collect(Collectors.toList());
+    List<SimpleUserDto> availableUsers = users.stream()
+            .filter(u -> !assignedUsers.contains(u))
+            .map(u -> new SimpleUserDto(u.getUsername(), u.getFirstName(), u.getLastName(), u.getEmail()))
+            .collect(Collectors.toList());
+    return availableUsers;
+  }
+
+    public void updateTemperaStation(String id, boolean enabled, String user) {
+        TemperaStation temperaStation = temperaStationRepository.findById(id).orElseThrow();
+        temperaStation.setEnabled(enabled);
+        temperaStation.setUser(userxRepository.findByUsername(user).orElse(null));
+        temperaStationRepository.save(temperaStation);
+    }
 }

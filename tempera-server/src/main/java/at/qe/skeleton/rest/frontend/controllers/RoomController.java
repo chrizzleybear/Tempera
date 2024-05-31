@@ -2,7 +2,9 @@ package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.rest.frontend.dtos.AccessPointDto;
+import at.qe.skeleton.rest.frontend.dtos.FloorComponent;
 import at.qe.skeleton.rest.frontend.dtos.ThresholdUpdateDto;
+import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.FloorMapper;
 import at.qe.skeleton.services.RoomService;
 import at.qe.skeleton.services.TemperaStationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ public class RoomController {
   @Autowired private RoomService roomService;
 
   @Autowired private TemperaStationService temp;
+
+  @Autowired private FloorMapper flo;
 
 
 
@@ -79,11 +83,12 @@ public class RoomController {
 
     @GetMapping("/load/{roomId}")
     public ResponseEntity<Room> getRoomById(@PathVariable String roomId) {
-        Optional<Room> room = roomService.getRoomById(roomId);
-        if (room.isPresent()) {
-            return ResponseEntity.ok(room.get());
+        try {
+            Room room = roomService.getRoomById(roomId);
+            return ResponseEntity.ok(room);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @GetMapping("/available")
@@ -103,13 +108,14 @@ public class RoomController {
         ThresholdTip updatedThreshold = roomService.updateThresholdTip(dto);
             return ResponseEntity.ok(updatedThreshold);
     }
-  //dummy methods
-    @GetMapping("/temperaStations")
-    public ResponseEntity<List<TemperaStation>> getTemperaStations() {
-        List<TemperaStation> temp1 = temp.getAllTemperaStations();
-        return ResponseEntity.ok(temp1);
+
+    @GetMapping("/floor")
+    public ResponseEntity<List<FloorComponent>> getFloorComponents() {
+        List<FloorComponent> floorComponents = flo.getAllFloorComponents();
+        return ResponseEntity.ok(floorComponents);
     }
 
+  //dummy methods
     @GetMapping("/accesspoint/{roomId}")
     public ResponseEntity<AccessPointDto> getAccessPoints(@PathVariable String roomId) {
         AccessPoint ap = this.roomService.getAccesspoint(roomId);

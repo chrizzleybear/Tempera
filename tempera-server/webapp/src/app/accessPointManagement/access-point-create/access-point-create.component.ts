@@ -36,8 +36,8 @@ export class AccessPointCreateComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private accessPointService: AccessPointService, private roomService: RoomService) {
     this.accessPointForm = this.formBuilder.group({
-      room: [null , [Validators.required]],
-      enabled: [true, [Validators.required]],
+      id: [null, [Validators.required]],
+      room: [null , [Validators.required]]
     });
   }
 
@@ -46,7 +46,7 @@ export class AccessPointCreateComponent implements OnInit {
   }
 
   private fetchRooms() {
-    this.roomService.getAvailableRooms().subscribe({
+    this.accessPointService.getAvailableRooms().subscribe({
       next: (rooms) => {
         this.rooms = rooms;
         console.log('Loaded rooms:', rooms);
@@ -59,8 +59,8 @@ export class AccessPointCreateComponent implements OnInit {
   onSubmit() {
     if (this.accessPointForm.valid) {
       const dto: AccessPointCreateDto = {
-        room: this.accessPointForm.value.room,
-        enabled: this.accessPointForm.value.enabled
+        id: this.accessPointForm.value.id,
+        room: this.accessPointForm.value.room.id,
       }
       console.log('Creating access point:', dto)
       this.accessPointService.createAccesspoint(dto
