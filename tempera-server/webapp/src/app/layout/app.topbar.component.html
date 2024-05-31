@@ -48,7 +48,7 @@
                 <td>
                   <p-tag [value]="showAlertText | wrapFn: alertEntry.severity" [severity]="getAlertSeverity | wrapFn: alertEntry.severity"></p-tag>
                 <td>
-                  <p-button (onClick)="removeAlert(alertEntry.id, (alerts.data?.length ?? 1) - 1)">
+                  <p-button (onClick)="removeAlert(alertEntry.id, (alerts.data.length) - 1)">
                     <i class="pi pi-times"></i>
                   </p-button>
                 </td>

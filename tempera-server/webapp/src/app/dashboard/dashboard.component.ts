@@ -97,7 +97,7 @@ export class DashboardComponent implements OnInit {
     private storageService: StorageService,
     private destroyRef: DestroyRef,
     private messageService: MessageService,
-    private warningStoreService: AlertStoreService) {
+    private alertStoreService: AlertStoreService) {
   }
 
   ngOnInit(): void {
@@ -106,7 +106,7 @@ export class DashboardComponent implements OnInit {
     if (this.user) {
       this.getData$(this.user.username).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: data => {
-          this.warningStoreService.refreshAlerts();
+          this.alertStoreService.refreshAlerts();
 
           this.dashboardData = data;
           this.colleagueTableFilterFields = Object.keys(this.dashboardData?.colleagueStates?.[0] ?? []);
