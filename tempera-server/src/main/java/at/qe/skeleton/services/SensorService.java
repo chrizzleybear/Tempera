@@ -2,11 +2,13 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.Sensor;
 import at.qe.skeleton.model.SensorId;
+import at.qe.skeleton.model.Threshold;
 import at.qe.skeleton.repositories.SensorRepository;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
 @Component
 @Scope("application")

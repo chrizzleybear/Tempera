@@ -3,6 +3,7 @@ export * from './accessPointAllowedDto';
 export * from './accessPointDto';
 export * from './accumulatedTimeDto';
 export * from './accumulatedTimeResponse';
+export * from './alertDto';
 export * from './colleagueStateDto';
 export * from './contributorAssignmentDto';
 export * from './credentialsDto';

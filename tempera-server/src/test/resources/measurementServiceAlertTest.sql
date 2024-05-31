@@ -14,7 +14,8 @@ DELETE FROM userx_userx_role;
 DELETE FROM userx WHERE default_project_id Is Not NULL;
 DELETE FROM project;
 DELETE FROM userx;
-
+DELETE FROM threshold;
+DELETE FROM alert;
 INSERT INTO userx
 (enabled, default_project_id, state, state_visibility, create_date, update_date, create_user_username, update_user_username, username, email, first_name, last_name, password)
 VALUES
@@ -38,16 +39,53 @@ INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES ('NMVOC', -
 -- fill in measurements for all the temperature sensors (also not necessary for HomeDataMapperTest but can be used later)
 -- user of interest is johndoe (TEMP123)
 INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES
-                                                                                                 (20.0, -10, '2024-05-10T08:30:00', 'TEMP123');
+    (100.0, -10, '2024-05-10T08:30:00', 'TEMP123');
 
 -- fill in measurements for all the irradiance sensors
 INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES
-                                                                                                 (1000.0, -11, '2024-05-10T08:30:00', 'TEMP123');
+    (100.0, -11, '2024-05-10T08:30:00', 'TEMP123');
 
 -- fill in measurements for all the humidity sensors
 INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES
-                                                                                                 (50.0, -12, '2024-05-10T08:30:00', 'TEMP123');
+    (100.0, -12, '2024-05-10T08:30:00', 'TEMP123');
 
 -- fill in measurements for all the nmvoc sensors
 INSERT INTO measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id)  VALUES
-                                                                                                 (100.0, -13, '2024-05-10T08:30:00', 'TEMP123');
+    (100.0, -13, '2024-05-10T08:30:00', 'TEMP123');
+
+INSERT INTO threshold (id, default_threshold, sensor_type, threshold_type, threshold_value, modification_id, tip_id) VALUES
+   (-100, True, 'TEMPERATURE', 'UPPERBOUND_INFO', 50.0, null, null),                   -- no violation (since UPPERBOUND_WARNING is overruling info
+    (-101, True, 'IRRADIANCE', 'UPPERBOUND_INFO', 50.0, null, null),                      -- violation irradiance upperbound_info
+    (-102, True, 'HUMIDITY', 'UPPERBOUND_INFO', 200.0, null, null),
+    (-103, True, 'NMVOC', 'UPPERBOUND_INFO', 200.0, null, null),
+    (-104, True, 'TEMPERATURE', 'LOWERBOUND_INFO', 0.0, null, null),
+    (-105, True, 'IRRADIANCE', 'LOWERBOUND_INFO', 0.0, null, null),
+    (-106, True, 'HUMIDITY', 'LOWERBOUND_INFO', 0.0, null, null),
+    (-107, True, 'NMVOC', 'LOWERBOUND_INFO', 200.0, null, null),                          -- no violation  since LOWERBOUND_WARNING is overruling info
+    (-108, True, 'TEMPERATURE', 'UPPERBOUND_WARNING', 0.0, null, null),            -- violation temp upperbound_warning
+    (-109, True, 'IRRADIANCE', 'UPPERBOUND_WARNING', 2000.0, null, null),
+    (-110, True, 'HUMIDITY', 'UPPERBOUND_WARNING', 1000.0, null, null),
+    (-111, True, 'NMVOC', 'UPPERBOUND_WARNING', 200.0, null, null),
+    (-112, True, 'TEMPERATURE', 'LOWERBOUND_WARNING', -10.0, null, null),
+    (-113, True, 'IRRADIANCE', 'LOWERBOUND_WARNING', -10.0, null, null),
+    (-114, True, 'HUMIDITY', 'LOWERBOUND_WARNING', -10.0, null, null),
+    (115, True, 'NMVOC', 'LOWERBOUND_WARNING', 1000.0, null, null);                 -- violation nmvoc lowerbound_warning
+
+
+    INSERT INTO room_thresholds (room_room_id, thresholds_id) VALUES
+        ('room_10', -100),
+        ('room_10', -101),
+        ('room_10', -102),
+        ('room_10', -103),
+        ('room_10', -104),
+        ('room_10', -105),
+        ('room_10', -106),
+        ('room_10', -107),
+        ('room_10', -108),
+        ('room_10', -109),
+        ('room_10', -110),
+        ('room_10', -111),
+        ('room_10', -112),
+        ('room_10', -113),
+        ('room_10', -114),
+        ('room_10', 115);

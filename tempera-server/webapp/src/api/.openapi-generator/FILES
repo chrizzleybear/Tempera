@@ -2,6 +2,7 @@
 README.md
 api.module.ts
 api/accumulatedTimeController.service.ts
+api/alertController.service.ts
 api/api.ts
 api/authController.service.ts
 api/dashboardController.service.ts
@@ -22,6 +23,7 @@ model/accessPointAllowedDto.ts
 model/accessPointDto.ts
 model/accumulatedTimeDto.ts
 model/accumulatedTimeResponse.ts
+model/alertDto.ts
 model/colleagueStateDto.ts
 model/contributorAssignmentDto.ts
 model/credentialsDto.ts
