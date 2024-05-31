@@ -4,4 +4,4 @@ import at.qe.skeleton.model.enums.State;
 
 import java.time.LocalDateTime;
 
-public record TimeTableRecordDBDto(Long recordId, LocalDateTime start, LocalDateTime end, Long assignedProjectId, State state, String description) {}
+public record TimeTableRecordDBDto(Long recordId, LocalDateTime start, LocalDateTime end, Long projectId, Long groupId, State state, String description) {}

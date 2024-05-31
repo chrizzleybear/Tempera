@@ -54,6 +54,7 @@ model/sensor.ts
 model/sensorId.ts
 model/signupRequest.ts
 model/simpleGroupDto.ts
+model/simpleGroupxProjectDto.ts
 model/simpleProjectDto.ts
 model/simpleUserDto.ts
 model/splitTimeRecordRequest.ts

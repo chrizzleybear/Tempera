@@ -27,6 +27,10 @@ import {InputTextModule} from "primeng/inputtext";
   templateUrl: './project-groups.component.html',
   styleUrl: './project-groups.component.css'
 })
+/**
+ * @class ProjectGroupsComponent
+ * This component is used to manage groups assigned to a project.
+ */
 export class ProjectGroupsComponent implements OnInit{
 
   groups: Group[] = [];

@@ -33,6 +33,10 @@ import {CardModule} from "primeng/card";
   templateUrl: './groups-grouplead.component.html',
   styleUrl: './groups-grouplead.component.css'
 })
+/**
+ * @class GroupsGroupleadComponent
+ * This component is used to display all groups of a group lead.
+ */
 export class GroupsGroupleadComponent implements OnInit{
 
   groups: Group[] = [];
