@@ -16,6 +16,10 @@ import java.util.Set;
 @Entity
 @IdClass(value = GroupxProjectId.class)
 @Table(name = "groupx_project_object")
+@NamedEntityGraph(name = "GroupxProject.detail", attributeNodes = {
+        @NamedAttributeNode("group"),
+        @NamedAttributeNode("project"),
+})
 public class GroupxProject implements Persistable<GroupxProjectId>{
 
     @Transient private boolean isNew = true;

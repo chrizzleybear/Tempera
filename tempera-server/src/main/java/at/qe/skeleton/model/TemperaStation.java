@@ -10,8 +10,8 @@ import java.util.Objects;
 @Entity
 public class TemperaStation implements Persistable<String> {
 
-  // we set id manually (has to be configurable from admin)
-  @Id private String id;
+//todo: as io pointed out this has to be a uuid or similar
+@Id private String id;
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY) private Userx user;
   private boolean enabled;
 

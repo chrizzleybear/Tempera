@@ -7,8 +7,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 
 /**
  * Repository for managing {@link Userx} entities.
@@ -47,5 +49,9 @@ public interface UserxRepository extends AbstractRepository<Userx, String> {
 
   @Query("SELECT u FROM Userx u WHERE :role MEMBER OF u.roles")
   List<Userx> findByRole(@Param("role") UserxRole role);
+
+  @EntityGraph(attributePaths = {"defaultGroupxProject.group", "defaultGroupxProject.project", "temperaStation", "groups"})
+  @Query(value = "SELECT u FROM Userx u WHERE u.username = :username")
+    Optional<Userx> findFirstByUsernameDetailed(@Param("username") String username);
 
 }

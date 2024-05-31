@@ -9,7 +9,6 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Project } from './project';
 import { GroupxProject } from './groupxProject';
 import { TemperaStation } from './temperaStation';
 import { Groupx } from './groupx';
@@ -27,7 +26,7 @@ export interface Userx {
     enabled?: boolean;
     state?: Userx.StateEnum;
     stateVisibility?: Userx.StateVisibilityEnum;
-    defaultProject?: Project;
+    defaultGroupxProject?: GroupxProject;
     roles?: Set<Userx.RolesEnum>;
     id?: string;
     _new?: boolean;
