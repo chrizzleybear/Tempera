@@ -4,7 +4,8 @@ import {Observable, Subject} from "rxjs";
 import {Room} from "../models/room.model";
 import {Threshold, ThresholdTipUpdateDto, ThresholdUpdateDto} from "../models/threshold.model";
 import {AccessPoint} from "../models/accessPoint.model";
-import {FloorPlanComponent} from "../rooms/floor-plan/floor-plan.component";
+import {FloorPlanComponent} from "../roomManagement/floor-plan/floor-plan.component";
+
 
 @Injectable({
   providedIn: 'root',
