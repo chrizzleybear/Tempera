@@ -1,3 +1,4 @@
+<p-toast position="bottom-right" key="topbar-toast"></p-toast>
 <div class="layout-topbar">
   <a class="layout-topbar-logo" routerLink="">
     <i class="pi pi-stopwatch mr-4 text-4xl"></i>
@@ -13,10 +14,10 @@
     <i class="pi pi-ellipsis-v"></i>
   </button>
 
-  <ng-container *ngIf="{data: warningStoreService.getAlerts() | async} as alerts">
+  <ng-container *ngIf="{data: alertStoreService.getAlerts() | async} as alerts">
     <div #topbarmenu class="layout-topbar-menu"
          [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
-      <button (click)="warningsPanel.toggle($event)" class="p-link layout-topbar-button pt-1" pTooltip="Warnings"
+      <button (click)="alertsPanel.toggle($event)" class="p-link layout-topbar-button pt-1" pTooltip="Warnings"
               tooltipPosition="bottom">
       <span class="p-overlay-badge">
         <i class="p-overlay-badge pi pi-exclamation-triangle"></i>
@@ -27,7 +28,7 @@
       </span>
         <span class="hidden-span">Warning</span>
       </button>
-      <p-overlayPanel appendTo="body" #warningsPanel>
+      <p-overlayPanel appendTo="body" #alertsPanel>
         <ng-container *ngIf="alerts.data && (alerts.data?.length ?? 0) > 0; else empty">
           <p-table [value]="alerts.data">
             <ng-template pTemplate="header">
@@ -57,7 +58,7 @@
           </p-table>
         </ng-container>
         <ng-template #empty>
-          <div class="text-center">No warnings</div>
+          <div class="text-center">No alerts</div>
         </ng-template>
       </p-overlayPanel>
       <button class="p-link layout-topbar-button" pTooltip="Settings" tooltipPosition="bottom">

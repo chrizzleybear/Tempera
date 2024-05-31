@@ -1,9 +1,8 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
-import at.qe.skeleton.model.enums.AlertSeverity;
-import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.rest.frontend.dtos.AlertDto;
 import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.AlertMapper;
+import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -36,13 +35,13 @@ public class AlertController {
 
   @DeleteMapping("/delete/{id}")
   @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'GROUPLEAD', 'EMPLOYEE')")
-  public ResponseEntity<String> deleteAlert(@PathVariable String id) {
+  public ResponseEntity<MessageResponse> deleteAlert(@PathVariable String id) {
     logger.info("deleteAlert called with id: {} ", id);
     try {
     alertMapper.deleteAlert(id);
-    return ResponseEntity.ok("Alert " + id + " deleted successfully.");
+    return ResponseEntity.ok(new MessageResponse("Alert " + id + " deleted successfully."));
     } catch (Exception e) {
-      return ResponseEntity.badRequest().body(e.getMessage());
+      return ResponseEntity.badRequest().body(new MessageResponse("Error: " + e.getMessage()));
     }
   }
 }

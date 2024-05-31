@@ -15,12 +15,13 @@ import { TagModule } from 'primeng/tag';
 import { AlertDto } from '../../api';
 import SeverityEnum = AlertDto.SeverityEnum;
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-topbar',
   templateUrl: './app.topbar.component.html',
   standalone: true,
-  imports: [RouterLink, NgClass, TooltipModule, BadgeModule, OverlayPanelModule, TableModule, ButtonModule, AsyncPipe, NgIf, DatePipe, TagModule, WrapFnPipe],
+  imports: [RouterLink, NgClass, TooltipModule, BadgeModule, OverlayPanelModule, TableModule, ButtonModule, AsyncPipe, NgIf, DatePipe, TagModule, WrapFnPipe, ToastModule],
 })
 export class AppTopBarComponent {
 
@@ -32,11 +33,11 @@ export class AppTopBarComponent {
 
   @ViewChild('topbarmenu') menu!: ElementRef;
 
-  @ViewChild('warningsPanel') warningsPanel!: OverlayPanel;
+  @ViewChild('alertsPanel') alertsPanel!: OverlayPanel;
 
-  constructor(public layoutService: LayoutService, private authService: AuthService, private storageService: StorageService, public warningStoreService: AlertStoreService) {
+  constructor(public layoutService: LayoutService, private authService: AuthService, private storageService: StorageService, public alertStoreService: AlertStoreService) {
     setInterval(() => {
-      this.warningStoreService.refreshAlerts();
+      this.alertStoreService.refreshAlerts();
     }, 20 * 1000);
   }
 
@@ -56,14 +57,14 @@ export class AppTopBarComponent {
 
   removeAlert(warningEntry: string, remainingAlerts: number) {
     if (remainingAlerts < 1) {
-      this.warningsPanel.hide();
+      this.alertsPanel.hide();
       // workaround to prevent flickering of the overlay panel
       setTimeout(() => {
-        this.warningStoreService.removeAlert(warningEntry);
+        this.alertStoreService.removeAlert(warningEntry);
       }, 100);
     } else
     {
-      this.warningStoreService.removeAlert(warningEntry);
+      this.alertStoreService.removeAlert(warningEntry);
     }
   }
 
