@@ -5,10 +5,10 @@ import at.qe.skeleton.model.Groupx;
 import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.model.dtos.SimpleProjectDbDto;
 import at.qe.skeleton.rest.frontend.dtos.*;
 import at.qe.skeleton.services.GroupService;
 import at.qe.skeleton.services.ProjectService;
-import at.qe.skeleton.services.UserxService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +23,15 @@ import static java.util.stream.Collectors.toList;
 public class ProjectMapperService {
     private ProjectService projectService;
     private GroupService groupService;
-    private UserxService userService;
+    private GroupMapperService groupMapperService;
+    private UserMapper userMapper;
 
 
-    public ProjectMapperService(ProjectService projectService) {
+    public ProjectMapperService(ProjectService projectService, GroupService groupService, GroupMapperService groupMapperService, UserMapper userMapper) {
         this.projectService = projectService;
         this.groupService = groupService;
-        this.userService = userService;
+        this.groupMapperService = groupMapperService;
+        this.userMapper = userMapper;
     }
 
     @Transactional
@@ -44,13 +46,13 @@ public class ProjectMapperService {
         projectService
             .getProjectById(projectId)
             .orElseThrow(() -> new CouldNotFindEntityException("Project not found: " + projectId));
-    SimpleProjectDto simpleProjectDto = projectDtoMapper(project);
-    SimpleUserDto managerDetails = userDtoMapper(project.getManager());
+    SimpleProjectDto simpleProjectDto = mapToSimpleProjectDto(project);
+    SimpleUserDto managerDetails = userMapper.getSimpleUser(project.getManager());
 
     List<GroupxProject> groupxProjects =
         projectService.findAllGroupxProjectsByProjectId(projectId);
     List<SimpleGroupDto> connectedGroups =
-        groupxProjects.stream().map(this::groupDtoMapper).toList();
+        groupxProjects.stream().map(groupMapperService::mapToSimpleGroupDto).toList();
 
     List<SimpleUserDto> contributors =
         projectService.findAllContributorsByProjectId(projectId);
@@ -63,17 +65,17 @@ public class ProjectMapperService {
         Groupx group =
         groupService
             .getGroup(groupId);
-        SimpleGroupDto simpleGroupDto = groupDtoMapper(group);
+        SimpleGroupDto simpleGroupDto = groupMapperService.mapToSimpleGroupDto(group);
         List<GroupxProject> groupxProjects = projectService.getGroupxProjectsByGroupId(groupId);
         Set<GroupxProjectDto> groupxProjectsDto = groupxProjects.stream().map(this::groupxProjectDtoMapper).collect(Collectors.toSet());
         List<Userx> groupMembers = groupService.getMembers(groupId);
-        Set<SimpleUserDto> groupMembersDto = groupMembers.stream().map(this::userDtoMapper).collect(Collectors.toSet());
+        Set<SimpleUserDto> groupMembersDto = groupMembers.stream().map(userMapper::getSimpleUser).collect(Collectors.toSet());
         return new ExtendedGroupDto(simpleGroupDto, groupxProjectsDto, groupMembersDto);
     }
 
     public List<SimpleGroupDto> getAllSimpleGroups(String projectId){
         List<GroupxProject> groupxProjects = projectService.findAllGroupxProjectsByProjectId(Long.valueOf(projectId));
-        return groupxProjects.stream().map(this::groupDtoMapper).collect(toList());
+        return groupxProjects.stream().map(groupMapperService::mapToSimpleGroupDto).collect(toList());
     }
 
 
@@ -85,11 +87,15 @@ public class ProjectMapperService {
 
     public List<SimpleProjectDto> getSimpleProjectsByGroupId(Long groupId) {
         List<Project> projects = projectService.getProjectsByGroupId(groupId);
-        return projects.stream().map(this::projectDtoMapper).collect(toList());
+        return projects.stream().map(this::mapToSimpleProjectDto).collect(toList());
     }
-
-
-  private SimpleProjectDto projectDtoMapper(Project project) {
+    public List<SimpleUserDto> findAllContributorsByGroupIdAndProjectId(Long groupId, Long projectId) {
+        GroupxProject groupxProject = projectService.findByGroupAndProject(groupId, projectId);
+        GroupxProjectDto groupxProjectdto = groupxProjectDtoMapper(groupxProject);
+        List<SimpleUserDto> simpleUserDtos =  groupxProjectdto.contributors();
+        return simpleUserDtos;
+    }
+  public SimpleProjectDto mapToSimpleProjectDto(Project project) {
         return new SimpleProjectDto(
                 project.getId().toString(),
                 project.getName(),
@@ -98,13 +104,22 @@ public class ProjectMapperService {
         );
     }
 
-    private GroupxProjectDto groupxProjectDtoMapper(GroupxProject groupxProject) {
+    public SimpleGroupxProjectDto mapToSimpleGroupxProjectDto(GroupxProject gxp) {
+        return new SimpleGroupxProjectDto(
+                gxp.getGroup().getId().toString(),
+                gxp.getGroup().getName(),
+                gxp.getProject().getId().toString(),
+                gxp.getProject().getName()
+        );
+    }
+
+    public GroupxProjectDto groupxProjectDtoMapper(GroupxProject groupxProject) {
         Project project = groupxProject.getProject();
-        SimpleUserDto managerDetails = userDtoMapper(project.getManager());
-        List<SimpleUserDto> contributors = groupxProject.getContributors().stream().map(this::userDtoMapper).toList();
+        SimpleUserDto managerDetails = userMapper.getSimpleUser(project.getManager());
+        List<SimpleUserDto> contributors = groupxProject.getContributors().stream().map(userMapper::getSimpleUser).toList();
         return new GroupxProjectDto(
-                groupDtoMapper(groupxProject),
-                projectDtoMapper(project),
+                groupMapperService.mapToSimpleGroupDto(groupxProject),
+                mapToSimpleProjectDto(project),
                 managerDetails,
                 contributors
         );
@@ -117,7 +132,7 @@ public class ProjectMapperService {
                         projectDto.name(),
                         projectDto.description(),
                         projectDto.manager());
-        return projectDtoMapper(updatedProject);
+        return mapToSimpleProjectDto(updatedProject);
     }
 
     public SimpleProjectDto createProject(SimpleProjectDto projectDto) {
@@ -126,38 +141,15 @@ public class ProjectMapperService {
                         projectDto.name(),
                         projectDto.description(),
                         projectDto.manager());
-        return projectDtoMapper(createdProject);
-    }
-
-
-    private SimpleGroupDto groupDtoMapper(GroupxProject groupxProject) {
-        return groupDtoMapper(groupxProject.getGroup());
-    }
-
-    private SimpleGroupDto groupDtoMapper(Groupx groupx) {
-        return new SimpleGroupDto(
-                groupx.getId().toString(),
-                groupx.getName(),
-                groupx.getGroupLead().getUsername(),
-                groupx.getGroupLead().getUsername()
-        );
+        return mapToSimpleProjectDto(createdProject);
     }
 
     private ProjectDetailsDto detailedProjectDtoMapper(Project project) {
         String projectId = project.getId().toString();
         String projectName = project.getName();
         String projectDescription = project.getDescription();
-        SimpleUserDto projectManagerDto = userDtoMapper(project.getManager());
+        SimpleUserDto projectManagerDto = userMapper.getSimpleUser(project.getManager());
         return new ProjectDetailsDto(projectId, projectName, projectDescription, projectManagerDto);
-    }
-
-    private SimpleUserDto userDtoMapper(Userx userx) {
-        return new SimpleUserDto(
-                userx.getUsername(),
-                userx.getFirstName(),
-                userx.getLastName(),
-                userx.getEmail()
-        );
     }
 
     public GroupDetailsDto groupDetailsDto(Groupx groupx) {
@@ -165,7 +157,18 @@ public class ProjectMapperService {
                 groupx.getId().toString(),
                 groupx.getName(),
                 groupx.getDescription(),
-                userDtoMapper(groupx.getGroupLead())
+                userMapper.getSimpleUser(groupx.getGroupLead())
         );
     }
+
+    public SimpleProjectDto mapSimpleProjectDbDtoToDto(SimpleProjectDbDto simpleProjectDbDto) {
+        return new SimpleProjectDto(
+            simpleProjectDbDto.id().toString(),
+            simpleProjectDbDto.name(),
+            simpleProjectDbDto.description(),
+            simpleProjectDbDto.manager());
+    }
+
+
+
 }

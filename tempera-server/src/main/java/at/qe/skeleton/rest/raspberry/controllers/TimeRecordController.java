@@ -43,6 +43,7 @@ public class TimeRecordController {
   private ResponseEntity<ExternalRecordDto> postTimeRecord(
       @RequestBody ExternalRecordDto timeRecordDto) {
     try {
+      logger.info("incoming request: createMeasurement with body: %s".formatted(timeRecordDto));
       if (!accessPointService.isEnabled(timeRecordDto.access_point_id())) {
         throw new IllegalArgumentException(
             "accessPoint %s is not enabled".formatted(timeRecordDto.access_point_id()));

@@ -1,3 +1,4 @@
+<p-toast position="bottom-right" key="topbar-toast"></p-toast>
 <div class="layout-topbar">
   <a class="layout-topbar-logo" routerLink="">
     <i class="pi pi-stopwatch mr-4 text-4xl"></i>
@@ -13,19 +14,62 @@
     <i class="pi pi-ellipsis-v"></i>
   </button>
 
-  <div #topbarmenu class="layout-topbar-menu"
-       [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
-    <button class="p-link layout-topbar-button">
-      <i class="pi pi-calendar"></i>
-      <span>Calendar</span>
-    </button>
-    <button class="p-link layout-topbar-button">
-      <i class="pi pi-user"></i>
-      <span>Profile</span>
-    </button>
-    <button class="p-link layout-topbar-button" [routerLink]="'/documentation'">
-      <i class="pi pi-cog"></i>
-      <span>Settings</span>
-    </button>
-  </div>
+  <ng-container *ngIf="{data: alertStoreService.getAlerts() | async} as alerts">
+    <div #topbarmenu class="layout-topbar-menu"
+         [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+      <button (click)="alertsPanel.toggle($event)" class="p-link layout-topbar-button pt-1" pTooltip="Warnings"
+              tooltipPosition="bottom">
+      <span class="p-overlay-badge">
+        <i class="p-overlay-badge pi pi-exclamation-triangle"></i>
+          <p-badge
+            [value]="alerts?.data?.length?.toString() ?? ''"
+            [badgeDisabled]="(alerts?.data?.length ?? 0) <= 0"
+            severity="danger"></p-badge>
+      </span>
+        <span class="hidden-span">Warning</span>
+      </button>
+      <p-overlayPanel appendTo="body" #alertsPanel>
+        <ng-container *ngIf="alerts.data && (alerts.data?.length ?? 0) > 0; else empty">
+          <p-table [value]="alerts.data">
+            <ng-template pTemplate="header">
+              <tr>
+                <th id="message">Message</th>
+                <th id="start">Start</th>
+                <th id="end">End</th>
+                <th id="severity">Severity</th>
+                <th id="filler"></th>
+              </tr>
+            </ng-template>
+            <ng-template let-alertEntry pTemplate="body">
+              <tr>
+                <td class="w-80">{{ alertEntry.message }}</td>
+                <td>{{ alertEntry.start | date: 'short' }}</td>
+                <td> {{ alertEntry.end | date: 'short' }} </td>
+                <td>
+                  <p-tag [value]="showAlertText | wrapFn: alertEntry.severity" [severity]="getAlertSeverity | wrapFn: alertEntry.severity"></p-tag>
+                <td>
+                  <p-button (onClick)="removeAlert(alertEntry.id, (alerts.data.length) - 1)">
+                    <i class="pi pi-times"></i>
+                  </p-button>
+                </td>
+              </tr>
+
+            </ng-template>
+          </p-table>
+        </ng-container>
+        <ng-template #empty>
+          <div class="text-center">No alerts</div>
+        </ng-template>
+      </p-overlayPanel>
+      <button class="p-link layout-topbar-button" pTooltip="Settings" tooltipPosition="bottom">
+        <i class="pi pi-cog"></i>
+        <span class="hidden-span">Settings</span>
+      </button>
+      <button class="p-link layout-topbar-button" pTooltip="Sign out" tooltipPosition="bottom"
+              (click)="this.logout()">
+        <i class="pi pi-sign-out"></i>
+        <span class="hidden-span">Sign out</span>
+      </button>
+    </div>
+  </ng-container>
 </div>

@@ -1,5 +1,5 @@
 <p-messages [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
-<h1 class="text-3xl font-semibold text-center text-gray-700 my-4">Projects from Group {{groupId}}</h1>
+<h1 class="text-3xl font-semibold text-center text-gray-700 my-4">Projects from Group {{groupName}}</h1>
 <br>
 <p-table [value]="projects" [paginator]="true" [rows]="10" responsiveLayout="scroll">
   <ng-template pTemplate="header">
@@ -15,7 +15,7 @@
     <tr (click)="viewProjectDetails(project)">
       <td>{{ project.name }}</td>
       <td>{{ project.description }}</td>
-      <td>{{ project.manager.username }}</td>
+      <td>{{ project.manager }}</td>
       <td>
         <p-button label="Add Member" (onClick)="addContributorsToProjectDialog(project); $event.stopPropagation()" icon="pi pi-users"></p-button>
       </td>
@@ -40,6 +40,7 @@
   <p-table [value]="availableProjectContributors" [paginator]="true" [rows]="10" responsiveLayout="scroll" [(selection)]="selectedMembers">
     <ng-template pTemplate="header">
       <tr>
+        <th scope="col"></th>
         <th scope="col" pSortableColumn="username">Benutzername
           <p-sortIcon field="username"></p-sortIcon>
         </th>
@@ -74,7 +75,7 @@
     <input type="text" pInputText placeholder="Search" (input)="applyFilterUsers($event)" class="mr-2">
     <button pButton type="button" label="Delete Selected" icon="pi pi-check" (click)="deleteContributorsFromProject()" class="p-mt-2"></button>
   </div>
-  <p-table [value]="members" [paginator]="true" [rows]="10" responsiveLayout="scroll" [(selection)]="selectedMembers">
+  <p-table [value]="contributors" [paginator]="true" [rows]="10" responsiveLayout="scroll" [(selection)]="selectedMembers">
     <ng-template pTemplate="header">
       <tr>
         <th scope="col" pSortableColumn="username">Benutzername

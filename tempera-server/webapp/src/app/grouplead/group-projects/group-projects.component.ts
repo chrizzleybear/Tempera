@@ -32,6 +32,10 @@ import { concatMap, toArray } from 'rxjs/operators';
   templateUrl: './group-projects.component.html',
   styleUrls: ['./group-projects.component.css']
 })
+/**
+ * @class GroupProjectsComponent
+ * This component is responsible for managing projects of groups.
+ */
 export class GroupProjectsComponent implements OnInit {
   projects: Project[] = [];
   messages: any;
@@ -43,12 +47,13 @@ export class GroupProjectsComponent implements OnInit {
   availableProjectContributors: User[] = [];
   filteredMembers: User[] = [];
   selectedMembers: User[] = [];
-  groupId: number | null | undefined;
-
+  groupId!: number;
+  groupName: string | null | undefined;
   constructor(private projectService: ProjectService, private groupService: GroupService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.groupId = Number(this.route.snapshot.paramMap.get('id'));
+    this.groupName = this.route.snapshot.paramMap.get('name');
     if (this.groupId) {
       this.loadProjects(this.groupId);
       this.loadGroupMembers(this.groupId);
@@ -58,7 +63,8 @@ export class GroupProjectsComponent implements OnInit {
   private loadProjects(groupId: number) {
     this.projectService.getProjectsOfGroup(groupId).subscribe({
       next: (projects) => {
-        console.log('Loaded projects:', projects);
+        console.log('Loaded projects:', groupId);
+        console.log('Project of group projects:', projects);
         this.projects = projects;
       },
       error: (error) => {
@@ -66,22 +72,18 @@ export class GroupProjectsComponent implements OnInit {
       }
     });
   }
-
-  private loadProject(groupId: number) {
-    this.projectService.getProjectById(groupId).subscribe({
-      next: (projects) => {
-        console.log('Loaded go:', projects);
-        this.contributors = projects.contributors!;
-        this.availableProjectContributors = this.members.filter(member => !this.contributors!.some(contributor => contributor.username === member.username));
+  private loadProjectContributors(projectId: number) {
+    this.projectService.getContributors(this.groupId, projectId).subscribe({
+      next: (contributors) => {
+        this.contributors = contributors;
+        this.availableProjectContributors = this.members.filter(member => !contributors.some(contributor => contributor.username === member.username));
         this.filteredMembers = [...this.availableProjectContributors];
-        console.log('Contributors:', this.contributors);
       },
       error: (error) => {
         console.error('Error loading projects:', error);
       }
     });
     }
-
 
   private loadGroupMembers(groupId: number) {
     this.groupService.getGroupMembers(groupId).subscribe({
@@ -103,8 +105,9 @@ export class GroupProjectsComponent implements OnInit {
 
   addContributorsToProjectDialog(project: Project) {
     this.displayAddMemberDialog = true;
+    this.selectedMembers = [];
     this.selectedProject = project;
-    this.loadProject(project.projectId);
+    this.loadProjectContributors(project.projectId);
   }
 
   private addContributorToProject(memberId: string) {
@@ -116,6 +119,10 @@ export class GroupProjectsComponent implements OnInit {
     return this.projectService.addMemberToProject(dto);
   }
 
+  /**
+   * Add selected members to the project.
+   * Pipe the selected members to addContributorToProject method and subscribe to the responses.
+   */
   addContributorsToProject() {
     from(this.selectedMembers.map(member => member.username))
       .pipe(
@@ -149,7 +156,7 @@ export class GroupProjectsComponent implements OnInit {
   deleteContributorDialog(project: Project) {
     this.displayDeleteMemberDialog = true;
     this.selectedProject = project;
-    this.loadProject(project.projectId);
+    this.loadProjectContributors(project.projectId);
     this.availableProjectContributors = project.contributors!;
   }
 

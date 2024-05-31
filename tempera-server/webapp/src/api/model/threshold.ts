@@ -14,10 +14,13 @@ import { Modification } from './modification';
 
 
 export interface Threshold { 
+    id?: number;
+    defaultThreshold?: boolean;
     sensorType?: Threshold.SensorTypeEnum;
     thresholdType?: Threshold.ThresholdTypeEnum;
     value?: number;
     tip?: ThresholdTip;
+    ofLowerBoundType?: boolean;
     modificationReason?: Modification;
 }
 export namespace Threshold {

@@ -28,7 +28,7 @@ public class InternalRecord {
   @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime start;
 
-  @ManyToOne(optional = false)
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   @JoinColumns({
     @JoinColumn(name = "userName", referencedColumnName = "user_username"),
     @JoinColumn(name = "ext_rec_start", referencedColumnName = "start")
@@ -41,7 +41,7 @@ public class InternalRecord {
   @Column(name = "time_end")
   private LocalDateTime end;
 
-@ManyToOne
+@ManyToOne(fetch = FetchType.LAZY)
 @JoinColumns({
     @JoinColumn(name = "group_id", referencedColumnName = "group_id"),
     @JoinColumn(name = "project_id", referencedColumnName = "project_id")
@@ -125,8 +125,9 @@ private GroupxProject groupxProject;
     if (!(o instanceof InternalRecord other)) {
       return false;
     }
-    return other.start.equals(this.start) && other.externalRecord.equals(this.externalRecord);
+    return other.getStart().equals(this.start) && other.getExternalRecord().equals(this.externalRecord);
   }
+
 
   @Override
   public String toString() {

@@ -33,6 +33,10 @@ import {CardModule} from "primeng/card";
   templateUrl: './groups-grouplead.component.html',
   styleUrl: './groups-grouplead.component.css'
 })
+/**
+ * @class GroupsGroupleadComponent
+ * This component is used to display all groups of a group lead.
+ */
 export class GroupsGroupleadComponent implements OnInit{
 
   groups: Group[] = [];
@@ -65,11 +69,11 @@ export class GroupsGroupleadComponent implements OnInit{
   }
 
   members(group: Group) {
-    this.router.navigate(['/group/members', group.id]);
+    this.router.navigate(['/group/members',group.name, group.id]);
   }
 
   projects(group: Group) {
-    this.router.navigate(['/group/projects', group.id]);
+    this.router.navigate(['/group/projects', group.name, group.id]);
 
   }
 }

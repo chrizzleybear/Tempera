@@ -5,10 +5,12 @@ import at.qe.skeleton.model.Groupx;
 import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.model.dtos.GroupxProjectStateTimeDbDto;
 import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.GroupxProjectRepository;
 import at.qe.skeleton.repositories.ProjectRepository;
 import at.qe.skeleton.repositories.UserxRepository;
+import at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Logger;
 
 @Service
@@ -163,7 +166,8 @@ public class ProjectService {
     if (groupxProject.getContributors().contains(contributor)) {
       throw new IllegalArgumentException("User is already a contributor");
     }
-    if (!(contributor.getGroups().contains(groupxProject.getGroup()))) {
+    List<Groupx> groups = contributor.getGroups();
+    if (!(groups.contains(groupxProject.getGroup()))) {
       throw new IllegalArgumentException(
           "User is not part of the group %s".formatted(groupxProject.getGroup()));
     }
@@ -181,6 +185,10 @@ public class ProjectService {
 
   public List<Project> getProjectsByManager(String username) {
     return projectRepository.findAllByManager_Username(username);
+  }
+
+  public List<Project> getProjectsByGroupLead(String username) {
+    return projectRepository.findAllByGroupLead(username);
   }
 
   public List<Project> getProjectsByContributor(Userx user) {
@@ -207,6 +215,20 @@ public class ProjectService {
             .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND));
     groupxProject.removeContributor(contributor);
     groupxProjectRepository.save(groupxProject);
+  }
+
+  @PreAuthorize("hasAuthority('MANAGER')")
+  public List<GroupxProjectStateTimeDbDto> gxpStateTimeDtosByManager(String username) {
+    return groupxProjectRepository.getAllgxpStateTimeDtosByManager(username);
+  }
+
+  @PreAuthorize("hasAuthority('GROUPLEAD')")
+  public List<GroupxProjectStateTimeDbDto> gxpStateTimeDtosByGroupLead(String username) {
+    return groupxProjectRepository.getAllgxpStateTimeDtosByGroupLead(username);
+  }
+
+  public Set<SimpleGroupxProjectDto> getSimpleGroupxProjectDtoByUser(String username) {
+    return groupxProjectRepository.getSimpleGroupxProjectDtoByUser(username);
   }
 
   @PreAuthorize("hasAuthority('MANAGER')")
@@ -247,5 +269,47 @@ public class ProjectService {
 
   public List<GroupxProject> getGroupxProjectsByGroupId(Long groupId) {
     return groupxProjectRepository.findAllByGroup_Id(groupId);
+  }
+
+  public GroupxProject findByGroupAndProject(Long groupId, Long projectId) {
+    GroupxProject groupxProject =
+        groupxProjectRepository.findByGroup_IdAndProject_Id(groupId, projectId).orElseThrow();
+    return groupxProject;
+  }
+
+  /**
+   * Loads a GroupxProject by its group and project id while fetching Contributors List, rest is lazy loaded.
+   * @param groupId
+   * @param projectId
+   * @return
+   * @throws CouldNotFindEntityException
+   */
+  public GroupxProject findByGroupAndProjectDetailedC(Long groupId, Long projectId) throws CouldNotFindEntityException{
+    return groupxProjectRepository
+        .findByGroupAndProjectDetailedC(groupId, projectId)
+        .orElseThrow(
+            () ->
+                new CouldNotFindEntityException(
+                    "GroupxProject with groupId %s and projectId %s not found"
+                        .formatted(groupId, projectId)));
+  }
+
+  /**
+   * Loads a GroupxProject by its group and project id while fetchin group and project details
+   * (which are usually lazy loaded) thus enabling the GroupxProject to deliver all the needed
+   * information in one go.
+   *
+   * @param groupId
+   * @param projectId
+   * @return
+   */
+  public GroupxProject findByGroupAndProjectDetailedGP(Long groupId, Long projectId) throws CouldNotFindEntityException{
+    return groupxProjectRepository
+        .findByGroupAndProjectDetailedGP(groupId, projectId)
+        .orElseThrow(
+            () ->
+                new CouldNotFindEntityException(
+                    "GroupxProject with groupId %s and projectId %s not found"
+                        .formatted(groupId, projectId)));
   }
 }

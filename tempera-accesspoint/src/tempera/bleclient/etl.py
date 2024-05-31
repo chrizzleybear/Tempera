@@ -1,8 +1,9 @@
 import logging
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta
 from typing import List
 
 import bleak.exc
+import pytz
 import sqlalchemy.orm
 from bleak import BleakClient, BleakGATTCharacteristic
 from bleak.backends.service import BleakGATTService
@@ -34,7 +35,7 @@ def _create_time_record(
     :param auto_update: whether the time recod was update automatically.
     :return: the saved time record.
     """
-    now = datetime.now(tz=timezone.utc)
+    now = datetime.now(tz=pytz.timezone("Europe/Vienna"))
     start_time = now - timedelta(milliseconds=elapsed_time)
     record = TimeRecord(
         tempera_station=tempera_station,
@@ -75,12 +76,12 @@ async def elapsed_time_handler(
     :param data: binary data containing the information.
     """
     work_mode_map = {
+        0: True,
         2: Mode.DEEP_WORK,
         3: Mode.IN_MEETING,
         4: Mode.OUT_OF_OFFICE,
         5: Mode.AVAILABLE,
     }
-    record_status_map = {0: True, 7: False}
 
     logger.debug(f"Received bytes: {data}")
     _flag = data[0]
@@ -88,7 +89,7 @@ async def elapsed_time_handler(
     _tss = data[7]
     _offset = data[8]
     work_mode = work_mode_map[data[9]]
-    auto_update = record_status_map[data[10]]
+    auto_update = work_mode_map[data[10]]
     logger.debug(
         f"Read -> flag: {_flag}, elapsed_time: {elapsed_time}, tss: {_tss}, offset: {_offset}, work_mode: {work_mode}, "
         f"auto_update: {auto_update}"
@@ -102,14 +103,15 @@ async def elapsed_time_handler(
             select(TimeRecord).order_by(TimeRecord.start.desc()).limit(1)
         ).first()
 
-        if auto_update:
+        if isinstance(auto_update, bool):
             if current_record:
                 # Update current time record
                 logger.info(
                     f"Updating record: adding {elapsed_time} ms to the duration of {current_record}"
                 )
                 current_record.duration += elapsed_time
-                current_record.auto_update = True
+                current_record.mode = work_mode
+                current_record.auto_update = False
             elif not current_record:
                 record = _create_time_record(
                     session, tempera_station, elapsed_time, work_mode, False
@@ -119,9 +121,10 @@ async def elapsed_time_handler(
                     "but no corresponding record was found to update. "
                     f"Creating new time record: {record} with auto update == False."
                 )
-        elif not auto_update:
+        else:
             if current_record:
                 # Close currently open time record before creating a new one
+                current_record.duration += elapsed_time
                 current_record.auto_update = False
                 logger.info(
                     f"Concluding the currently open time record: {current_record}."
@@ -129,7 +132,7 @@ async def elapsed_time_handler(
 
             # Create new time record
             record = _create_time_record(
-                session, tempera_station, elapsed_time, work_mode, auto_update
+                session, tempera_station, elapsed_time, auto_update, False
             )
             logger.info(f"Creating new time record: {record}")
 
@@ -204,7 +207,7 @@ async def measurements_handler(
 
         measurement = Measurement(
             tempera_station=tempera_station,
-            timestamp=datetime.now(timezone.utc),
+            timestamp=datetime.now(tz=pytz.timezone("Europe/Vienna")),
             temperature=temperature,
             irradiance=irradiance,
             humidity=humidity,
@@ -216,6 +219,12 @@ async def measurements_handler(
         session.commit()
 
 
+@retry(
+    retry=retry_if_exception_type(bleak.exc.BleakError)
+    | retry_if_exception_type(bleak.exc.BleakDBusError),
+    wait=wait_fixed(5),
+    stop=stop_after_attempt(10),
+)
 async def filter_uuid(
     provider: BleakClient | BleakGATTService, uuid: str
 ) -> BleakGATTService | BleakGATTCharacteristic:

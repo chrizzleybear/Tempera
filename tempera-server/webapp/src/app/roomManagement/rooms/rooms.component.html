@@ -14,7 +14,7 @@
         <ng-template pTemplate="header">
           <tr>
             <th style="width: 3rem"></th>
-            <th>Room Number</th>
+            <th>Room</th>
             <th></th>
           </tr>
         </ng-template>
@@ -61,6 +61,7 @@
     <p-dialog header="Create Room" [(visible)]="displayCreateDialog" [modal]="true" [style]="{ width: '50vw' }"
               [closable]="true">
       <p-messages [(value)]="messagesCreate"></p-messages>
+      <label for="roomId">Room: </label>
       <input id="roomId" type="text" pInputText [(ngModel)]="newRoomId" required>
       <br>
       <br>

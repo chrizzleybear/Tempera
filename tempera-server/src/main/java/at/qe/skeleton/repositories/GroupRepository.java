@@ -14,6 +14,8 @@ public interface GroupRepository extends AbstractRepository<Groupx, Long> {
     List<Groupx> findAll();
 
     List<Groupx> findByGroupLead(Userx groupLead);
-
     List<Groupx> findAllByMembersContains(Userx user);
+
+    @Query("SELECT g FROM Groupx g JOIN g.groupxProjects gxp JOIN gxp.project p WHERE :manager = p.manager")
+    List<Groupx> findAllByManager(Userx manager);
 }

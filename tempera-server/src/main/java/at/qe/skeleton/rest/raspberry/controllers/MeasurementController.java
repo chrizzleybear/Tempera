@@ -1,6 +1,7 @@
 package at.qe.skeleton.rest.raspberry.controllers;
 
 import at.qe.skeleton.model.Measurement;
+import at.qe.skeleton.model.MeasurementId;
 import at.qe.skeleton.rest.raspberry.dtos.MeasurementDto;
 import at.qe.skeleton.rest.raspberry.mappers.MeasurementMapper;
 import at.qe.skeleton.services.AccessPointService;
@@ -38,6 +39,7 @@ public class MeasurementController {
   @PostMapping("")
   public ResponseEntity<MeasurementDto> createMeasurement(
       @RequestBody MeasurementDto measurementDto) {
+    logger.info("incoming request: createMeasurement with body: %s".formatted(measurementDto));
     try {
       if (!accessPointService.isEnabled(measurementDto.access_point_id())) {
         logger.info("accessPoint %s is not enabled".formatted(measurementDto.access_point_id()));
@@ -49,7 +51,9 @@ public class MeasurementController {
         return ResponseEntity.status(403).build();
       }
       List<Measurement> entities = measurementMapper.mapFromDto(measurementDto);
+      List<MeasurementId> entityIds = entities.stream().map(Measurement::getId).toList();
       entities.forEach(measurementService::saveMeasurement);
+      measurementService.reviewForAlerts(entityIds, measurementDto.tempera_station_id());
       return ResponseEntity.ok(measurementMapper.mapToDto(entities));
     } catch (Exception e) {
       logger.log(Level.SEVERE, "Could not map MeasurementDto to Measurement entity", e);

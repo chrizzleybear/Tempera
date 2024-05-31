@@ -3,7 +3,7 @@ package at.qe.skeleton.rest.raspberry.controllers;
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.AccessPoint;
 import at.qe.skeleton.model.TemperaStation;
-import at.qe.skeleton.rest.raspberry.dtos.AccessPointDto;
+import at.qe.skeleton.rest.raspberry.dtos.AccessPointAllowedDto;
 import at.qe.skeleton.rest.raspberry.dtos.ScanOrderDto;
 import at.qe.skeleton.rest.raspberry.mappers.AccessPointMapper;
 import at.qe.skeleton.services.AccessPointService;
@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 @RestController
 @RequestMapping("/rasp/api")
 public class PeripheryConnectionController {
-  private static final org.slf4j.Logger log = LoggerFactory.getLogger(PeripheryConnectionController.class);
   private final AccessPointMapper accessPointMapper;
   private final AccessPointService accessPointService;
   Logger logger = Logger.getLogger("raspberryLogger");
@@ -33,7 +32,7 @@ public class PeripheryConnectionController {
   // Get Requests dont allow Request Bodys according to the HTTP/1.1 specification
   // wie funktioniert das mit RequestParam - ist das dasselbe wie header? und url??
   @GetMapping("/valid_devices")
-  public ResponseEntity<AccessPointDto> getAccessPointDto(
+  public ResponseEntity<AccessPointAllowedDto> getAccessPointDto(
       @RequestParam("access_point_id") UUID access_point_id) {
     try {
       logger.info("getAccessPointDto getting request with id: %s".formatted(access_point_id));

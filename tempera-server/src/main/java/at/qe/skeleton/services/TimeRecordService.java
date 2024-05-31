@@ -4,14 +4,12 @@ import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.exceptions.InternalRecordOutOfBoundsException;
 import at.qe.skeleton.exceptions.ExternalRecordOutOfBoundsException;
 import at.qe.skeleton.model.*;
+import at.qe.skeleton.model.dtos.TimeTableRecordDBDto;
 import at.qe.skeleton.repositories.InternalRecordRepository;
 import at.qe.skeleton.repositories.ExternalRecordRepository;
 import at.qe.skeleton.repositories.UserxRepository;
 
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Logger;
 
 @Component
@@ -30,15 +29,15 @@ public class TimeRecordService {
   private final Logger logger = Logger.getLogger("TimeRecordServiceLogger");
   private final InternalRecordRepository internalRecordRepository;
   private final ExternalRecordRepository externalRecordRepository;
-  private final UserxRepository userxRepository;
+  private final UserxService userService;
 
   public TimeRecordService(
       ExternalRecordRepository externalRecordRepository,
       InternalRecordRepository internalRecordRepository,
-      UserxRepository userxRepository) {
+      UserxService userService) {
     this.externalRecordRepository = externalRecordRepository;
     this.internalRecordRepository = internalRecordRepository;
-    this.userxRepository = userxRepository;
+    this.userService = userService;
   }
 
   public ExternalRecord findSuperiorTimeRecordByUserAndStart(Userx user, LocalDateTime start)
@@ -70,6 +69,8 @@ public class TimeRecordService {
     }
     Userx user = newExternalRecord.getUser();
     finalizeOldTimeRecord(user, newExternalRecord);
+    user.setState(newExternalRecord.getState());
+    userService.saveUser(user);
     return saveNewTimeRecord(newExternalRecord, user);
   }
 
@@ -111,7 +112,6 @@ public class TimeRecordService {
       return;
     }
     ExternalRecord oldExternalRecord = oldExternalRecordOptional.get();
-    logger.info("found old ExternalRecord %s".formatted(oldExternalRecord));
 
     ExternalRecordId incomingId = newExternalRecord.getId();
     if (oldExternalRecord.getId().equals(incomingId)) {
@@ -139,9 +139,7 @@ public class TimeRecordService {
 
     // persisting the Entities
     internalRecordRepository.save(oldInternalRecord);
-    logger.info("saved %s".formatted(oldInternalRecord.toString()));
     externalRecordRepository.save(oldExternalRecord);
-    logger.info("saved %s".formatted(oldExternalRecord.toString()));
   }
 
   public void delete(ExternalRecord externalRecord) {
@@ -170,8 +168,8 @@ public class TimeRecordService {
     return internalRecordRepository.findByStartAndExternalRecordUser(start, user);
   }
 
-  public List<InternalRecord> getInternalRecordsForUser(Userx user) {
-    return internalRecordRepository.findAllByUserOrderByStartDesc(user);
+  public Set<TimeTableRecordDBDto> getTimeTableRecordDtosByUser(String username) {
+    return internalRecordRepository.getTimeTableRecordDBDtoByUser(username);
   }
 
   public Optional<InternalRecord> findInternalRecordById(Long id) {

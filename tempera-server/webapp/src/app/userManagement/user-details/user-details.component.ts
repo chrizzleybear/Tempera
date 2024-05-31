@@ -18,6 +18,11 @@ import { CardModule } from 'primeng/card';
   templateUrl: './user-details.component.html',
   styleUrls: ['./user-details.component.css'],
 })
+/**
+ * @class UserDetails
+ * This component is responsible for displaying user details.
+ * It fetches the user details from the backend and displays them.
+ */
 export class UserDetailsComponent implements OnInit {
   user: User | undefined;
   userId: string | null | undefined;

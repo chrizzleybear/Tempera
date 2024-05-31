@@ -9,12 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { AccessPoint } from './accessPoint';
 import { Threshold } from './threshold';
 
 
 export interface Room { 
-    roomId?: string;
     thresholds?: Set<Threshold>;
+    accessPoint?: AccessPoint;
     id?: string;
     _new?: boolean;
 }

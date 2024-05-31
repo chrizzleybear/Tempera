@@ -4,6 +4,7 @@ import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.repositories.*;
+import org.h2.engine.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -41,7 +43,7 @@ class TimeRecordServiceTest {
 
   @Mock private ExternalRecordRepository externalRecordRepositoryMock;
   @Mock private InternalRecordRepository internalRecordRepositoryMock;
-    @Mock private UserxRepository mockedUserxRepository;
+    @Mock private UserxService mockedUserxService;
     private TimeRecordService timeRecordService;
 
 
@@ -49,9 +51,9 @@ class TimeRecordServiceTest {
   void setUp() {
     timeRecordServiceMockedDependencies =
         new TimeRecordService(
-                externalRecordRepositoryMock, internalRecordRepositoryMock, mockedUserxRepository);
+                externalRecordRepositoryMock, internalRecordRepositoryMock, mockedUserxService);
     sensorService = new SensorService(sensorRepository);
-    timeRecordServiceReal = new TimeRecordService(externalRecordRepository, internalRecordRepository, userxRepository);
+    timeRecordServiceReal = new TimeRecordService(externalRecordRepository, internalRecordRepository, mockedUserxService);
     temperaStationService = new TemperaStationService(temperaStationRepository, sensorService);
 
   }
@@ -113,6 +115,7 @@ class TimeRecordServiceTest {
 
 
   @Test
+  @Transactional
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:addRecordWithOlderRecordsRealRepositoryTest.sql")
   @WithMockUser(
           username = "admin",
