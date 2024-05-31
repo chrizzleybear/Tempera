@@ -1,5 +1,10 @@
 <div>
 <form [formGroup]="temperaForm" (ngSubmit)="onSubmit()">
+<div class="p-field">
+  <label for="id">ID: </label>
+  <input id="id" type="text" pInputText formControlName="id">
+</div>
+<br>
   <div class="p-field">
     <label for="user">User: </label>
     <p-dropdown [options]="users "
@@ -15,9 +20,8 @@
   </div>
   <br>
   <div class="p-field">
-    <label>Enabled
-    <input type="checkbox" formControlName="enabled">
-    </label>
+    <label for="accessPoint">Access Point: </label>
+    <p-dropdown [options]="accessPoints" formControlName="accessPoint" optionLabel="label" placeholder="Select an AccessPoint" id="accessPoint"></p-dropdown>
   </div>
   <br>
   <p-button type="submit" label="Create"></p-button>
