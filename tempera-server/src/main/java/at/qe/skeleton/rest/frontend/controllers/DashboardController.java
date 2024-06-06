@@ -31,8 +31,7 @@ public class DashboardController {
   @GetMapping("/dashboardData")
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<DashboardDataResponse> getDashboardData(@RequestParam String username) {
-    Userx user = userXService.loadUser(username);
-    DashboardDataResponse homeDataResponse = dashboardDataMapper.mapUserToHomeDataResponse(user);
+    DashboardDataResponse homeDataResponse = dashboardDataMapper.mapUserToHomeDataResponse(username);
     return ResponseEntity.ok(homeDataResponse);
   }
 

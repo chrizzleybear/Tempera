@@ -19,5 +19,6 @@ export interface AccessPoint {
     room?: Room;
     enabled?: boolean;
     _new?: boolean;
+    healthy?: boolean;
 }
 

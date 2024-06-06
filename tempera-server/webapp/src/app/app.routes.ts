@@ -16,7 +16,7 @@ import { ProjectGroupsComponent } from './projectManagement/project-groups/proje
 import { GroupsGroupleadComponent } from './grouplead/groups-grouplead.component';
 import { GroupProjectsComponent } from './grouplead/group-projects/group-projects.component';
 import { RoomsComponent } from './roomManagement/rooms/rooms.component';
-import { FloorPlanComponent } from './rooms/floor-plan/floor-plan.component';
+import { FloorPlanComponent } from './roomManagement/floor-plan/floor-plan.component';
 import { RoomDetailsComponent } from './roomManagement/room-details/room-details.component';
 import { TimetableComponent } from './timetable/timetable.component';
 import {AccesspointsComponent} from "./accessPointManagement/access-points/accespoints.component";
@@ -40,18 +40,19 @@ export const routes: Routes = [
           { path: 'plan', component: FloorPlanComponent },
           { path: 'groups', component: GroupsComponent },
           { path: 'group/:id', component: GroupDetailsComponent },
-          { path: 'group/members/:id', component: GroupMembersComponent },
+          { path: 'group/members/:name/:id', component: GroupMembersComponent },
           { path: 'project/groups/:id', component: ProjectGroupsComponent },
           { path: 'projects', component: ProjectsComponent },
           { path: 'project/:id', component: ProjectDetailsComponent },
           { path: 'myGroups', component: GroupsGroupleadComponent },
-          { path: 'group/projects/:id', component: GroupProjectsComponent },
+          { path: 'group/projects/:name/:id', component: GroupProjectsComponent },
           { path: 'timetable', component: TimetableComponent },
           { path: 'accumulated-time', component: AccumulatedTimeComponent },
           { path: 'accessPoints', component: AccesspointsComponent},
           { path: 'accessPoint/:id', component: AccessPointDetailsComponent},
           { path: 'temperaStations', component: TemperaStationsComponent},
           { path: 'temperaStation/:id', component: TemperaStationDetailsComponent},
+          { path: 'accumulated-time', component: AccumulatedTimeComponent}
         ],
       },
     ],

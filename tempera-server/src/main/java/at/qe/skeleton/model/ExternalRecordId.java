@@ -45,7 +45,7 @@ public class ExternalRecordId implements Serializable {
     if (!(o instanceof ExternalRecordId other)) return false;
 
     if (!Objects.equals(start, other.start)) return false;
-    return Objects.equals(userName, other.userName);
+    return Objects.equals(userName, other.getUserName());
   }
 
   @Override

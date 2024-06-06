@@ -2,15 +2,15 @@ package at.qe.skeleton.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.jpa.repository.EntityGraph;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 /** seems like this is a Value Object (in DDD lingo) */
-
-// todo: Hier noch die embeddedId einbauen!
-
 @Entity
+@NamedEntityGraph(name = "Measurement.detail",
+        attributeNodes = {@NamedAttributeNode("sensor"), @NamedAttributeNode("id")})
 public class Measurement {
   @EmbeddedId
   MeasurementId id;
@@ -75,7 +75,7 @@ public class Measurement {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Measurement that = (Measurement) o;
-    return Objects.equals(id, that.id);
+    return Objects.equals(id, that.getId());
   }
 
   @Override

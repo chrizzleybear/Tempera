@@ -27,12 +27,17 @@ import { concatMap } from 'rxjs/operators';
   templateUrl: './group-members.component.html',
   styleUrl: './group-members.component.css'
 })
+/**
+ * @class GroupMembersComponent
+ * This component is responsible for managing group members.
+ */
 export class GroupMembersComponent implements OnInit{
 
   members: User[] = [];
   users: User[] = [];
   displayAddDialog: boolean = false;
   groupId: number | null | undefined;
+  groupName: string | null | undefined;
   filteredMembers: User[] = [];
   filteredUsers: User[] = [];
   selectedUsers: User[] = [];
@@ -43,10 +48,14 @@ export class GroupMembersComponent implements OnInit{
   }
   ngOnInit(): void {
     this.groupId = Number(this.route.snapshot.paramMap.get('id'));
+    this.groupName = this.route.snapshot.paramMap.get('name');
     this.loadMembersAndUsers(this.groupId!);
   }
 
-
+  /**
+   * Load all members and users that are not members of the group.
+   * @param groupId
+   */
   loadMembersAndUsers(groupId: number) {
     // Load members
     this.groupService.getGroupMembers(groupId).subscribe({

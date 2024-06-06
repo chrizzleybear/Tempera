@@ -6,6 +6,7 @@ import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
 import at.qe.skeleton.rest.frontend.dtos.ExtendedProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
 import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.DashboardDataMapper;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateDashboardDataRequest;
@@ -51,8 +52,7 @@ class DashboardControllerTest {
   @Test
   @WithMockUser(username ="johndoe", authorities = "EMPLOYEE")
   void homeData() {
-    Userx johnny = new Userx();
-    johnny.setUsername("johndoe");
+    String johnny = "johndoe";
     List<String> noGroups = new ArrayList<>();
     var colleagueStates =
         List.of(
@@ -61,9 +61,9 @@ class DashboardControllerTest {
             new ColleagueStateDto("Cooler Typ", "Raum 1", State.MEETING, false, noGroups));
     var projects =
         List.of(
-            new SimpleProjectDto("project1", "Projekt 1", "Beschreibung 1", "manager1"),
-            new SimpleProjectDto("project2", "Projekt 2", "Beschreibung 2", "manager2"),
-            new SimpleProjectDto("project3", "Projekt 3", "Beschreibung 3", "manager3"));
+            new SimpleGroupxProjectDto("1", "group1", "1", "project1"),
+            new SimpleGroupxProjectDto("2", "group2", "2", "project2"),
+            new SimpleGroupxProjectDto("3", "group3", "3", "project3"));
     DashboardDataResponse dashboardDataResponse =
         new DashboardDataResponse(
             1.0,
@@ -78,10 +78,8 @@ class DashboardControllerTest {
             colleagueStates);
 
     when(dashboardDataMapper.mapUserToHomeDataResponse(johnny)).thenReturn(dashboardDataResponse);
-    when(userXService.loadUser(johnny.getUsername())).thenReturn(johnny);
 
-
-    ResponseEntity<DashboardDataResponse> returnValue = dashboardController.getDashboardData(johnny.getUsername());
+    ResponseEntity<DashboardDataResponse> returnValue = dashboardController.getDashboardData(johnny);
     DashboardDataResponse response = returnValue.getBody();
 
     verify(dashboardDataMapper, times(1)).mapUserToHomeDataResponse(johnny);
@@ -99,7 +97,9 @@ class DashboardControllerTest {
     ResponseEntity<MessageResponse> response =
         dashboardController.updateDashboardData(
             new UpdateDashboardDataRequest(
-                Visibility.HIDDEN, new SimpleProjectDto("-1", "Projekt 1", "blabla", "johnathan hingeforth mc cringleberry")));
+                Visibility.HIDDEN,
+                new SimpleGroupxProjectDto(
+                    "-1", "Group1", "1", "Projekt1")));
     assertEquals(messageResponse, response.getBody());
     verify(userXService, times(1)).loadUser("johndoe");
     verify(dashboardDataMapper, times(1)).updateUserVisibilityAndTimeStampProject(any(), any());

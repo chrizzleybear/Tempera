@@ -13,15 +13,15 @@
       <th id="endTimeFilter">
         <p-columnFilter type="date" field="endTime" placeholder="Search"></p-columnFilter>
       <th id="groupFilter">
-        <p-columnFilter field="groupWithStringId.stringId" [showMenu]="true" [showClearButton]="false">
+        <p-columnFilter field="groupId" [showMenu]="true" [showClearButton]="false">
           <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-            <p-dropdown [options]="availableGroups" [showClear]="true" (onChange)="filter($event.value?.stringId)"
+            <p-dropdown [options]="availableGroups" [showClear]="true" (onChange)="filter($event.value?.id)"
                         optionLabel="name" appendTo="body" placeholder="Select one"></p-dropdown>
           </ng-template>
         </p-columnFilter>
       </th>
       <th id="projectFilter">
-        <p-columnFilter field="project.projectId" [showMenu]="true" [showClearButton]="false">
+        <p-columnFilter field="projectId" [showMenu]="true" [showClearButton]="false">
           <ng-template pTemplate="filter" let-value let-filter="filterCallback">
             <p-dropdown [options]="availableProjects" [showClear]="true" (onChange)="filter($event.value?.projectId)"
                         optionLabel="name" appendTo="body" placeholder="Select one"></p-dropdown>
@@ -31,7 +31,21 @@
     </tr>
   </ng-template>
 </p-table>
-
-<p-card styleClass="text-lg text-center">
-  {{ "The total worked time with the current filters is " + this.totalTime.hours + " hours and " + this.totalTime.minutes + " minutes." }}
-</p-card>
+<div class="card my-4">
+  <canvas id="MyChart">{{ chart }}</canvas>
+</div>
+<div class="w-full flex justify-center">
+  <div class="lg:w-1/2 card text-lg grid grid-cols-2">
+    <div class="text-left pl-4">The total worked time with the current filters is</div>
+    <div class="text-right pr-4">{{ this.totalTime + " hours" }}</div>
+    <p-tag class="text-left pl-4" [value]="DisplayHelper.showState | wrapFn: StateEnum.Available"
+           [severity]="DisplayHelper.getStateSeverity | wrapFn: StateEnum.Available"></p-tag>
+    <div class="text-right pr-4">{{ this.stateTimes.AVAILABLE }} hours</div>
+    <p-tag class="text-left pl-4" [value]="DisplayHelper.showState | wrapFn: StateEnum.Deepwork"
+           [severity]="DisplayHelper.getStateSeverity | wrapFn: StateEnum.Deepwork"></p-tag>
+    <div class="text-right pr-4">{{ this.stateTimes.DEEPWORK }} hours</div>
+    <p-tag class="text-left pl-4" [value]="DisplayHelper.showState | wrapFn: StateEnum.Meeting"
+           [severity]="DisplayHelper.getStateSeverity | wrapFn: StateEnum.Meeting"></p-tag>
+    <div class="text-right pr-4">{{ this.stateTimes.MEETING }} hours</div>
+  </div>
+</div>

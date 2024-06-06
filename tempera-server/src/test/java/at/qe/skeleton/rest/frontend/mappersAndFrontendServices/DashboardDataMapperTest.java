@@ -6,6 +6,7 @@ import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateDashboardDataRequest;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
@@ -50,7 +51,7 @@ class DashboardDataMapperTest {
     @WithMockUser(username = "johndoe", authorities = "EMPLOYEE")
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:DashboardDataMapper.sql")
     void mapUserToHomeDataResponse() {
-        Userx johndoe = userService.loadUser("johndoe");
+        String johndoe = "johndoe";
         DashboardDataResponse homeDataResponse = dashboardDataMapper.mapUserToHomeDataResponse(johndoe);
         assertEquals(8, homeDataResponse.colleagueStates().size(), "ColleagueStates size should be 8, for reference look at DashboardDataMapper.sql");
         assertEquals(20.0, homeDataResponse.temperature(), "Temperature of johndoe should be 20");
@@ -80,15 +81,30 @@ class DashboardDataMapperTest {
         assertTrue(sharedGroupsOfManagerWithJohnDoe.contains("testGroup2"), "admin should be in group2");
     }
 
+  @Test
+  @Transactional
+  @WithMockUser(username = "johndoe", authorities = "EMPLOYEE")
+  @Sql(
+      executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+      scripts = "classpath:DashboardDataMapper.sql")
+  void mapUserToDataResponseGroupxProjects() {
+    String johndoe = "johndoe";
+    DashboardDataResponse homeDataResponse = dashboardDataMapper.mapUserToHomeDataResponse(johndoe);
 
+      assertEquals(6, homeDataResponse.availableProjects().size(), "Johndoe should have 6 available Projects, since he is assigned to 6 GroupxProjects");
+      assertTrue(homeDataResponse.availableProjects().stream().anyMatch(p -> p.projectName().equals("Cost Reduction Initiative")), "Johndoe should have the Project 'Cost Reduction Initiative' available");
+      assertFalse(homeDataResponse.availableProjects().stream().anyMatch(p -> p.projectName().equals("Efficiency")), "Johndoe should not have the Project 'Efficiency' available");
+  }
 
-    @Test
-    @Transactional
-    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:DashboardDataMapper.sql")
-    @WithMockUser(username = "tonystark", authorities = "EMPLOYEE")
-    void mapUserToHomeDataResponseNullValues() {
-        Userx johndoe = userService.loadUser("tonystark");
-        DashboardDataResponse homeDataResponse = dashboardDataMapper.mapUserToHomeDataResponse(johndoe);
+  @Test
+  @Transactional
+  @Sql(
+      executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+      scripts = "classpath:DashboardDataMapper.sql")
+  @WithMockUser(username = "tonystark", authorities = "EMPLOYEE")
+  void mapUserToHomeDataResponseNullValues() {
+        String user = "tonystark";
+        DashboardDataResponse homeDataResponse = dashboardDataMapper.mapUserToHomeDataResponse(user);
         assertEquals(8, homeDataResponse.colleagueStates().size(), "ColleagueStates size should be 8, for reference look at DashboardDataMapper.sql");
         assertNull(homeDataResponse.temperature(), "Temperature of johndoe should be 20");
         assertNull(homeDataResponse.humidity(), "Humidity of johndoe should be 50.0");
@@ -116,20 +132,28 @@ class DashboardDataMapperTest {
     @Test
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:DashboardDataMapper.sql")
     @WithMockUser(username = "johndoe", authorities = "EMPLOYEE")
+    @Transactional
     void mapUserToHomeDataResponseNoMeasurements() throws CouldNotFindEntityException {
         Userx johndoe = userService.loadUser("johndoe");
         assertEquals(Visibility.PUBLIC, johndoe.getStateVisibility(), "Visibility of johndoe should be PUBLIC before the update");
         GroupxProject projectBefore = timeRecordService.findLatestInternalRecordByUser(johndoe).get().getGroupxProject();
         assertNull(projectBefore, "Project of johndoe should be null before the update");
 
-        // choose another visibility and project that John Doe is a member of
+        // choose another visibility and set a gxp that John Doe is a member of to the current timestamp
         Visibility visibilityUpdate = Visibility.HIDDEN;
-        SimpleProjectDto projectUpdate = new SimpleProjectDto("-12", "Infrastructure Upgrade", "This project involves upgrading the company's IT infrastructure to improve efficiency and security." ,  "admin");
-        UpdateDashboardDataRequest request = new UpdateDashboardDataRequest(visibilityUpdate, projectUpdate);
+    SimpleGroupxProjectDto gxpUpdate =
+        new SimpleGroupxProjectDto(
+                "-2",
+            "testGroup2",
+            "-12",
+            "Infrastructure Upgrade");
+        UpdateDashboardDataRequest request = new UpdateDashboardDataRequest(visibilityUpdate, gxpUpdate);
         dashboardDataMapper.updateUserVisibilityAndTimeStampProject(request, johndoe);
         assertEquals(Visibility.HIDDEN, johndoe.getStateVisibility(), "Visibility of johndoe should be HIDDEN after the update");
-        Project projectAfter = timeRecordService.findLatestInternalRecordByUser(johndoe).get().getGroupxProject().getProject();
-        assertEquals("Infrastructure Upgrade", projectAfter.getName(), "Project of johndoe should be Infrastructure Upgrade after the update");
+        GroupxProject gxpAfter = timeRecordService.findLatestInternalRecordByUser(johndoe).get().getGroupxProject();
+        assertEquals("Infrastructure Upgrade", gxpAfter.getProject().getName(), "Project of johndoe should be Infrastructure Upgrade after the update");
+        assertEquals("testGroup2", gxpAfter.getGroup().getName(), "Group of johndoe should be testGroup2 after the update");
+
     }
 
 

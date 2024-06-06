@@ -12,6 +12,7 @@ import {DialogModule} from "primeng/dialog";
 import {AccessPointCreateComponent} from "../access-point-create/access-point-create.component";
 import {AccessPointEditComponent} from "../access-point-edit/access-point-edit.component";
 import {InputTextModule} from "primeng/inputtext";
+import {AccessPointTemperaComponent} from "../access-point-tempera/access-point-tempera.component";
 
 
 @Component({
@@ -26,7 +27,8 @@ import {InputTextModule} from "primeng/inputtext";
     DialogModule,
     AccessPointCreateComponent,
     AccessPointEditComponent,
-    InputTextModule
+    InputTextModule,
+    AccessPointTemperaComponent
   ],
   templateUrl: './accespoints.component.html',
   styleUrl: './accespoints.component.css'
@@ -39,6 +41,7 @@ export class AccesspointsComponent implements OnInit{
   displayCreateDialog: boolean = false;
   displayEditDialog: boolean = false;
   messages: Message[] = [];
+  temperaDialogDisplay: boolean = false;
 
   constructor(private accessPointService: AccessPointService, private router: Router) {}
   ngOnInit(): void {
@@ -47,9 +50,9 @@ export class AccesspointsComponent implements OnInit{
 
 
   private loadAccessPoints() {
-    this.accessPointService.getAccesspointsByRoomId("room_1").subscribe({
+    this.accessPointService.getAllAccesspoints().subscribe({
       next: (accessPoints) => {
-        this.accessPoints = [accessPoints];
+        this.accessPoints = accessPoints;
         this.filteredAccessPoints = this.accessPoints;
         console.log("Loaded accesspoints:", accessPoints);
       },
@@ -58,14 +61,17 @@ export class AccesspointsComponent implements OnInit{
       }
     });
   }
-  deleteAccesspoints(accessPoint: AccessPoint) {
+  deleteAccesspoint(accessPoint: AccessPoint) {
     if (accessPoint) {
         this.accessPointService.deleteAccesspoint(accessPoint.id).subscribe({
           next: () => {
             console.log(`Deleted access point with id: ${accessPoint.id}`);
+            this.loadAccessPoints();
+            this.messages = [{severity: 'success', summary: 'Success', detail: 'Access Point deleted successfully'}];
           },
           error: (error) => {
             console.error(`Error deleting access point with id: ${accessPoint.id}`, error);
+            this.messages = [{severity: 'error', summary: 'Error', detail: 'Error deleting Access Point'}];
           }
         });
     }
@@ -101,6 +107,11 @@ export class AccesspointsComponent implements OnInit{
 
   viewAccessPointDetails(accessPoint: AccessPoint) {
     this.router.navigate(['/accessPoint', accessPoint.id])
+  }
+
+  temperaDialog(accessPoint: AccessPoint) {
+    this.selectedAccessPoint = accessPoint;
+    this.temperaDialogDisplay = true;
   }
 }
 

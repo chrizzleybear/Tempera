@@ -5,6 +5,8 @@ import at.qe.skeleton.model.Threshold;
 import at.qe.skeleton.model.ThresholdTip;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.ThresholdType;
+import at.qe.skeleton.repositories.RoomRepository;
+import at.qe.skeleton.repositories.TemperaStationRepository;
 import at.qe.skeleton.repositories.ThresholdRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -12,16 +14,23 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Component
 @Scope("application")
 public class ThresholdService {
 
     private final ThresholdRepository thresholdRepository;
+    private final RoomRepository roomRepository;
+    private final TemperaStationRepository temperaStationRepository;
 
     @Autowired
-    public ThresholdService(ThresholdRepository thresholdRepository) {
+    public ThresholdService(ThresholdRepository thresholdRepository,
+                            RoomRepository roomRepository,
+                            TemperaStationRepository temperaStationRepository) {
         this.thresholdRepository = thresholdRepository;
+        this.roomRepository = roomRepository;
+        this.temperaStationRepository = temperaStationRepository;
     }
 
     @Transactional
@@ -43,6 +52,9 @@ public class ThresholdService {
         return thresholdRepository.save(t);
     }
 
+    public Set<Threshold> getThresholdsByTemperaId(String temperaId) {
+        return temperaStationRepository.getThresholdsByTemperaId(temperaId);
+    }
     @Transactional
     public Threshold updateThreshold(Threshold oldThreshold, SensorType newSensorType, ThresholdType newThresholdType, double newValue, String newReason, String newTip) {
         oldThreshold.setSensorType(newSensorType);
@@ -57,5 +69,9 @@ public class ThresholdService {
     public void deleteThreshold(Long id) {
         Threshold t = thresholdRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Threshold not found: " + id));
         thresholdRepository.delete(t);
+    }
+
+    public Threshold getThresholdById(Long id) {
+        return thresholdRepository.findById(id).orElse(null);
     }
 }

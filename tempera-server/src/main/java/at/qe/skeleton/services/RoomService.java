@@ -70,8 +70,8 @@ public class RoomService {
         }
         return false;
     }
-    public Optional<Room> getRoomById(String roomId) {
-        return roomRepository.findById(roomId);
+    public Room getRoomById(String roomId) throws IllegalArgumentException {
+        return roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException(ROOM_NOT_FOUND + roomId));
     }
 
     public List<Room> getAvailableRooms() {

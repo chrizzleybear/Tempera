@@ -23,7 +23,7 @@ public class GroupMapperService {
 
     public List<SimpleGroupDto> getSimpleGroupDtosByGroupLead(String groupLeadI) {
         List<Groupx> groups = groupService.getGroupsByGroupLead(groupLeadI);
-        return groups.stream().map(this::groupDtoMapper).toList();
+        return groups.stream().map(this::mapToSimpleGroupDto).toList();
     }
 
     @Transactional
@@ -39,19 +39,19 @@ public class GroupMapperService {
 
     public SimpleGroupDto updateGroup(SimpleGroupDto group) {
         Groupx groupx = groupService.updateGroup(Long.valueOf(group.id()), group.name(), group.description(), group.groupLead());
-        return groupDtoMapper(groupx);
+        return mapToSimpleGroupDto(groupx);
     }
 
     public SimpleGroupDto createGroup(SimpleGroupDto group) {
         Groupx groupx = groupService.createGroup(group.name(), group.description(), group.groupLead());
-        return groupDtoMapper(groupx);
+        return mapToSimpleGroupDto(groupx);
     }
 
-    public SimpleGroupDto groupDtoMapper(GroupxProject groupxProject) {
-        return groupDtoMapper(groupxProject.getGroup());
+    public SimpleGroupDto mapToSimpleGroupDto(GroupxProject groupxProject) {
+        return mapToSimpleGroupDto(groupxProject.getGroup());
     }
 
-    public SimpleGroupDto groupDtoMapper(Groupx groupx) {
+    public SimpleGroupDto mapToSimpleGroupDto(Groupx groupx) {
         return new SimpleGroupDto(
                 groupx.getId().toString(),
                 groupx.getName(),

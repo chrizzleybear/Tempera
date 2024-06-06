@@ -27,15 +27,15 @@ INSERT INTO project (id, name, description, manager_username) VALUES
                                                                   (-12, 'Infrastructure Upgrade', 'This project involves upgrading the company''s IT infrastructure to improve efficiency and security.', 'MariaTheresa');
 
 -- these users can be used to display as colleagues for john doe
-INSERT INTO userx (enabled, default_project_id, state, state_visibility, create_date, update_date, create_user_username, update_user_username, username, email, first_name, last_name, password) VALUES
-                                                                                                                                                                                                     (TRUE, -2, 'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin', 'johndoe', 'johndoe@example.com', 'John', 'Doe', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
-                                                                                                                                                                                                     (TRUE, null, 'MEETING', 'PUBLIC', '2024-05-10T10:00:00', '2024-05-10T11:45:00', 'bobjones', 'admin', 'bobjones', 'bobjones@example.com', 'Bob', 'Jones', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
-                                                                                                                                                                                                     (TRUE, -3, 'OUT_OF_OFFICE', 'HIDDEN', '2024-05-08T15:30:00', '2024-05-08T17:00:00', 'admin', 'admin', 'alicebrown', 'alicebrown@example.com', 'Alice', 'Brown', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
-                                                                                                                                                                                                     (true, -2,'DEEPWORK', 'PRIVATE', '2024-05-07T14:00:00', '2024-05-07T16:30:00', 'chriswilliams', 'admin', 'chriswilliams', 'chriswilliams@example.com', 'Chris', 'Williams', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
-                                                                                                                                                                                                     (TRUE, -5, 'MEETING', 'PUBLIC', '2024-05-11T10:30:00', '2024-05-11T11:45:00', 'admin', 'admin', 'peterparker', 'peterparker@example.com', 'Peter', 'Parker', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
-                                                                                                                                                                                                     (true, null, 'OUT_OF_OFFICE', 'PRIVATE', '2024-05-11T13:00:00', '2024-05-11T14:15:00', 'admin', 'admin', 'tonystark', 'tonystark@example.com', 'Tony', 'Stark', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
-                                                                                                                                                                                                     (TRUE, -1, 'DEEPWORK', 'HIDDEN', '2024-05-10T15:30:00', '2024-05-10T17:00:00', 'admin', 'admin', 'brucewayne', 'brucewayne@example.com', 'Bruce', 'Wayne', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
-                                                                                                                                                                                                     (TRUE, -4, 'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin', 'clarkkent', 'clarkkent@webmail.com', 'Clark', 'Kent', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u');
+INSERT INTO userx (enabled, default_group_id, default_project_id, state, state_visibility, create_date, update_date, create_user_username, update_user_username, username, email, first_name, last_name, password) VALUES
+                                                                                                                                                                                                     (TRUE, null, null,'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin', 'johndoe', 'johndoe@example.com', 'John', 'Doe', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
+                                                                                                                                                                                                     (TRUE, null,null,  'MEETING', 'PUBLIC', '2024-05-10T10:00:00', '2024-05-10T11:45:00', 'bobjones', 'admin', 'bobjones', 'bobjones@example.com', 'Bob', 'Jones', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
+                                                                                                                                                                                                     (TRUE, null, null,  'OUT_OF_OFFICE', 'HIDDEN', '2024-05-08T15:30:00', '2024-05-08T17:00:00', 'admin', 'admin', 'alicebrown', 'alicebrown@example.com', 'Alice', 'Brown', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
+                                                                                                                                                                                                     (true, null, null, 'DEEPWORK', 'PRIVATE', '2024-05-07T14:00:00', '2024-05-07T16:30:00', 'chriswilliams', 'admin', 'chriswilliams', 'chriswilliams@example.com', 'Chris', 'Williams', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
+                                                                                                                                                                                                     (TRUE, null, null, 'MEETING', 'PUBLIC', '2024-05-11T10:30:00', '2024-05-11T11:45:00', 'admin', 'admin', 'peterparker', 'peterparker@example.com', 'Peter', 'Parker', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
+                                                                                                                                                                                                     (true, null, null, 'OUT_OF_OFFICE', 'PRIVATE', '2024-05-11T13:00:00', '2024-05-11T14:15:00', 'admin', 'admin', 'tonystark', 'tonystark@example.com', 'Tony', 'Stark', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
+                                                                                                                                                                                                     (TRUE, null, null, 'DEEPWORK', 'HIDDEN', '2024-05-10T15:30:00', '2024-05-10T17:00:00', 'admin', 'admin', 'brucewayne', 'brucewayne@example.com', 'Bruce', 'Wayne', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
+                                                                                                                                                                                                     (TRUE, null, null, 'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin', 'clarkkent', 'clarkkent@webmail.com', 'Clark', 'Kent', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u');
 
 INSERT INTO userx_userx_role (userx_username, roles) VALUES ('johndoe', 'EMPLOYEE'), ('bobjones', 'EMPLOYEE'), ('alicebrown', 'EMPLOYEE'), ('chriswilliams', 'EMPLOYEE'), ('peterparker', 'EMPLOYEE'), ('tonystark', 'EMPLOYEE'), ('brucewayne', 'EMPLOYEE'), ('clarkkent', 'EMPLOYEE');
 INSERT INTO userx_userx_role (userx_username, roles) VALUES ('brucewayne', 'MANAGER'), ('peterparker', 'GROUPLEAD'), ('tonystark', 'GROUPLEAD');
@@ -55,12 +55,14 @@ VALUES (-1, -1), (-1, -2), (-1, -3), (-1, -4), (-1,-5), (-1, -6);
 
 -- add Product Development, Cost Reduction, Quality Assurance, Marketing Campaign Launch, Training and Development and Infrastructure Upgrade to testGroup2
 INSERT INTO groupx_project_object (group_id, project_id)
-Values (-2, -7), (-2, -8), (-2, -9), (-2, -10), (-2, -11), (-2, -12);
+Values (-2, -7), (-2, -1), (-2, -8), (-2, -9), (-2, -10), (-2, -11), (-2, -12);
+Values (-1, -7), (-2, -7), (-2, -8), (-2, -9), (-2, -10), (-2, -11), (-2, -12);
 
 INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username)
-VALUES (-1, -1, 'admin'), (-1, -2, 'admin'), (-1, -3, 'admin'), (-1, -4, 'admin'), (-1, -5, 'admin'), (-1, -6, 'admin'), (-1, -6, 'bobjones'), (-1, -6, 'chriswilliams'), (-1, -6, 'peterparker'), (-1, -6, 'tonystark'), (-1, -6, 'brucewayne'), (-1, -6, 'clarkkent');
+VALUES (-1, -1, 'admin'), (-2, -1, 'admin'), (-1, -2, 'admin'), (-1, -3, 'admin'), (-1, -4, 'admin'), (-1, -5, 'admin'), (-1, -6, 'admin'), (-1, -6, 'bobjones'), (-1, -6, 'chriswilliams'), (-1, -6, 'peterparker'), (-1, -6, 'tonystark'), (-1, -6, 'brucewayne'), (-1, -6, 'clarkkent');
 INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username)
 VALUES (-2, -7, 'johndoe'), (-2, -8, 'johndoe'), (-2, -9, 'johndoe'), (-2, -10, 'johndoe'), (-2, -11, 'johndoe'), (-2, -12, 'johndoe');
+VALUES (-1, -7, 'johndoe'),(-2, -7, 'johndoe'), (-2, -8, 'johndoe'), (-2, -9, 'johndoe'), (-2, -10, 'johndoe'), (-2, -11, 'johndoe'), (-2, -12, 'johndoe');
 
 
 INSERT INTO groupx_members (groups_id, members_username) VALUES (-1, 'johndoe'), (-2, 'johndoe');
@@ -77,57 +79,67 @@ INSERT INTO groupx_members (groups_id, members_username) VALUES (-3, 'clarkkent'
 -- Testdata for TimeRecordService
 INSERT INTO external_record (duration, start, time_end, user_username, state)
 VALUES
-    (30, '2024-05-16 12:00:00', '2024-05-16 12:29:59', 'admin', 'DEEPWORK'),
-    (45, '2024-05-16 13:00:00', '2024-05-16 13:44:59', 'admin', 'DEEPWORK'),
-    (90, '2024-05-16 14:00:00', '2024-05-16 15:29:59', 'admin', 'MEETING'),
-    (120, '2024-05-17 09:00:00', '2024-05-17 10:59:59', 'admin', 'MEETING'),
-    (60, '2024-05-17 11:00:00', '2024-05-17 11:59:59', 'admin', 'AVAILABLE'),
-    (300, '2024-05-17 15:00:00', '2024-05-17 19:59:59', 'admin', 'OUT_OF_OFFICE'),
-    (200, '2024-05-18 10:00:00', '2024-05-18 13:19:59', 'admin', 'AVAILABLE'),
-    (100, '2024-05-18 14:00:00', '2024-05-18 15:39:59', 'admin', 'MEETING'),
-    (50, '2024-05-18 16:00:00', '2024-05-18 16:49:59', 'admin', 'OUT_OF_OFFICE'),
-    (400, '2024-05-19 09:00:00', '2024-05-19 15:39:59', 'admin', 'AVAILABLE'),
-    (150, '2024-05-19 14:00:00', null, 'admin', 'DEEPWORK'),
+    (30, '2024-05-16 12:00:00', '2024-05-16 13:00:00', 'admin', 'DEEPWORK'),
+    (45, '2024-05-16 13:00:00', '2024-05-16 15:00:00', 'admin', 'DEEPWORK'),
+    (90, '2024-05-16 15:00:00', '2024-05-17 08:00:00', 'admin', 'MEETING'),
+    (120, '2024-05-17 08:00:00', '2024-05-17 11:00:00', 'admin', 'MEETING'),
+    (60, '2024-05-17 11:00:00', '2024-05-17 15:00:00', 'admin', 'AVAILABLE'),
+    (300, '2024-05-17 15:00:00', '2024-05-18 09:00:00', 'admin', 'OUT_OF_OFFICE'),
+    (200, '2024-05-18 10:00:00', '2024-05-18 14:00:00', 'admin', 'AVAILABLE'),
+    (100, '2024-05-18 14:00:00', '2024-05-18 16:00:00', 'admin', 'MEETING'),
+    (50, '2024-05-18 16:00:00', '2024-05-19 09:00:00', 'admin', 'OUT_OF_OFFICE'),
+    (400, '2024-05-19 09:00:00', '2024-05-19 14:00:00', 'admin', 'AVAILABLE'),
+    (150, '2024-05-19 14:00:00', null, 'admin', 'DEEPWORK');
 
-    (3400, '2024-05-10 09:30:00', '2024-05-11 10:29:59', 'johndoe', 'DEEPWORK'),
-    (60, '2024-05-11 10:00:00', '2024-05-11 10:59:59', 'johndoe', 'MEETING'),
-    (45, '2024-05-11 13:00:00', '2024-05-11 13:44:59', 'johndoe', 'OUT_OF_OFFICE'),
-    (90, '2024-05-12 11:00:00', '2024-05-12 12:29:59', 'johndoe', 'AVAILABLE'),
-    (120, '2024-05-12 14:00:00', '2024-05-12 15:59:59', 'johndoe', 'MEETING'),
-    (120, '2024-05-12 17:00:00', '2024-05-12 18:59:59', 'johndoe', 'OUT_OF_OFFICE'),
-    (30, '2024-05-13 08:00:00', '2024-05-13 08:29:59', 'johndoe', 'AVAILABLE'),
-    (150, '2024-05-13 11:00:00', '2024-05-13 13:29:59', 'johndoe', 'OUT_OF_OFFICE'),
-    (300, '2024-05-14 09:00:00', '2024-05-14 13:59:59', 'johndoe', 'AVAILABLE'),
-    (200, '2024-05-14 13:00:00', '2024-05-14 16:19:59', 'johndoe', 'DEEPWORK'),
-    (200, '2024-05-14 17:00:00', '2024-05-14 20:19:59', 'johndoe', 'OUT_OF_OFFICE'),
-    (100, '2024-05-15 10:00:00', '2024-05-15 11:39:59', 'johndoe', 'DEEPWORK'),
+INSERT INTO internal_record (id, group_id, project_id, start, time_end, ext_rec_start, user_name)
+VALUES
+    (-1, null, null, '2024-05-16 12:00:00', '2024-05-16 13:00:00', '2024-05-16 12:00:00', 'admin'),
+    (-3, -1, -2, '2024-05-16 13:00:00', '2024-05-16 15:00:00', '2024-05-16 13:00:00', 'admin'),
+    (-4, null, null, '2024-05-16 15:00:00', '2024-05-17 08:00:00', '2024-05-16 15:00:00', 'admin'),
+    (-5, -1, -3, '2024-05-17 08:00:00', '2024-05-17 11:00:00', '2024-05-17 08:00:00', 'admin'),
+    (-6, null, null, '2024-05-17 11:00:00', '2024-05-17 15:00:00', '2024-05-17 11:00:00', 'admin'),
+    (-7, null, null, '2024-05-17 15:00:00', '2024-05-18 09:00:00', '2024-05-17 15:00:00', 'admin'),
+    (-8, null, null, '2024-05-18 10:00:00', '2024-05-18 14:00:00', '2024-05-18 10:00:00', 'admin'),
+    (-9, -1, -5, '2024-05-18 14:00:00', '2024-05-18 16:00:00', '2024-05-18 14:00:00', 'admin'),
+    (-10, null, null, '2024-05-18 16:00:00', '2024-05-19 09:00:00', '2024-05-18 16:00:00', 'admin'),
+    (-11, -1, -6, '2024-05-19 09:00:00', '2024-05-19 14:00:00', '2024-05-19 09:00:00', 'admin'),
+    (-12, null, null, '2024-05-19 14:00:00', null, '2024-05-19 14:00:00', 'admin');
+
+INSERT INTO external_record (duration, start, time_end, user_username, state)
+VALUES
+    (3400, '2024-05-11 09:30:00', '2024-05-11 10:00:00', 'johndoe', 'DEEPWORK'),
+    (60, '2024-05-11 10:00:00', '2024-05-11 13:00:00', 'johndoe', 'MEETING'),
+    (45, '2024-05-11 13:00:00', '2024-05-11 18:00:00', 'johndoe', 'OUT_OF_OFFICE'),
+    (45, '2024-05-11 18:00:00', '2024-05-12 11:00:00', 'johndoe', 'OUT_OF_OFFICE'),
+    (90, '2024-05-12 11:00:00', '2024-05-12 14:00:00', 'johndoe', 'AVAILABLE'),
+    (120, '2024-05-12 14:00:00', '2024-05-12 17:00:00', 'johndoe', 'MEETING'),
+    (120, '2024-05-12 17:00:00', '2024-05-12 08:00:00', 'johndoe', 'OUT_OF_OFFICE'),
+    (30, '2024-05-13 08:00:00', '2024-05-13 11:00:00', 'johndoe', 'AVAILABLE'),
+    (30, '2024-05-13 11:00:00', '2024-05-13 17:00:00', 'johndoe', 'DEEPWORK'),
+    (150, '2024-05-13 17:00:00', '2024-05-14 09:00:00', 'johndoe', 'OUT_OF_OFFICE'),
+    (300, '2024-05-14 09:00:00', '2024-05-14 13:00:00', 'johndoe', 'AVAILABLE'),
+    (200, '2024-05-14 13:00:00', '2024-05-14 17:00:00', 'johndoe', 'DEEPWORK'),
+    (200, '2024-05-14 17:00:00', '2024-05-15 10:00:00', 'johndoe', 'OUT_OF_OFFICE'),
+    (100, '2024-05-15 10:00:00', '2024-05-15 15:00:00', 'johndoe', 'DEEPWORK'),
     (50, '2024-05-15 15:00:00', null, 'johndoe', 'MEETING');
 
 
 INSERT INTO internal_record (id, group_id, project_id, start, time_end, ext_rec_start, user_name)
 VALUES
-    (-1, null, null, '2024-05-16 12:00:00', '2024-05-16 12:59:59', '2024-05-16 12:00:00', 'admin'),
-    (-3, -1, -2, '2024-05-16 13:00:00', '2024-05-16 13:59:59', '2024-05-16 13:00:00', 'admin'),
-    (-4, null, null, '2024-05-16 14:00:00', '2024-05-17 08:59:59', '2024-05-16 14:00:00', 'admin'),
-    (-5, -1, -3, '2024-05-17 09:00:00', '2024-05-17 10:59:59', '2024-05-17 09:00:00', 'admin'),
-    (-6, null, null, '2024-05-17 11:00:00', '2024-05-17 14:59:59', '2024-05-17 11:00:00', 'admin'),
-    (-7, -1, -4, '2024-05-17 15:00:00', '2024-05-18 09:59:59', '2024-05-17 15:00:00', 'admin'),
-    (-8, null, null, '2024-05-18 10:00:00', '2024-05-18 13:59:59', '2024-05-18 10:00:00', 'admin'),
-    (-9, -1, -5, '2024-05-18 14:00:00', '2024-05-18 15:59:59', '2024-05-18 14:00:00', 'admin'),
-    (-10, null, null, '2024-05-18 16:00:00', '2024-05-19 08:59:59', '2024-05-18 16:00:00', 'admin'),
-    (-11, -1, -6, '2024-05-19 09:00:00', '2024-05-19 13:59:59', '2024-05-19 09:00:00', 'admin'),
-    (-12, null, null, '2024-05-19 14:00:00', null, '2024-05-19 14:00:00', 'admin'),
-
-    (-2, -1, -1, '2024-05-10 09:30:00', '2024-05-11 09:29:59', '2024-05-10 09:30:00', 'johndoe'),
+    (-2, -1, -1, '2024-05-11 09:30:00', '2024-05-11 10:00:00', '2024-05-11 09:30:00', 'johndoe'),
     (-13, null, null, '2024-05-11 10:00:00', '2024-05-11 12:59:59', '2024-05-11 10:00:00', 'johndoe'),
-    (-14, -2, -7, '2024-05-11 13:00:00', '2024-05-12 10:59:59', '2024-05-11 13:00:00', 'johndoe'),
+    (-14, -2, -7, '2024-05-11 13:00:00', '2024-05-11 17:59:59', '2024-05-11 13:00:00', 'johndoe'),
+    (-23, -2, -7, '2024-05-11 18:00:00', '2024-05-12 11:00:00', '2024-05-11 18:00:00', 'johndoe'),
     (-15, null, null, '2024-05-12 11:00:00', '2024-05-12 13:59:59', '2024-05-12 11:00:00', 'johndoe'),
     (-16, -2, -8, '2024-05-12 14:00:00', '2024-05-12 16:59:59', '2024-05-12 14:00:00', 'johndoe'),
-    (-17, null, null, '2024-05-13 08:00:00', '2024-05-13 10:59:59', '2024-05-13 08:00:00', 'johndoe'),
-    (-18, -2, -9, '2024-05-13 11:00:00', '2024-05-14 08:59:59', '2024-05-13 11:00:00', 'johndoe'),
-    (-19, null, null, '2024-05-14 09:00:00', '2024-05-14 12:59:59', '2024-05-14 09:00:00', 'johndoe'),
-    (-20, -2, -10, '2024-05-14 13:00:00', '2024-05-14 16:59:59', '2024-05-14 13:00:00', 'johndoe'),
-    (-21, null, null, '2024-05-15 10:00:00', '2024-05-15 14:59:59', '2024-05-15 10:00:00', 'johndoe'),
+    (-17, null, null, '2024-05-12 17:00:00', '2024-05-13 10:59:59', '2024-05-12 17:00:00', 'johndoe'),
+    (-18, -2, -9, '2024-05-13 08:00:00', '2024-05-13 11:00:00', '2024-05-13 08:00:00', 'johndoe'),
+    (-24, -2, -9, '2024-05-13 11:00:00', '2024-05-13 17:00:00', '2024-05-13 11:00:00', 'johndoe'),
+    (-25, -2, -9, '2024-05-13 17:00:00', '2024-05-14 09:00:00', '2024-05-13 17:00:00', 'johndoe'),
+    (-19, null, null, '2024-05-14 09:00:00', '2024-05-14 13:00:00', '2024-05-14 09:00:00', 'johndoe'),
+    (-20, -2, -10, '2024-05-14 13:00:00', '2024-05-14 17:00:00', '2024-05-14 13:00:00', 'johndoe'),
+    (-26, -2, -10, '2024-05-14 17:00:00', '2024-05-15 10:00:00', '2024-05-14 17:00:00', 'johndoe'),
+    (-21, null, null, '2024-05-15 10:00:00', '2024-05-15 15:00:00', '2024-05-15 10:00:00', 'johndoe'),
     (-22, -2, -11, '2024-05-15 15:00:00', null, '2024-05-15 15:00:00', 'johndoe');
 
 
@@ -262,23 +274,27 @@ INSERT INTO threshold_tip (id, tip) VALUES
                                         (-30, 'Regelmäßiges Lüften: Öffnen Sie Fenster und Türen mehrmals täglich für mindestens 10 Minuten, um frische Luft hereinzulassen und abgestandene Luft auszutauschen.\nVerwendung von Luftreinigern: Setzen Sie Luftreiniger ein, um Staub, Pollen und andere Schadstoffe aus der Luft zu filtern und die Raumluftqualität zu verbessern.\nPflanzen im Raum platzieren: Stellen Sie Zimmerpflanzen auf, die die Luftqualität verbessern können und das Wohlbefinden erhöhen.\n');
 INSERT INTO Modification (id, reason, time_stamp) VALUES
     (-1, 'Default threshold.', NULL);
-INSERT INTO Threshold (id, default_threshold, sensor_type, threshold_type, threshold_value, modification_id, tip_id) VALUES
-                                                                                                                         (-11, TRUE, 0, 1, 20.0, -1, -1),
-                                                                                                                         (-12, TRUE, 0, 3, 19.0, -1, -1),
-                                                                                                                         (-13, TRUE, 0, 0, 24.0, -1, -2),
-                                                                                                                         (-14, TRUE, 0, 2, 25.0, -1, -2),
-                                                                                                                         (-21, TRUE, 2, 1, 50.0, -1, -10),
-                                                                                                                         (-22, TRUE, 2, 3, 40.0, -1, -10),
-                                                                                                                         (-23, TRUE, 2, 0, 60.0, -1, -11),
-                                                                                                                         (-24, TRUE, 2, 2, 70.0, -1, -11),
-                                                                                                                         (-31, TRUE, 1, 1, 220.0, -1, -20),
-                                                                                                                         (-32, TRUE, 1, 3, 200.0, -1, -20),
-                                                                                                                         (-33, TRUE, 1, 0, 540.0, -1, -21),
-                                                                                                                         (-34, TRUE, 1, 2, 600.0, -1, -21),
-                                                                                                                         (-41, TRUE, 3, 1, 11.0, -1, -30),
-                                                                                                                         (-42, TRUE, 3, 3, 10.0, -1, -30),
-                                                                                                                         (-43, TRUE, 3, 0, 10.00, -1, -30),
-                                                                                                                         (-44, TRUE, 3, 2, 10.00, -1, -30);
 
+INSERT INTO Threshold (id, default_threshold, sensor_type, threshold_type, threshold_value, modification_id, tip_id) VALUES
+(-11, TRUE, 'TEMPERATURE', 'LOWERBOUND_INFO', 20.0, -1, -1),
+(-12, TRUE, 'TEMPERATURE', 'LOWERBOUND_WARNING', 19.0, -1, -1),
+(-13, TRUE, 'TEMPERATURE', 'UPPERBOUND_INFO', 24.0, -1, -2),
+(-14, TRUE, 'TEMPERATURE', 'UPPERBOUND_WARNING', 25.0, -1, -2),
+(-21, TRUE, 'HUMIDITY', 'LOWERBOUND_INFO', 50.0, -1, -10),
+(-22, TRUE, 'HUMIDITY', 'LOWERBOUND_WARNING', 40.0, -1, -10),
+(-23, TRUE, 'HUMIDITY', 'UPPERBOUND_INFO', 60.0, -1, -11),
+(-24, TRUE, 'HUMIDITY', 'UPPERBOUND_WARNING', 70.0, -1, -11),
+(-31, TRUE, 'IRRADIANCE', 'LOWERBOUND_INFO', 220.0, -1, -20),
+(-32, TRUE, 'IRRADIANCE', 'LOWERBOUND_WARNING', 200.0, -1, -20),
+(-33, TRUE, 'IRRADIANCE', 'UPPERBOUND_INFO', 540.0, -1, -21),
+(-34, TRUE, 'IRRADIANCE', 'UPPERBOUND_WARNING', 600.0, -1, -21),
+(-41, TRUE, 'NMVOC', 'LOWERBOUND_INFO', 11.0, -1, -30),
+(-42, TRUE, 'NMVOC', 'LOWERBOUND_WARNING', 10.0, -1, -30),
+(-43, TRUE, 'NMVOC', 'UPPERBOUND_INFO', 10.00, -1, -30),
+(-44, TRUE, 'NMVOC', 'UPPERBOUND_WARNING', 10.00, -1, -30);
+
+
+INSERT INTO alert (ACKNOWLEDGED, PEAK_DEVIATION_VALUE, FIRST_INCIDENT, ID, LAST_INCIDENT, SENSOR_SENSOR_ID, THRESHOLD_ID, SENSOR_TEMPERA_ID)
+VALUES (FALSE, 9000, '2024-05-10T08:00:00', -1, '2024-05-10T08:29:00', -10, -14, 'TEMP123');
 
 

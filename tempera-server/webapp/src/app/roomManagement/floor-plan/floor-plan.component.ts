@@ -26,6 +26,11 @@ interface Room {
   templateUrl: './floor-plan.component.html',
   styleUrl: './floor-plan.component.css'
 })
+/**
+ * @class FloorPlanComponent
+ * This component represents the floor plan of building.
+ * It fetches the room infos and transform them into a svd diagram data.
+ */
 export class FloorPlanComponent implements OnInit{
 
   private roomChangedSubscription: Subscription;
@@ -74,11 +79,12 @@ export class FloorPlanComponent implements OnInit{
   fetchrooms() {
     this.roomService.getAllRooms().subscribe({
       next: (data) => {
+        console.log(data);
         this.roomObjects = data;
         this.roomIds = data.map((room) => room.id);
         this.createFloorPlan();
         this.accesspoints = data.map((room) => room.accessPoint ? room.accessPoint.isHealthy : null);
-      },
+        },
       error: (error) => {
         console.error('Failed to load rooms:', error);
       },
@@ -87,7 +93,7 @@ export class FloorPlanComponent implements OnInit{
 
   createFloorPlan() {
     this.rooms[0] = [
-      { x: 0, y: 0, roomId: this.roomIds[0] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[0] ? 'green' : 'red'},
+      { x: 0, y: 0, roomId: this.roomIds[0] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[0] ? 'green' : 'green'},
       { x: 130, y: 0, roomId: this.roomIds[1] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[1] ? 'green' : 'red'},
       { x: 0, y: 100, roomId: this.roomIds[2] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[2] ? 'green' : 'red'},
       { x: 130, y: 100, roomId:this.roomIds[3] || '', fillColor: 'white', shape: 'rectangle', accessPoint: this.accesspoints[3] ? 'green' : 'red'},
@@ -121,7 +127,6 @@ export class FloorPlanComponent implements OnInit{
     if (this.roomObjects[index]) {
       this.roomService.getAccessPoints(this.roomObjects[index + this.currentFloor*7].id).subscribe({
         next: (data) => {
-          console.log('AccessPoints: ', data);
           this.router.navigate(['/accessPoint', data.id]);
         },
         error: (error) => {

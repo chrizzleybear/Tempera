@@ -32,7 +32,7 @@ public class AccessPoint implements Persistable<UUID>, Serializable {
 
   @Id private UUID id;
   @OneToMany(mappedBy = "accessPoint") private Set<TemperaStation> temperaStations;
-  @ManyToOne private Room room;
+  @OneToOne() private Room room;
   private boolean enabled;
   private boolean isHealthy;
 
@@ -55,6 +55,10 @@ public class AccessPoint implements Persistable<UUID>, Serializable {
 
   public boolean isHealthy() {
         return isHealthy;
+  }
+
+  public void setHealthy(boolean healthy) {
+    isHealthy = healthy;
   }
 
   /**
@@ -98,7 +102,7 @@ public class AccessPoint implements Persistable<UUID>, Serializable {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     AccessPoint that = (AccessPoint) o;
-    return Objects.equals(id, that.id);
+    return Objects.equals(id, that.getId());
   }
 
   @Override

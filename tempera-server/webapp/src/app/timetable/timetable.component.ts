@@ -1,12 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import {
-  ColleagueStateDto,
-  SimpleProjectDto,
+  ColleagueStateDto, SimpleGroupxProjectDto,
   TimetableControllerService, TimetableEntryDto,
 } from '../../api';
 import { Table, TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe, NgForOf, NgIf, NgStyle } from '@angular/common';
 import { TagModule } from 'primeng/tag';
 import { DisplayHelper } from '../_helpers/display-helper';
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
@@ -36,6 +35,8 @@ import { CardModule } from 'primeng/card';
 import { DateTime } from 'luxon';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TotalTimeHelper } from '../_helpers/total-time-helper';
+import { OverlappingProjectHelper } from '../_helpers/overlapping-project-helper';
 
 interface InternalTimetableEntryDto extends TimetableEntryDto {
   startTime: Date;
@@ -68,6 +69,8 @@ interface InternalTimetableEntryDto extends TimetableEntryDto {
     CardModule,
     SkeletonModule,
     ProgressSpinnerModule,
+    NgStyle,
+    NgForOf,
   ],
   templateUrl: './timetable.component.html',
   styleUrl: './timetable.component.css',
@@ -75,13 +78,13 @@ interface InternalTimetableEntryDto extends TimetableEntryDto {
 export class TimetableComponent implements OnInit {
   public tableEntries?: InternalTimetableEntryDto[];
 
-  public availableProjects: SimpleProjectDto[] = [];
+  public availableProjects: SimpleGroupxProjectDto[] = [];
 
   public filterFields: string[] = [];
 
   public stateOptions: StateEnum[] = (Object.values(StateEnum));
 
-  public selectedRowIndex: number = 0;
+  public selectedEntry?: InternalTimetableEntryDto;
 
   protected readonly DisplayHelper = DisplayHelper;
 
@@ -90,28 +93,48 @@ export class TimetableComponent implements OnInit {
   public editDescriptionVisible: boolean = false;
 
   public splitVisible: boolean = false;
+  public calendarVisible: boolean = false;
+
+  /*
+  Used for handling when a user is assigned to a project from multiple groups
+  Key is the projectId and value is an object containing the projects with the same projectId and the original name of the project
+   */
+  private duplicatedProjects: Map<string, {
+    projects: SimpleGroupxProjectDto[],
+    originalName: string
+  }> = new Map<string, {
+    projects: SimpleGroupxProjectDto[],
+    originalName: string
+  }>();
 
   protected readonly Date = Date;
+  protected readonly StateEnum = StateEnum;
 
 
   /*
   * This reference to the PrimeNG table is used because its entries also reflect the correct order if the table is sorted and the available entries when filtered.
+  * Setter is needed because of ngIf directive in the template (table is not available when component is initialized)
    */
-  @ViewChild('table') table!: Table;
+  private table?: Table;
+
+  @ViewChild('table') set tableRef(tableRef: Table) {
+    if (tableRef) {
+      this.table = tableRef;
+      this.calculateTotalTime();
+    }
+  }
 
   /*
     * Validates that the time is between the start and end time of the time entry.
-    * Time entry is selected by the selectedRowIndex.
+    * Time entry is selected by the selectedEntry.
    */
   inPermittedTimeRangeValidator: ValidatorFn = (control: AbstractControl<Date | undefined>): ValidationErrors | null => {
     if (!control.value) {
       return null;
     }
 
-    const entries = this.getFilteredEntries();
-
-    const minStartTime = entries[this.selectedRowIndex].startTime;
-    const maxEndTime = entries[this.selectedRowIndex].endTime;
+    const minStartTime = this.selectedEntry!.startTime;
+    const maxEndTime = this.selectedEntry!.endTime;
 
     if (control.value > minStartTime && control.value < maxEndTime) {
       return null;
@@ -134,7 +157,7 @@ export class TimetableComponent implements OnInit {
     }),
   });
 
-  constructor(public timetableControllerService: TimetableControllerService, private messageService: MessageService) {
+  constructor(public timetableControllerService: TimetableControllerService, private messageService: MessageService, private cd: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -148,6 +171,12 @@ export class TimetableComponent implements OnInit {
 
           this.availableProjects = data.availableProjects ?? [];
 
+          // Rename projects that have the same projectId
+          this.duplicatedProjects = OverlappingProjectHelper.getDuplicatedProjects(this.availableProjects);
+          OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, this.availableProjects);
+          const assignedProjects = this.tableEntries.filter(x => x?.assignedGroupxProject).map(entry => entry.assignedGroupxProject!)
+          OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, assignedProjects);
+
           this.filterFields = Object.keys(this.tableEntries?.[0] ?? []);
         },
         error: err => {
@@ -158,10 +187,18 @@ export class TimetableComponent implements OnInit {
     );
   }
 
-  updateProject(newProject: SimpleProjectDto, timeEntryId: number) {
+  updateProject(newProject: SimpleGroupxProjectDto, timeEntryId: number) {
+
+    // give the project back the original name if it is a duplicate
+    let submitProject = structuredClone(newProject);
+    if (this.duplicatedProjects.has(submitProject.projectId ?? '')) {
+      submitProject.projectName = this.duplicatedProjects.get(submitProject.projectId!)?.originalName;
+    }
+
     this.timetableControllerService.updateProject1({
       entryId: timeEntryId,
-      project: newProject,
+      projectId: submitProject.projectId!,
+      groupId: submitProject.groupId!,
     }).subscribe({
       next: () => {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project updated successfully' });
@@ -173,15 +210,14 @@ export class TimetableComponent implements OnInit {
     });
   }
 
-  onOpenSplitForm(rowIndex: number) {
-    this.selectedRowIndex = rowIndex;
-    this.splitForm.controls.time.setValue(this.getFilteredEntries()[rowIndex].startTime);
+  onOpenSplitForm(entry: InternalTimetableEntryDto) {
+    this.selectedEntry = entry;
+    this.splitForm.controls.time.setValue(entry.startTime);
     this.splitVisible = true;
   }
 
   onSplitFormSubmit() {
-    const entries = this.getFilteredEntries();
-    const timeEntryId = entries[this.selectedRowIndex].id;
+    const timeEntryId = this.selectedEntry!.id;
 
     const time = DateTime.fromJSDate(this.splitForm.controls.time.value!).toString();
     this.timetableControllerService.splitTimeRecord({ entryId: timeEntryId, splitTimestamp: time }).subscribe(
@@ -205,15 +241,14 @@ export class TimetableComponent implements OnInit {
     );
   }
 
-  onEditDescription(rowIndex: number) {
+  onEditDescription(entry: InternalTimetableEntryDto) {
     this.editDescriptionVisible = true;
-    this.selectedRowIndex = rowIndex;
-    this.descriptionForm.controls.description.setValue(this.getFilteredEntries()[rowIndex].description);
+    this.selectedEntry = entry;
+    this.descriptionForm.controls.description.setValue(entry.description);
   }
 
   onDescriptionFormSubmit() {
-    const entries = this.getFilteredEntries();
-    const timeEntryId = entries[this.selectedRowIndex].id;
+    const timeEntryId = this.selectedEntry!.id;
     const description = this.descriptionForm.controls.description.value!;
     this.timetableControllerService.updateDescription({ entryId: timeEntryId, description }).subscribe(
       {
@@ -223,7 +258,7 @@ export class TimetableComponent implements OnInit {
             summary: 'Success',
             detail: 'Description updated successfully',
           });
-          this.tableEntries![this.selectedRowIndex].description = description;
+          this.tableEntries!.find(entry => entry.id === timeEntryId)!.description = description;
           this.editDescriptionVisible = false;
         },
         error: () => {
@@ -238,30 +273,9 @@ export class TimetableComponent implements OnInit {
   Calculates the total work time with the current active filters
    */
   calculateTotalTime() {
-    let totalTimeTemp: number = 0;
+    const filteredEntries = TotalTimeHelper.getFilteredEntries<InternalTimetableEntryDto>(this.table);
+    this.totalTime = TotalTimeHelper.calculate(filteredEntries);
 
-    const tempEntries = this.getFilteredEntries()
-
-    tempEntries.forEach(entry => {
-      totalTimeTemp += entry.endTime.getTime() - entry.startTime.getTime();
-    });
-    const hours = Math.floor(totalTimeTemp / 3600000);
-
-    const remainingTime = totalTimeTemp % 3600000;
-
-    const minutes = Math.floor(remainingTime / 60000);
-    this.totalTime = { hours: hours, minutes: minutes };
-  }
-
-  /*
-  * Returns the entries that are currently displayed in the table, depending on the active filters.
-   */
-  getFilteredEntries(): InternalTimetableEntryDto[] {
-    const filters = this.table?.filters as any;
-    if (filters['startTime']?.value || filters['endTime']?.value || filters['state']?.value || filters['assignedProject.projectId']?.value || filters['description']?.value) {
-      return this.table.filteredValue as InternalTimetableEntryDto[];
-    } else {
-      return  this.table.value as InternalTimetableEntryDto[];
-    }
+    this.cd.detectChanges();
   }
 }

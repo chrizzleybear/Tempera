@@ -14,7 +14,7 @@ public class Groupx {
   private String name;
   private String description;
 
-  @ManyToOne private Userx groupLead;
+  @ManyToOne(fetch = FetchType.LAZY) private Userx groupLead;
 
   @ManyToMany(cascade = CascadeType.ALL) private List<Userx> members;
 
@@ -126,7 +126,7 @@ public class Groupx {
     if (!(obj instanceof Groupx other)) {
       return false;
     }
-    return other.name.equals(this.name);
+    return other.getName().equals(this.name);
   }
 
   @Override

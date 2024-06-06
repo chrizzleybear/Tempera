@@ -19,10 +19,13 @@
       <td>{{ accessPoint.room }}</td>
       <td>{{ accessPoint.enabled ? 'Enabled' : 'Disabled' }}</td>
       <td>
+        <p-button label="Tempera" (onClick)="temperaDialog(accessPoint); $event.stopPropagation()" icon="pi pi-eye"></p-button>
+      </td>
+      <td>
         <p-button label="Edit" (onClick)="editAccessPoint(accessPoint); $event.stopPropagation()" icon="pi pi-pencil"></p-button>
       </td>
       <td>
-        <p-button label="Delete" icon="pi pi-trash" (onClick)="deleteAccesspoints(accessPoint); $event.stopPropagation()"></p-button>
+        <p-button label="Delete" icon="pi pi-trash" (onClick)="deleteAccesspoint(accessPoint); $event.stopPropagation()"></p-button>
       </td>
     </tr>
   </ng-template>
@@ -34,4 +37,8 @@
   <p-dialog header="Edit Access Point" [(visible)]="displayEditDialog" [modal]="true" [style]="{width: '50vw'}" [closable]="true">
     <app-access-point-edit [accessPoint]="selectedAccessPoint" (editComplete)="onEditComplete($event)"></app-access-point-edit>
   </p-dialog>
+  <p-dialog header="Tempera" [(visible)]="temperaDialogDisplay" [modal]="true" [style]="{width: '50vw'}" [closable]="true">
+    <app-access-point-tempera [accessPoint]="selectedAccessPoint"></app-access-point-tempera>
+  </p-dialog>
 </div>
+

@@ -2,14 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TemperaStationService } from '../../_services/tempera-station.service';
 import { TemperaStation } from '../../models/temperaStation.model';
-import {NgIf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
+import {Sensor} from "../../models/sensor.model";
+import {TableModule} from "primeng/table";
+
 
 @Component({
   selector: 'app-tempera-station-details',
   templateUrl: './tempera-station-details.component.html',
   standalone: true,
   imports: [
-    NgIf
+    NgIf,
+    NgForOf,
+    TableModule
   ],
   styleUrls: ['./tempera-station-details.component.css']
 })
@@ -17,6 +22,7 @@ export class TemperaStationDetailsComponent implements OnInit {
 
   temperaStationId: string | undefined;
   temperaStation: TemperaStation | undefined;
+  sensors: Sensor[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -35,9 +41,21 @@ export class TemperaStationDetailsComponent implements OnInit {
       next: (data) => {
         console.log('TemperaStation details: ', data);
         this.temperaStation = data;
+        this.fetchSensors();
       },
       error: (error) => {
         console.error('Failed to load temperaStation details:', error);
+      },
+    });
+  }
+
+  fetchSensors() {
+    this.temperaStationService.getTemperaStationSensors(this.temperaStationId!).subscribe({
+      next: (data) => {
+        this.sensors = data;
+      },
+      error: (error) => {
+        console.error('Failed to load temperaStation sensors:', error);
       },
     });
   }

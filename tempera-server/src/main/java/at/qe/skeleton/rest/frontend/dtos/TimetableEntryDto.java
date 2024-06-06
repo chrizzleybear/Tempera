@@ -10,14 +10,14 @@ import jakarta.validation.constraints.NotNull;
  * @param startTimestamp the start timestamp of the entry.
  * @param endTimestamp the end timestamp of the entry.
  * @param state the state of the entry.
- * @param assignedProject the project assigned to the entry. If there is no project assigned, this
- *     field is filled with default project.
+ * @param assignedGroupxProject the combination from group and project assigned to the entry. If there is no gxp assigned, this
+ *     field is filled with default gxp.
  * @param description the description of the entry.
  */
 public record TimetableEntryDto(
    @NotNull Long id,
    @NotNull String startTimestamp,
    @NotNull String endTimestamp,
-   SimpleProjectDto assignedProject,
+   SimpleGroupxProjectDto assignedGroupxProject,
    @NotNull State state,
    String description) {}

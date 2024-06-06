@@ -10,8 +10,8 @@ import java.util.Objects;
 @Entity
 public class TemperaStation implements Persistable<String> {
 
-  // we set id manually (has to be configurable from admin)
-  @Id private String id;
+//todo: as io pointed out this has to be a uuid or similar
+@Id private String id;
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY) private Userx user;
   private boolean enabled;
 
@@ -107,7 +107,7 @@ public class TemperaStation implements Persistable<String> {
     this.enabled = enabled;
   }
 
-    public boolean isIsHealthy() {
+    public boolean isHealthy() {
         return isHealthy;
     }
 
@@ -120,7 +120,7 @@ public class TemperaStation implements Persistable<String> {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     TemperaStation that = (TemperaStation) o;
-    return Objects.equals(id, that.id);
+    return Objects.equals(id, that.getId());
   }
 
   @Override
