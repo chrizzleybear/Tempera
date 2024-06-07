@@ -1,7 +1,6 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
-import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.LogAffectedType;
 import at.qe.skeleton.model.enums.LogEvent;
 import at.qe.skeleton.model.AccessPoint;

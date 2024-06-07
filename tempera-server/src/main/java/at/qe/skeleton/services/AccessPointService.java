@@ -9,7 +9,6 @@ import at.qe.skeleton.repositories.TemperaStationRepository;
 import at.qe.skeleton.rest.frontend.dtos.AccessPointDto;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;

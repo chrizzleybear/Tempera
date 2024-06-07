@@ -6,7 +6,6 @@ import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.dtos.GroupxProjectStateTimeDbDto;
-import at.qe.skeleton.model.dtos.SimpleProjectDbDto;
 import at.qe.skeleton.model.enums.LogAffectedType;
 import at.qe.skeleton.model.enums.LogEvent;
 import at.qe.skeleton.repositories.GroupRepository;

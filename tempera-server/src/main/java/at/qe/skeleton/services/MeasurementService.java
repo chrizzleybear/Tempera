@@ -6,7 +6,6 @@ import at.qe.skeleton.model.enums.*;
 import at.qe.skeleton.repositories.MeasurementRepository;
 import at.qe.skeleton.repositories.SensorRepository;
 import at.qe.skeleton.repositories.TemperaStationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
