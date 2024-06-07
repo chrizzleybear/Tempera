@@ -16,6 +16,8 @@ import java.util.Set;
 
 public interface GroupxProjectRepository extends AbstractRepository<GroupxProject, GroupxProjectId> {
 
+
+
     public List<GroupxProject> findAllByProjectId(Long projectId);
 
     public Optional<GroupxProject> findByGroup_IdAndProject_Id(Long groupId, Long projectId);

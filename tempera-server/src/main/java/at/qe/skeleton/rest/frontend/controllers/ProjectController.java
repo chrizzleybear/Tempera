@@ -1,7 +1,6 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
-import at.qe.skeleton.model.Project;
 import at.qe.skeleton.rest.frontend.dtos.*;
 import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.ProjectMapperService;
 import at.qe.skeleton.services.ProjectService;
@@ -74,10 +73,16 @@ public class ProjectController {
   }
 
   //ehemals getGroups
-  @GetMapping("/getGroupsOfProject/{projectId}")
+  @GetMapping("/getActiveGroupsOfProject/{projectId}")
   public ResponseEntity<List<SimpleGroupDto>> getGroupsByProjectId(@PathVariable String projectId) {
-    List<SimpleGroupDto> groups = projectMapperService.getAllSimpleGroups(projectId);
-    return ResponseEntity.ok(groups);
+    List<SimpleGroupDto> activeGroups = projectMapperService.getAllActiveSimpleGroups(projectId);
+    return ResponseEntity.ok(activeGroups);
+  }
+
+  @GetMapping("/getDeactivatedGroupsOfProject/{projectId}")
+public ResponseEntity<List<SimpleGroupDto>> getDeactivatedGroupsByProjectId(@PathVariable String projectId) {
+    List<SimpleGroupDto> deactivatedGroups = projectMapperService.getAllDeactivatedSimpleGroups(projectId);
+    return ResponseEntity.ok(deactivatedGroups);
   }
 
   @PostMapping("/addGroup")

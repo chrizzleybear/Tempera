@@ -106,13 +106,15 @@ public class ProjectService {
   @Transactional
   public void deleteProject(Long projectId) {
     List<GroupxProject> groupxProjects = groupxProjectRepository.findAllByProjectId(projectId);
-    // todo: decide what happens to the groupxproject object if project gets deleted...
+    // todo: connected groupxProjects must be deactivated
     for (GroupxProject groupxProject : groupxProjects) {
-      groupxProject.removeProject();
+      groupxProject.setActive(false);
       groupxProjectRepository.save(groupxProject);
     }
     Project project = projectRepository.findFirstById(projectId);
-    projectRepository.delete(project);
+    project.deactivate();
+    //todo: logic for searching Projects anpassen an isActive
+    projectRepository.save(project);
   }
 
   public void removeGroupFromProject(Long groupId, Long projectId)
@@ -259,9 +261,14 @@ public class ProjectService {
     return groupxProjectRepository.save(groupxProject);
   }
 
+
   public List<GroupxProject> findAllGroupxProjectsByProjectId(Long projectId) {
     return groupxProjectRepository.findAllByProjectId(projectId);
   }
+
+
+
+
 
   public List<Project> findAllProjects() {
     return projectRepository.findAll();

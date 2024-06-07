@@ -51,13 +51,15 @@ public class ProjectMapperService {
 
     List<GroupxProject> groupxProjects =
         projectService.findAllGroupxProjectsByProjectId(projectId);
-    List<SimpleGroupDto> connectedGroups =
-        groupxProjects.stream().map(groupMapperService::mapToSimpleGroupDto).toList();
+    List<SimpleGroupDto> activeGroups =
+        groupxProjects.stream().filter(GroupxProject::isActive).map(groupMapperService::mapToSimpleGroupDto).toList();
+    List<SimpleGroupDto> deactivatedGroups =
+        groupxProjects.stream().filter(groupxProject -> !groupxProject.isActive()).map(groupMapperService::mapToSimpleGroupDto).toList();
 
     List<SimpleUserDto> contributors =
         projectService.findAllContributorsByProjectId(projectId);
 
-    return new ExtendedProjectDto(managerDetails, simpleProjectDto, connectedGroups, contributors);
+    return new ExtendedProjectDto(managerDetails, simpleProjectDto, activeGroups, deactivatedGroups, contributors);
     }
 
     public ExtendedGroupDto loadExtendedGroupDto(Long groupId)
@@ -73,9 +75,14 @@ public class ProjectMapperService {
         return new ExtendedGroupDto(simpleGroupDto, groupxProjectsDto, groupMembersDto);
     }
 
-    public List<SimpleGroupDto> getAllSimpleGroups(String projectId){
+    public List<SimpleGroupDto> getAllActiveSimpleGroups(String projectId){
         List<GroupxProject> groupxProjects = projectService.findAllGroupxProjectsByProjectId(Long.valueOf(projectId));
-        return groupxProjects.stream().map(groupMapperService::mapToSimpleGroupDto).collect(toList());
+        return groupxProjects.stream().filter(GroupxProject::isActive).map(groupMapperService::mapToSimpleGroupDto).collect(toList());
+    }
+
+    public List<SimpleGroupDto> getAllDeactivatedSimpleGroups(String projectId){
+        List<GroupxProject> groupxProjects = projectService.findAllGroupxProjectsByProjectId(Long.valueOf(projectId));
+        return groupxProjects.stream().filter(groupxProject -> !groupxProject.isActive()).map(groupMapperService::mapToSimpleGroupDto).collect(toList());
     }
 
 
