@@ -15,9 +15,10 @@ import { SimpleGroupDto } from './simpleGroupDto';
 
 
 export interface GroupxProjectDto { 
-    group?: SimpleGroupDto;
-    project?: SimpleProjectDto;
-    managerDetails?: SimpleUserDto;
+    group: SimpleGroupDto;
+    project: SimpleProjectDto;
+    managerDetails: SimpleUserDto;
     contributors?: Array<SimpleUserDto>;
+    isActive: boolean;
 }
 

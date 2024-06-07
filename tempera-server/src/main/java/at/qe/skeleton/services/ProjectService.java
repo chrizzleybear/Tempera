@@ -10,6 +10,7 @@ import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.GroupxProjectRepository;
 import at.qe.skeleton.repositories.ProjectRepository;
 import at.qe.skeleton.repositories.UserxRepository;
+import at.qe.skeleton.rest.frontend.dtos.GroupxProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
@@ -62,6 +63,12 @@ public class ProjectService {
   public Optional<Project> getProjectById(Long id) {
     return projectRepository.findById(id);
   }
+
+  public SimpleProjectDto getSimpleProjectDtoById(Long id) throws CouldNotFindEntityException {
+    return projectRepository.findSimpleProjectDtoById(id).orElseThrow(() -> new CouldNotFindEntityException("No Project with id %s found".formatted(id)));
+  }
+
+
 
   @Transactional
   public Project updateProject(Long id, String name, String description, String manager) {
@@ -266,6 +273,7 @@ public class ProjectService {
   public List<GroupxProject> findAllGroupxProjectsByProjectId(Long projectId) {
     return groupxProjectRepository.findAllByProjectId(projectId);
   }
+
 
   public List<SimpleProjectDto> getAllSimpleProjectDtos(){
     return projectRepository.findAllSimpleProjectDtos();

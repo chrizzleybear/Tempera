@@ -4,6 +4,7 @@ import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.GroupxProjectId;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.dtos.GroupxProjectStateTimeDbDto;
+import at.qe.skeleton.rest.frontend.dtos.GroupxProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -51,4 +52,5 @@ public interface GroupxProjectRepository extends AbstractRepository<GroupxProjec
     @EntityGraph(attributePaths = {"contributors"}, type = EntityGraph.EntityGraphType.FETCH)
     @Query(value = "SELECT gxp FROM GroupxProject gxp WHERE gxp.group.id = :groupId AND gxp.project.id = :projectId")
     public Optional<GroupxProject> findByGroupAndProjectDetailedC(@Param(value = "groupId") Long groupId, @Param(value = "projectId") Long projectId);
+
 }

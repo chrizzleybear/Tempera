@@ -2,6 +2,7 @@ package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.rest.frontend.dtos.*;
+import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.GroupMapperService;
 import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.ProjectMapperService;
 import at.qe.skeleton.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,8 @@ import java.util.logging.Logger;
 public class ProjectController {
 
   @Autowired ProjectService projectService;
-  @Autowired
-  ProjectMapperService projectMapperService;
+  @Autowired ProjectMapperService projectMapperService;
+  @Autowired GroupMapperService groupMapperService;
   private final Logger logger = Logger.getLogger("ProjectController");
 
     @GetMapping("/all")
@@ -69,10 +70,21 @@ public class ProjectController {
       }
   }
 
+    @GetMapping("/loadSimpleProject/{projectId}")
+    public ResponseEntity<SimpleProjectDto> getProjectSimpleById(@PathVariable String projectId) {
+        try{
+            SimpleProjectDto projectDto = projectMapperService.loadSimpleProjectDto(projectId);
+            return ResponseEntity.ok(projectDto);
+        } catch (CouldNotFindEntityException e) {
+            logger.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
   @GetMapping("/loadExtendedGroup/{groupId}")
   public ResponseEntity<ExtendedGroupDto> getExtendedGroupById(@PathVariable String groupId) {
     try {
-      ExtendedGroupDto groupDto = projectMapperService.loadExtendedGroupDto(Long.parseLong(groupId));
+      ExtendedGroupDto groupDto = groupMapperService.loadExtendedGroupDto(Long.parseLong(groupId));
       return ResponseEntity.ok(groupDto);
     } catch (CouldNotFindEntityException e) {
       logger.warning(e.getMessage());

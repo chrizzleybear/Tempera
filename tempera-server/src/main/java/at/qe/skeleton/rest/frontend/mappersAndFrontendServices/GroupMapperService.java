@@ -1,25 +1,34 @@
 package at.qe.skeleton.rest.frontend.mappersAndFrontendServices;
 
+import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.Groupx;
 import at.qe.skeleton.model.GroupxProject;
-import at.qe.skeleton.rest.frontend.dtos.GroupDetailsDto;
-import at.qe.skeleton.rest.frontend.dtos.SimpleGroupDto;
+import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.rest.frontend.dtos.*;
 import at.qe.skeleton.services.GroupService;
+import at.qe.skeleton.services.ProjectService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class GroupMapperService {
 
     private final GroupService groupService;
     private final UserMapper userMapper;
+    private final ProjectService projectService;
+    private final GroupxProjectMapper groupxProjectMapper;
 
-    public GroupMapperService(GroupService groupService, UserMapper userMapper) {
-        this.userMapper = userMapper;
-        this.groupService = groupService;
-    }
+  public GroupMapperService(
+      GroupService groupService, UserMapper userMapper, ProjectService projectService, GroupxProjectMapper groupxProjectMapper) {
+    this.userMapper = userMapper;
+    this.groupService = groupService;
+    this.projectService = projectService;
+    this.groupxProjectMapper = groupxProjectMapper;
+        }
 
     public List<SimpleGroupDto> getSimpleGroupDtosByGroupLead(String groupLeadI) {
         List<Groupx> groups = groupService.getGroupsByGroupLead(groupLeadI);
@@ -35,6 +44,19 @@ public class GroupMapperService {
                 group.getDescription(),
                 userMapper.getSimpleUser(group.getGroupLead()
         ));
+    }
+
+    public ExtendedGroupDto loadExtendedGroupDto(Long groupId)
+            throws CouldNotFindEntityException {
+        Groupx group =
+                groupService
+                        .getGroup(groupId);
+        SimpleGroupDto simpleGroupDto = this.mapToSimpleGroupDto(group);
+        List<GroupxProject> groupxProjects = projectService.getGroupxProjectsByGroupId(groupId);
+        Set<GroupxProjectDto> groupxProjectsDto = groupxProjects.stream().map(groupxProjectMapper::groupxProjectDtoMapper).collect(Collectors.toSet());
+        List<Userx> groupMembers = groupService.getMembers(groupId);
+        Set<SimpleUserDto> groupMembersDto = groupMembers.stream().map(userMapper::getSimpleUser).collect(Collectors.toSet());
+        return new ExtendedGroupDto(simpleGroupDto, groupxProjectsDto, groupMembersDto);
     }
 
     public SimpleGroupDto updateGroup(SimpleGroupDto group) {

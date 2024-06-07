@@ -22,16 +22,16 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class ProjectMapperService {
     private ProjectService projectService;
-    private GroupService groupService;
     private GroupMapperService groupMapperService;
     private UserMapper userMapper;
+    private GroupxProjectMapper groupxProjectMapper;
 
 
-    public ProjectMapperService(ProjectService projectService, GroupService groupService, GroupMapperService groupMapperService, UserMapper userMapper) {
+    public ProjectMapperService(ProjectService projectService, GroupMapperService groupMapperService, UserMapper userMapper, GroupxProjectMapper groupxProjectMapper) {
         this.projectService = projectService;
-        this.groupService = groupService;
         this.groupMapperService = groupMapperService;
         this.userMapper = userMapper;
+        this.groupxProjectMapper = groupxProjectMapper;
     }
 
     @Transactional
@@ -67,18 +67,11 @@ public class ProjectMapperService {
     return new ExtendedProjectDto(managerDetails, simpleProjectDto, activeGroups, deactivatedGroups, contributors);
     }
 
-    public ExtendedGroupDto loadExtendedGroupDto(Long groupId)
-      throws CouldNotFindEntityException {
-        Groupx group =
-        groupService
-            .getGroup(groupId);
-        SimpleGroupDto simpleGroupDto = groupMapperService.mapToSimpleGroupDto(group);
-        List<GroupxProject> groupxProjects = projectService.getGroupxProjectsByGroupId(groupId);
-        Set<GroupxProjectDto> groupxProjectsDto = groupxProjects.stream().map(this::groupxProjectDtoMapper).collect(Collectors.toSet());
-        List<Userx> groupMembers = groupService.getMembers(groupId);
-        Set<SimpleUserDto> groupMembersDto = groupMembers.stream().map(userMapper::getSimpleUser).collect(Collectors.toSet());
-        return new ExtendedGroupDto(simpleGroupDto, groupxProjectsDto, groupMembersDto);
+    public SimpleProjectDto loadSimpleProjectDto(String projectId) throws CouldNotFindEntityException{
+        return projectService.getSimpleProjectDtoById(Long.parseLong(projectId));
     }
+
+
 
     public List<SimpleGroupDto> getAllActiveSimpleGroups(String projectId){
         List<GroupxProject> groupxProjects = projectService.findAllGroupxProjectsByProjectId(Long.valueOf(projectId));
@@ -103,7 +96,7 @@ public class ProjectMapperService {
     }
     public List<SimpleUserDto> findAllContributorsByGroupIdAndProjectId(Long groupId, Long projectId) {
         GroupxProject groupxProject = projectService.findByGroupAndProject(groupId, projectId);
-        GroupxProjectDto groupxProjectdto = groupxProjectDtoMapper(groupxProject);
+        GroupxProjectDto groupxProjectdto = groupxProjectMapper.groupxProjectDtoMapper(groupxProject);
         List<SimpleUserDto> simpleUserDtos =  groupxProjectdto.contributors();
         return simpleUserDtos;
     }
@@ -126,17 +119,6 @@ public class ProjectMapperService {
         );
     }
 
-    public GroupxProjectDto groupxProjectDtoMapper(GroupxProject groupxProject) {
-        Project project = groupxProject.getProject();
-        SimpleUserDto managerDetails = userMapper.getSimpleUser(project.getManager());
-        List<SimpleUserDto> contributors = groupxProject.getContributors().stream().map(userMapper::getSimpleUser).toList();
-        return new GroupxProjectDto(
-                groupMapperService.mapToSimpleGroupDto(groupxProject),
-                mapToSimpleProjectDto(project),
-                managerDetails,
-                contributors
-        );
-    }
 
     public SimpleProjectDto updateProject(SimpleProjectDto projectDto) {
         Project updatedProject =

@@ -40,6 +40,7 @@ export class ProjectGroupsComponent implements OnInit{
   filteredGroups: SimpleGroupDto[] = [];
   filteredAvailableGroups: SimpleGroupDto[] = [];
   projectId!: number;
+  projectName!: string;
   displayAddDialog: boolean = false;
   messages: any;
   constructor(private projectControllerService: ProjectControllerService, private route: ActivatedRoute, private groupControllerService: GroupManagementControllerService) {
@@ -48,6 +49,8 @@ export class ProjectGroupsComponent implements OnInit{
 
   ngOnInit() {
     this.projectId = Number(this.route.snapshot.paramMap.get('id')!);
+    //todo: getSimpleProject from ControllerService and check functionality
+    this.projectName = this.projectControllerService.get
     this.fetchActiveGroups(this.projectId);
   }
 
