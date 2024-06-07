@@ -8,8 +8,13 @@ import {GroupService} from "../../_services/group.service";
 import {MessagesModule} from "primeng/messages";
 import {ButtonModule} from "primeng/button";
 import {DialogModule} from "primeng/dialog";
-import {GroupAssignmentDTO} from "../../models/projectDtos";
 import {InputTextModule} from "primeng/inputtext";
+import {
+  GroupManagementControllerService,
+  MinimalGxpDto,
+  ProjectControllerService,
+  SimpleGroupDto,
+} from '../../../api';
 
 @Component({
   selector: 'app-project-groups',
@@ -33,70 +38,69 @@ import {InputTextModule} from "primeng/inputtext";
  */
 export class ProjectGroupsComponent implements OnInit{
 
-  groups: Group[] = [];
-  availableGroups: Group[] = [];
-  filteredGroups: Group[] = [];
-  filteredAvailableGroups: Group[] = [];
+  activeGroups: SimpleGroupDto[] = [];
+  availableGroups: SimpleGroupDto[] = [];
+  filteredGroups: SimpleGroupDto[] = [];
+  filteredAvailableGroups: SimpleGroupDto[] = [];
   projectId!: number;
   displayAddDialog: boolean = false;
   messages: any;
-  constructor(private projectService: ProjectService, private route: ActivatedRoute, private groupService: GroupService) {
+  constructor(private projectControllerService: ProjectControllerService, private route: ActivatedRoute, private groupControllerService: GroupManagementControllerService) {
 
   }
 
   ngOnInit() {
     this.projectId = Number(this.route.snapshot.paramMap.get('id')!);
-    this.fetchGroups(this.projectId);
+    this.fetchActiveGroups(this.projectId);
   }
 
-  fetchGroups(projectId: number) {
-    this.projectService.getGroups(projectId).subscribe((groups: Group[]) => {
-      this.groups = groups;
-      this.filteredGroups = groups;
+  fetchActiveGroups(projectId: number) {
+    // todo: where to parse projectId to string?
+    this.projectControllerService.getActiveGroupsByProjectId(projectId.toString()).subscribe((activeGroups: SimpleGroupDto[]) : void => {
+      this.activeGroups = activeGroups;
+      //todo: what is this.filteredGroups?
+      this.filteredGroups = activeGroups;
     });
   }
 
-  fetchAllGroups() {
-    this.groupService.getAllGroups().subscribe((groups: Group[]) => {
+  fetchAllActiveGroups() {
+    this.groupControllerService.getAllActiveGroups().subscribe((groups: SimpleGroupDto[]) => {
       this.availableGroups = groups.filter((group: { id: string; }) =>
-        !this.groups.some(groupP => group.id === groupP.id));
+        !this.activeGroups.some(groupP => group.id === groupP.id));
       this.filteredAvailableGroups = this.availableGroups;
     });
   }
 
   addGroupDialog() {
-    this.filteredGroups = this.groups;
-    this.fetchAllGroups();
+    this.filteredGroups = this.activeGroups;
+    this.fetchAllActiveGroups();
     this.displayAddDialog = true;
   }
 
-  addGroupToProject(groupId: number) {
-    const dto: GroupAssignmentDTO = {
-      projectId: this.projectId!,
+  addGroupToProject(groupId: string) {
+    const minimalGxpDto: MinimalGxpDto = {
+      projectId: this.projectId.toString(),
       groupId: groupId
     }
-    this.projectService.addGroupToProject(dto).subscribe(() => {
-      this.fetchGroups(this.projectId);
+    this.projectControllerService.addGroupToProject(minimalGxpDto).subscribe(() => {
+      this.fetchActiveGroups(this.projectId);
       this.displayAddDialog = false;
     });
   }
 
   deleteGroupFromProject(groupId: number) {
-    const dto: GroupAssignmentDTO = {
-      projectId: Number(this.projectId),
-      groupId: groupId
-    }
-    this.projectService.deleteGroupFromProject(dto).subscribe(() => {
-      console.log(groupId, " deleted from project with ID: ", this.projectId);
-      this.fetchGroups(this.projectId);
+    this.projectControllerService.removeGroupFromProject(this.projectId.toString(), groupId.toString()).subscribe(() => {
+      console.log(groupId, ` removed Group ${groupId}from project with ID: `, this.projectId);
+      this.fetchActiveGroups(this.projectId);
     });
   }
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.filteredGroups = filterValue ? this.groups.filter(group =>
-      group.name.toLowerCase().includes(filterValue.toLowerCase())) : this.groups;
+    this.filteredGroups = filterValue ? this.activeGroups.filter(group =>
+      (group.name?.toLowerCase() ?? '').includes(filterValue.toLowerCase())) : this.activeGroups;
+
     this.filteredAvailableGroups = filterValue ? this.availableGroups.filter(group =>
-      group.name.toLowerCase().includes(filterValue.toLowerCase())) : this.availableGroups;
+      (group.name?.toLowerCase() ?? '').includes(filterValue.toLowerCase())) : this.availableGroups;
   }
 }
 

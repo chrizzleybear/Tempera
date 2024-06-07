@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {catchError, Observable, throwError} from 'rxjs';
-import {Project, ProjectDetailsDto} from "../models/project.model";
+import {Project} from "../models/project.model";
 import {Group} from "../models/group.model";
-import {ContributorAssignmentDTO, GroupAssignmentDTO, ProjectCreateDTO, ProjectUpdateDTO} from "../models/projectDtos";
+
 import {User} from "../models/user.model";
+import { ExtendedProjectDto, SimpleProjectDto } from '../../api';
+import { ContributorAssignmentDTO } from '../models/projectDtos';
 
 
 @Injectable({
@@ -19,11 +21,11 @@ export class ProjectService {
     return this.http.get<Project[]>(this.API_URL + 'all');
   }
 
-  createProject(dto: ProjectCreateDTO): Observable<ProjectDetailsDto> {
-    return this.http.post<ProjectDetailsDto>(`${this.API_URL}create`, dto);
+  createProject(dto: SimpleProjectDto): Observable<ExtendedProjectDto> {
+    return this.http.post<ExtendedProjectDto>(`${this.API_URL}create`, dto);
   }
 
-  updateProject(dto: ProjectUpdateDTO): Observable<Project> {
+  updateProject(dto: SimpleProjectDto): Observable<Project> {
     return this.http.put<Project>(`${this.API_URL}update`, dto);
   }
 
@@ -34,20 +36,8 @@ export class ProjectService {
       );
   }
 
-  getProjectById(projectId: number): Observable<ProjectDetailsDto> {
-    return this.http.get<ProjectDetailsDto>(`${this.API_URL}loadExtendedProject/${projectId}`);
-  }
-
-  addGroupToProject(dto: GroupAssignmentDTO): Observable<void> {
-    return this.http.post<void>(`${this.API_URL}addGroup`, dto);
-  }
-
-    getGroups(projectId: number): Observable<Group[]> {
-    return this.http.get<Group[]>(`${this.API_URL}getGroupsOfProject/${projectId}`);
-  }
-
-  deleteGroupFromProject(dto: GroupAssignmentDTO): Observable<void> {
-    return this.http.delete<void>(`${this.API_URL}removeGroup/${dto.projectId}/${dto.groupId}`);
+  getProjectById(projectId: string): Observable<ExtendedProjectDto> {
+    return this.http.get<ExtendedProjectDto>(`${this.API_URL}loadExtendedProject/${projectId}`);
   }
 
   addMemberToProject(dto: ContributorAssignmentDTO): Observable<Project> {

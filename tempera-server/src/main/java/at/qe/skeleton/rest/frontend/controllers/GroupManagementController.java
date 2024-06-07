@@ -1,6 +1,5 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
-import at.qe.skeleton.model.Groupx;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.rest.frontend.dtos.GroupDetailsDto;
 import at.qe.skeleton.rest.frontend.dtos.MemberAssigmentDto;
@@ -31,8 +30,8 @@ public class GroupManagementController {
   }
 
   @GetMapping("/all")
-  public ResponseEntity<List<SimpleGroupDto>> getAllGroups() {
-    List<SimpleGroupDto> groups = groupService.getAllGroups();
+  public ResponseEntity<List<SimpleGroupDto>> getAllActiveGroups() {
+    List<SimpleGroupDto> groups = groupService.getAllActiveGroups();
     return ResponseEntity.ok(groups);
   }
 

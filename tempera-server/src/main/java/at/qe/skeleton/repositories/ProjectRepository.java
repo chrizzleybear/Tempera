@@ -21,8 +21,10 @@ public interface ProjectRepository extends AbstractRepository<Project, Long> {
 
   public List<Project> findAllByManager_Username(String username);
 
-  @Query(
-      "select p from Project p join p.groupxProjects gxp join gxp.group g where g.groupLead.username = :username")
+  @Query("select new at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto(CAST(p.id AS string), p.isActive, p.name, p.description, p.manager.username) from Project p")
+    public List<SimpleProjectDto> findAllSimpleProjectDtos();
+
+  @Query("select p from Project p join p.groupxProjects gxp join gxp.group g where g.groupLead.username = :username")
   public List<Project> findAllByGroupLead(String username);
 
   public List<Project> findAll();

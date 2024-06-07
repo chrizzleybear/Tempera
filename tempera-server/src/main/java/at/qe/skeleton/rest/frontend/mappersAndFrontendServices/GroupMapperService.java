@@ -54,6 +54,7 @@ public class GroupMapperService {
     public SimpleGroupDto mapToSimpleGroupDto(Groupx groupx) {
         return new SimpleGroupDto(
                 groupx.getId().toString(),
+                groupx.isActive(),
                 groupx.getName(),
                 groupx.getDescription(),
                 groupx.getGroupLead().getUsername()

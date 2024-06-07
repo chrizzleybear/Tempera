@@ -13,6 +13,9 @@ public interface GroupRepository extends AbstractRepository<Groupx, Long> {
 
     List<Groupx> findAll();
 
+    @Query("SELECT g FROM Groupx g WHERE g.active = true")
+    List<Groupx> findAllActive();
+
     List<Groupx> findByGroupLead(Userx groupLead);
     List<Groupx> findAllByMembersContains(Userx user);
 

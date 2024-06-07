@@ -1,16 +1,12 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.Groupx;
-import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.GroupxProjectRepository;
 import at.qe.skeleton.repositories.UserxRepository;
-import at.qe.skeleton.rest.frontend.dtos.GroupDetailsDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleGroupDto;
-import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.ProjectMapperService;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @Scope("application")
@@ -39,10 +34,14 @@ public class GroupService {
     private GroupxProjectRepository groupxProjectRepository;
 
 
-    public List<SimpleGroupDto> getAllGroups() {
-        List<Groupx> groups = groupRepository.findAll();
+    /**
+     * will mostly be used to get all active groups as options for adding to a project
+     * @return
+     */
+    public List<SimpleGroupDto> getAllActiveGroups() {
+        List<Groupx> groups = groupRepository.findAllActive();
         List<SimpleGroupDto> dtos = groups.stream()
-                .map(group -> new SimpleGroupDto(String.valueOf(group.getId()), group.getName(), group.getDescription(), group.getGroupLead().getId()))
+                .map(group -> new SimpleGroupDto(String.valueOf(group.getId()), group.isActive(), group.getName(), group.getDescription(), group.getGroupLead().getId()))
                 .toList();
         return dtos;
     }
@@ -113,6 +112,7 @@ public class GroupService {
         List<Groupx> groups = groupRepository.findByGroupLead(groupLead);
         return groups;
     }
+
 
     @PreAuthorize("hasAuthority('MANAGER') or hasAnyAuthority('ADMIN')")
     public List<Groupx> getGroupsByManager(String userId) {

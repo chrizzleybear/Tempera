@@ -66,7 +66,7 @@ public class AccumulatedTimeMapper {
     List<Project> projects = projectService.getProjectsByGroupLead(username);
     List<SimpleProjectDto> simpleProjectDtos =
         projects.stream().map(projectMapper::mapToSimpleProjectDto).toList();
-    // all available Groups for this group lead -> all groups that are assigned this grouplead
+    // all available Groups for this group lead (active and inactive) -> all groups that are assigned to this grouplead
     List<Groupx> groups = groupService.getGroupsByGroupLead(username);
     List<SimpleGroupDto> simpleGroupDtos =
         groups.stream().map(groupMapperService::mapToSimpleGroupDto).toList();

@@ -1,4 +1,6 @@
 package at.qe.skeleton.rest.frontend.dtos;
 
-public record SimpleProjectDto (String projectId, String name, String description, String manager) {}
+import jakarta.validation.constraints.NotNull;
+
+public record SimpleProjectDto (@NotNull String projectId, @NotNull boolean isActive, @NotNull String name,@NotNull String description, @NotNull String manager) {}
 

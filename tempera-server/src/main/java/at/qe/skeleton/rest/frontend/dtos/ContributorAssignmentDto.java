@@ -1,3 +1,5 @@
 package at.qe.skeleton.rest.frontend.dtos;
 
-public record ContributorAssignmentDto (Long groupId, Long projectId, String contributorId){}
+import jakarta.validation.constraints.NotNull;
+
+public record ContributorAssignmentDto (@NotNull Long groupId, @NotNull  Long projectId,@NotNull String contributorId){}

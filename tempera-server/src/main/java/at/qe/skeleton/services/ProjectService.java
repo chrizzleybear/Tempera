@@ -11,6 +11,7 @@ import at.qe.skeleton.repositories.GroupxProjectRepository;
 import at.qe.skeleton.repositories.ProjectRepository;
 import at.qe.skeleton.repositories.UserxRepository;
 import at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -266,10 +267,9 @@ public class ProjectService {
     return groupxProjectRepository.findAllByProjectId(projectId);
   }
 
-
-
-
-
+  public List<SimpleProjectDto> getAllSimpleProjectDtos(){
+    return projectRepository.findAllSimpleProjectDtos();
+  }
   public List<Project> findAllProjects() {
     return projectRepository.findAll();
   }

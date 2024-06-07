@@ -11,6 +11,7 @@ import {ProjectCreateComponent} from "../project-create/project-create.component
 import {DialogModule} from "primeng/dialog";
 import {Router} from "@angular/router";
 import {ProjectEditComponent} from "../project-edit/project-edit.component";
+import { ProjectControllerService, SimpleProjectDto } from '../../../api';
 @Component({
   selector: 'app-projects',
   standalone: true,
@@ -34,14 +35,14 @@ import {ProjectEditComponent} from "../project-edit/project-edit.component";
  */
 export class ProjectsComponent implements OnInit{
 
-  projects: Project[] = [];
-  filteredProjects: Project[] = [];
+  projects: SimpleProjectDto[] = [];
+  filteredProjects: SimpleProjectDto[] = [];
   messages: any;
   displayCreateDialog: boolean = false;
   displayEditDialog: boolean = false;
-  selectedProject: Project | undefined;
+  selectedProject: SimpleProjectDto | undefined;
 
-  constructor(private projectService: ProjectService, private router: Router) {
+  constructor(private projectService: ProjectControllerService, private router: Router) {
 
   }
   ngOnInit(): void {
@@ -50,7 +51,7 @@ export class ProjectsComponent implements OnInit{
   }
 
   private loadProjects() {
-    this.projectService.getAllProjects().subscribe({
+    this.projectService.getAllSimpleProjects().subscribe({
       next: (projects) => {
         console.log("Loaded projects:", projects);
         this.projects = projects;
@@ -75,7 +76,7 @@ export class ProjectsComponent implements OnInit{
   createProject() {
     this.displayCreateDialog = true;
   }
-    deleteProject(projectId: number) {
+    deleteProject(projectId: string) {
       this.projectService.deleteProject(projectId).subscribe({
         next: (response) => {
           this.loadProjects();
@@ -93,7 +94,7 @@ export class ProjectsComponent implements OnInit{
       this.returnToProjects();
     }
   }
-  editProject(project: Project) {
+  editProject(project: SimpleProjectDto) {
     console.log("Edit project:", project);
     this.selectedProject = project;
     this.displayEditDialog = true;

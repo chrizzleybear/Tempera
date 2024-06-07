@@ -14,6 +14,8 @@ public class Groupx {
   private String name;
   private String description;
 
+  private boolean active;
+
   @ManyToOne(fetch = FetchType.LAZY) private Userx groupLead;
 
   @ManyToMany(cascade = CascadeType.ALL) private List<Userx> members;
@@ -40,12 +42,23 @@ public class Groupx {
     this.description = description;
     this.groupLead = Objects.requireNonNull(groupLead, "GroupLead must not be null");
     this.members = new ArrayList<>();
+    this.active = true;
   }
 
+  public boolean isActive() {
+    return active;
+  }
 
+  public void activate() {
+    this.active = true;
+  }
 
+  public void deactivate() {
+    this.active = false;
+  }
   protected Groupx() {
     this.members = new ArrayList<>();
+    this.active = true;
   }
 
   public String getName() {

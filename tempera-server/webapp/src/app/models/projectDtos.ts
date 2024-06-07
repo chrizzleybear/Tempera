@@ -11,11 +11,6 @@ export interface ProjectUpdateDTO {
   manager: string;
 }
 
-export interface GroupAssignmentDTO {
-  projectId: number;
-  groupId: number;
-}
-
 export interface ContributorAssignmentDTO {
   projectId: number;
   groupId: number;

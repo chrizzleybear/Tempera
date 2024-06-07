@@ -1,6 +1,7 @@
 .gitignore
 README.md
 api.module.ts
+api/accessPointController.service.ts
 api/accumulatedTimeController.service.ts
 api/alertController.service.ts
 api/api.ts
@@ -11,6 +12,7 @@ api/measurementController.service.ts
 api/peripheryConnectionController.service.ts
 api/projectController.service.ts
 api/roomController.service.ts
+api/temperaStationController.service.ts
 api/timeRecordController.service.ts
 api/timetableController.service.ts
 api/userManagementController.service.ts
@@ -31,8 +33,8 @@ model/dashboardDataResponse.ts
 model/extendedGroupDto.ts
 model/extendedProjectDto.ts
 model/externalRecordDto.ts
+model/floorComponent.ts
 model/getTimetableDataResponse.ts
-model/groupAssignmentDto.ts
 model/groupDetailsDto.ts
 model/groupx.ts
 model/groupxProject.ts
@@ -44,6 +46,7 @@ model/measurementDto.ts
 model/measurementId.ts
 model/memberAssigmentDto.ts
 model/messageResponse.ts
+model/minimalGxpDto.ts
 model/models.ts
 model/modification.ts
 model/project.ts
@@ -51,6 +54,7 @@ model/projectDetailsDto.ts
 model/room.ts
 model/scanOrderDto.ts
 model/sensor.ts
+model/sensorDto.ts
 model/sensorId.ts
 model/signupRequest.ts
 model/simpleGroupDto.ts
@@ -59,6 +63,7 @@ model/simpleProjectDto.ts
 model/simpleUserDto.ts
 model/splitTimeRecordRequest.ts
 model/temperaStation.ts
+model/temperaStationDto.ts
 model/threshold.ts
 model/thresholdDto.ts
 model/thresholdTip.ts

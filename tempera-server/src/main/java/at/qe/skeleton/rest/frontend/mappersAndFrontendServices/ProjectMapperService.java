@@ -40,6 +40,11 @@ public class ProjectMapperService {
         return projects.stream().map(this::detailedProjectDtoMapper).collect(toList());
     }
 
+    @Transactional
+    public List<SimpleProjectDto> getAllSimpleProjects() {
+        return projectService.getAllSimpleProjectDtos();
+    }
+
   public ExtendedProjectDto loadExtendedProjectDto(Long projectId)
       throws CouldNotFindEntityException {
     Project project =
@@ -86,10 +91,10 @@ public class ProjectMapperService {
     }
 
 
-    public ExtendedProjectDto addGroupToProject(GroupAssignmentDto groupAssignmentDto) throws IOException {
-        GroupxProject groupxProject = projectService.createGroupxProject(groupAssignmentDto.projectId(), groupAssignmentDto.groupId());
+    public ExtendedProjectDto addGroupToProject(minimalGxpDto minimalGxpDto) throws IOException {
+        GroupxProject groupxProject = projectService.createGroupxProject(Long.parseLong(minimalGxpDto.projectId()), Long.parseLong(minimalGxpDto.groupId()));
         projectService.saveGroupxProject(groupxProject);
-        return loadExtendedProjectDto(groupAssignmentDto.projectId());
+        return loadExtendedProjectDto(Long.parseLong(minimalGxpDto.projectId()));
     }
 
     public List<SimpleProjectDto> getSimpleProjectsByGroupId(Long groupId) {
@@ -105,6 +110,7 @@ public class ProjectMapperService {
   public SimpleProjectDto mapToSimpleProjectDto(Project project) {
         return new SimpleProjectDto(
                 project.getId().toString(),
+                project.isActive(),
                 project.getName(),
                 project.getDescription(),
                 project.getManager().getUsername()
@@ -167,15 +173,4 @@ public class ProjectMapperService {
                 userMapper.getSimpleUser(groupx.getGroupLead())
         );
     }
-
-    public SimpleProjectDto mapSimpleProjectDbDtoToDto(SimpleProjectDbDto simpleProjectDbDto) {
-        return new SimpleProjectDto(
-            simpleProjectDbDto.id().toString(),
-            simpleProjectDbDto.name(),
-            simpleProjectDbDto.description(),
-            simpleProjectDbDto.manager());
-    }
-
-
-
 }

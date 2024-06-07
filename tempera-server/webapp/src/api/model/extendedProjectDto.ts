@@ -15,9 +15,10 @@ import { SimpleGroupDto } from './simpleGroupDto';
 
 
 export interface ExtendedProjectDto { 
-    manager?: SimpleUserDto;
-    simpleProjectDto?: SimpleProjectDto;
-    connectedGroups?: Array<SimpleGroupDto>;
+    manager: SimpleUserDto;
+    simpleProjectDto: SimpleProjectDto;
+    activeGroups?: Array<SimpleGroupDto>;
+    deactivatedGroups?: Array<SimpleGroupDto>;
     contributors?: Array<SimpleUserDto>;
 }
 

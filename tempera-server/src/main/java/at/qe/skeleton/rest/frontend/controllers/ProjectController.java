@@ -23,10 +23,18 @@ public class ProjectController {
   private Logger logger = Logger.getLogger("ProjectController");
 
     @GetMapping("/all")
-    public ResponseEntity<List<ProjectDetailsDto>> getAllProjects() {
-      List<ProjectDetailsDto> projects = projectMapperService.getAllDetailedProjects();
+    public ResponseEntity<List<SimpleProjectDto>> getAllSimpleProjects() {
+      List<SimpleProjectDto> projects = projectMapperService.getAllSimpleProjects();
       return ResponseEntity.ok(projects);
     }
+
+  @GetMapping("/allDetailed")
+  public ResponseEntity<List<ProjectDetailsDto>> getAllDetailedProjects() {
+    List<ProjectDetailsDto> projects = projectMapperService.getAllDetailedProjects();
+    return ResponseEntity.ok(projects);
+  }
+
+
 
 
   @PutMapping("/update")
@@ -74,7 +82,7 @@ public class ProjectController {
 
   //ehemals getGroups
   @GetMapping("/getActiveGroupsOfProject/{projectId}")
-  public ResponseEntity<List<SimpleGroupDto>> getGroupsByProjectId(@PathVariable String projectId) {
+  public ResponseEntity<List<SimpleGroupDto>> getActiveGroupsByProjectId(@PathVariable String projectId) {
     List<SimpleGroupDto> activeGroups = projectMapperService.getAllActiveSimpleGroups(projectId);
     return ResponseEntity.ok(activeGroups);
   }
@@ -87,9 +95,9 @@ public ResponseEntity<List<SimpleGroupDto>> getDeactivatedGroupsByProjectId(@Pat
 
   @PostMapping("/addGroup")
   public ResponseEntity<ExtendedProjectDto> addGroupToProject(
-      @RequestBody GroupAssignmentDto groupAssignmentDto) {
+      @RequestBody minimalGxpDto minimalGxpDto) {
     try{
-      ExtendedProjectDto extendedProjectDto = projectMapperService.addGroupToProject(groupAssignmentDto);
+      ExtendedProjectDto extendedProjectDto = projectMapperService.addGroupToProject(minimalGxpDto);
       return ResponseEntity.ok(extendedProjectDto);
     } catch (Exception e) {
       logger.warning(e.getMessage());
