@@ -27,7 +27,7 @@ model/accessPointDto.ts
 model/accumulatedTimeDto.ts
 model/accumulatedTimeResponse.ts
 model/alertDto.ts
-model/auditLog.ts
+model/auditLogDto.ts
 model/colleagueStateDto.ts
 model/contributorAssignmentDto.ts
 model/credentialsDto.ts
