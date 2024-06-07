@@ -13,11 +13,11 @@ import { SimpleUserDto } from './simpleUserDto';
 
 
 export interface AuditLogDto { 
-    id?: string;
-    timeStamp?: string;
-    triggeringUser?: SimpleUserDto;
-    actionType?: AuditLogDto.ActionTypeEnum;
-    affectedType?: AuditLogDto.AffectedTypeEnum;
+    id: string;
+    timeStamp: string;
+    triggeringUser: SimpleUserDto;
+    actionType: AuditLogDto.ActionTypeEnum;
+    affectedType: AuditLogDto.AffectedTypeEnum;
     message?: string;
 }
 export namespace AuditLogDto {

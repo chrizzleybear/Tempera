@@ -1,0 +1,65 @@
+<ng-container *ngIf="auditLogs; else loading">
+  <p-table [value]="auditLogs" [paginator]="true">
+    <ng-template pTemplate="header">
+      <tr>
+        <th id="time">Time</th>
+        <th id="user">Triggering User</th>
+        <th id="actionType">Action Type</th>
+        <th id="affectedType">Affected Type</th>
+        <th id="message">Message</th>
+      </tr>
+      <!--  Filters   -->
+      <tr>
+        <th id="timeFilter">
+          <p-columnFilter type="date" field="time" placeholder="Search"></p-columnFilter>
+        </th>
+        <th id="userFilter">
+          <p-columnFilter field="user.username" placeholder="Search"></p-columnFilter>
+        </th>
+        <th id="actionTypeFilter">
+          <p-columnFilter field="actionType" [showMenu]="false" matchMode="in" [showClearButton]="false">
+            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+              <p-multiSelect
+                [options]="actionTypeOptions"
+                [showClear]="true"
+                (onChange)="filter($event.value)"
+                (onClear)="filter(null)"
+                appendTo="body"
+                placeholder="Any"
+              ></p-multiSelect>
+            </ng-template>
+          </p-columnFilter>
+        </th>
+        <th id="affectedTypeFilter">
+          <p-columnFilter field="affectedType" [showMenu]="false" matchMode="in" [showClearButton]="false">
+            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+              <p-multiSelect
+                [options]="affectedTypeOptions"
+                [showClear]="true"
+                (onChange)="filter($event.value)"
+                (onClear)="filter(null)"
+                appendTo="body"
+                placeholder="Any"
+              ></p-multiSelect>
+            </ng-template>
+          </p-columnFilter>
+        </th>
+        <th id="messageFilter">
+          <p-columnFilter type="text" field="message"></p-columnFilter>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-auditLog>
+      <tr>
+        <td>{{ auditLog.time | date: 'ccc, MMM dd, y, HH:mm' }}</td>
+        <td>{{ auditLog.triggeringUser.username }}</td>
+        <td>{{ auditLog.actionType }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</ng-container>
+<ng-template #loading>
+  <div class="flex justify-center">
+    <p-progressSpinner ariaLabel="loading" />
+  </div>
+</ng-template>
