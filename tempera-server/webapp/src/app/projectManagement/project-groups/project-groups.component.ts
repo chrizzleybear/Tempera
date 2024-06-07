@@ -1,10 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {ProjectService} from "../../_services/project.service";
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
-import {Group} from "../../models/group.model";
 import {ActivatedRoute} from "@angular/router";
 import {TableModule} from "primeng/table";
-import {GroupService} from "../../_services/group.service";
 import {MessagesModule} from "primeng/messages";
 import {ButtonModule} from "primeng/button";
 import {DialogModule} from "primeng/dialog";

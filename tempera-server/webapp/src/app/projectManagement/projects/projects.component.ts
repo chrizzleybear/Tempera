@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {Project} from "../../models/project.model";
-import {ProjectService} from '../../_services/project.service';
 import {MessagesModule} from "primeng/messages";
 import {TableModule} from "primeng/table";
 import {ButtonModule} from "primeng/button";
@@ -82,8 +81,8 @@ export class ProjectsComponent implements OnInit{
           this.loadProjects();
           this.messages = [{severity:'success', summary:'Success', detail:'Project deleted successfully'}];
         },
-        error: (error) => {
-          this.messages = [{severity:'error', summary:'Error', detail:'Error deleting project'}];
+        error: (err) => {
+          this.messages = [{severity:'error', summary:'Error', detail:`Error ${err} deleting project`}];
         }
       })
   };

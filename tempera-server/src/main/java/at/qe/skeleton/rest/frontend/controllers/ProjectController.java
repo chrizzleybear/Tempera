@@ -20,7 +20,7 @@ public class ProjectController {
   @Autowired ProjectService projectService;
   @Autowired
   ProjectMapperService projectMapperService;
-  private Logger logger = Logger.getLogger("ProjectController");
+  private final Logger logger = Logger.getLogger("ProjectController");
 
     @GetMapping("/all")
     public ResponseEntity<List<SimpleProjectDto>> getAllSimpleProjects() {
@@ -118,13 +118,13 @@ public ResponseEntity<List<SimpleGroupDto>> getDeactivatedGroupsByProjectId(@Pat
   }
 
   @PostMapping("/addContributor")
-  public ResponseEntity<ExtendedProjectDto> addContributßor(
+  public ResponseEntity<ExtendedProjectDto> addContributor(
       @RequestBody ContributorAssignmentDto contributorAssignmentDto) {
     try {
-      System.out.println(contributorAssignmentDto);
-    projectService.addContributor(contributorAssignmentDto.groupId(),
-        contributorAssignmentDto.projectId(), contributorAssignmentDto.contributorId());
-    ExtendedProjectDto extendedProjectDtoproject = projectMapperService.loadExtendedProjectDto(contributorAssignmentDto.projectId());
+      logger.info("addContributor called");
+    projectService.addContributor(Long.parseLong(contributorAssignmentDto.groupId()),
+        Long.parseLong(contributorAssignmentDto.projectId()), contributorAssignmentDto.contributorId());
+    ExtendedProjectDto extendedProjectDtoproject = projectMapperService.loadExtendedProjectDto(Long.parseLong(contributorAssignmentDto.projectId()));
     return ResponseEntity.ok(extendedProjectDtoproject);
     } catch (Exception e) {
       logger.warning("caught exception in Controller: %s".formatted(e.getMessage()));
@@ -134,7 +134,7 @@ public ResponseEntity<List<SimpleGroupDto>> getDeactivatedGroupsByProjectId(@Pat
 
   @DeleteMapping("/removeContributor/{projectId}/{groupId}/{contributorId}")
   public ResponseEntity<ExtendedProjectDto> removeContributor(
-      @PathVariable String projectId, @PathVariable String groupId, @PathVariable String contributorId) throws CouldNotFindEntityException {
+      @PathVariable String projectId, @PathVariable String groupId, @PathVariable String contributorId) {
     try {
       projectService.removeContributor(Long.parseLong(groupId), Long.parseLong(projectId), contributorId);
       ExtendedProjectDto extendedProjectDto = projectMapperService.loadExtendedProjectDto(Long.parseLong(projectId));

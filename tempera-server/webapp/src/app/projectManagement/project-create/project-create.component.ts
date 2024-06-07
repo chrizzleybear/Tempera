@@ -1,14 +1,13 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ProjectService } from '../../_services/project.service';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { UsersService } from '../../_services/users.service';
 import { User } from '../../models/user.model';
-import {ProjectCreateDTO} from "../../models/projectDtos";
 import {MessageModule} from "primeng/message";
 import {NgIf} from "@angular/common";
+import { ProjectControllerService, SimpleProjectDto } from '../../../api';
 
 @Component({
   selector: 'app-project-create',
@@ -29,7 +28,7 @@ export class ProjectCreateComponent {
   managers: { label: string, value: User }[] | undefined;
   @Output() createComplete = new EventEmitter<boolean>();
 
-  constructor(private fb: FormBuilder, private projectService: ProjectService, private usersService: UsersService) {
+  constructor(private fb: FormBuilder, private projectService: ProjectControllerService, private usersService: UsersService) {
     this.projectForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required]],
@@ -54,8 +53,10 @@ export class ProjectCreateComponent {
 
   onSubmit() {
     if (this.projectForm.valid) {
-      const dto: ProjectCreateDTO = {
+      const dto: SimpleProjectDto = {
         name: this.projectForm.value.name,
+        projectId: this.projectForm.value.name,
+        isActive: true,
         description: this.projectForm.value.description,
         manager: this.projectForm.value.manager.value.username
       };

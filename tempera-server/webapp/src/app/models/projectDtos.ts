@@ -12,7 +12,7 @@ export interface ProjectUpdateDTO {
 }
 
 export interface ContributorAssignmentDTO {
-  projectId: number;
-  groupId: number;
+  projectId: string;
+  groupId: string;
   contributorId: string;
 }

@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {ProjectService} from "../../_services/project.service";
 import {ButtonModule} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
 import {MessageModule} from "primeng/message";
@@ -8,7 +7,7 @@ import {NgIf} from "@angular/common";
 import {PaginatorModule} from "primeng/paginator";
 import {User} from "../../models/user.model";
 import {UsersService} from "../../_services/users.service";
-import { ExtendedProjectDto, SimpleProjectDto } from '../../../api';
+import { ExtendedProjectDto, ProjectControllerService, SimpleProjectDto } from '../../../api';
 
 @Component({
   selector: 'app-project-edit',
@@ -32,7 +31,7 @@ export class ProjectEditComponent implements OnChanges, OnInit {
   @Input({required: true}) project!: SimpleProjectDto;
   @Output() editComplete = new EventEmitter<boolean>();
 
-  constructor(private fb: FormBuilder, private projectService: ProjectService, private usersService: UsersService) {
+  constructor(private fb: FormBuilder, private projectService: ProjectControllerService, private usersService: UsersService) {
     this.projectForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required]],
@@ -46,7 +45,7 @@ export class ProjectEditComponent implements OnChanges, OnInit {
   }
 
   loadProjectDetails() {
-    this.projectService.getProjectById(this.project?.projectId).subscribe({
+    this.projectService.getProjectDetailedById(this.project?.projectId).subscribe({
       next: (data) => {
         this.extendedProject = data;
         this.fetchManagers();
