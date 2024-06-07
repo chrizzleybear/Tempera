@@ -9,13 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { MeasurementId } from './measurementId';
-import { Sensor } from './sensor';
 
 
-export interface Measurement { 
-    id?: MeasurementId;
-    value?: number;
-    sensor?: Sensor;
+export interface SensorDto { 
+    id?: string;
+    type?: string;
+    unit?: string;
+    temperaStationId?: string;
 }
 
