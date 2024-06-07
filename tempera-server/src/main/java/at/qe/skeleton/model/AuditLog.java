@@ -5,7 +5,6 @@ import at.qe.skeleton.model.enums.LogEvent;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.Objects;
 
 @Entity
@@ -44,7 +43,7 @@ public class AuditLog {
     this.message = message;
   }
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
@@ -64,6 +63,9 @@ public class AuditLog {
     return actionType;
   }
 
+  public Userx getTriggeringUser() {
+    return triggeringUser;
+  }
 
   @Override
   public boolean equals(Object obj) {

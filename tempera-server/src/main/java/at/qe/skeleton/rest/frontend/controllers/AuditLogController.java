@@ -1,8 +1,8 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
-import at.qe.skeleton.model.AuditLog;
+import at.qe.skeleton.rest.frontend.dtos.AuditLogDto;
+import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.AuditLogMapper;
 import at.qe.skeleton.services.AuditLogService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,11 +17,17 @@ import java.util.List;
 @RequestMapping(value = "/api/auditlogs", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuditLogController {
 
-    @Autowired private AuditLogService auditLogService;
+    private final AuditLogService auditLogService;
+    private final AuditLogMapper auditLogMapper;
+
+    public AuditLogController(AuditLogService auditLogService, AuditLogMapper auditLogMapper) {
+        this.auditLogService = auditLogService;
+        this.auditLogMapper = auditLogMapper;
+    }
 
     @GetMapping("/all")
-    public ResponseEntity<List<AuditLog>> getAllAuditLogs() {
-        List<AuditLog> auditLogs = auditLogService.getAll();
+    public ResponseEntity<List<AuditLogDto>> getAllAuditLogs() {
+        List<AuditLogDto> auditLogs = auditLogService.getAll().stream().map(auditLogMapper :: getAuditLogDto).toList();
         return ResponseEntity.ok(auditLogs);
     }
 
