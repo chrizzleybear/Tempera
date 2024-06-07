@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import { TemperaStationService } from '../../_services/tempera-station.service';
 import { TemperaStation } from '../../models/temperaStation.model';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgIf} from "@angular/common";
 import {CheckboxModule} from "primeng/checkbox";
 import {ButtonModule} from "primeng/button";
@@ -23,7 +23,7 @@ import {UsersService} from "../../_services/users.service";
   ],
   styleUrls: ['./tempera-station-edit.component.css']
 })
-export class TemperaStationEditComponent implements OnInit {
+export class TemperaStationEditComponent implements OnInit, OnChanges {
 
   temperaForm: FormGroup;
 
@@ -34,24 +34,26 @@ export class TemperaStationEditComponent implements OnInit {
   constructor(
     private temperaStationService: TemperaStationService,
     private formBuilder: FormBuilder,
-    private userService: UsersService
   ) {
     this.temperaForm = this.formBuilder.group({
-      user: '',
-      enabled: ''
+      user: [null, [Validators.required]],
+      enabled: [false, [Validators.required]],
     });
   }
 
   ngOnInit() {
-    this.fetchUsers();
-    //this.fetchTemperaStationDetails(this.temperaStation.id);
+    this.fetchTemperaStationDetails(this.temperaStation.id);
+  }
+
+  ngOnChanges() {
+    this.fetchTemperaStationDetails(this.temperaStation.id);
   }
 
   private fetchTemperaStationDetails(temperaStationId: string) {
     this.temperaStationService.getTemperaStationById(temperaStationId).subscribe({
       next: (data) => {
        this.temperaStation = data;
-        this.populateForm();
+        this.fetchUsers();
       },
       error: (error) => {
         console.error('Failed to load temperaStation details:', error);
@@ -61,9 +63,16 @@ export class TemperaStationEditComponent implements OnInit {
 
   onSubmit() {
     if (this.temperaForm?.valid) {
-      this.temperaStationService.updateTemperaStation(this.temperaStation.id, this.temperaForm.value).subscribe({
+      if(this.temperaForm.value.user.value == undefined) {
+        this.temperaStation.enabled = this.temperaForm.value.enabled;
+      }
+      else {
+        this.temperaStation.user = this.temperaForm.value.user.value.username;
+        this.temperaStation.enabled = this.temperaForm.value.enabled;
+      }
+      console.log("Update ", this.temperaStation);
+      this.temperaStationService.updateTemperaStation(this.temperaStation).subscribe({
         next: () => {
-          console.log('TemperaStation updated successfully');
           this.temperaForm?.reset();
           this.onEditComplete.emit(true);
 
@@ -77,7 +86,7 @@ export class TemperaStationEditComponent implements OnInit {
   }
 
   private fetchUsers() {
-    this.userService.getAllUsers().subscribe({
+    this.temperaStationService.getAvailableUsers().subscribe({
       next: (users: User[]) => {
         this.users = users.map(user => ({
           label: `${user.firstName} ${user.lastName}`,
@@ -90,10 +99,8 @@ export class TemperaStationEditComponent implements OnInit {
   }
 
   populateForm() {
-    console.log(this.temperaStation.user.username);
-    console.log(this.users);
     this.temperaForm = this.formBuilder.group({
-      user: this.users?.find(user => user.value.username === this.temperaStation.user.username),
+      user: this.temperaStation.user,
       enabled: this.temperaStation.enabled
     });
   }

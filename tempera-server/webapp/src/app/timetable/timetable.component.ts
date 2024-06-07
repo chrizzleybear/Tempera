@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import {
-  ColleagueStateDto,
-  SimpleProjectDto,
+  ColleagueStateDto, SimpleGroupxProjectDto,
   TimetableControllerService, TimetableEntryDto,
 } from '../../api';
 import { Table, TableModule } from 'primeng/table';
@@ -37,6 +36,7 @@ import { DateTime } from 'luxon';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TotalTimeHelper } from '../_helpers/total-time-helper';
+import { OverlappingProjectHelper } from '../_helpers/overlapping-project-helper';
 
 interface InternalTimetableEntryDto extends TimetableEntryDto {
   startTime: Date;
@@ -78,7 +78,7 @@ interface InternalTimetableEntryDto extends TimetableEntryDto {
 export class TimetableComponent implements OnInit {
   public tableEntries?: InternalTimetableEntryDto[];
 
-  public availableProjects: SimpleProjectDto[] = [];
+  public availableProjects: SimpleGroupxProjectDto[] = [];
 
   public filterFields: string[] = [];
 
@@ -94,6 +94,18 @@ export class TimetableComponent implements OnInit {
 
   public splitVisible: boolean = false;
   public calendarVisible: boolean = false;
+
+  /*
+  Used for handling when a user is assigned to a project from multiple groups
+  Key is the projectId and value is an object containing the projects with the same projectId and the original name of the project
+   */
+  private duplicatedProjects: Map<string, {
+    projects: SimpleGroupxProjectDto[],
+    originalName: string
+  }> = new Map<string, {
+    projects: SimpleGroupxProjectDto[],
+    originalName: string
+  }>();
 
   protected readonly Date = Date;
   protected readonly StateEnum = StateEnum;
@@ -159,6 +171,12 @@ export class TimetableComponent implements OnInit {
 
           this.availableProjects = data.availableProjects ?? [];
 
+          // Rename projects that have the same projectId
+          this.duplicatedProjects = OverlappingProjectHelper.getDuplicatedProjects(this.availableProjects);
+          OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, this.availableProjects);
+          const assignedProjects = this.tableEntries.filter(x => x?.assignedGroupxProject).map(entry => entry.assignedGroupxProject!)
+          OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, assignedProjects);
+
           this.filterFields = Object.keys(this.tableEntries?.[0] ?? []);
         },
         error: err => {
@@ -169,10 +187,18 @@ export class TimetableComponent implements OnInit {
     );
   }
 
-  updateProject(newProject: SimpleProjectDto, timeEntryId: number) {
+  updateProject(newProject: SimpleGroupxProjectDto, timeEntryId: number) {
+
+    // give the project back the original name if it is a duplicate
+    let submitProject = structuredClone(newProject);
+    if (this.duplicatedProjects.has(submitProject.projectId ?? '')) {
+      submitProject.projectName = this.duplicatedProjects.get(submitProject.projectId!)?.originalName;
+    }
+
     this.timetableControllerService.updateProject1({
       entryId: timeEntryId,
-      project: newProject,
+      projectId: submitProject.projectId!,
+      groupId: submitProject.groupId!,
     }).subscribe({
       next: () => {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project updated successfully' });

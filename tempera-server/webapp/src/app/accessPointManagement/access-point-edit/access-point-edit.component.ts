@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import {AccessPoint} from "../../models/accessPoint.model";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {AccessPointService} from "../../_services/access-point.service";
@@ -20,7 +20,7 @@ import {ButtonModule} from "primeng/button";
   templateUrl: './access-point-edit.component.html',
   styleUrl: './access-point-edit.component.css'
 })
-export class AccessPointEditComponent implements OnInit{
+export class AccessPointEditComponent implements OnInit, OnChanges{
 
   accessPointForm: FormGroup;
   rooms: Room[] = [];
@@ -38,12 +38,14 @@ export class AccessPointEditComponent implements OnInit{
 
   ngOnInit(): void {
     this.fetchAccessPoint()
+  }
+
+  ngOnChanges(SimpleChanges: any) {
     this.fetchRooms();
-    this.populateForm();
   }
 
   private fetchRooms() {
-    this.roomService.getAvailableRooms().subscribe({
+    this.accessPointService.getAvailableRooms().subscribe({
       next: (rooms) => {
         this.rooms = rooms;
         console.log('Loaded rooms:', rooms);
@@ -52,6 +54,7 @@ export class AccessPointEditComponent implements OnInit{
         console.error('Error loading rooms:', error);
       }
     });
+    this.populateForm();
   }
   private fetchAccessPoint() {
     this.accessPointService.getAccesspointById(this.accessPoint.id).subscribe({
@@ -61,6 +64,7 @@ export class AccessPointEditComponent implements OnInit{
           room: accessPoint.room,
           enabled: accessPoint.enabled
         });
+        this.fetchRooms();
       },
       error: (error) => {
         console.error('Error loading access point:', error);
@@ -76,6 +80,9 @@ export class AccessPointEditComponent implements OnInit{
 
   onSubmit() {
     if (this.accessPointForm.valid) {
+      if(this.accessPointForm.value.room.id === undefined) {
+        this.accessPointForm.value.room = this.accessPoint.room;
+      }
       const dto: AccessPointEditDto = {
         id : this.accessPoint.id,
         room: this.accessPointForm.value.room,

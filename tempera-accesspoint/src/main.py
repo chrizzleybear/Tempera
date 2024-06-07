@@ -5,7 +5,7 @@ import sys
 import bleak
 import requests.exceptions
 from bleak import BleakClient
-from tenacity import retry, wait_fixed, retry_if_exception_type, stop_after_attempt
+from tenacity import retry, wait_fixed, retry_if_exception_type
 
 from logging_conf import config
 from tempera import bleclient, utils, api
@@ -17,10 +17,10 @@ logger = logging.getLogger("tempera")
 
 
 @retry(
-    retry=retry_if_exception_type(bleak.exc.BleakError)
-    | retry_if_exception_type(bleak.exc.BleakDBusError),
+    retry=retry_if_exception_type(BluetoothConnectionLostException)
+    | retry_if_exception_type(bleak.exc.BleakDBusError)
+    | retry_if_exception_type(RuntimeError),
     wait=wait_fixed(10),
-    stop=stop_after_attempt(10),
 )
 async def get_notifications(client: BleakClient) -> None:
     elapsed_time_service = await bleclient.filter_uuid(client, "183f")
@@ -34,10 +34,10 @@ async def get_notifications(client: BleakClient) -> None:
 
 
 @retry(
-    retry=retry_if_exception_type(bleak.exc.BleakError)
-    | retry_if_exception_type(bleak.exc.BleakDBusError),
+    retry=retry_if_exception_type(BluetoothConnectionLostException)
+    | retry_if_exception_type(bleak.exc.BleakDBusError)
+    | retry_if_exception_type(RuntimeError),
     wait=wait_fixed(10),
-    stop=stop_after_attempt(10),
 )
 async def get_measurements(client: BleakClient) -> None:
     measurement_service = await bleclient.filter_uuid(client, "181a")

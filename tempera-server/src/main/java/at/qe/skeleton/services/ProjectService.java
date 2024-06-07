@@ -13,6 +13,7 @@ import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.GroupxProjectRepository;
 import at.qe.skeleton.repositories.ProjectRepository;
 import at.qe.skeleton.repositories.UserxRepository;
+import at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -79,7 +80,7 @@ public class ProjectService {
             .findById(manager)
             .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND)));
     auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.PROJECT,
-            "Project " + project.getName() + " was edited.");
+          "Project " + project.getName() + " was edited.");
     return projectRepository.save(project);
   }
 
@@ -102,7 +103,7 @@ public class ProjectService {
     groupxProject.addProject(project);
     groupxProject.addGroup(group);
     auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.PROJECT,
-            "Project " + project.getName() + " was linked to group " + group.getName() + ".");
+          "Project " + project.getName() + " was linked to group " + group.getName() + ".");
     return groupxProjectRepository.save(groupxProject);
   }
 
@@ -136,8 +137,8 @@ public class ProjectService {
       // löschen wir einfach mal das GroupxProject
       // todo: eine geeignete lösch-policy überlegen: ein feld in GroupxProject setzen mit "is
       // active" oder so
-      auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.PROJECT,
-              "Group " + groupxProject.getGroup().getName() + " was removed from project " + groupxProject.getProject().getName() + ".");
+    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.PROJECT,
+            "Group " + groupxProject.getGroup().getName() + " was removed from project " + groupxProject.getProject().getName() + ".");
       deleteGroupxProject(groupxProject);
     }
   }
@@ -182,9 +183,9 @@ public class ProjectService {
     }
     groupxProject.addContributor(contributor);
     auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.PROJECT,
-            "User " + contributor.getUsername() + ", " + contributor.getId() +
-                    " was added to project " + groupxProject.getProject().getName() +
-                    " of group " + groupxProject.getGroup().getName() + ".");
+          "User " + contributor.getUsername() + ", " + contributor.getId() +
+                  " was added to project " + groupxProject.getProject().getName() +
+                  " of group " + groupxProject.getGroup().getName() + ".");
     groupxProjectRepository.save(groupxProject);
   }
 
@@ -227,9 +228,9 @@ public class ProjectService {
             .findByUsername(username)
             .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND));
     auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.PROJECT,
-            "User " + contributor.getUsername() + ", " + contributor.getId() +
-                    " was removed from project " + groupxProject.getProject().getName() +
-                    " of group " + groupxProject.getGroup().getName() + ".");
+          "User " + contributor.getUsername() + ", " + contributor.getId() +
+                  " was removed from project " + groupxProject.getProject().getName() +
+                  " of group " + groupxProject.getGroup().getName() + ".");
     groupxProject.removeContributor(contributor);
     groupxProjectRepository.save(groupxProject);
   }
@@ -240,18 +241,18 @@ public class ProjectService {
   }
 
   @PreAuthorize("hasAuthority('GROUPLEAD')")
-    public List<GroupxProjectStateTimeDbDto> gxpStateTimeDtosByGroupLead(String username) {
-        return groupxProjectRepository.getAllgxpStateTimeDtosByGroupLead(username);
-    }
+  public List<GroupxProjectStateTimeDbDto> gxpStateTimeDtosByGroupLead(String username) {
+    return groupxProjectRepository.getAllgxpStateTimeDtosByGroupLead(username);
+  }
 
-    public Set<SimpleProjectDbDto> getSimpleProjectDbDtoByUser(String username) {
-         return projectRepository.getSimpleProjectDbDtoByUser(username);
-    }
+  public Set<SimpleGroupxProjectDto> getSimpleGroupxProjectDtoByUser(String username) {
+    return groupxProjectRepository.getSimpleGroupxProjectDtoByUser(username);
+  }
 
   @PreAuthorize("hasAuthority('MANAGER')")
   public void deleteProject(Project project) {
     auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.PROJECT,
-            "Project " + project.getName() + "was deleted.");
+          "Project " + project.getName() + "was deleted.");
     projectRepository.delete(project);
   }
 
@@ -291,7 +292,44 @@ public class ProjectService {
   }
 
   public GroupxProject findByGroupAndProject(Long groupId, Long projectId) {
-    GroupxProject groupxProject = groupxProjectRepository.findByGroup_IdAndProject_Id(groupId, projectId).orElseThrow();
+    GroupxProject groupxProject =
+        groupxProjectRepository.findByGroup_IdAndProject_Id(groupId, projectId).orElseThrow();
     return groupxProject;
-    }
+  }
+
+  /**
+   * Loads a GroupxProject by its group and project id while fetching Contributors List, rest is lazy loaded.
+   * @param groupId
+   * @param projectId
+   * @return
+   * @throws CouldNotFindEntityException
+   */
+  public GroupxProject findByGroupAndProjectDetailedC(Long groupId, Long projectId) throws CouldNotFindEntityException{
+    return groupxProjectRepository
+        .findByGroupAndProjectDetailedC(groupId, projectId)
+        .orElseThrow(
+            () ->
+                new CouldNotFindEntityException(
+                    "GroupxProject with groupId %s and projectId %s not found"
+                        .formatted(groupId, projectId)));
+  }
+
+  /**
+   * Loads a GroupxProject by its group and project id while fetchin group and project details
+   * (which are usually lazy loaded) thus enabling the GroupxProject to deliver all the needed
+   * information in one go.
+   *
+   * @param groupId
+   * @param projectId
+   * @return
+   */
+  public GroupxProject findByGroupAndProjectDetailedGP(Long groupId, Long projectId) throws CouldNotFindEntityException{
+    return groupxProjectRepository
+        .findByGroupAndProjectDetailedGP(groupId, projectId)
+        .orElseThrow(
+            () ->
+                new CouldNotFindEntityException(
+                    "GroupxProject with groupId %s and projectId %s not found"
+                        .formatted(groupId, projectId)));
+  }
 }

@@ -1,12 +1,8 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
-import at.qe.skeleton.model.Measurement;
-import at.qe.skeleton.model.MeasurementId;
-import at.qe.skeleton.model.Sensor;
-import at.qe.skeleton.model.SensorId;
-import at.qe.skeleton.model.enums.LogAffectedType;
-import at.qe.skeleton.model.enums.LogEvent;
+import at.qe.skeleton.model.*;
+import at.qe.skeleton.model.enums.*;
 import at.qe.skeleton.repositories.MeasurementRepository;
 import at.qe.skeleton.repositories.SensorRepository;
 import at.qe.skeleton.repositories.TemperaStationRepository;
@@ -15,47 +11,51 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 @Scope("application")
 public class MeasurementService {
 
   private final MeasurementRepository measurementRepository;
-
-  @Autowired private AuditLogService auditLogService;
+  private final ThresholdService thresholdService;
+  private final AlertService alertService;
+  private final AuditLogService auditLogService;
 
   public MeasurementService(
+      AlertService alertService,
+      ThresholdService thresholdService,
       TemperaStationRepository temperaStationRepository,
       MeasurementRepository measurementRepository,
       SensorRepository sensorRepository,
       AuditLogService auditLogService) {
+    this.alertService = alertService;
+    this.thresholdService = thresholdService;
     this.measurementRepository = measurementRepository;
+    this.auditLogService = auditLogService;
   }
 
-  public Measurement loadMeasurementByIdComponents(String temperaId, Long sensorId, LocalDateTime timestamp) throws CouldNotFindEntityException {
+
+
+  public Measurement loadMeasurementByIdComponents(
+      String temperaId, Long sensorId, LocalDateTime timestamp) throws CouldNotFindEntityException {
     MeasurementId id = new MeasurementId();
     id.setSensorId(new SensorId(temperaId, sensorId));
     id.setTimestamp(timestamp);
 
-    Measurement measurement = measurementRepository
-            .findById(id)
-            .orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id));
-    auditLogService.logEvent(LogEvent.LOAD, LogAffectedType.MEASUREMENT,
-            "Measurement of station " + temperaId + " and sensor " + sensorId + "was loaded.");
-    return measurement;
+    return measurementRepository
+        .findById(id)
+        .orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id));
   }
 
   public Measurement loadMeasurement(MeasurementId id) throws CouldNotFindEntityException {
-    Measurement m =  measurementRepository
+      Measurement m = measurementRepository
         .findById(id)
         .orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id));
-    auditLogService.logEvent(LogEvent.LOAD, LogAffectedType.MEASUREMENT,
-            "Measurement from sensor " + id.getSensorId() + " at " + id.getTimestamp() + "was loaded.");
-    return m;
+      auditLogService.logEvent(LogEvent.LOAD, LogAffectedType.MEASUREMENT,
+              "Measurement from sensor " + id.getSensorId() + " at " + id.getTimestamp() + "was loaded.");
+      return m;
   }
-
 
   public Measurement saveMeasurement(Measurement measurement) {
     LocalDateTime timestamp = measurement.getId().getTimestamp();
@@ -68,13 +68,124 @@ public class MeasurementService {
     measurementRepository.delete(measurement);
   }
 
+  /**
+   * Reviews all measurements if they trigger an alert. If an alert is triggered the method looks for
+   * existing and unacknowledged alerts for the sensor of the measurement that match the threshold type
+   * that was violated and updates the alert with the new information. If no alert is found, a new alert
+   * is created and saved.
+   * @param measurementIds List of 4 MeasurementIds, that came via the MeasurementController from the AccessPoint and
+   *                       all belong to the same TemperaStation
+   * @param temperaId
+   * @throws CouldNotFindEntityException
+   */
+  public void reviewForAlerts(List<MeasurementId> measurementIds, String temperaId)
+      throws CouldNotFindEntityException {
+    Set<Threshold> thresholds = thresholdService.getThresholdsByTemperaId(temperaId);
+    List<Measurement> measurements = new ArrayList<>();
+    for (var id : measurementIds) {
+      measurements.add(
+          (measurementRepository.findByIdDetailed(id))
+              .orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id)));
+    }
+    for (var measurement : measurements) {
+      // ein Measurement kann maximal einen Alert auslösen, da es entweder gar keinen Alert, einen
+      // Info-Alert oder einen Warn-Alert auslösen kann
+      Alert alert = checkAlertConditions(measurement, thresholds);
+      if (alert != null) {
+        alertService.saveAlert(alert);
+      }
+    }
+  }
+
+  private Alert checkAlertConditions(Measurement measurement, Set<Threshold> thresholds) {
+    if (thresholds == null) {
+      return null;
+    }
+    Threshold lowerInfoThreshold =
+        thresholds.stream()
+            .filter(
+                t ->
+                    t.getSensorType().equals(measurement.getSensor().getSensorType())
+                        && t.getThresholdType().equals(ThresholdType.LOWERBOUND_INFO))
+            .findFirst()
+            .orElse(null);
+    Threshold lowerWarnThreshold =
+        thresholds.stream()
+            .filter(
+                t ->
+                    t.getSensorType().equals(measurement.getSensor().getSensorType())
+                        && t.getThresholdType().equals(ThresholdType.LOWERBOUND_WARNING))
+            .findFirst()
+            .orElse(null);
+    Threshold upperInfoThreshold =
+        thresholds.stream()
+            .filter(
+                t ->
+                    t.getSensorType().equals(measurement.getSensor().getSensorType())
+                        && t.getThresholdType().equals(ThresholdType.UPPERBOUND_INFO))
+            .findFirst()
+            .orElse(null);
+    Threshold upperWarnThreshold =
+        thresholds.stream()
+            .filter(
+                t ->
+                    t.getSensorType().equals(measurement.getSensor().getSensorType())
+                        && t.getThresholdType().equals(ThresholdType.UPPERBOUND_WARNING))
+            .findFirst()
+            .orElse(null);
+
+    double value = measurement.getValue();
+
+    if (value <= lowerWarnThreshold.getValue()) {
+      return alertBuilder(lowerWarnThreshold, measurement);
+    } else if (value <= lowerInfoThreshold.getValue()) {
+      return alertBuilder(lowerInfoThreshold, measurement);
+    } else if (value >= upperWarnThreshold.getValue()) {
+      return alertBuilder(upperWarnThreshold, measurement);
+    } else if (value >= upperInfoThreshold.getValue()) {
+      return alertBuilder(upperInfoThreshold, measurement);
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * Builds an alert object based on the threshold and measurement. If an alert is already open for the
+   * sensor and threshold, the alert is updated with the new information. If no alert is open, a new alert
+   * is created.
+   * @param threshold
+   * @param measurement
+   * @return
+   */
+  private Alert alertBuilder(Threshold threshold, Measurement measurement) {
+
+    Alert openAlert = alertService.findOpenAlertBySensorAndThreshold(measurement.getSensor(), threshold);
+    if (openAlert == null) {
+      openAlert = new Alert(threshold, measurement.getSensor());
+      openAlert.setFirstIncident(measurement.getId().getTimestamp());
+      openAlert.setLastIncident(measurement.getId().getTimestamp());
+      openAlert.setPeakDeviationValue(measurement.getValue());
+
+      return openAlert;
+    }
+    openAlert.setLastIncident(measurement.getId().getTimestamp());
+
+    if (threshold.isOfLowerBoundType() && measurement.getValue() < openAlert.getPeakDeviationValue()) {
+      openAlert.setPeakDeviationValue(measurement.getValue());
+    }
+    if (!threshold.isOfLowerBoundType() && measurement.getValue() > openAlert.getPeakDeviationValue()) {
+      openAlert.setPeakDeviationValue(measurement.getValue());
+    }
+    return openAlert;
+  }
 
   public Optional<Measurement> findLatestMeasurementBySensor(Sensor sensor) {
     SensorId id = sensor.getSensorId();
     auditLogService.logEvent(LogEvent.LOAD, LogAffectedType.MEASUREMENT,
-            "Lastest measurement of sensor " + sensor.getId() + "was loaded.");
+              "Lastest measurement of sensor " + sensor.getId() + "was loaded.");
     return measurementRepository.findFirstBySensorIdOrderById_TimestampDesc(id);
   }
+
   public List<Measurement> loadAllMeasurementsFromTempera() {
     return null;
   }

@@ -114,7 +114,7 @@ private GroupxProject groupxProject;
 
   @Override
   public int hashCode() {
-    return id.hashCode();
+    return Objects.hash(start, externalRecord);
   }
 
   @Override
@@ -125,7 +125,7 @@ private GroupxProject groupxProject;
     if (!(o instanceof InternalRecord other)) {
       return false;
     }
-    return other.getId().equals(this.id);
+    return other.getStart().equals(this.start) && other.getExternalRecord().equals(this.externalRecord);
   }
 
 

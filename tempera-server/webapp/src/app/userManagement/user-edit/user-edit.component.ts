@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UsersService } from '../../_services/users.service';
 import { NgForOf, NgIf } from '@angular/common';
@@ -15,14 +15,22 @@ import { User } from '../../models/user.model';
   standalone: true,
   imports: [ReactiveFormsModule, NgForOf, DialogModule, InputTextModule, ButtonModule, MessageModule, NgIf],
 })
-export class UserEditComponent implements OnInit {
+/**
+ * @class UserEditComponent
+ * This component is responsible for editing a user.
+ */
+export class UserEditComponent implements OnInit, OnChanges {
   userForm: FormGroup;
   username!: string;
   roles: string[];
-  @Input({ required: true }) user!: User;
-  @Output() editCompleted = new EventEmitter<boolean>();
+  @Input({ required: true }) user!: User; // The user to edit from the users component
+  @Output() editCompleted = new EventEmitter<boolean>(); // Event emitter to notify the parent component that the edit is completed
 
-
+  /**
+   * Constructor for UserEditComponent that initializes the edit form.
+   * @param fb
+   * @param usersService
+   */
   constructor(private fb: FormBuilder, private usersService: UsersService) {
     this.roles = ['ADMIN', 'EMPLOYEE', 'MANAGER', 'GROUPLEAD'];
     this.userForm = this.fb.group({
@@ -54,6 +62,11 @@ export class UserEditComponent implements OnInit {
     });
   }
 
+  /**
+   * Called when the input properties of the component change.
+   * To check if the current value is not stored in the user object.
+   * @param changes
+   */
   ngOnChanges(changes: SimpleChanges) {
     // Check if 'user' input has changed
     if (changes['user']?.currentValue) {
@@ -73,12 +86,17 @@ export class UserEditComponent implements OnInit {
         enabled: this.user.enabled,
       });
       const rolesControl = this.userForm.get('roles') as FormGroup;
+      // Set the roles to true if the user has the role.
       this.roles.forEach(role => {
         rolesControl.get(role)?.setValue(this.user.roles.includes(role));
       });
     }
   }
 
+  /**
+   * Submits the user form to update the user.
+   * Roles are filtered to only include the selected roles.
+   */
   onSubmit() {
     this.userForm.value.roles = Object.keys(this.userForm.value.roles).filter((role) => this.userForm.value.roles[role]);
     console.log(this.userForm.value);

@@ -10,5 +10,5 @@ DOCKERBASE=$(readlink -m "$(dirname "$BASE")")
   chmod +x "$BASE/app.sh"
 
   cd "$DOCKERBASE" || exit
-  docker compose run --build ble-app false
+  docker compose run ble-app false || /bin/sh "$BASE/app.sh"
 }
