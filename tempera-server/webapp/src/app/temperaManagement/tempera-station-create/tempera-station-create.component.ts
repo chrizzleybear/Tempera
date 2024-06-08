@@ -9,6 +9,8 @@ import {InputTextModule} from "primeng/inputtext";
 import {TemperaStation} from "../../models/temperaStation.model";
 import {AccessPoint} from "../../models/accessPoint.model";
 import {AccessPointService} from "../../_services/access-point.service";
+import {MessageService} from "primeng/api";
+import {ToastModule} from "primeng/toast";
 
 @Component({
   selector: 'app-tempera-station-create',
@@ -18,7 +20,8 @@ import {AccessPointService} from "../../_services/access-point.service";
     DropdownModule,
     CheckboxModule,
     ButtonModule,
-    InputTextModule
+    InputTextModule,
+    ToastModule
   ],
   templateUrl: './tempera-station-create.component.html',
   styleUrl: './tempera-station-create.component.css'
@@ -35,6 +38,7 @@ export class TemperaStationCreateComponent implements OnInit, OnChanges{
     private temperaStationService: TemperaStationService,
     private accessPointService: AccessPointService,
     private formBuilder: FormBuilder,
+    private messageService: MessageService
   ) {
     this.temperaForm = this.formBuilder.group({
       id: [null, [Validators.required]],
@@ -67,7 +71,7 @@ export class TemperaStationCreateComponent implements OnInit, OnChanges{
           this.onCreateCompleted.emit(true);
         },
         error: (error) => {
-          console.error('Failed to create temperaStation:', error);
+          this.messageService.add({severity:'error', summary:'Error', detail:'Failed to create tempera station'});
           this.onCreateCompleted.emit(false);
         },
       });
