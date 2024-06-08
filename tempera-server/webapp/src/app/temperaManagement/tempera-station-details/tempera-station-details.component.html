@@ -3,11 +3,11 @@
     <h1 class="text-2xl font-bold mb-4">Tempera Station Details</h1>
   <p><strong>ID:</strong> {{temperaStation.id}}</p>
   <p><strong>User:</strong> {{temperaStation.user}}</p>
-  <p><strong>Enabled:</strong> {{temperaStation.enabled}}</p>
-  <p><strong>Healthy:</strong> {{temperaStation.isHealthy}}</p>
-</div>
+  <p><strong>Status:</strong> {{temperaStation.enabled ? 'Enabled' : 'Disabled'}}</p>
+  <p><strong>Healthy:</strong> {{temperaStation.isHealthy ? 'Yes' : 'No'}}</p>
+    <br>
   <div *ngIf="sensors">
-    <h1 class="text-2xl font-bold mb-4">Sensors</h1>
+    <h1 class="text-xl text-center font-bold mb-4">Sensors</h1>
     <p-table [value]="sensors" [paginator]="true" [rows]="5">
       <ng-template pTemplate="header">
         <tr>
@@ -25,4 +25,5 @@
       </ng-template>
     </p-table>
   </div>
+</div>
 </div>
