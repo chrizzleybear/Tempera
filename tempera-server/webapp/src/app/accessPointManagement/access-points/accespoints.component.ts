@@ -4,7 +4,7 @@ import {AccessPointService} from "../../_services/access-point.service";
 import {AccessPoint} from "../../models/accessPoint.model";
 import {NgIf} from "@angular/common";
 import {CardModule} from "primeng/card";
-import {Message} from "primeng/api";
+import {Message, MessageService} from "primeng/api";
 import {MessagesModule} from "primeng/messages";
 import {TableModule} from "primeng/table";
 import {ButtonModule} from "primeng/button";
@@ -13,6 +13,7 @@ import {AccessPointCreateComponent} from "../access-point-create/access-point-cr
 import {AccessPointEditComponent} from "../access-point-edit/access-point-edit.component";
 import {InputTextModule} from "primeng/inputtext";
 import {AccessPointTemperaComponent} from "../access-point-tempera/access-point-tempera.component";
+import {ToastModule} from "primeng/toast";
 
 
 @Component({
@@ -28,7 +29,8 @@ import {AccessPointTemperaComponent} from "../access-point-tempera/access-point-
     AccessPointCreateComponent,
     AccessPointEditComponent,
     InputTextModule,
-    AccessPointTemperaComponent
+    AccessPointTemperaComponent,
+    ToastModule
   ],
   templateUrl: './accespoints.component.html',
   styleUrl: './accespoints.component.css'
@@ -40,10 +42,12 @@ export class AccesspointsComponent implements OnInit{
   selectedAccessPoint: AccessPoint | null = null;
   displayCreateDialog: boolean = false;
   displayEditDialog: boolean = false;
-  messages: Message[] = [];
   temperaDialogDisplay: boolean = false;
 
-  constructor(private accessPointService: AccessPointService, private router: Router) {}
+  constructor(
+    private accessPointService: AccessPointService,
+    private router: Router,
+    private messageService: MessageService) {}
   ngOnInit(): void {
     this.loadAccessPoints();
   }
@@ -57,6 +61,7 @@ export class AccesspointsComponent implements OnInit{
         console.log("Loaded accesspoints:", accessPoints);
       },
       error: (error) => {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error loading Access Points'});
         console.error("Error loading accesspoints:", error);
       }
     });
@@ -65,13 +70,14 @@ export class AccesspointsComponent implements OnInit{
     if (accessPoint) {
         this.accessPointService.deleteAccesspoint(accessPoint.id).subscribe({
           next: () => {
+            this.messageService.add({severity: 'success', summary: 'Success', detail: 'Access Point deleted successfully'});
             console.log(`Deleted access point with id: ${accessPoint.id}`);
             this.loadAccessPoints();
-            this.messages = [{severity: 'success', summary: 'Success', detail: 'Access Point deleted successfully'}];
+
           },
           error: (error) => {
             console.error(`Error deleting access point with id: ${accessPoint.id}`, error);
-            this.messages = [{severity: 'error', summary: 'Error', detail: 'Error deleting Access Point'}];
+            this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error deleting Access Point'});
           }
         });
     }
@@ -96,13 +102,12 @@ export class AccesspointsComponent implements OnInit{
   onCreateComplete(event: any): void {
     this.displayCreateDialog = false;
     this.loadAccessPoints();
-    this.messages = [{ severity: 'success', summary: 'Success', detail: 'Access Point created successfully' }];
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Access Point created successfully' });
   }
 
   onEditComplete(event: any): void {
     this.displayEditDialog = false;
     this.loadAccessPoints();
-    this.messages = [{ severity: 'success', summary: 'Success', detail: 'Access Point updated successfully' }];
   }
 
   viewAccessPointDetails(accessPoint: AccessPoint) {

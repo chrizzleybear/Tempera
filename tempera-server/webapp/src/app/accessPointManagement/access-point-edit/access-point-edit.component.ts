@@ -7,6 +7,7 @@ import {AccessPointEditDto} from "../../models/AccessPointDtos";
 import {DropdownModule} from "primeng/dropdown";
 import {Room} from "../../models/room.model";
 import {ButtonModule} from "primeng/button";
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-access-point-edit',
@@ -29,7 +30,7 @@ export class AccessPointEditComponent implements OnInit, OnChanges{
   @Input() accessPoint!: AccessPoint;
   @Output() editComplete = new EventEmitter<boolean>();
 
-  constructor(private formBuilder: FormBuilder, private accessPointService: AccessPointService, private roomService: RoomService) {
+  constructor(private formBuilder: FormBuilder, private accessPointService: AccessPointService, private messageService: MessageService) {
     this.accessPointForm = this.formBuilder.group({
       room: [null , [Validators.required]],
       enabled: [true, [Validators.required]],
@@ -51,6 +52,7 @@ export class AccessPointEditComponent implements OnInit, OnChanges{
         console.log('Loaded rooms:', rooms);
       },
       error: (error) => {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error loading rooms'});
         console.error('Error loading rooms:', error);
       }
     });
@@ -67,6 +69,7 @@ export class AccessPointEditComponent implements OnInit, OnChanges{
         this.fetchRooms();
       },
       error: (error) => {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error loading access point'});
         console.error('Error loading access point:', error);
       }
     });
@@ -92,10 +95,12 @@ export class AccessPointEditComponent implements OnInit, OnChanges{
       this.accessPointService.updateAccesspoint(dto
       ).subscribe({
         next: (response) => {
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Access Point edited successfully'});
           console.log('Access point edited:', response);
           this.editComplete.emit(true);
         },
         error: (error) => {
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error editing access point'});
           console.error('Error editing access point:', error)
         }
       });

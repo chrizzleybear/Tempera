@@ -92,7 +92,6 @@ export class TemperaStationsComponent implements OnInit {
 
   onCreateCompleted(success: boolean) {
     if (success) {
-      this.messageService.add({severity:'success', summary:'Success', detail:'Tempera station created successfully'});
       this.fetchTemperaStations();
       this.displayCreateDialog = false;
     }

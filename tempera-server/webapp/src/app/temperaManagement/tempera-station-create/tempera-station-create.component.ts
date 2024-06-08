@@ -64,10 +64,10 @@ export class TemperaStationCreateComponent implements OnInit, OnChanges{
         isHealthy: false,
         accessPointId: this.temperaForm.value.accessPoint.value.id
       }
-      console.log('Creating temperaStation:', this.newTemperaStation);
       this.temperaStationService.createTemperaStation(this.newTemperaStation).subscribe({
         next: () => {
           this.temperaForm.reset();
+          this.messageService.add({severity:'success', summary:'Success', detail:'Tempera station created successfully'});
           this.onCreateCompleted.emit(true);
         },
         error: (error) => {
