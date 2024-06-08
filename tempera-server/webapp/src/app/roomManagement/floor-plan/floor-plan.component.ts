@@ -4,7 +4,7 @@ import {Router} from "@angular/router";
 import {TemperaStationService} from "../../_services/tempera-station.service";
 import {RoomService} from "../../_services/room.service";
 import {Subscription} from "rxjs";
-import {FloorComponent, Room as RoomModel} from "../../models/room.model";
+import {FloorComponent} from "../../models/room.model";
 import {DropdownModule} from "primeng/dropdown";
 
 interface Room {
@@ -119,6 +119,7 @@ export class FloorPlanComponent implements OnInit{
   }
   viewDetailsAccesspoint(index: number) {
     if (this.floorComponents[index]) {
+      console.log('Access Point:', this.floorComponents[index].roomId);
       this.router.navigate(['/accessPoint', this.floorComponents[index + this.currentFloor * 7].accessPointId]);
     }
     else {
