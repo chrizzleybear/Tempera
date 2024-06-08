@@ -12,6 +12,7 @@ import {
   ProjectControllerService,
   SimpleGroupDto,
 } from '../../../api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-project-groups',
@@ -24,7 +25,8 @@ import {
     MessagesModule,
     ButtonModule,
     DialogModule,
-    InputTextModule
+    InputTextModule,
+    ToastModule,
   ],
   templateUrl: './project-groups.component.html',
   styleUrl: './project-groups.component.css'
@@ -42,6 +44,8 @@ export class ProjectGroupsComponent implements OnInit{
   projectId!: string;
   projectName!: string;
   displayAddDialog: boolean = false;
+  displayRemoveDialog: boolean = false;
+  groupToBeRemoved?: string;
   messages: any;
   constructor(private projectControllerService: ProjectControllerService, private route: ActivatedRoute, private groupControllerService: GroupManagementControllerService) {
 
@@ -69,6 +73,17 @@ export class ProjectGroupsComponent implements OnInit{
     });
   }
 
+  removeGroupFromProject() {
+    const groupId = this.groupToBeRemoved ?? '';
+    this.projectControllerService.removeGroupFromProject(this.projectId.toString(), groupId).subscribe(() => {
+
+      console.log(groupId, ` removed Group ${groupId}from project with ID: `, this.projectId);
+      this.fetchActiveGroupsOfThisProject(this.projectId);
+      this.displayRemoveDialog = false;
+      this.groupToBeRemoved = undefined;
+    });
+  }
+
   addGroupDialog() {
     this.filteredGroups = this.activeContributingGroups;
     this.fetchAllActiveGroups();
@@ -86,11 +101,9 @@ export class ProjectGroupsComponent implements OnInit{
     });
   }
 
-  deleteGroupFromProject(groupId: number) {
-    this.projectControllerService.removeGroupFromProject(this.projectId.toString(), groupId.toString()).subscribe(() => {
-      console.log(groupId, ` removed Group ${groupId}from project with ID: `, this.projectId);
-      this.fetchActiveGroupsOfThisProject(this.projectId);
-    });
+  RemoveGroupDialogue(groupId: string) {
+    this.displayRemoveDialog = true;
+    this.groupToBeRemoved = groupId;
   }
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
