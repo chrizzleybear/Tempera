@@ -41,7 +41,6 @@ export class TemperaStationsComponent implements OnInit {
   selectedTemperaStation: TemperaStation | undefined;
   displayEditDialog: boolean = false;
   displayCreateDialog: boolean = false;
-  messages: any[] = [];
 
   constructor(
     private router: Router,
