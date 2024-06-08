@@ -2,7 +2,6 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angula
 import {AccessPoint} from "../../models/accessPoint.model";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {AccessPointService} from "../../_services/access-point.service";
-import {RoomService} from "../../_services/room.service";
 import {AccessPointEditDto} from "../../models/AccessPointDtos";
 import {DropdownModule} from "primeng/dropdown";
 import {Room} from "../../models/room.model";

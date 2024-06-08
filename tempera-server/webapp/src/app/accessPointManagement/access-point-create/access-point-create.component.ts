@@ -1,7 +1,6 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormGroup, FormBuilder, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Room} from "../../models/room.model";
-import {RoomService} from "../../_services/room.service";
 import {AccessPointService} from "../../_services/access-point.service";
 import {NgForOf, NgIf} from "@angular/common";
 import {AccessPointCreateDto} from "../../models/AccessPointDtos";

@@ -7,7 +7,6 @@ import {CheckboxModule} from "primeng/checkbox";
 import {ButtonModule} from "primeng/button";
 import {User} from "../../models/user.model";
 import {DropdownModule} from "primeng/dropdown";
-import {UsersService} from "../../_services/users.service";
 import {MessageService} from "primeng/api";
 
 @Component({
