@@ -1,11 +1,19 @@
 <ng-container *ngIf="auditLogs; else loading">
-  <p-table #table [value]="auditLogs" [paginator]="true" [rows]="12">
+  <p-table #table [value]="auditLogs" [paginator]="true" [rows]="12" sortMode="multiple">
     <ng-template pTemplate="header">
       <tr>
-        <th id="time">Time</th>
-        <th id="user">Triggering User</th>
-        <th id="actionType">Action Type</th>
-        <th id="affectedType">Affected Type</th>
+        <th id="time" pSortableColumn="time">Time
+          <p-sortIcon field="time"></p-sortIcon>
+        </th>
+        <th id="triggeringUserName" pSortableColumn="triggeringUserName">Triggering User
+          <p-sortIcon field="triggeringUserName"></p-sortIcon>
+        </th>
+        <th id="actionType" pSortableColumn="actionType">Action Type
+          <p-sortIcon field="actionType"></p-sortIcon>
+        </th>
+        <th id="affectedType" pSortableColumn="affectedType">Affected Type
+          <p-sortIcon field="affectedType"></p-sortIcon>
+        </th>
         <th id="message">Message</th>
       </tr>
       <!--  Filters   -->
