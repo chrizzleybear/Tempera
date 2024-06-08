@@ -1,10 +1,10 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable, Subject} from "rxjs";
-import {Room} from "../models/room.model";
+import {FloorComponent, Room} from "../models/room.model";
 import {Threshold, ThresholdTipUpdateDto, ThresholdUpdateDto} from "../models/threshold.model";
 import {AccessPoint} from "../models/accessPoint.model";
-import {FloorPlanComponent} from "../roomManagement/floor-plan/floor-plan.component";
+
 
 
 @Injectable({
@@ -50,8 +50,8 @@ export class RoomService {
     return this.http.put<Threshold>(`${this.API_URL}threshold/tip/update`, dto);
   }
 
-  getFloorPlan(): Observable<FloorPlanComponent[]> {
-    return this.http.get<FloorPlanComponent[]>(this.API_URL + 'floor');
+  getFloorPlan(): Observable<FloorComponent[]> {
+    return this.http.get<FloorComponent[]>(this.API_URL + 'floor');
   }
 
   private roomChangedSource = new Subject<void>();
