@@ -6,6 +6,8 @@ import {RoomService} from "../../_services/room.service";
 import {Subscription} from "rxjs";
 import {FloorComponent} from "../../models/room.model";
 import {DropdownModule} from "primeng/dropdown";
+import {MessageService} from "primeng/api";
+import {ToastModule} from "primeng/toast";
 
 interface Room {
   x: number;
@@ -21,7 +23,8 @@ interface Room {
   imports: [
     NgForOf,
     NgIf,
-    DropdownModule
+    DropdownModule,
+    ToastModule
   ],
   templateUrl: './floor-plan.component.html',
   styleUrl: './floor-plan.component.css'
@@ -49,7 +52,7 @@ export class FloorPlanComponent implements OnInit{
     { x: 65, y: 350 },
   ];
 
-  constructor(private router: Router, private temperaStationService: TemperaStationService, private roomService: RoomService) {
+  constructor(private router: Router, private roomService: RoomService, private messageService: MessageService) {
     this.roomChangedSubscription = this.roomService.roomChanged$.subscribe(() => {
       this.fetchData();
     }
@@ -63,11 +66,6 @@ export class FloorPlanComponent implements OnInit{
       {label: 'Floor 2', value: 2},
       {label: 'Floor 3', value: 3}
     ];
-  }
-  viewDetails(index: number): void {
-    if (this.rooms[this.currentFloor][index].roomId !== '') {
-      this.router.navigate(['/room', this.rooms[this.currentFloor][index].roomId]);
-    }
   }
 
   fetchData() {
@@ -117,14 +115,26 @@ export class FloorPlanComponent implements OnInit{
       { x: 65, y: 300, roomId: this.floorComponents[20]?.roomId|| '', fillColor: 'white', shape: 'rectangle', accessPoint: this.floorComponents[20]?.isHealthy ? 'green' : 'red'},
     ];
   }
-  viewDetailsAccesspoint(index: number) {
-    if (this.floorComponents[index]) {
-      console.log('Access Point:', this.floorComponents[index].roomId);
-      this.router.navigate(['/accessPoint', this.floorComponents[index + this.currentFloor * 7].accessPointId]);
+
+  viewDetails(index: number): void {
+    if (this.floorComponents[index + this.currentFloor * 7].roomId) {
+      this.router.navigate(['/room', this.floorComponents[index + this.currentFloor * 7].roomId]);
     }
     else {
-      postMessage('No access point found for this room');
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'No room found'});
     }
+  }
+  viewDetailsAccesspoint(index: number) {
+    if (this.floorComponents[index]) {
+      if (this.floorComponents[index + this.currentFloor * 7].accessPointId) {
+        this.router.navigate(['/accessPoint', this.floorComponents[index + this.currentFloor * 7].accessPointId]);
+      } else {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'No access point found for this room'});
+      }
+    }
+    else {
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'No access point found for this room'});
+      }
   }
   selectFloor(event: {value: {label: string, value: number}}): void {
     this.currentFloor = event.value.value - 1;
