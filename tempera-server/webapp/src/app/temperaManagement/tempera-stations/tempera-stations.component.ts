@@ -99,7 +99,6 @@ export class TemperaStationsComponent implements OnInit {
 
   onEditCompleted(success: boolean) {
     if (success) {
-      this.messageService.add({severity:'success', summary:'Success', detail:'Tempera station updated successfully'});
       this.fetchTemperaStations();
       this.displayEditDialog = false;
     }
