@@ -46,7 +46,7 @@ import { OverlappingProjectHelper } from '../_helpers/overlapping-project-helper
 interface InternalTimetableEntryDto extends TimetableEntryDto {
   startTime: Date;
   endTime: Date;
-  showProjectDropdown: boolean;
+  isEditable: boolean;
 }
 
 @Component({
@@ -171,19 +171,23 @@ export class TimetableComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.fillTable();
+  }
+
+  fillTable(): void {
     this.timetableControllerService.getTimetableData().subscribe({
         next: data => {
           this.tableEntries = data.tableEntries?.map(entry => ({
             ...entry,
             startTime: new Date(entry.startTimestamp),
             endTime: new Date(entry.endTimestamp),
-            showProjectDropdown: !(entry.assignedGroupxProject) ||
+            isEditable: !(entry.assignedGroupxProject) ||
               (data.availableProjects?.some(project =>
-              project.projectId === entry.assignedGroupxProject?.projectId && project.groupId === entry.assignedGroupxProject?.groupId) ?? true),
+                project.projectId === entry.assignedGroupxProject?.projectId && project.groupId === entry.assignedGroupxProject?.groupId) ?? true),
           })) ?? [];
 
           this.availableProjects = data.availableProjects ?? [];
-          this.deactivatedProjects = this.tableEntries?.filter(entry => !entry.showProjectDropdown)?.map(entry => entry.assignedGroupxProject!) ?? [];
+          this.deactivatedProjects = this.tableEntries?.filter(entry => !entry.isEditable)?.map(entry => entry.assignedGroupxProject!) ?? [];
           this.deactivatedProjects = OverlappingProjectHelper.removeDuplicatProjects(this.deactivatedProjects);
           this.filterProjects = this.availableProjects.concat(this.deactivatedProjects);
 
@@ -193,7 +197,6 @@ export class TimetableComponent implements OnInit {
           OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, this.filterProjects);
           const assignedProjects = this.tableEntries.filter(x => x?.assignedGroupxProject).map(entry => entry.assignedGroupxProject!);
           OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, assignedProjects);
-
 
 
           this.filterFields = Object.keys(this.tableEntries?.[0] ?? []);
@@ -244,17 +247,7 @@ export class TimetableComponent implements OnInit {
         next: data => {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Time entry split successfully' });
           this.splitVisible = false;
-          this.tableEntries = data.tableEntries?.map(entry => ({
-            ...entry,
-            startTime: new Date(entry.startTimestamp),
-            endTime: new Date(entry.endTimestamp),
-            showProjectDropdown: entry.state !== StateEnum.OutOfOffice && this.availableProjects.some(project =>
-              project.projectId === entry.assignedGroupxProject?.projectId && project.groupId === entry.assignedGroupxProject?.groupId),
-          })) ?? [];
-
-          this.availableProjects = data.availableProjects ?? [];
-          this.deactivatedProjects = this.tableEntries?.filter(entry => entry.showProjectDropdown)?.map(entry => entry.assignedGroupxProject!) ?? [];
-
+          this.fillTable();
         },
         error: () => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to split time entry' });
