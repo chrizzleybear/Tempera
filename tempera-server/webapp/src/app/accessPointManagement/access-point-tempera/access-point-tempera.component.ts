@@ -51,7 +51,7 @@ export class AccessPointTemperaComponent implements OnInit, OnChanges{
           console.log("Loaded tempera:", tempera);
         },
         error: (error) => {
-          this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error loading tempera stations'});
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error loading tempera station'});
           console.error("Error loading tempera:", error);
         }
       });

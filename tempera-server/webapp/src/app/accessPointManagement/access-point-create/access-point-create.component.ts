@@ -50,7 +50,6 @@ export class AccessPointCreateComponent implements OnInit {
     this.accessPointService.getAvailableRooms().subscribe({
       next: (rooms) => {
         this.rooms = rooms;
-        console.log('Loaded rooms:', rooms);
       },
       error: (error) => {
         this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error loading rooms'});
@@ -64,11 +63,10 @@ export class AccessPointCreateComponent implements OnInit {
         id: this.accessPointForm.value.id,
         room: this.accessPointForm.value.room.id,
       }
-      console.log('Creating access point:', dto)
       this.accessPointService.createAccesspoint(dto
       ).subscribe({
         next: (response) => {
-          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Access point created'});
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Access point created successfully'});
           console.log('Access point created:', response);
           this.accessPointForm.reset();
           this.createComplete.emit(true);

@@ -95,7 +95,7 @@ export class AccessPointEditComponent implements OnInit, OnChanges{
       this.accessPointService.updateAccesspoint(dto
       ).subscribe({
         next: (response) => {
-          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Access Point edited successfully'});
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Access point edited successfully'});
           console.log('Access point edited:', response);
           this.accessPointForm.reset();
           this.editComplete.emit(true);

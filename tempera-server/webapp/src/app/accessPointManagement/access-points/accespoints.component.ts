@@ -4,7 +4,7 @@ import {AccessPointService} from "../../_services/access-point.service";
 import {AccessPoint} from "../../models/accessPoint.model";
 import {NgIf} from "@angular/common";
 import {CardModule} from "primeng/card";
-import {Message, MessageService} from "primeng/api";
+import {MessageService} from "primeng/api";
 import {MessagesModule} from "primeng/messages";
 import {TableModule} from "primeng/table";
 import {ButtonModule} from "primeng/button";
@@ -61,7 +61,7 @@ export class AccesspointsComponent implements OnInit{
         console.log("Loaded accesspoints:", accessPoints);
       },
       error: (error) => {
-        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error loading Access Points'});
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error loading access points'});
         console.error("Error loading accesspoints:", error);
       }
     });
@@ -70,14 +70,14 @@ export class AccesspointsComponent implements OnInit{
     if (accessPoint) {
         this.accessPointService.deleteAccesspoint(accessPoint.id).subscribe({
           next: () => {
-            this.messageService.add({severity: 'success', summary: 'Success', detail: 'Access Point deleted successfully'});
+            this.messageService.add({severity: 'success', summary: 'Success', detail: 'Access point deleted successfully'});
             console.log(`Deleted access point with id: ${accessPoint.id}`);
             this.loadAccessPoints();
 
           },
           error: (error) => {
             console.error(`Error deleting access point with id: ${accessPoint.id}`, error);
-            this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error deleting Access Point'});
+            this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error deleting access point'});
           }
         });
     }
@@ -102,7 +102,6 @@ export class AccesspointsComponent implements OnInit{
   onCreateComplete(event: any): void {
     this.displayCreateDialog = false;
     this.loadAccessPoints();
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Access Point created successfully' });
   }
 
   onEditComplete(event: any): void {
