@@ -29,12 +29,12 @@ export class AccessPointDetailsComponent implements OnInit{
   ngOnInit() {
     this.accessPointId = this.route.snapshot.paramMap.get('id');
     if (this.accessPointId) {
-      this.fetchAccessPointDetails(Number(this.accessPointId));
+      this.fetchAccessPointDetails(this.accessPointId);
     }
   }
 
-  fetchAccessPointDetails(id: number) {
-    this.accessPointService.getAccesspointsByRoomId("room_1").subscribe({
+  fetchAccessPointDetails(id: string) {
+    this.accessPointService.getAccesspointById(id).subscribe({
       next: (data) => {
         this.accessPoint = data;
         console.log('Access Point details: ', this.accessPoint);
