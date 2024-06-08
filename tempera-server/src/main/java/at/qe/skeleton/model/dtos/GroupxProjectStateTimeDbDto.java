@@ -4,4 +4,4 @@ import at.qe.skeleton.model.enums.State;
 
 import java.time.LocalDateTime;
 
-public record GroupxProjectStateTimeDbDto(Long projectId, Long groupId, State state, LocalDateTime start, LocalDateTime end) {}
+public record GroupxProjectStateTimeDbDto(Long projectId, Long groupId, Boolean isActive, State state, LocalDateTime start, LocalDateTime end) {}
