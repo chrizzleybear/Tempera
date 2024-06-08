@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <p-dropdown [options]="floors" (onChange)="selectFloor($event)" optionLabel="label"></p-dropdown>
 <svg width="400" height="600">
   <g *ngFor="let room of rooms[currentFloor]?? []; let i = index">
