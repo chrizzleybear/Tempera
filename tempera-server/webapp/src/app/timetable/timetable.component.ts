@@ -88,6 +88,8 @@ export class TimetableComponent implements OnInit {
 
   public deactivatedProjects: SimpleGroupxProjectDto[] = [];
 
+  public filterProjects: SimpleGroupxProjectDto[] = [];
+
   public filterFields: string[] = [];
 
   public stateOptions: StateEnum[] = (Object.values(StateEnum));
@@ -182,12 +184,17 @@ export class TimetableComponent implements OnInit {
 
           this.availableProjects = data.availableProjects ?? [];
           this.deactivatedProjects = this.tableEntries?.filter(entry => !entry.showProjectDropdown)?.map(entry => entry.assignedGroupxProject!) ?? [];
+          this.deactivatedProjects = OverlappingProjectHelper.removeDuplicatProjects(this.deactivatedProjects);
+          this.filterProjects = this.availableProjects.concat(this.deactivatedProjects);
+
 
           // Rename projects that have the same projectId
-          this.duplicatedProjects = OverlappingProjectHelper.getDuplicatedProjects(this.availableProjects);
-          OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, this.availableProjects);
+          this.duplicatedProjects = OverlappingProjectHelper.getDuplicatedProjects(this.filterProjects);
+          OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, this.filterProjects);
           const assignedProjects = this.tableEntries.filter(x => x?.assignedGroupxProject).map(entry => entry.assignedGroupxProject!);
           OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, assignedProjects);
+
+
 
           this.filterFields = Object.keys(this.tableEntries?.[0] ?? []);
         },
@@ -204,7 +211,7 @@ export class TimetableComponent implements OnInit {
     // give the project back the original name if it is a duplicate
     let submitProject = structuredClone(newProject);
     if (this.duplicatedProjects.has(submitProject.projectId ?? '')) {
-      submitProject.projectName = this.duplicatedProjects.get(submitProject.projectId!)?.originalName;
+      submitProject.projectName = this.duplicatedProjects.get(submitProject.projectId)?.originalName ?? '';
     }
 
     this.timetableControllerService.updateProject1({

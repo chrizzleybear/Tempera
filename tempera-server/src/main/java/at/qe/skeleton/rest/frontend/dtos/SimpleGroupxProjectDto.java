@@ -1,3 +1,5 @@
 package at.qe.skeleton.rest.frontend.dtos;
 
-public record SimpleGroupxProjectDto(String groupId, String groupName, String projectId, String projectName) {}
+import jakarta.validation.constraints.NotNull;
+
+public record SimpleGroupxProjectDto(@NotNull String groupId, @NotNull String groupName,@NotNull String projectId,@NotNull String projectName) {}
