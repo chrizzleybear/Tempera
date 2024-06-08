@@ -46,6 +46,11 @@ public class GroupMapperService {
         ));
     }
 
+    public SimpleGroupDto getSimpleGroupDto(String groupId) {
+        Groupx group = groupService.getGroup(Long.parseLong(groupId));
+        return mapToSimpleGroupDto(group);
+    }
+
     public ExtendedGroupDto loadExtendedGroupDto(Long groupId)
             throws CouldNotFindEntityException {
         Groupx group =

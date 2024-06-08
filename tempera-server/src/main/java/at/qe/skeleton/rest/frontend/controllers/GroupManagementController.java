@@ -54,10 +54,18 @@ public class GroupManagementController {
   }
 
   @GetMapping("/load/{groupId}")
-  public ResponseEntity<GroupDetailsDto> getGroup(@PathVariable String groupId) {
+  public ResponseEntity<GroupDetailsDto> getDetailedGroup(@PathVariable String groupId) {
     GroupDetailsDto group = groupMapperService.getGroupDetailsDto(Long.parseLong(groupId));
     return ResponseEntity.ok(group);
   }
+
+  @GetMapping("/loadSimple/{groupId}")
+  public ResponseEntity<SimpleGroupDto> getSimpleGroup(@PathVariable String groupId) {
+    SimpleGroupDto group = groupMapperService.getSimpleGroupDto(groupId);
+    return ResponseEntity.ok(group);
+  }
+
+
 
   @GetMapping("/members/{groupId}")
   public ResponseEntity<List<SimpleUserDto>> getMembers(@PathVariable String groupId) {
