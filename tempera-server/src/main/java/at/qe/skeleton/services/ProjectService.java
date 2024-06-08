@@ -86,10 +86,31 @@ public class ProjectService {
     return projectRepository.save(project);
   }
 
-  // todo: for the following methods develop queries in the groupxprojectRepository that make it
-  // easy to handle everyting
+  /**
+   * This method creates a GroupxProject. If the GroupxProject already exists and is just deactivated, it will be reactivated.
+   * @param projectId
+   * @param groupId
+   * @return
+   * @throws IOException
+   */
   @Transactional
   public GroupxProject createGroupxProject(Long projectId, Long groupId) throws IOException {
+    // GroupxProject may already exist but be deactivated. In this case, we should reactivate gxp.
+Optional<GroupxProject> groupxProjectOptional =
+        groupxProjectRepository.findByGroup_IdAndProject_IdFetchGroupAndProjectEagerly(groupId, projectId);
+if(groupxProjectOptional.isPresent()){
+    GroupxProject groupxProject = groupxProjectOptional.get();
+    if(groupxProject.isActive()){
+        throw new IOException("GroupxProject with Group %s and Project %s already exists and is active");
+    }
+      if (!(groupxProject.getGroup().isActive()) || !(groupxProject.getProject().isActive())){
+        throw new IOException("Either Group or Project are not active and cannot be added to a GroupxProject");
+    }
+      else {
+        groupxProject.setActive(true);
+        return groupxProjectRepository.save(groupxProject);
+    }
+}
     Project project =
         projectRepository
             .findById(projectId)
@@ -125,20 +146,26 @@ public class ProjectService {
     projectRepository.save(project);
   }
 
+  /**
+   * This Method only conceptually removes a Group from  a Project. It sets
+   * the isActive Flag for the GroupxProject to false, and removes all active contributors,
+   * thus making it unaccessable for users. The TimeRecords stored on that Gxp are still present
+   * and can be accessed in the accumulated Manager/ Grouplead Time Overview.
+   * The Group Object will not be removed from the GroupxProject Object, so it can be reactivated later.
+   * @param groupId
+   * @param projectId
+   * @throws CouldNotFindEntityException
+   */
   public void removeGroupFromProject(Long groupId, Long projectId)
       throws CouldNotFindEntityException {
     Optional<GroupxProject> groupxProjectOptional =
-        groupxProjectRepository.findByGroup_IdAndProject_Id(groupId, projectId);
+        groupxProjectRepository.findByGroup_IdAndProject_IdFetchContributorsEagerly(groupId, projectId);
     if (groupxProjectOptional.isEmpty()) {
       throw new CouldNotFindEntityException(
           "GroupxProject with groupId %d and projectId %d are not present"
               .formatted(groupId, projectId));
     } else {
       GroupxProject groupxProject = groupxProjectOptional.get();
-      // ohne Groupx kann das GroupxProject nicht existieren, da das Teil der Id ist. derweil
-      // löschen wir einfach mal das GroupxProject
-      // todo: eine geeignete lösch-policy überlegen: ein feld in GroupxProject setzen mit "is
-      // active" oder so
       deactivateGroupxProject(groupxProject);
       logger.info("removed Group %s from Project %s".formatted(groupId, projectId));
     }

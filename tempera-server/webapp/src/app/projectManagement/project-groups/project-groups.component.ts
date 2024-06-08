@@ -35,7 +35,7 @@ import {
  */
 export class ProjectGroupsComponent implements OnInit{
 
-  activeGroups: SimpleGroupDto[] = [];
+  activeContributingGroups: SimpleGroupDto[] = [];
   availableGroups: SimpleGroupDto[] = [];
   filteredGroups: SimpleGroupDto[] = [];
   filteredAvailableGroups: SimpleGroupDto[] = [];
@@ -51,14 +51,12 @@ export class ProjectGroupsComponent implements OnInit{
     this.projectId = this.route.snapshot.paramMap.get('id')!;
     //todo: getSimpleProject from ControllerService and check functionality
     this.projectControllerService.getProjectSimpleById(this.projectId).subscribe(project => this.projectName = project.name);
-    this.fetchActiveGroups(this.projectId);
+    this.fetchActiveGroupsOfThisProject(this.projectId);
   }
 
-  fetchActiveGroups(projectId: string) {
-    // todo: where to parse projectId to string?
+  fetchActiveGroupsOfThisProject(projectId: string) {
     this.projectControllerService.getActiveGroupsByProjectId(projectId).subscribe((activeGroups: SimpleGroupDto[]) : void => {
-      this.activeGroups = activeGroups;
-      //todo: what is this.filteredGroups?
+      this.activeContributingGroups = activeGroups;
       this.filteredGroups = activeGroups;
     });
   }
@@ -66,13 +64,13 @@ export class ProjectGroupsComponent implements OnInit{
   fetchAllActiveGroups() {
     this.groupControllerService.getAllActiveGroups().subscribe((groups: SimpleGroupDto[]) => {
       this.availableGroups = groups.filter((group: { id: string; }) =>
-        !this.activeGroups.some(groupP => group.id === groupP.id));
+        !this.activeContributingGroups.some(groupP => group.id === groupP.id));
       this.filteredAvailableGroups = this.availableGroups;
     });
   }
 
   addGroupDialog() {
-    this.filteredGroups = this.activeGroups;
+    this.filteredGroups = this.activeContributingGroups;
     this.fetchAllActiveGroups();
     this.displayAddDialog = true;
   }
@@ -83,7 +81,7 @@ export class ProjectGroupsComponent implements OnInit{
       groupId: groupId
     }
     this.projectControllerService.addGroupToProject(minimalGxpDto).subscribe(() => {
-      this.fetchActiveGroups(this.projectId);
+      this.fetchActiveGroupsOfThisProject(this.projectId);
       this.displayAddDialog = false;
     });
   }
@@ -91,13 +89,13 @@ export class ProjectGroupsComponent implements OnInit{
   deleteGroupFromProject(groupId: number) {
     this.projectControllerService.removeGroupFromProject(this.projectId.toString(), groupId.toString()).subscribe(() => {
       console.log(groupId, ` removed Group ${groupId}from project with ID: `, this.projectId);
-      this.fetchActiveGroups(this.projectId);
+      this.fetchActiveGroupsOfThisProject(this.projectId);
     });
   }
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.filteredGroups = filterValue ? this.activeGroups.filter(group =>
-      (group.name?.toLowerCase() ?? '').includes(filterValue.toLowerCase())) : this.activeGroups;
+    this.filteredGroups = filterValue ? this.activeContributingGroups.filter(group =>
+      (group.name?.toLowerCase() ?? '').includes(filterValue.toLowerCase())) : this.activeContributingGroups;
 
     this.filteredAvailableGroups = filterValue ? this.availableGroups.filter(group =>
       (group.name?.toLowerCase() ?? '').includes(filterValue.toLowerCase())) : this.availableGroups;
