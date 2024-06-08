@@ -24,7 +24,7 @@
     <p-dropdown [options]="accessPoints" formControlName="accessPoint" optionLabel="label" placeholder="Select an AccessPoint" id="accessPoint"></p-dropdown>
   </div>
   <br>
-  <p-button type="submit" label="Create"></p-button>
+  <p-button type="submit" label="Create" [disabled]="!temperaForm.valid"></p-button>
 </form>
 </div>
 

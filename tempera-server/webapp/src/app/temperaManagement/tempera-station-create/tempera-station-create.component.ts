@@ -38,7 +38,7 @@ export class TemperaStationCreateComponent implements OnInit, OnChanges{
   ) {
     this.temperaForm = this.formBuilder.group({
       id: [null, [Validators.required]],
-      user: [null, []],
+      user: [null, [Validators.required]],
       accessPoint: [null, Validators.required]
     });
   }
