@@ -94,7 +94,7 @@ export class TemperaStationCreateComponent implements OnInit, OnChanges{
     this.accessPointService.getAllAccesspoints().subscribe({
       next: (accesspoints: AccessPoint[]) => {
         this.accessPoints = accesspoints.map(accessPoint => ({
-          label: accessPoint.id, // Change this to any property you want to display
+          label: accessPoint.id,
           value: accessPoint
         }));
         console.log(this.accessPoints);
