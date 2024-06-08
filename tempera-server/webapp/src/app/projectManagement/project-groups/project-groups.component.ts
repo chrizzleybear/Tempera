@@ -96,7 +96,8 @@ export class ProjectGroupsComponent implements OnInit {
     });
     this.confirmationService.confirm({
       target: event.target ?? undefined,
-      message: 'Are you sure that you want to remove this group from the project?',
+      header: 'Are you sure?',
+      message: 'All Contributors will be removed...',
       icon: 'pi pi-exclamation-circle',
       accept: () => {
         this.removeGroupFromProject();
