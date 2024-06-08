@@ -88,7 +88,7 @@ export class AppMenuComponent implements OnInit {
             visible: this.storageService.getUser()?.roles.includes('ADMIN'),
           },
           {
-            label: 'Audit Log',
+            label: 'Audit Logs',
             icon: 'pi pi-fw pi-list',
             routerLink: ['/audit-logs'],
             visible: this.storageService.getUser()?.roles.includes('ADMIN'),
