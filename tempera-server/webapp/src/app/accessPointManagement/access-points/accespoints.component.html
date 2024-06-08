@@ -9,6 +9,8 @@
       <th scope="col" pSortableColumn="id">Access Point ID <p-sortIcon field="id"></p-sortIcon></th>
       <th scope="col" pSortableColumn="room">Room <p-sortIcon field="room"></p-sortIcon></th>
       <th scope="col" pSortableColumn="enabled">Status <p-sortIcon field="enabled"></p-sortIcon></th>
+      <th scope="col" pSortableColumn="isHealthy">Healthy<p-sortIcon field="isHealthy"></p-sortIcon></th>
+      <th></th>
       <th></th>
       <th></th>
     </tr>
@@ -18,6 +20,7 @@
       <td>{{ accessPoint.id }}</td>
       <td>{{ accessPoint.room }}</td>
       <td>{{ accessPoint.enabled ? 'Enabled' : 'Disabled' }}</td>
+      <td>{{accessPoint.isHealthy}}</td>
       <td>
         <p-button label="Tempera" (onClick)="temperaDialog(accessPoint); $event.stopPropagation()" icon="pi pi-eye"></p-button>
       </td>
