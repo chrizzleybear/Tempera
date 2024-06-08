@@ -6,20 +6,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuditLogMapper {
-    private final UserMapper userMapper;
-
-    public AuditLogMapper(UserMapper userMapper) {
-        this.userMapper = userMapper;
-    }
-
-    public AuditLogDto getAuditLogDto(AuditLog auditLog) {
-        return new AuditLogDto(
-                auditLog.getId().toString(),
-                auditLog.getTimeStamp().toString(),
-                userMapper.getSimpleUser(auditLog.getTriggeringUser()),
-                auditLog.getActionType(),
-                auditLog.getAffectedType(),
-                auditLog.getMessage()
-        );
-    }
+  public AuditLogDto getAuditLogDto(AuditLog auditLog) {
+    return new AuditLogDto(
+        auditLog.getId().toString(),
+        auditLog.getTimeStamp().toString(),
+        auditLog.getTriggeringUser().getUsername(),
+        auditLog.getActionType(),
+        auditLog.getAffectedType(),
+        auditLog.getMessage());
+  }
 }

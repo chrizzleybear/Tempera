@@ -1,5 +1,5 @@
 <ng-container *ngIf="auditLogs; else loading">
-  <p-table [value]="auditLogs" [paginator]="true">
+  <p-table #table [value]="auditLogs" [paginator]="true" [rows]="12">
     <ng-template pTemplate="header">
       <tr>
         <th id="time">Time</th>
@@ -11,10 +11,23 @@
       <!--  Filters   -->
       <tr>
         <th id="timeFilter">
-          <p-columnFilter type="date" field="time" placeholder="Search"></p-columnFilter>
+          <p-columnFilter type="date" field="time" placeholder="Search" [showMenu]="false" [showClearButton]="false">
+            <ng-template pTemplate="filter" let-filter="filterCallback">
+              <p-calendar
+                [(ngModel)]="rangeDates"
+                selectionMode="range"
+                appendTo="body"
+                (onSelect)="table.filter(rangeDates, 'time', 'range-filter')"
+                (onClear)="filter(null)"
+                [showClear]="true"
+                [readonlyInput]="true"
+              ></p-calendar>
+            </ng-template>
+          </p-columnFilter>
         </th>
         <th id="userFilter">
-          <p-columnFilter field="user.username" placeholder="Search"></p-columnFilter>
+          <p-columnFilter type="text" field="triggeringUserName" matchMode="contains" placeholder="Search"
+                          [showMenu]="false"></p-columnFilter>
         </th>
         <th id="actionTypeFilter">
           <p-columnFilter field="actionType" [showMenu]="false" matchMode="in" [showClearButton]="false">
@@ -45,15 +58,17 @@
           </p-columnFilter>
         </th>
         <th id="messageFilter">
-          <p-columnFilter type="text" field="message"></p-columnFilter>
+          <p-columnFilter type="text" field="message" matchMode="contains"></p-columnFilter>
         </th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-auditLog>
       <tr>
         <td>{{ auditLog.time | date: 'ccc, MMM dd, y, HH:mm' }}</td>
-        <td>{{ auditLog.triggeringUser.username }}</td>
+        <td>{{ auditLog.triggeringUserName }}</td>
         <td>{{ auditLog.actionType }}</td>
+        <td>{{ auditLog.affectedType }}</td>
+        <td>{{ auditLog.message }}</td>
       </tr>
     </ng-template>
   </p-table>

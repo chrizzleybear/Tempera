@@ -9,13 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { SimpleUserDto } from './simpleUserDto';
 
 
 export interface AuditLogDto { 
     id: string;
     timeStamp: string;
-    triggeringUser: SimpleUserDto;
+    triggeringUserName: string;
     actionType: AuditLogDto.ActionTypeEnum;
     affectedType: AuditLogDto.AffectedTypeEnum;
     message?: string;

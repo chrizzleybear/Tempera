@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 public record AuditLogDto(
     @NotNull String id,
     @NotNull String timeStamp,
-    @NotNull SimpleUserDto triggeringUser,
+    @NotNull String triggeringUserName,
     @NotNull LogEvent actionType,
     @NotNull LogAffectedType affectedType,
     String message) {}

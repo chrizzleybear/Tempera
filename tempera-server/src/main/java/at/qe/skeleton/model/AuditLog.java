@@ -17,14 +17,15 @@ public class AuditLog {
   @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime timeStamp;
 
-  @ManyToOne
-  private Userx triggeringUser;
+  @ManyToOne private Userx triggeringUser;
 
   private LogEvent actionType;
 
   private LogAffectedType affectedType;
 
   private String message;
+
+  public AuditLog() {}
 
   /**
    * For creating AuditLogs only this Constructor should be used.
@@ -35,7 +36,8 @@ public class AuditLog {
    * @param triggeringUser The Userx that initiated the Action that is being logged.
    * @param actionType A categorization of the Action that is being logged.
    */
-  public AuditLog(Userx triggeringUser, LogEvent actionType, LogAffectedType affectedType, String message) {
+  public AuditLog(
+      Userx triggeringUser, LogEvent actionType, LogAffectedType affectedType, String message) {
     this.triggeringUser = triggeringUser;
     this.timeStamp = LocalDateTime.now();
     this.actionType = actionType;
@@ -78,8 +80,8 @@ public class AuditLog {
     return Objects.equals(other.getId(), this.getId());
   }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
 }
