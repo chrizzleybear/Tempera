@@ -39,7 +39,7 @@ export class ProjectGroupsComponent implements OnInit{
   availableGroups: SimpleGroupDto[] = [];
   filteredGroups: SimpleGroupDto[] = [];
   filteredAvailableGroups: SimpleGroupDto[] = [];
-  projectId!: number;
+  projectId!: string;
   projectName!: string;
   displayAddDialog: boolean = false;
   messages: any;
@@ -48,15 +48,15 @@ export class ProjectGroupsComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.projectId = Number(this.route.snapshot.paramMap.get('id')!);
+    this.projectId = this.route.snapshot.paramMap.get('id')!;
     //todo: getSimpleProject from ControllerService and check functionality
-    this.projectName = this.projectControllerService.get
+    this.projectControllerService.getProjectSimpleById(this.projectId).subscribe(project => this.projectName = project.name);
     this.fetchActiveGroups(this.projectId);
   }
 
-  fetchActiveGroups(projectId: number) {
+  fetchActiveGroups(projectId: string) {
     // todo: where to parse projectId to string?
-    this.projectControllerService.getActiveGroupsByProjectId(projectId.toString()).subscribe((activeGroups: SimpleGroupDto[]) : void => {
+    this.projectControllerService.getActiveGroupsByProjectId(projectId).subscribe((activeGroups: SimpleGroupDto[]) : void => {
       this.activeGroups = activeGroups;
       //todo: what is this.filteredGroups?
       this.filteredGroups = activeGroups;

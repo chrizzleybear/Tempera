@@ -140,6 +140,7 @@ public class ProjectService {
       // todo: eine geeignete lösch-policy überlegen: ein feld in GroupxProject setzen mit "is
       // active" oder so
       deactivateGroupxProject(groupxProject);
+      logger.info("removed Group %s from Project %s".formatted(groupId, projectId));
     }
   }
 
@@ -151,13 +152,7 @@ public class ProjectService {
    */
   public void deactivateGroupxProject (GroupxProject groupxProject) {
     groupxProject.setActive(false);
-    groupxProject
-        .getContributors()
-        .forEach(
-            contributor -> {
-              contributor.getGroupxProjects().remove(groupxProject);
-              userxRepository.save(contributor);
-            });
+    groupxProject.removeAllContributors();
     groupxProjectRepository.save(groupxProject);
   }
 

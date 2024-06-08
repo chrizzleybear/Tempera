@@ -1,11 +1,9 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.model.Userx;
-import at.qe.skeleton.rest.frontend.dtos.GroupDetailsDto;
-import at.qe.skeleton.rest.frontend.dtos.MemberAssigmentDto;
-import at.qe.skeleton.rest.frontend.dtos.SimpleGroupDto;
-import at.qe.skeleton.rest.frontend.dtos.UserxDto;
+import at.qe.skeleton.rest.frontend.dtos.*;
 import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.GroupMapperService;
+import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.UserMapper;
 import at.qe.skeleton.services.GroupService;
 import at.qe.skeleton.services.UserxService;
 import org.springframework.http.MediaType;
@@ -22,11 +20,13 @@ public class GroupManagementController {
   private final GroupService groupService;
   private final UserxService userxService;
   private GroupMapperService groupMapperService;
+  private UserMapper userMapper;
 
-  GroupManagementController(GroupService groupService, UserxService userxService, GroupMapperService groupMapperService) {
+  GroupManagementController(GroupService groupService, UserxService userxService, GroupMapperService groupMapperService, UserMapper userMapper) {
     this.groupService = groupService;
     this.userxService = userxService;
     this.groupMapperService =  groupMapperService;
+    this.userMapper = userMapper;
   }
 
   @GetMapping("/all")
@@ -60,19 +60,19 @@ public class GroupManagementController {
   }
 
   @GetMapping("/members/{groupId}")
-  public ResponseEntity<List<UserxDto>> getMembers(@PathVariable String groupId) {
-    List<UserxDto> members =
+  public ResponseEntity<List<SimpleUserDto>> getMembers(@PathVariable String groupId) {
+    List<SimpleUserDto> members =
             groupService.getGroup(Long.parseLong(groupId)).getMembers().stream()
-                    .map(userxService::convertToDTO)
+                    .map(userMapper::getSimpleUser)
                     .toList();
     return ResponseEntity.ok(members);
   }
 
   @PostMapping("/addMember")
-  public ResponseEntity<UserxDto> addMember(@RequestBody MemberAssigmentDto memberAssigmentDto) {
+  public ResponseEntity<SimpleUserDto> addMember(@RequestBody MemberAssigmentDto memberAssigmentDto) {
     Userx member =
             groupService.addMember(memberAssigmentDto.groupId(), memberAssigmentDto.memberId());
-    return ResponseEntity.ok(userxService.convertToDTO(member));
+    return ResponseEntity.ok(userMapper.getSimpleUser(member));
   }
 
   @DeleteMapping("/removeMember/{groupId}/{memberId}")

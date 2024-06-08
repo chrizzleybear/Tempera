@@ -45,7 +45,7 @@ export class GroupProjectsComponent implements OnInit {
   displayAddMemberDialog: boolean = false;
   displayDeleteMemberDialog: boolean = false;
   selectedProject: SimpleProjectDto | undefined;
-  members: UserxDto[] = [];
+  members: SimpleUserDto[] = [];
   contributors: SimpleUserDto[] = [];
   availableProjectContributors: SimpleUserDto[] = [];
   filteredMembers: SimpleUserDto[] = [];

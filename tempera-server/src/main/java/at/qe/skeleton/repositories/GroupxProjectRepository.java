@@ -22,6 +22,9 @@ public interface GroupxProjectRepository extends AbstractRepository<GroupxProjec
     public List<GroupxProject> findAllByProjectId(Long projectId);
 
     public Optional<GroupxProject> findByGroup_IdAndProject_Id(Long groupId, Long projectId);
+    @EntityGraph(attributePaths = {"contributors"}, type = EntityGraph.EntityGraphType.FETCH)
+    @Query("SELECT gxp From GroupxProject gxp where gxp.group.id = :groupId AND gxp.project.id = :projectId")
+    public Optional<GroupxProject> findByGroup_IdAndProject_IdFetchContributorsEagerly(Long groupId, Long projectId);
 
     @Query("SELECT gxp From GroupxProject gxp where gxp.project.id = :projectId AND :contributor member of gxp.contributors")
     public List<GroupxProject> findAllByProjectIdAndContributorsContaining(@Param("projectId")Long projectId, @Param("contributor")Userx contributor);

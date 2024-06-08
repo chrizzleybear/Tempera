@@ -84,6 +84,12 @@ public class GroupxProject implements Persistable<GroupxProjectId>{
         internalRecords.clear();
     }
 
+    @PreAuthorize("hasRole('GROUPLEAD') or hasRole('ADMIN') or hasRole('MANAGER')")
+    public void removeAllContributors(){
+        contributors.forEach(contributor -> contributor.getGroupxProjects().remove(this));
+        contributors.clear();
+    }
+
 
     public Groupx getGroup() {
         return group;
