@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {NgForOf, NgIf} from "@angular/common";
 import {Router} from "@angular/router";
-import {TemperaStationService} from "../../_services/tempera-station.service";
 import {RoomService} from "../../_services/room.service";
 import {Subscription} from "rxjs";
 import {FloorComponent} from "../../models/room.model";
