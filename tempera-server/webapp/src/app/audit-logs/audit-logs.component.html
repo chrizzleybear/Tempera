@@ -19,7 +19,7 @@
       <!--  Filters   -->
       <tr>
         <th id="timeFilter">
-          <p-columnFilter type="date" field="time" placeholder="Search" [showMenu]="false" [showClearButton]="false">
+          <p-columnFilter type="date" field="time" [showMenu]="false" [showClearButton]="false">
             <ng-template pTemplate="filter" let-filter="filterCallback">
               <p-calendar
                 [(ngModel)]="rangeDates"
@@ -29,6 +29,7 @@
                 (onClear)="filter(null)"
                 [showClear]="true"
                 [readonlyInput]="true"
+                placeholder="Select range"
               ></p-calendar>
             </ng-template>
           </p-columnFilter>
@@ -66,7 +67,8 @@
           </p-columnFilter>
         </th>
         <th id="messageFilter">
-          <p-columnFilter type="text" field="message" matchMode="contains" [showMenu]="false"></p-columnFilter>
+          <p-columnFilter type="text" field="message" matchMode="contains" placeholder="Search"
+                          [showMenu]="false"></p-columnFilter>
         </th>
       </tr>
     </ng-template>
