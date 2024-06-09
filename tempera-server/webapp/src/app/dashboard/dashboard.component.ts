@@ -119,8 +119,10 @@ export class DashboardComponent implements OnInit {
           if (this.user?.roles?.includes(RolesEnum.Admin)) {
             this.form.controls.visibility.disable();
           }
-          if (this.dashboardData?.defaultProject?.projectId) {
-            this.form.controls.project.setValue(this.dashboardData?.defaultProject);
+          if (this.dashboardData.project) {
+            this.form.controls.project.setValue(this.dashboardData.project);
+          } else if (this.dashboardData?.defaultProject) {
+            this.form.controls.project.setValue(this.dashboardData.defaultProject);
           }
         },
         error: err => {
