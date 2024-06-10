@@ -23,26 +23,39 @@
           <p-columnFilter type="date" field="endTime" placeholder="Search"></p-columnFilter>
         </th>
         <th id="projectFilter">
-          <p-columnFilter field="assignedGroupxProject" [showMenu]="false" matchMode="in" [showClearButton]="false">
-            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+          <div [ngClass]="{flex: onlyUnassignedProjectsShown}">
+            <p-columnFilter field="assignedGroupxProject" [showMenu]="false" matchMode="in"
+                            [showClearButton]="false">
+              <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                <p-multiSelect #projectFilter
+                               [ngModel]="selectedProjects"
+                               [options]="availableProjects"
+                               [showClear]="true"
+                               (onChange)="filter($event.value)"
+                               (onClear)="filter(null)"
+                               [disabled]="onlyUnassignedProjectsShown"
+                               optionLabel="projectName" appendTo="body" placeholder="Any"
+                >
+                  <ng-template pTemplate="footer">
+                    <p-button (onClick)="filterAssignedProjects()">Show unassigned</p-button>
+                  </ng-template>
+                </p-multiSelect>
 
-              <p-multiSelect
-                [options]="availableProjects"
-                [showClear]="true"
-                (onChange)="filter($event.value)"
-                (onClear)="filter(null)"
-                optionLabel="projectName" appendTo="body" placeholder="Any"
-              ></p-multiSelect>
-
-            </ng-template>
-          </p-columnFilter>
+              </ng-template>
+            </p-columnFilter>
+            <p-button *ngIf="onlyUnassignedProjectsShown" (onClick)="removeAssignedProjectsFilter()" class="ml-2">Show
+              all
+            </p-button>
+          </div>
         </th>
         <th id="stateFilter">
           <p-columnFilter field="state" [showMenu]="false" matchMode="in" [showClearButton]="false">
             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
 
-              <p-multiSelect [options]="stateOptions"
+              <p-multiSelect [ngModel]="selectedStates"
+                             [options]="stateOptions"
                              [showClear]="true"
+                             [disabled]="onlyUnassignedProjectsShown"
                              (onChange)="filter($event.value)"
                              (onClear)="filter(null)"
                              optionLabel="value"
