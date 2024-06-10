@@ -5,6 +5,7 @@ DELETE FROM alert;
 DELETE FROM sensor;
 DELETE FROM tempera_station;
 DELETE FROM access_point;
+DELETE FROM room_thresholds;
 DELETE FROM room;
 DELETE FROM groupx_members;
 DELETE FROM groupx_project_object_contributors;
