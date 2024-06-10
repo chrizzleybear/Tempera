@@ -296,22 +296,8 @@ INSERT INTO Threshold (id, default_threshold, sensor_type, threshold_type, thres
 (-44, TRUE, 'NMVOC', 'UPPERBOUND_WARNING', 10.00, -1, -30);
 
 INSERT INTO room_thresholds(room_room_id, thresholds_id) VALUES
-                                                             ('room_1', -11),
-                                                             ('room_1', -12),
-                                                             ('room_1', -13),
-                                                             ('room_1', -14),
-                                                             ('room_1', -21),
-                                                             ('room_1', -22),
-                                                             ('room_1', -23),
-                                                             ('room_1', -24),
-                                                             ('room_1', -31),
-                                                             ('room_1', -32),
-                                                             ('room_1', -33),
-                                                             ('room_1', -34),
-                                                             ('room_1', -41),
-                                                             ('room_1', -42),
-                                                             ('room_1', -43),
-                                                             ('room_1', -44);
+('room_1', -11),  ('room_1', -12), ('room_1', -13), ('room_1', -14), ('room_1', -21), ('room_1', -22), ('room_1', -23),
+ ('room_1', -24), ('room_1', -31), ('room_1', -32), ('room_1', -33), ('room_1', -34), ('room_1', -41), ('room_1', -42), ('room_1', -43), ('room_1', -44);
 
 
 INSERT INTO alert (ACKNOWLEDGED, PEAK_DEVIATION_VALUE, FIRST_INCIDENT, ID, LAST_INCIDENT, SENSOR_SENSOR_ID, THRESHOLD_ID, SENSOR_TEMPERA_ID)
