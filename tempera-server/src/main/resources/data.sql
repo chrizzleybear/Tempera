@@ -151,6 +151,24 @@ INSERT INTO room (room_id) VALUES ('room_10');
 INSERT INTO room (room_id) VALUES ('room_11');
 INSERT INTO room (room_id) VALUES ('room_12');
 
+INSERT INTO room_thresholds(room_room_id, thresholds_id) VALUES
+                                                             ('room_1', -11),
+                                                             ('room_1', -12),
+                                                             ('room_1', -13),
+                                                             ('room_1', -14),
+                                                             ('room_1', -21),
+                                                             ('room_1', -22),
+                                                             ('room_1', -23),
+                                                             ('room_1', -24),
+                                                             ('room_1', -31),
+                                                             ('room_1', -32),
+                                                             ('room_1', -33),
+                                                             ('room_1', -34),
+                                                             ('room_1', -41),
+                                                             ('room_1', -42),
+                                                             ('room_1', -43),
+                                                             ('room_1', -44);
+
 INSERT INTO access_point (id, is_healthy, enabled, room_room_id) VALUES ('123e4567-e89b-12d3-a456-426614174001', TRUE, TRUE, 'room_1');
 INSERT INTO access_point (id, is_healthy, enabled, room_room_id) VALUES ('456e4567-e89b-12d3-a456-426614174001', FALSE, TRUE, 'room_2');
 INSERT INTO access_point (id, is_healthy, enabled, room_room_id) VALUES ('789e4567-e89b-12d3-a456-426614174001', TRUE, TRUE, 'room_3');
