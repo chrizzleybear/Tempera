@@ -59,7 +59,7 @@ public class AccessPointController {
     }
 
     @GetMapping("/load/room/{roomId}")
-    public ResponseEntity<AccessPoint> getAccesspointsByRoomId(@RequestBody String roomId) {
+    public ResponseEntity<AccessPoint> getAccesspointsByRoomId(@PathVariable String roomId) {
         try {
             AccessPoint a = accessPointService.getAccessPointByRoomId(roomId);
             return ResponseEntity.ok(a);
