@@ -1,7 +1,7 @@
 <p-toast></p-toast>
 <ng-container *ngIf="tableEntries; else loading">
   <p-table #table [value]="tableEntries" [globalFilterFields]="filterFields"
-           (onFilter)="calculateTotalTime()" [rows]="7" [paginator]="true" sortField="startTime" [sortOrder]="1">
+           (onFilter)="calculateTotalTime()" [rows]="7" [paginator]="true" sortField="startTime" [sortOrder]="-1">
     <ng-template pTemplate="header">
       <tr>
         <th id="start" pSortableColumn="startTime">Start
