@@ -1,10 +1,12 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
-import at.qe.skeleton.model.Group;
+import at.qe.skeleton.model.Groupx;
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.rest.frontend.dtos.GroupDetailsDto;
 import at.qe.skeleton.rest.frontend.dtos.MemberAssigmentDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleGroupDto;
 import at.qe.skeleton.rest.frontend.dtos.UserxDto;
+import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.GroupMapperService;
 import at.qe.skeleton.services.GroupService;
 import at.qe.skeleton.services.UserxService;
 import org.springframework.http.MediaType;
@@ -20,30 +22,29 @@ public class GroupManagementController {
 
   private final GroupService groupService;
   private final UserxService userxService;
+  private GroupMapperService groupMapperService;
 
-  GroupManagementController(GroupService groupService, UserxService userxService) {
+  GroupManagementController(GroupService groupService, UserxService userxService, GroupMapperService groupMapperService) {
     this.groupService = groupService;
     this.userxService = userxService;
+    this.groupMapperService =  groupMapperService;
   }
 
   @GetMapping("/all")
-  public ResponseEntity<List<Group>> getAllGroups() {
-    List<Group> users = groupService.getAllGroups();
-    return ResponseEntity.ok(users);
+  public ResponseEntity<List<SimpleGroupDto>> getAllGroups() {
+    List<SimpleGroupDto> groups = groupService.getAllGroups();
+    return ResponseEntity.ok(groups);
   }
 
   @PostMapping("/create")
-  public ResponseEntity<Group> createGroup(@RequestBody SimpleGroupDto groupData) {
-    Group group =
-        groupService.createGroup(groupData.name(), groupData.description(), groupData.groupLead());
+  public ResponseEntity<SimpleGroupDto> createGroup(@RequestBody SimpleGroupDto groupData) {
+    SimpleGroupDto group = groupMapperService.createGroup(groupData);
     return ResponseEntity.ok(group);
   }
 
   @PutMapping("/update")
-  public ResponseEntity<Group> updateGroup(@RequestBody SimpleGroupDto groupData) {
-    Group updatedGroup =
-        groupService.updateGroup(
-            groupData.groupId(), groupData.name(), groupData.description(), groupData.groupLead());
+  public ResponseEntity<SimpleGroupDto> updateGroup(@RequestBody SimpleGroupDto groupData) {
+    SimpleGroupDto updatedGroup = groupMapperService.updateGroup(groupData);
     return ResponseEntity.ok(updatedGroup);
   }
 
@@ -54,37 +55,37 @@ public class GroupManagementController {
   }
 
   @GetMapping("/load/{groupId}")
-  public ResponseEntity<Group> getGroup(@PathVariable String groupId) {
-    Group group = groupService.getGroup(Long.parseLong(groupId));
+  public ResponseEntity<GroupDetailsDto> getGroup(@PathVariable String groupId) {
+    GroupDetailsDto group = groupMapperService.getGroupDetailsDto(Long.parseLong(groupId));
     return ResponseEntity.ok(group);
   }
 
   @GetMapping("/members/{groupId}")
   public ResponseEntity<List<UserxDto>> getMembers(@PathVariable String groupId) {
     List<UserxDto> members =
-        groupService.getGroup(Long.parseLong(groupId)).getMembers().stream()
-            .map(userxService::convertToDTO)
-            .toList();
+            groupService.getGroup(Long.parseLong(groupId)).getMembers().stream()
+                    .map(userxService::convertToDTO)
+                    .toList();
     return ResponseEntity.ok(members);
   }
 
   @PostMapping("/addMember")
   public ResponseEntity<UserxDto> addMember(@RequestBody MemberAssigmentDto memberAssigmentDto) {
     Userx member =
-        groupService.addMember(memberAssigmentDto.groupId(), memberAssigmentDto.memberId());
+            groupService.addMember(memberAssigmentDto.groupId(), memberAssigmentDto.memberId());
     return ResponseEntity.ok(userxService.convertToDTO(member));
   }
 
   @DeleteMapping("/removeMember/{groupId}/{memberId}")
   public ResponseEntity<Void> removeMember(
-      @PathVariable String groupId, @PathVariable String memberId) {
+          @PathVariable String groupId, @PathVariable String memberId) {
     groupService.removeMember(Long.parseLong(groupId), memberId);
     return ResponseEntity.ok().build();
   }
 
   @GetMapping("/groupLead/{groupLeadId}")
-  public ResponseEntity<List<Group>> getGroupByGroupLead(@PathVariable String groupLeadId) {
-    List<Group> groups = groupService.getGroupFromGroupLead(groupLeadId);
+  public ResponseEntity<List<SimpleGroupDto>> getGroupsByGroupLead(@PathVariable String groupLeadId) {
+    List<SimpleGroupDto> groups = groupMapperService.getSimpleGroupDtosByGroupLead(groupLeadId);
     return ResponseEntity.ok(groups);
   }
 }

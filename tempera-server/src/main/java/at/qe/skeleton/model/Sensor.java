@@ -13,7 +13,7 @@ public class Sensor {
 
   @EmbeddedId private SensorId sensorId;
 
-  @ManyToOne(optional = false)
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   @MapsId("temperaId")
   @JoinColumn(name = "tempera_id")
   private TemperaStation temperaStation;
@@ -101,7 +101,7 @@ public class Sensor {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof Sensor other)) return false;
-    return sensorId.equals(other.sensorId);
+    return sensorId.equals(other.getSensorId());
   }
 
   @Override

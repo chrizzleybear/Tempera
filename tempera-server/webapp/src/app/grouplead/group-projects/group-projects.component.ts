@@ -32,6 +32,10 @@ import { concatMap, toArray } from 'rxjs/operators';
   templateUrl: './group-projects.component.html',
   styleUrls: ['./group-projects.component.css']
 })
+/**
+ * @class GroupProjectsComponent
+ * This component is responsible for managing projects of groups.
+ */
 export class GroupProjectsComponent implements OnInit {
   projects: Project[] = [];
   messages: any;
@@ -39,15 +43,17 @@ export class GroupProjectsComponent implements OnInit {
   displayDeleteMemberDialog: boolean = false;
   selectedProject: Project | undefined;
   members: User[] = [];
+  contributors: User[] = [];
   availableProjectContributors: User[] = [];
   filteredMembers: User[] = [];
   selectedMembers: User[] = [];
-  groupId: number | null | undefined;
-
+  groupId!: number;
+  groupName: string | null | undefined;
   constructor(private projectService: ProjectService, private groupService: GroupService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.groupId = Number(this.route.snapshot.paramMap.get('id'));
+    this.groupName = this.route.snapshot.paramMap.get('name');
     if (this.groupId) {
       this.loadProjects(this.groupId);
       this.loadGroupMembers(this.groupId);
@@ -57,7 +63,8 @@ export class GroupProjectsComponent implements OnInit {
   private loadProjects(groupId: number) {
     this.projectService.getProjectsOfGroup(groupId).subscribe({
       next: (projects) => {
-        console.log('Loaded projects:', projects);
+        console.log('Loaded projects:', groupId);
+        console.log('Project of group projects:', projects);
         this.projects = projects;
       },
       error: (error) => {
@@ -65,6 +72,18 @@ export class GroupProjectsComponent implements OnInit {
       }
     });
   }
+  private loadProjectContributors(projectId: number) {
+    this.projectService.getContributors(this.groupId, projectId).subscribe({
+      next: (contributors) => {
+        this.contributors = contributors;
+        this.availableProjectContributors = this.members.filter(member => !contributors.some(contributor => contributor.username === member.username));
+        this.filteredMembers = [...this.availableProjectContributors];
+      },
+      error: (error) => {
+        console.error('Error loading projects:', error);
+      }
+    });
+    }
 
   private loadGroupMembers(groupId: number) {
     this.groupService.getGroupMembers(groupId).subscribe({
@@ -80,27 +99,30 @@ export class GroupProjectsComponent implements OnInit {
 
   viewProjectDetails(project: Project) {
     console.log('View project details:', project);
-    console.log('Project ID:', project.id);
-    this.router.navigate(['/project', project.id]);
+    console.log('Project ID:', project.projectId);
+    this.router.navigate(['/project', project.projectId]);
   }
 
   addContributorsToProjectDialog(project: Project) {
     this.displayAddMemberDialog = true;
+    this.selectedMembers = [];
     this.selectedProject = project;
-    this.availableProjectContributors = this.members.filter((member: { username: string }) =>
-      !project.contributors!.some(projectMember => projectMember.username === member.username)
-    );
-    this.filteredMembers = [...this.availableProjectContributors];
+    this.loadProjectContributors(project.projectId);
   }
 
   private addContributorToProject(memberId: string) {
     const dto: ContributorAssignmentDTO = {
-      projectId: this.selectedProject!.id,
+      projectId: this.selectedProject!.projectId,
+      groupId: this.groupId!,
       contributorId: memberId
     };
     return this.projectService.addMemberToProject(dto);
   }
 
+  /**
+   * Add selected members to the project.
+   * Pipe the selected members to addContributorToProject method and subscribe to the responses.
+   */
   addContributorsToProject() {
     from(this.selectedMembers.map(member => member.username))
       .pipe(
@@ -111,7 +133,6 @@ export class GroupProjectsComponent implements OnInit {
         next: responses => {
           console.log('All members added successfully:', responses);
           this.loadProjects(this.groupId!);
-          this.resetMembers();
           this.messages = [{ severity: 'success', summary: 'Success', detail: 'Contributors added successfully' }];
         },
         error: err => console.error('Error adding member:', err)
@@ -135,13 +156,14 @@ export class GroupProjectsComponent implements OnInit {
   deleteContributorDialog(project: Project) {
     this.displayDeleteMemberDialog = true;
     this.selectedProject = project;
+    this.loadProjectContributors(project.projectId);
     this.availableProjectContributors = project.contributors!;
   }
 
   deleteContributorsFromProject() {
     from(this.selectedMembers.map(member => member.username))
       .pipe(
-        concatMap(memberId => this.deleteContributorFromProject(this.selectedProject!.id, memberId)),
+        concatMap(memberId => this.deleteContributorFromProject(this.selectedProject!.projectId, memberId)),
         toArray()
       )
       .subscribe({
@@ -159,15 +181,11 @@ export class GroupProjectsComponent implements OnInit {
   private deleteContributorFromProject(projectId: number, memberId: string) {
     const dto: ContributorAssignmentDTO = {
       projectId: projectId,
+      groupId: this.groupId!,
       contributorId: memberId
     };
     return this.projectService.removeMemberFromProject(dto);
   }
-
-  backToGroups() {
-    this.router.navigate(['/myGroups']);
-  }
-
   resetMembers() {
     this.selectedMembers = [];
     this.availableProjectContributors = [];

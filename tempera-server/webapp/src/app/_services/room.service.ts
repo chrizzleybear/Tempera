@@ -1,7 +1,11 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {Room} from "../models/room.model";
+import {Observable, Subject} from "rxjs";
+import {FloorComponent, Room} from "../models/room.model";
+import {Threshold, ThresholdTipUpdateDto, ThresholdUpdateDto} from "../models/threshold.model";
+import {AccessPoint} from "../models/accessPoint.model";
+
+
 
 @Injectable({
   providedIn: 'root',
@@ -25,9 +29,36 @@ export class RoomService {
     return this.http.get<Room>(`${this.API_URL}load/${roomId}`);
   }
 
-  createRoom(roomId: String): Observable<string> {
-    console.log('Create room with ID: ');
+  createRoom(roomId: string): Observable<string> {
     return this.http.post<string>(`${this.API_URL}create`, roomId, { responseType: 'text' as 'json' });
+  }
+
+  getAvailableRooms(): Observable<Room[]>{
+    return this.http.get<Room[]>(this.API_URL + 'available');
+  }
+//two way binding ->delete
+  getAccessPoints(roomId: string): Observable<AccessPoint> {
+    return this.http.get<AccessPoint>(`${this.API_URL}accesspoint/${roomId}`);
+  }
+
+  updateThreshold(dto: ThresholdUpdateDto): Observable<Threshold>{
+    console.log('Update Threshold: ', dto);
+    return this.http.put<Threshold>(`${this.API_URL}threshold/update`, dto);
+  }
+
+  updateThresholdTip(dto: ThresholdTipUpdateDto) {
+    return this.http.put<Threshold>(`${this.API_URL}threshold/tip/update`, dto);
+  }
+
+  getFloorPlan(): Observable<FloorComponent[]> {
+    return this.http.get<FloorComponent[]>(this.API_URL + 'floor');
+  }
+
+  private roomChangedSource = new Subject<void>();
+  roomChanged$ = this.roomChangedSource.asObservable();
+
+  roomChanged() {
+    this.roomChangedSource.next();
   }
 
 }

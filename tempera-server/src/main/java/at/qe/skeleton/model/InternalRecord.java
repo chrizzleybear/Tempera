@@ -1,6 +1,7 @@
 package at.qe.skeleton.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Columns;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -19,36 +20,42 @@ import java.util.Objects;
  * assigned to that Group or Project reference null as assigned Group/Project.
  */
 @Entity
-@IdClass(InternalRecordId.class)
 public class InternalRecord {
-  //  @Id
-  //  @GeneratedValue(strategy = GenerationType.AUTO)
-  //  private Long id;
-
   @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
+
   @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime start;
 
-  @Id
-  @ManyToOne(optional = false)
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   @JoinColumns({
     @JoinColumn(name = "userName", referencedColumnName = "user_username"),
     @JoinColumn(name = "ext_rec_start", referencedColumnName = "start")
   })
   private ExternalRecord externalRecord;
 
+  private String Description;
+
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "time_end")
   private LocalDateTime end;
 
-  // bidirectional one-to-many association
-  @ManyToOne
-  @JoinColumn(name = "project_id")
-  private Project assignedProject;
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumns({
+    @JoinColumn(name = "group_id", referencedColumnName = "group_id"),
+    @JoinColumn(name = "project_id", referencedColumnName = "project_id")
+})
+private GroupxProject groupxProject;
 
-  @ManyToOne
-  @JoinColumn(name = "groupx_id")
-  private Group assignedGroup;
+  public GroupxProject getGroupxProject() {
+    return groupxProject;
+  }
+
+  public void setGroupxProject(GroupxProject groupxProject) {
+    this.groupxProject = groupxProject;
+  }
+
 
   // these are the foreign keys from externalRecord. The ext_rec_start will often be the same
   // as the start of the InternalRecord but once the user starts to divide the ExternalRecord
@@ -80,26 +87,29 @@ public class InternalRecord {
   }
 
   public void setEnd(LocalDateTime end) {
+    if (end.isBefore(this.start)) {
+      throw new IllegalArgumentException("InternalRecord start is before End");
+    }
     this.end = end;
   }
 
-  protected InternalRecord() {}
-  ;
-
-  public Project getAssignedProject() {
-    return assignedProject;
+  protected InternalRecord() {
   }
 
-  public void setAssignedProject(Project assignedProject) {
-    this.assignedProject = assignedProject;
+  public Long getId() {
+    return id;
   }
 
-  public Group getAssignedGroup() {
-    return assignedGroup;
+  public void setId(Long id) {
+    this.id = id;
   }
 
-  public void setAssignedGroup(Group assignedGroup) {
-    this.assignedGroup = assignedGroup;
+  public String getDescription() {
+    return Description;
+  }
+
+  public void setDescription(String description) {
+    Description = description;
   }
 
   @Override
@@ -115,8 +125,9 @@ public class InternalRecord {
     if (!(o instanceof InternalRecord other)) {
       return false;
     }
-    return other.start.equals(this.start) && other.externalRecord.equals(this.externalRecord);
+    return other.getStart().equals(this.start) && other.getExternalRecord().equals(this.externalRecord);
   }
+
 
   @Override
   public String toString() {
@@ -124,6 +135,6 @@ public class InternalRecord {
         .formatted(
             start.toString(),
             end == null ? "null" : end,
-            assignedProject == null ? "null" : assignedProject);
+            groupxProject == null ? "null" : groupxProject);
   }
 }

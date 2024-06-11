@@ -1,16 +1,20 @@
 DELETE FROM internal_record;
 DELETE FROM external_record;
 DELETE FROM measurement;
+DELETE FROM alert;
 DELETE FROM sensor;
 DELETE FROM tempera_station;
 DELETE FROM access_point;
+DELETE FROM room_thresholds;
 DELETE FROM room;
 DELETE FROM groupx_members;
+DELETE FROM groupx_project_object_contributors;
+DELETE FROM groupx_project_object;
 DELETE FROM groupx;
-DELETE FROM project_contributors;
 DELETE FROM userx_userx_role;
-DELETE FROM userx;
+DELETE FROM userx WHERE default_project_id Is Not NULL;
 DELETE FROM project;
+DELETE FROM userx;
 
 INSERT INTO userx
 (enabled, default_project_id, state, state_visibility, create_date, update_date, create_user_username, update_user_username, username, email, first_name, last_name, password)
@@ -19,12 +23,12 @@ VALUES
 
 INSERT INTO room (room_id) VALUES ('room_10');
 
-INSERT INTO access_point (enabled, id, room_room_id) VALUES (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'room_10');
+INSERT INTO access_point (is_healthy, enabled, id, room_room_id) VALUES (TRUE, TRUE, '111e4567-e89b-12d3-a456-426614174001', 'room_10');
 
 INSERT INTO tempera_station
-(enabled, access_point_id, user_username, id)
+(is_healthy, enabled, access_point_id, user_username, id)
 VALUES
-    (TRUE, '111e4567-e89b-12d3-a456-426614174001', 'johndoe', 'TEMP123');
+    (TRUE, TRUE, '111e4567-e89b-12d3-a456-426614174001', 'johndoe', 'TEMP123');
 
 -- realized this is not necessary for all the colleagues for the tests but we can use it later
 INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES ('TEMPERATURE', -10, 'TEMP123', 'CELSIUS');

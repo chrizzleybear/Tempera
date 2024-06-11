@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {DropdownOptionUser, User} from "../../models/user.model";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {GroupService} from "../../_services/group.service";
@@ -28,7 +28,7 @@ import {GroupUpdateDTO} from "../../models/groupDtos";
 export class GroupEditComponent implements OnInit, OnChanges{
 
   groupForm: FormGroup;
-  groupLeads: DropdownOptionUser[] = [];
+  groupLeads: any[] = [];
 
   @Input({required: true}) group!: Group;
   @Output() editComplete = new EventEmitter<unknown>();
@@ -49,7 +49,7 @@ export class GroupEditComponent implements OnInit, OnChanges{
     this.fetchGroupLeads();
   }
 
-  ngOnChanges() {
+  ngOnChanges(change: SimpleChanges) {
     this.groupForm.reset();
     this.populateForm();
 
@@ -60,11 +60,9 @@ export class GroupEditComponent implements OnInit, OnChanges{
       next: (users: User[]) => {
         this.groupLeads = users.map(user => ({
           label: `${user.firstName} ${user.lastName}`,
-          value: user
+          value: user.username
         }));
-        if (this.group) {
-          this.populateForm();
-        }
+        this.populateForm();
       },
       error: (error) => {
         console.error('Error loading users:', error);
@@ -76,17 +74,18 @@ export class GroupEditComponent implements OnInit, OnChanges{
     this.groupForm.patchValue({
       name: this.group.name,
       description: this.group.description,
-      groupLead: this.groupLeads.find(lead => lead.value.username === this.group.groupLead.id)
+      groupLead: this.groupLeads.find(lead => lead.value === this.group.groupLead)
     });
+    console.log('Populated form:', this.groupForm.value);
   }
 
   onSubmit() {
     if (this.groupForm.valid) {
       const dto: GroupUpdateDTO = {
-        groupId: Number(this.group.id),
+        id: Number(this.group.id),
         name: this.groupForm.value.name,
         description: this.groupForm.value.description,
-        groupLead: this.groupForm.value.groupLead.value.username
+        groupLead: this.groupForm.value.groupLead.value
       };
       this.groupService.updateGroup(dto).subscribe({
         next: (response) => {

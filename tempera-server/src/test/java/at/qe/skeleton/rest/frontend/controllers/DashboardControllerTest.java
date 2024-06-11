@@ -5,8 +5,10 @@ import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
-import at.qe.skeleton.rest.frontend.dtos.ProjectDto;
-import at.qe.skeleton.rest.frontend.mappers.DashboardDataMapper;
+import at.qe.skeleton.rest.frontend.dtos.ExtendedProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
+import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.DashboardDataMapper;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateDashboardDataRequest;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
 import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
@@ -50,15 +52,18 @@ class DashboardControllerTest {
   @Test
   @WithMockUser(username ="johndoe", authorities = "EMPLOYEE")
   void homeData() {
-    Userx johnny = new Userx();
-    johnny.setUsername("johndoe");
+    String johnny = "johndoe";
     List<String> noGroups = new ArrayList<>();
     var colleagueStates =
         List.of(
             new ColleagueStateDto("Max Mustermann", "Raum 1", State.DEEPWORK, true, List.of("Gruppe 1")),
             new ColleagueStateDto("Jane Doe", "Raum 3", State.AVAILABLE, true, List.of("Gruppe1","Gruppe 2")),
             new ColleagueStateDto("Cooler Typ", "Raum 1", State.MEETING, false, noGroups));
-    var projects = List.of(new ProjectDto(1L, "Projekt 1"), new ProjectDto(2L, "Projekt 2"), new ProjectDto(3L, "Projekt 3"));
+    var projects =
+        List.of(
+            new SimpleGroupxProjectDto("1", "group1", "1", "project1"),
+            new SimpleGroupxProjectDto("2", "group2", "2", "project2"),
+            new SimpleGroupxProjectDto("3", "group3", "3", "project3"));
     DashboardDataResponse dashboardDataResponse =
         new DashboardDataResponse(
             1.0,
@@ -68,15 +73,14 @@ class DashboardControllerTest {
             Visibility.HIDDEN,
             State.DEEPWORK,
             "10.05.2024T12:20:10",
+            null,
             projects.get(0),
             projects,
             colleagueStates);
 
     when(dashboardDataMapper.mapUserToHomeDataResponse(johnny)).thenReturn(dashboardDataResponse);
-    when(userXService.loadUser(johnny.getUsername())).thenReturn(johnny);
 
-
-    ResponseEntity<DashboardDataResponse> returnValue = dashboardController.getDashboardData(johnny.getUsername());
+    ResponseEntity<DashboardDataResponse> returnValue = dashboardController.getDashboardData(johnny);
     DashboardDataResponse response = returnValue.getBody();
 
     verify(dashboardDataMapper, times(1)).mapUserToHomeDataResponse(johnny);
@@ -91,7 +95,12 @@ class DashboardControllerTest {
     when(userXService.loadUser("johndoe")).thenReturn(userx);
     when(dashboardDataMapper.updateUserVisibilityAndTimeStampProject(any(), any())).thenReturn(messageResponse);
 
-    ResponseEntity<MessageResponse> response = dashboardController.updateDashboardData(new UpdateDashboardDataRequest(Visibility.HIDDEN, new ProjectDto(1L, "Projekt 1")));
+    ResponseEntity<MessageResponse> response =
+        dashboardController.updateDashboardData(
+            new UpdateDashboardDataRequest(
+                Visibility.HIDDEN,
+                new SimpleGroupxProjectDto(
+                    "-1", "Group1", "1", "Projekt1")));
     assertEquals(messageResponse, response.getBody());
     verify(userXService, times(1)).loadUser("johndoe");
     verify(dashboardDataMapper, times(1)).updateUserVisibilityAndTimeStampProject(any(), any());

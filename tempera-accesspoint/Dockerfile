@@ -1,17 +1,13 @@
-FROM python:3.11.8-alpine
+FROM python:3.11.8-alpine AS build
 LABEL authors="leo"
 
-# Setup
 WORKDIR /home
+
 COPY requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# Copy project and change to non-root user
-RUN addgroup -S nonroot \
-    && adduser -S nonroot -G nonroot
-USER nonroot
-COPY --chown=nonroot:nonroot . .
-
-# Run
-CMD ["/bin/sh", "app.sh"]
+COPY ./src ./src
+COPY app.sh .
+RUN chmod +x app.sh
+ENTRYPOINT ["/bin/sh", "app.sh"]

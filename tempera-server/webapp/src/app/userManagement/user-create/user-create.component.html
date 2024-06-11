@@ -8,10 +8,6 @@
              severity="error" text="First name is required." styleClass="mr-2"></p-message>
   <p-message *ngIf="userForm.controls['lastName'].invalid && userForm.controls['lastName'].touched" severity="error"
              text="Last name is required." styleClass="mr-2"></p-message>
-  <p-message *ngIf="userForm.controls['password'].errors?.['required'] && userForm.controls['password'].touched"
-             severity="error" text="Password is required." styleClass="mr-2"></p-message>
-  <p-message *ngIf="userForm.controls['password'].errors?.['minlength'] && userForm.controls['password'].touched"
-             severity="error" text="Password needs at least 6 symbols." styleClass="mr-2"></p-message>
   <p-message *ngIf="userForm.controls['email'].errors?.['required'] && userForm.controls['email'].touched"
              severity="error" text="Email is required." styleClass="mr-2"></p-message>
   <p-message *ngIf="userForm.controls['email'].errors?.['email'] && userForm.controls['email'].touched"
@@ -35,12 +31,6 @@
   </div>
   <br>
   <div class="p-field">
-    <label for="password">Password: </label>
-    <input id="password" type="password" pInputText formControlName="password" placeholder="Password"
-           autocomplete="new-password">
-  </div>
-  <br>
-  <div class="p-field">
     <label for="email">Email: </label>
     <input id="email" type="text" pInputText formControlName="email" placeholder="Email">
   </div>
@@ -61,14 +51,13 @@
   </div>
   <br>
   <div>
-    <label>Active
+    <label>Enabled
       <input type="checkbox" formControlName="enabled">
     </label>
   </div>
   <br>
   <div>
-    <button pButton type="submit" label="Save Changes" [disabled]="!userForm.valid"
-            class="p-button-rounded p-button-success p-mr-2"></button>
+    <p-button type="submit" label="Save User" [disabled]="!userForm.valid"></p-button>
   </div>
   <br>
 </form>

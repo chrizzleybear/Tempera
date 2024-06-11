@@ -15,6 +15,7 @@ public class Modification implements Serializable {
   private String reason;
 
   @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "time_stamp")
   private LocalDateTime timeStamp;
 
   public Modification(String reason) {
@@ -45,7 +46,7 @@ public class Modification implements Serializable {
     if (!(o instanceof Modification other)) {
       return false;
     }
-    return other.reason.equals(this.reason);
+    return other.getReason().equals(this.getReason());
   }
 
   @Override

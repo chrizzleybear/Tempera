@@ -7,14 +7,30 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 
 /**
  * Repository for managing {@link Userx} entities.
  *
  * <p>This class is part of the skeleton project provided for students of the course "Software
- * Engineering" offered by the University of Innsbruck.
+ * Engineering" offered by the University of Inn  public void addProject(Project project) {
+ *     if (project == null) {
+ *       throw new IllegalArgumentException("Project must not be null to be added to group %s".formatted(name));
+ *     }
+ *     this.projects.add(project);
+ *     project.getGroups().add(this);
+ *   }
+ *
+ *   public void removeProject(Project project) {
+ *     if (project == null) {
+ *       throw new IllegalArgumentException("Project must not be null to be removed from group %s".formatted(name));
+ *     }
+ *     this.projects.remove(project);
+ *     project.getGroups().remove(this);
+ *   }sbruck.
  */
 public interface UserxRepository extends AbstractRepository<Userx, String> {
 
@@ -33,5 +49,9 @@ public interface UserxRepository extends AbstractRepository<Userx, String> {
 
   @Query("SELECT u FROM Userx u WHERE :role MEMBER OF u.roles")
   List<Userx> findByRole(@Param("role") UserxRole role);
+
+  @EntityGraph(attributePaths = {"defaultGroupxProject.group", "defaultGroupxProject.project", "temperaStation", "groups"})
+  @Query(value = "SELECT u FROM Userx u WHERE u.username = :username")
+    Optional<Userx> findFirstByUsernameDetailed(@Param("username") String username);
 
 }

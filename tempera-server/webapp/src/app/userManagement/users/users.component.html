@@ -1,4 +1,4 @@
-<p-messages [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
+<p-toast></p-toast>
 <div *ngIf="!displayEditDialog && !displayCreateDialog">
   <div class="mb-4">
     <input type="text" pInputText placeholder="Search" (input)="applyFilter($event)" class="mr-2">
@@ -9,17 +9,17 @@
   <p-table [value]="filteredUsers" [paginator]="true" [rows]="10" responsiveLayout="scroll">
     <ng-template pTemplate="header">
       <tr>
-        <th scope="col" pSortableColumn="username">Benutzername
+        <th scope="col" pSortableColumn="username">Username
           <p-sortIcon field="username"></p-sortIcon>
         </th>
-        <th scope="col" pSortableColumn="firstName">Vorname
+        <th scope="col" pSortableColumn="firstName">First Name
           <p-sortIcon field="firstName"></p-sortIcon>
         </th>
-        <th scope="col" pSortableColumn="lastName">Nachname
+        <th scope="col" pSortableColumn="lastName">Last Name
           <p-sortIcon field="lastName"></p-sortIcon>
         </th>
-        <th scope="col">Rollen</th>
-        <th scope="col">Enabled</th>
+        <th scope="col">Roles</th>
+        <th scope="col">Status</th>
         <!--  Empty headers for styling    -->
         <th></th>
         <th></th>
@@ -35,7 +35,7 @@
             <li *ngFor="let role of user.roles">{{ role }}</li>
           </ul>
         </td>
-        <td>{{ user.enabled ? "Yes" : "No" }}</td>
+        <td>{{ user.enabled ? "Enabled" : "Disabled" }}</td>
         <td>
           <p-button label="Edit" (onClick)="editUser(user); $event.stopPropagation()" icon="pi pi-pencil"></p-button>
         </td>

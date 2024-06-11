@@ -24,6 +24,10 @@ import { Message } from 'primeng/api';
   templateUrl: './validation.component.html',
   styleUrl: './validation.component.css',
 })
+/**
+ * @class ValidationComponent
+ * This component is responsible for user validation and enabling a user.
+ */
 export class ValidationComponent {
   userId: string = '';
   validated: boolean = false;
@@ -33,7 +37,12 @@ export class ValidationComponent {
   constructor(private route: ActivatedRoute, private usersService: UsersService) {
   }
 
-
+  /**
+   * Validates a user's credentials.
+   * @param username The username of the user.
+   * @param password The password of the user.
+   * @returns void
+   */
   validateUser(username: string, password: string) {
     if (username === undefined || password === undefined) {
       console.error('Username or password is undefined');
@@ -55,6 +64,11 @@ export class ValidationComponent {
     });
   }
 
+  /**
+   * Sets a new password to enable user.
+   * @param password
+   * @param passwordRepeat
+   */
   setPassword(password: string, passwordRepeat: string) {
     if (password === passwordRepeat) {
       this.usersService.enableUser(this.userId, password).subscribe({

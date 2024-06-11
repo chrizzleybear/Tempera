@@ -48,4 +48,8 @@ export class UsersService {
   getAllManagers(): Observable<User[]> {
     return this.http.get<User[]>(this.API_URL + 'managers');
   }
+
+  resendActivationEmail(userData: User): Observable<Object> {
+    return this.http.post(this.API_URL + 'resend', userData );
+  }
 }

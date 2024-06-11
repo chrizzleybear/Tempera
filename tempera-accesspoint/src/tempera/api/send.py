@@ -1,4 +1,5 @@
 import logging
+import sys
 from asyncio import TaskGroup
 from typing import Dict, Any, Sequence, Tuple, Literal
 
@@ -22,9 +23,11 @@ def _get_from_database(
     *, kind: DataType
 ) -> Tuple[Sequence[TimeRecord | Measurement], TemperaStation]:
     """
+    Gets all measurements or time records associated to the currently connected tempera station in an
+    ascending time-ordered fashion.
 
-    :param kind:
-    :return:
+    :param kind: what kind of data (measurement or time record) to fetch from the database.
+    :return: an ascending time-ordered list of measurements or time records and the associated tempera station.
     """
     with Session(shared.db_engine) as session:
         tempera_station = session.scalars(
@@ -35,7 +38,7 @@ def _get_from_database(
                 f"Currently connected station {shared.current_station_id} not found in the database. "
                 "The station should have been saved upon first connection. Check the logs for possible errors."
             )
-            raise ValueError
+            sys.exit(0)
 
         result = None
         match kind:
@@ -62,47 +65,47 @@ def _get_from_database(
 def _build_payload(
     tempera_station: TemperaStation,
     data: Measurement | TimeRecord,
-    *,
-    kind: DataType,
 ) -> Dict[str, Any]:
     """
+    Builds the payload to send to the web server out of a measurement or time record.
 
-    :param tempera_station:
-    :param data:
-    :param kind:
-    :return:
+    :param tempera_station: The tempera station from whence the measurement/time record comes from.
+    :param data: the measurement/time record to send
+    :return: the payload as a dictionary to be sent as a json kwarg in a HTTP request.
     """
-    match kind:
-        case "Measurement":
-            return {
-                "access_point_id": shared.config["access_point_id"],
-                "tempera_station_id": tempera_station.id,
-                # datetime is not serializable -> to string
-                # web server expects 'T' separated date & time, not ' ' separated
-                "timestamp": f"{data.timestamp}".replace(" ", "T"),
-                "temperature": data.temperature,
-                "irradiance": data.irradiance,
-                "humidity": data.humidity,
-                "nmvoc": data.nmvoc,
-            }
-        case "TimeRecord":
-            return {
-                "access_point_id": shared.config["access_point_id"],
-                "tempera_station_id": tempera_station.id,
-                "start": f"{data.start}".replace(" ", "T"),
-                # ms / 1_000 = seconds (cast back to int because division turns the value automatically to
-                # float)
-                "duration": int(data.duration / 1_000),
-                "mode": data.mode,
-                "auto_update": data.auto_update,
-            }
+    if isinstance(data, Measurement):
+        return {
+            "access_point_id": shared.config["access_point_id"],
+            "tempera_station_id": tempera_station.id,
+            # datetime is not serializable -> to string
+            # web server expects 'T' separated date & time, not ' ' separated
+            # web server needs precision no higher than tenths of a second
+            "timestamp": data.timestamp.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-5],
+            "temperature": data.temperature,
+            "irradiance": data.irradiance,
+            "humidity": data.humidity,
+            "nmvoc": data.nmvoc,
+        }
+    elif isinstance(data, TimeRecord):
+        return {
+            "access_point_id": shared.config["access_point_id"],
+            "tempera_station_id": tempera_station.id,
+            "start": data.start.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-5],
+            # ms / 1_000 = seconds (cast back to int because division turns the value automatically to
+            # float)
+            "duration": int(data.duration / 1_000),
+            "mode": data.mode,
+            "auto_update": data.auto_update,
+        }
 
 
-async def send_data(*, kind: DataType):
+async def send_data(*, kind: DataType) -> None:
     """
+    Retrieves all measurements or time records from database and asynchronously sends them to the web server.
 
-    :param kind:
-    :return:
+    :param kind: type of data to send (measurement or time record).
+    :return: None
+    :raises requests.exceptions.ConnectionError: if the web server can't be reached
     """
     match kind:
         case "Measurement":
@@ -111,14 +114,11 @@ async def send_data(*, kind: DataType):
             endpoint = "time_record"
         case _:
             logger.critical(f"Can't handle data of the {kind} type.")
-            raise ValueError
+            sys.exit(0)
 
     data, tempera_station = _get_from_database(kind=kind)
 
-    if not data:
-        logger.warning(f"No measurements found for station {tempera_station.id}")
-
-    payloads = [_build_payload(tempera_station, item, kind=kind) for item in data]
+    payloads = [_build_payload(tempera_station, item) for item in data]
 
     logger.info(f"Sending {len(payloads)} {kind}(s).")
     try:
@@ -140,24 +140,21 @@ async def send_data(*, kind: DataType):
             "Couldn't establish a connection to the web server "
             f"at {shared.config['webserver_address']}."
         )
-        raise ConnectionError from None
+        raise requests.exceptions.ConnectionError
 
-    _safe_delete_data(data, kind=kind)
+    _safe_delete_data(data)
 
 
-def _safe_delete_data(
-    data: Sequence[Measurement | TimeRecord], *, kind: DataType
-) -> None:
+def _safe_delete_data(data: Sequence[Measurement | TimeRecord]) -> None:
     """
+    Delete all items of the sequence if they are of type measurement. If the items are of type time record,
+    the last one is always kept, as it is the only one that isn't concluded yet, meaning that it could be
+    updated any time with an auto update.
 
-    :param data:
-    :param kind:
-    :return:
+    :param data: sequence of measurements or time records to send
+    :return: None
     """
-    # Don't delete the most recent time record.
-    # This is the only time record that isn't concluded (i.e., doesn't have an end).
-    # Note: it doesn't matter whether auto update is True or False for this measurement.
-    if kind == "TimeRecord":
+    if len(data) > 0 and isinstance(data[0], TimeRecord):
         data = data[:-1]
 
     with Session(shared.db_engine) as session:
@@ -165,11 +162,14 @@ def _safe_delete_data(
         session.commit()
 
 
-async def send_measurements_and_time_records():
+async def send_measurements_and_time_records() -> None:
     """
     Wrapper around :func:`~send_data` to send measurements and time records with one function call.
 
-    :return:
+    :return: None
     """
-    await send_data(kind="Measurement")
-    await send_data(kind="TimeRecord")
+    for kind in ["Measurement", "TimeRecord"]:
+        try:
+            await send_data(kind=kind)
+        except requests.exceptions.ConnectionError:
+            pass

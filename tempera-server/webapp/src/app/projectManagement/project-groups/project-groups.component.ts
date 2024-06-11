@@ -9,6 +9,7 @@ import {MessagesModule} from "primeng/messages";
 import {ButtonModule} from "primeng/button";
 import {DialogModule} from "primeng/dialog";
 import {GroupAssignmentDTO} from "../../models/projectDtos";
+import {InputTextModule} from "primeng/inputtext";
 
 @Component({
   selector: 'app-project-groups',
@@ -20,15 +21,22 @@ import {GroupAssignmentDTO} from "../../models/projectDtos";
     TableModule,
     MessagesModule,
     ButtonModule,
-    DialogModule
+    DialogModule,
+    InputTextModule
   ],
   templateUrl: './project-groups.component.html',
   styleUrl: './project-groups.component.css'
 })
+/**
+ * @class ProjectGroupsComponent
+ * This component is used to manage groups assigned to a project.
+ */
 export class ProjectGroupsComponent implements OnInit{
 
   groups: Group[] = [];
-  allGroups: Group[] = [];
+  availableGroups: Group[] = [];
+  filteredGroups: Group[] = [];
+  filteredAvailableGroups: Group[] = [];
   projectId!: number;
   displayAddDialog: boolean = false;
   messages: any;
@@ -44,17 +52,20 @@ export class ProjectGroupsComponent implements OnInit{
   fetchGroups(projectId: number) {
     this.projectService.getGroups(projectId).subscribe((groups: Group[]) => {
       this.groups = groups;
+      this.filteredGroups = groups;
     });
   }
 
   fetchAllGroups() {
     this.groupService.getAllGroups().subscribe((groups: Group[]) => {
-      this.allGroups = groups.filter((group: { id: string; }) =>
+      this.availableGroups = groups.filter((group: { id: string; }) =>
         !this.groups.some(groupP => group.id === groupP.id));
+      this.filteredAvailableGroups = this.availableGroups;
     });
   }
 
   addGroupDialog() {
+    this.filteredGroups = this.groups;
     this.fetchAllGroups();
     this.displayAddDialog = true;
   }
@@ -79,6 +90,13 @@ export class ProjectGroupsComponent implements OnInit{
       console.log(groupId, " deleted from project with ID: ", this.projectId);
       this.fetchGroups(this.projectId);
     });
+  }
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.filteredGroups = filterValue ? this.groups.filter(group =>
+      group.name.toLowerCase().includes(filterValue.toLowerCase())) : this.groups;
+    this.filteredAvailableGroups = filterValue ? this.availableGroups.filter(group =>
+      group.name.toLowerCase().includes(filterValue.toLowerCase())) : this.availableGroups;
   }
 }
 

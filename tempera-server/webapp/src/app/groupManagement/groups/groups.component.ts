@@ -27,6 +27,10 @@ import {GroupEditComponent} from "../group-edit/group-edit.component";
   templateUrl: './groups.component.html',
   styleUrls: ['./groups.component.css']
 })
+/**
+ * @class GroupsComponent
+ * This component is responsible for managing and displaying all groups.
+ */
 export class GroupsComponent implements OnInit {
   groups: Group[] = [];
   filteredGroups: Group[] = [];
@@ -98,6 +102,6 @@ export class GroupsComponent implements OnInit {
   }
 
   members(group: Group) {
-    this.router.navigate(['/group/members', group.id]);
+    this.router.navigate(['/group/members',group.name, group.id]);
   }
 }

@@ -5,6 +5,7 @@ import at.qe.skeleton.model.enums.LogEvent;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 public class AuditLog {
@@ -43,7 +44,8 @@ public class AuditLog {
   }
 
   protected AuditLog() {}
-  ;
+
+
 
   public long getId() {
     return id;
@@ -68,4 +70,21 @@ public class AuditLog {
   public LogEvent getEvent() {
     return event;
   }
+
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (!(obj instanceof AuditLog other)) {
+      return false;
+    }
+    return Objects.equals(other.getId(), this.getId());
+  }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

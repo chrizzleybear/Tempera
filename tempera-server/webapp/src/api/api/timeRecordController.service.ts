@@ -19,7 +19,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { SuperiorTimeRecordDto } from '../model/superiorTimeRecordDto';
+import { ExternalRecordDto } from '../model/externalRecordDto';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -92,90 +92,16 @@ export class TimeRecordControllerService {
     }
 
     /**
-     * @param id 
-     * @param accessPointId 
+     * @param externalRecordDto 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getTimeRecord(id: number, accessPointId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<SuperiorTimeRecordDto>;
-    public getTimeRecord(id: number, accessPointId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<SuperiorTimeRecordDto>>;
-    public getTimeRecord(id: number, accessPointId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<SuperiorTimeRecordDto>>;
-    public getTimeRecord(id: number, accessPointId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getTimeRecord.');
-        }
-        if (accessPointId === null || accessPointId === undefined) {
-            throw new Error('Required parameter accessPointId was null or undefined when calling getTimeRecord.');
-        }
-
-        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (accessPointId !== undefined && accessPointId !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>accessPointId, 'accessPointId');
-        }
-
-        let localVarHeaders = this.defaultHeaders;
-
-        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (localVarHttpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                '*/*'
-            ];
-            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (localVarHttpHeaderAcceptSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
-        }
-
-        let localVarHttpContext: HttpContext | undefined = options && options.context;
-        if (localVarHttpContext === undefined) {
-            localVarHttpContext = new HttpContext();
-        }
-
-        let localVarTransferCache: boolean | undefined = options && options.transferCache;
-        if (localVarTransferCache === undefined) {
-            localVarTransferCache = true;
-        }
-
-
-        let responseType_: 'text' | 'json' | 'blob' = 'json';
-        if (localVarHttpHeaderAcceptSelected) {
-            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
-                responseType_ = 'text';
-            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
-                responseType_ = 'json';
-            } else {
-                responseType_ = 'blob';
-            }
-        }
-
-        let localVarPath = `/rasp/api/timerecord/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`;
-        return this.httpClient.request<SuperiorTimeRecordDto>('get', `${this.configuration.basePath}${localVarPath}`,
-            {
-                context: localVarHttpContext,
-                params: localVarQueryParameters,
-                responseType: <any>responseType_,
-                withCredentials: this.configuration.withCredentials,
-                headers: localVarHeaders,
-                observe: observe,
-                transferCache: localVarTransferCache,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * @param superiorTimeRecordDto 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public postTimeRecord(superiorTimeRecordDto: SuperiorTimeRecordDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<SuperiorTimeRecordDto>;
-    public postTimeRecord(superiorTimeRecordDto: SuperiorTimeRecordDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<SuperiorTimeRecordDto>>;
-    public postTimeRecord(superiorTimeRecordDto: SuperiorTimeRecordDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<SuperiorTimeRecordDto>>;
-    public postTimeRecord(superiorTimeRecordDto: SuperiorTimeRecordDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (superiorTimeRecordDto === null || superiorTimeRecordDto === undefined) {
-            throw new Error('Required parameter superiorTimeRecordDto was null or undefined when calling postTimeRecord.');
+    public postTimeRecord(externalRecordDto: ExternalRecordDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<ExternalRecordDto>;
+    public postTimeRecord(externalRecordDto: ExternalRecordDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ExternalRecordDto>>;
+    public postTimeRecord(externalRecordDto: ExternalRecordDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ExternalRecordDto>>;
+    public postTimeRecord(externalRecordDto: ExternalRecordDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (externalRecordDto === null || externalRecordDto === undefined) {
+            throw new Error('Required parameter externalRecordDto was null or undefined when calling postTimeRecord.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -223,11 +149,11 @@ export class TimeRecordControllerService {
             }
         }
 
-        let localVarPath = `/rasp/api/timerecord/create`;
-        return this.httpClient.request<SuperiorTimeRecordDto>('post', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/rasp/api/time_record`;
+        return this.httpClient.request<ExternalRecordDto>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: superiorTimeRecordDto,
+                body: externalRecordDto,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

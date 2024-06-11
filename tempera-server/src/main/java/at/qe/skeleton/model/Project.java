@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Project {
@@ -14,42 +15,37 @@ public class Project {
 
   private String name;
   private String description;
-  @ManyToOne private Userx manager;
+  @ManyToOne(fetch = FetchType.LAZY) private Userx manager;
 
-  @ManyToMany
-  @JoinTable(
-      name = "project_contributors",
-      joinColumns = @JoinColumn(name = "project_id"),
-      inverseJoinColumns = @JoinColumn(name = "username"))
-  private List<Userx> contributors;
 
-  @ManyToMany
-  @JoinTable(
-      name = "project_group",
-      joinColumns = @JoinColumn(name = "project_id"),
-      inverseJoinColumns = @JoinColumn(name = "group_id"))
-  private List<Group> groups;
+  @OneToMany(mappedBy = "project")
+  private Set<GroupxProject> groupxProjects;
+
 
   public Project(String name, String description, Userx manager) {
     this.name = name;
     this.description = description;
     this.manager = manager;
-    this.contributors = new ArrayList<>();
+//    this.contributors = new ArrayList<>();
   }
 
   public Project() {}
+
+  public Set<GroupxProject> getGroupxProjects() {
+    return groupxProjects;
+  }
 
   public Userx getManager() {
     return manager;
   }
 
-  public List<Userx> getContributors() {
-    return contributors;
-  }
+//  public List<Userx> getContributors() {
+//    return contributors;
+//  }
 
-  public List<Group> getGroups() {
-    return groups;
-  }
+//  public List<Groupx> getGroups() {
+//    return groups;
+//  }
 
   public void setName(String name) {
     this.name = name;
@@ -66,35 +62,21 @@ public class Project {
     this.manager = manager;
   }
 
-  public void addGroup(Group contributor) {
-    if (contributor == null) {
-      throw new NullPointerException("Contributor should not be null when added to Project");
-    }
-    this.groups.add(contributor);
-  }
-
-  public void removeGroup(Group contributor) {
-    if (contributor == null) {
-      throw new NullPointerException("Contributor should not be null when removed from Project");
-    }
-    this.groups.remove(contributor);
-  }
-
-  public void addContributor(Userx contributor) {
-    if (contributor == null) {
-      throw new NullPointerException("Contributor should not be null when added to Project");
-    }
-    this.contributors.add(contributor);
-    contributor.getProjects().add(this);
-  }
-
-  public void removeContributor(Userx contributor) {
-    if (contributor == null) {
-      throw new NullPointerException("Contributor should not be null when removed from Project");
-    }
-    this.contributors.remove(contributor);
-    contributor.getProjects().remove(this);
-  }
+//  public void addContributor(Userx contributor) {
+//    if (contributor == null) {
+//      throw new NullPointerException("Contributor should not be null when added to Project");
+//    }
+//    this.contributors.add(contributor);
+//    contributor.getProjects().add(this);
+//  }
+//
+//  public void removeContributor(Userx contributor) {
+//    if (contributor == null) {
+//      throw new NullPointerException("Contributor should not be null when removed from Project");
+//    }
+//    this.contributors.remove(contributor);
+//    contributor.getProjects().remove(this);
+//  }
 
   public String getName() {
     return name;
@@ -121,7 +103,7 @@ public class Project {
     if (!(obj instanceof Project other)) {
       return false;
     }
-    return other.name.equals(this.name);
+    return other.getName().equals(this.name);
   }
 
   @Override

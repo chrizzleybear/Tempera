@@ -1,0 +1,29 @@
+<div>
+  <form [formGroup]="accessPointForm" (ngSubmit)="onSubmit()">
+    <!-- Validator messages -->
+    <div class="mb-2">
+      <p-message *ngIf="accessPointForm.controls['room'].errors?.['required'] && accessPointForm.controls['room'].touched"
+                 severity="error" text="Room is required." styleClass="mr-2"></p-message>
+    </div>
+    <div class="p-field">
+      <label for="id">ID: </label>
+      <input id="id" type="text" pInputText formControlName="id">
+    </div>
+    <br>
+    <div class="p-field">
+      <label for="room">Room: </label>
+      <p-dropdown [options]="rooms"
+                  [editable]="true"
+                  [filter]="true"
+                  [virtualScroll]="true"
+                  [virtualScrollItemSize]="38"
+                  appendTo="body"
+                  optionLabel="id"
+                  formControlName="room"
+                  placeholder="Select a Room"
+                  id="room"></p-dropdown>
+    </div>
+    <br>
+    <p-button type="submit" label="Create Access Point" [disabled]="!accessPointForm.valid"></p-button>
+  </form>
+</div>

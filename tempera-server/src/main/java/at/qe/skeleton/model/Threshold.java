@@ -14,15 +14,52 @@ public class Threshold implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(name = "default_threshold")
+  private boolean defaultThreshold;
+
+  @Column(name = "sensor_type")
+  @Enumerated(EnumType.STRING)
   private SensorType sensorType;
+
+  @Column(name = "threshold_type")
+  @Enumerated(EnumType.STRING)
   private ThresholdType thresholdType;
 
   @Column(name = "threshold_value")
   private double value;
 
-  @OneToOne private Modification modification;
+  @ManyToOne
+  @JoinColumn(name = "modification_id")
+  private Modification modification;
 
-  @OneToOne private ThresholdTip tip;
+  @ManyToOne
+  @JoinColumn(name = "tip_id")
+  private ThresholdTip tip;
+
+  public Threshold(
+      SensorType sensorType,
+      ThresholdType thresholdType,
+      double value,
+      Modification modification,
+      ThresholdTip tip) {
+    this.defaultThreshold = false;
+    this.sensorType = sensorType;
+    this.thresholdType = thresholdType;
+    this.value = value;
+    this.modification = modification;
+    this.tip = tip;
+  }
+
+  public Threshold() {}
+
+  public boolean isOfLowerBoundType() {
+    return thresholdType == ThresholdType.LOWERBOUND_INFO
+        || thresholdType == ThresholdType.LOWERBOUND_WARNING;
+  }
+
+  public Long getId() {
+    return id;
+  }
 
   public SensorType getSensorType() {
     return sensorType;
@@ -34,6 +71,10 @@ public class Threshold implements Serializable {
 
   public ThresholdType getThresholdType() {
     return thresholdType;
+  }
+
+  public boolean isDefaultThreshold() {
+    return defaultThreshold;
   }
 
   public void setThresholdType(ThresholdType thresholdType) {
@@ -69,12 +110,12 @@ public class Threshold implements Serializable {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Threshold threshold = (Threshold) o;
-    return id == threshold.id;
+    return sensorType.equals(threshold.getSensorType()) && thresholdType.equals(threshold.getThresholdType()) && value == threshold.getValue();
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id);
+    return Objects.hash(sensorType, thresholdType, value);
   }
 
   @Override

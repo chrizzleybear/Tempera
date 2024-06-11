@@ -5,6 +5,7 @@ import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.AuthenticationService;
 import at.qe.skeleton.services.UserxService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
@@ -53,9 +54,18 @@ public class UserManagementController {
   }
 
   @PostMapping("/create")
-  public ResponseEntity<UserxDto> createUser(@RequestBody UserxDto userxDto) {
-    UserxDto createdUser = authenticationService.registerUser(userxDto);
-    return ResponseEntity.ok(createdUser);
+  public ResponseEntity<?> createUser(@RequestBody UserxDto userxDto) {
+    try {
+      UserxDto createdUser = authenticationService.registerUser(userxDto);
+      return ResponseEntity.ok(createdUser);
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+              .body(Map.of("message", e.getMessage()));
+    }
+    catch (RuntimeException e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+              .body(Map.of("message", e.getMessage()));
+    }
   }
 
   @PostMapping("/validate")
@@ -75,6 +85,17 @@ public class UserManagementController {
     public ResponseEntity<List<UserxDto>> getManagers() {
         List<UserxDto> managers = userxService.getManagers().stream().map(userxService::convertToDTO).toList();
         return ResponseEntity.ok(managers);
+    }
+
+    @PostMapping("/resend")
+    public ResponseEntity<Map<String, String>> resendValidation(@RequestBody UserxDto userxDTO) {
+        try {
+            authenticationService.resendValidation(userxDTO);
+            return ResponseEntity.ok(Map.of("message", "Validation email sent"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", e.getMessage()));
+        }
     }
 
 }

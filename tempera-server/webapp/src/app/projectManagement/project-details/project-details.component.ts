@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Project} from "../../models/project.model";
 import {ProjectService} from "../../_services/project.service";
 import {ActivatedRoute} from "@angular/router";
@@ -18,9 +18,9 @@ import {CardModule} from "primeng/card";
   templateUrl: './project-details.component.html',
   styleUrl: './project-details.component.css'
 })
-export class ProjectDetailsComponent {
+export class ProjectDetailsComponent implements OnInit{
 
-  project: Project | undefined;
+  project: any | undefined;
 
   constructor(private projectService: ProjectService, private route: ActivatedRoute) {
 

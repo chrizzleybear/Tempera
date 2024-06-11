@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import java.io.Serializable;
 import java.util.Objects;
 
-// todo finish the empedded id key
 
 /**
  * This class represents the composite key of the Sensor entity. It consists of the sensorId and the
@@ -49,7 +48,7 @@ public class SensorId implements Serializable {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof SensorId other)) return false;
-    return sensorId.equals(other.sensorId) && temperaId.equals(other.temperaId);
+    return sensorId.equals(other.getSensorId()) && temperaId.equals(other.getTemperaId());
   }
 
   @Override

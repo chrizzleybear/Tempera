@@ -1,8 +1,8 @@
 package at.qe.skeleton.repositories;
 
 import at.qe.skeleton.model.AccessPoint;
+import at.qe.skeleton.model.Room;
 import at.qe.skeleton.model.TemperaStation;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -19,4 +19,6 @@ public interface AccessPointRepository extends AbstractRepository<AccessPoint, U
   public Optional<AccessPoint> findFirstByTemperaStationsContains(TemperaStation temperaStation);
 
   public List<AccessPoint> findAllByEnabledTrue();
+  public Optional<AccessPoint> findByRoom(Room room);
+  boolean existsById(UUID id);
 }

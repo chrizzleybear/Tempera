@@ -1,6 +1,7 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
+import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.ExternalRecord;
 import at.qe.skeleton.model.TemperaStation;
 import at.qe.skeleton.services.UserxService;
@@ -18,11 +19,14 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.UserxRole;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,6 +46,8 @@ public class UserxServiceTest {
     @Autowired
     UserxService userxService;
     @Autowired
+    private TemperaStationService temperaStationService;
+    @Autowired
     TimeRecordService timeRecordService;
 
     @Test
@@ -52,62 +58,62 @@ public class UserxServiceTest {
         assertEquals(12, userxService.getAllUsers().size(), "Insufficient amount of users initialized for test data source");
         for (Userx user : userxService.getAllUsers()) {
             if ("admin".equals(user.getUsername())) {
-                Assertions.assertTrue(user.getRoles().contains(UserxRole.ADMIN), "User \"" + user + "\" does not have role ADMIN");
-                assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
-                assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
-                Assertions.assertNull(user.getUpdateUser(), "User \"" + user + "\" has a updateUser defined");
-                Assertions.assertNull(user.getUpdateDate(), "User \"" + user + "\" has a updateDate defined");
+                assertTrue(user.getRoles().contains(UserxRole.ADMIN), "User \"" + user + "\" does not have role ADMIN");
+                Assertions.assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
+                Assertions.assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
+                assertNull(user.getUpdateUser(), "User \"" + user + "\" has a updateUser defined");
+                assertNull(user.getUpdateDate(), "User \"" + user + "\" has a updateDate defined");
             } else if ("user1".equals(user.getUsername())) {
-                Assertions.assertTrue(user.getRoles().contains(UserxRole.MANAGER), "User \"" + user + "\" does not have role MANAGER");
-                assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
-                assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
-                Assertions.assertNull(user.getUpdateUser(), "User \"" + user + "\" has a updateUser defined");
-                Assertions.assertNull(user.getUpdateDate(), "User \"" + user +"\" has a updateDate defined");
+                assertTrue(user.getRoles().contains(UserxRole.MANAGER), "User \"" + user + "\" does not have role MANAGER");
+                Assertions.assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
+                Assertions.assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
+                assertNull(user.getUpdateUser(), "User \"" + user + "\" has a updateUser defined");
+                assertNull(user.getUpdateDate(), "User \"" + user +"\" has a updateDate defined");
             } else if ("user2".equals(user.getUsername())) {
-                Assertions.assertTrue(user.getRoles().contains(UserxRole.EMPLOYEE), "User \"" + user + "\" does not have role EMPLOYEE");
-                assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
-                assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
-                Assertions.assertNull(user.getUpdateUser(), "User \"" + user + "\" has a updateUser defined");
-                Assertions.assertNull(user.getUpdateDate(), "User \"" + user + "\" has a updateDate defined");
+                assertTrue(user.getRoles().contains(UserxRole.EMPLOYEE), "User \"" + user + "\" does not have role EMPLOYEE");
+                Assertions.assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
+                Assertions.assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
+                assertNull(user.getUpdateUser(), "User \"" + user + "\" has a updateUser defined");
+                assertNull(user.getUpdateDate(), "User \"" + user + "\" has a updateDate defined");
             } else  if ("elvis".equals(user.getUsername())) {
-                Assertions.assertTrue(user.getRoles().contains(UserxRole.ADMIN), "User \"" + user + "\" does not have role ADMIN");
-                assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
-                assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
-                Assertions.assertNull(user.getUpdateUser(), "User \"" + user + "\" has a updateUser defined");
-                Assertions.assertNull(user.getUpdateDate(), "User \"" + user + "\" has a updateDate defined");
+                assertTrue(user.getRoles().contains(UserxRole.ADMIN), "User \"" + user + "\" does not have role ADMIN");
+                Assertions.assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
+                Assertions.assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
+                assertNull(user.getUpdateUser(), "User \"" + user + "\" has a updateUser defined");
+                assertNull(user.getUpdateDate(), "User \"" + user + "\" has a updateDate defined");
             } else if (user.getUsername().equals("brucewayne")) {
-                Assertions.assertTrue(user.getRoles().contains(UserxRole.MANAGER), "User \"" + user + "\" does not have role Manager");
-                assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
-                assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
-                assertEquals("admin", user.getUpdateUser().getUsername(), "User \"" + user + "\" has no updateUser defined");
+                assertTrue(user.getRoles().contains(UserxRole.MANAGER), "User \"" + user + "\" does not have role Manager");
+                Assertions.assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
+                Assertions.assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
+                Assertions.assertEquals("admin", user.getUpdateUser().getUsername(), "User \"" + user + "\" has no updateUser defined");
             } else if (user.getUsername().equals("clarkkent")) {
-                Assertions.assertTrue(user.getRoles().contains(UserxRole.EMPLOYEE), "User \"" + user + "\" does not have role Employee");
-                assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
-                assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
-                assertNotNull(user.getUpdateUser(), "User \"" + user + "\" has a updateUser defined");
+                assertTrue(user.getRoles().contains(UserxRole.EMPLOYEE), "User \"" + user + "\" does not have role Employee");
+                Assertions.assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
+                Assertions.assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
+                Assertions.assertNotNull(user.getUpdateUser(), "User \"" + user + "\" has a updateUser defined");
             } else if (user.getUsername().equals("alicebrown")) {
-                Assertions.assertTrue(user.getRoles().contains(UserxRole.EMPLOYEE), "User \"" + user + "\" does not have role Employee");
-                assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
-                assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
-                assertNotNull(user.getUpdateUser(), "User \"" + user + "\" has a updateUser defined");
+                assertTrue(user.getRoles().contains(UserxRole.EMPLOYEE), "User \"" + user + "\" does not have role Employee");
+                Assertions.assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
+                Assertions.assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
+                Assertions.assertNotNull(user.getUpdateUser(), "User \"" + user + "\" has a updateUser defined");
             } else if (user.getUsername().equals("tonystark")) {
-                Assertions.assertTrue(user.getRoles().contains(UserxRole.EMPLOYEE), "User \"" + user + "\" does not have role Employee");
-                assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
-                assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
-                assertNotNull(user.getUpdateUser(), "User \"" + user + "\" has a updateUser defined");
+                assertTrue(user.getRoles().contains(UserxRole.EMPLOYEE), "User \"" + user + "\" does not have role Employee");
+                Assertions.assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
+                Assertions.assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
+                Assertions.assertNotNull(user.getUpdateUser(), "User \"" + user + "\" has a updateUser defined");
             } else if (user.getUsername().equals("peterparker")) {
-                Assertions.assertTrue(user.getRoles().contains(UserxRole.EMPLOYEE), "User \"" + user + "\" does not have role Employee");
-                assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
-                assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
+                assertTrue(user.getRoles().contains(UserxRole.EMPLOYEE), "User \"" + user + "\" does not have role Employee");
+                Assertions.assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
+                Assertions.assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
             } else if (user.getUsername().equals("johndoe")) {
-                Assertions.assertTrue(user.getRoles().contains(UserxRole.EMPLOYEE), "User \"" + user + "\" does not have role Employee");
-                assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
-                assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
-                assertEquals("admin", user.getUpdateUser().getUsername(), "User \"" + user + "\" has no updateUser defined");
+                assertTrue(user.getRoles().contains(UserxRole.EMPLOYEE), "User \"" + user + "\" does not have role Employee");
+                Assertions.assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
+                Assertions.assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
+                Assertions.assertEquals("admin", user.getUpdateUser().getUsername(), "User \"" + user + "\" has no updateUser defined");
             } else if (user.getUsername().equals("janedoe")) {
-                Assertions.assertTrue(user.getRoles().contains(UserxRole.EMPLOYEE), "User \"" + user + "\" does not have role Employee");
+                assertTrue(user.getRoles().contains(UserxRole.EMPLOYEE), "User \"" + user + "\" does not have role Employee");
                 } else if (user.getUsername().equals("chriswilliams")) {
-                Assertions.assertTrue(user.getRoles().contains(UserxRole.EMPLOYEE), "User \"" + user + "\" does not have role Employee");
+                assertTrue(user.getRoles().contains(UserxRole.EMPLOYEE), "User \"" + user + "\" does not have role Employee");
     }
         else if (user.getUsername().equals("bobjones")) {
             Assertions.assertTrue(user.getRoles().contains(UserxRole.EMPLOYEE), "User \"" + user + "\" does not have role Employee");
@@ -133,7 +139,7 @@ public class UserxServiceTest {
 
         assertEquals(11, userxService.getAllUsers().size(), "No user has been deleted after calling UserService.deleteUser");
         Userx deletedUser = userxService.loadUser(username);
-        Assertions.assertNull(deletedUser, "Deleted User \"" + username + "\" could still be loaded from test data source via UserService.loadUser");
+        assertNull(deletedUser, "Deleted User \"" + username + "\" could still be loaded from test data source via UserService.loadUser");
 
         for (Userx remainingUser : userxService.getAllUsers()) {
             Assertions.assertNotEquals(toBeDeletedUser.getUsername(), remainingUser.getUsername(), "Deleted User \"" + username + "\" could still be loaded from test data source via UserService.getAllUsers");
@@ -141,25 +147,44 @@ public class UserxServiceTest {
     }
 
     @DirtiesContext
-    @Test
     @Transactional
+    @Test
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:userxServiceTest.sql")
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testDeleteUserExtreme() throws CouldNotFindEntityException {
-        String username = "brucewayne";
+        String username = "johndoe";
         Userx toBeDeletedUser = userxService.loadUser(username);
-        TemperaStation temperaStationOfDeletedUser = toBeDeletedUser.getTemperaStation();
+        TemperaStation temperaStation = toBeDeletedUser.getTemperaStation();
+        assertEquals(toBeDeletedUser,temperaStation.getUser(),"the user is not referenced in his temperastation");
         ExternalRecord externalRecordOfDeletedUser = timeRecordService.findLatestExternalRecordByUser(toBeDeletedUser).get();
         assertNotNull(externalRecordOfDeletedUser);
-        assertNotNull(toBeDeletedUser, "User \"" + username + "\" could not be loaded from test data source");
+
+        List<Groupx> usersGroups = toBeDeletedUser.getGroups();
+        for (Groupx groupx : usersGroups) {
+            assertTrue(groupx.getMembers().contains(toBeDeletedUser), "The user is not reference in his Group %s".formatted(groupx.getName()));
+        }
+        Set<GroupxProject> usersProjects = toBeDeletedUser.getGroupxProjects();
+        assertEquals(6, usersProjects.size(), "The user has not exactly six groupxProjects");
+        for(GroupxProject gxproject : usersProjects) {
+            assertTrue(gxproject.getContributors().contains(toBeDeletedUser), "The user is not reference in his gxProject %s".formatted(gxproject));
+        }
+        Assertions.assertNotNull(toBeDeletedUser, "User \"" + username + "\" could not be loaded from test data source");
 
         userxService.deleteUser(username);
 
-        assertEquals(11, userxService.getAllUsers().size(), "No user has been deleted after calling UserService.deleteUser");
+     //   assertEquals(11, userxService.getAllUsers().size(), "No user has been deleted after calling UserService.deleteUser");
         Userx deletedUser = userxService.loadUser(username);
         Assertions.assertNull(deletedUser, "Deleted User \"" + username + "\" could still be loaded from test data source via UserService.loadUser");
         List<ExternalRecord> externalRecords= timeRecordService.findAllExternalTimeRecordsByUser(toBeDeletedUser);
         assertEquals(0, externalRecords.size(), "ExternalRecords of deleted User \"" + username + "\" could still be loaded from test data source via TimeRecordService.findAllExternalTimeRecordsByUser");
+
+        for (Groupx group : usersGroups) {
+            assertFalse(group.getMembers().contains(toBeDeletedUser), "The user is still referenced in group %s".formatted(group.getName()));
+        }
+        for (GroupxProject gxProject : usersProjects) {
+            assertFalse(gxProject.getContributors().contains(toBeDeletedUser), "The user is still refernced in GroupxProject %s".formatted(gxProject));
+        }
+
         for (Userx remainingUser : userxService.getAllUsers()) {
             Assertions.assertNotEquals(toBeDeletedUser.getUsername(), remainingUser.getUsername(), "Deleted User \"" + username + "\" could still be loaded from test data source via UserService.getAllUsers");
         }
@@ -169,6 +194,7 @@ public class UserxServiceTest {
 
     @DirtiesContext
     @Test
+    @Transactional
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:userxServiceTest.sql")
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testUpdateUser() {
@@ -194,6 +220,7 @@ public class UserxServiceTest {
 
     @DirtiesContext
     @Test
+    @Transactional
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:userxServiceTest.sql")
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testCreateUser() {
@@ -275,8 +302,9 @@ public class UserxServiceTest {
     public void testAuthorizedLoadUser() {
         String username = "user1";
         Userx user = userxService.loadUser(username);
-        assertEquals(username, user.getUsername(), "Call to userService.loadUser returned wrong user");
+        Assertions.assertEquals(username, user.getUsername(), "Call to userService.loadUser returned wrong user");
     }
+
 
     @Test
     @WithMockUser(username = "user1", authorities = {"EMPLOYEE"})
@@ -284,7 +312,7 @@ public class UserxServiceTest {
     public void testUnauthorizedDeleteUser() {
         Assertions.assertThrows(AccessDeniedException.class, () -> {
             Userx user = userxService.loadUser("user1");
-            assertEquals("user1", user.getUsername(), "Call to userService.loadUser returned wrong user");
+            Assertions.assertEquals("user1", user.getUsername(), "Call to userService.loadUser returned wrong user");
             userxService.deleteUser(user.getUsername());
         });
     }

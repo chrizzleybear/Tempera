@@ -5,7 +5,7 @@ export interface GroupCreateDTO {
 }
 
 export interface GroupUpdateDTO {
-  groupId: number;
+  id: number;
   name: string;
   description: string;
   groupLead: string;

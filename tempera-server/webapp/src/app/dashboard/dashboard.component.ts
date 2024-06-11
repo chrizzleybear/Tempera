@@ -1,5 +1,5 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
-import { State, User } from '../models/user.model';
+import { User } from '../models/user.model';
 import { DatePipe, NgIf } from '@angular/common';
 import { MessageModule } from 'primeng/message';
 import { DropdownModule } from 'primeng/dropdown';
@@ -9,8 +9,12 @@ import { AirQualityPipe } from '../_pipes/air-quality.pipe';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
-import { ColleagueStateDto, DashboardControllerService, DashboardDataResponse, ProjectDto, UserxDto } from '../../api';
-import StateEnum = ColleagueStateDto.StateEnum;
+import {
+  DashboardControllerService,
+  DashboardDataResponse,
+  SimpleGroupxProjectDto,
+  UserxDto,
+} from '../../api';
 import VisibilityEnum = DashboardDataResponse.VisibilityEnum;
 import { StorageService } from '../_services/storage.service';
 import { ButtonModule } from 'primeng/button';
@@ -18,8 +22,13 @@ import RolesEnum = UserxDto.RolesEnum;
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MessagesModule } from 'primeng/messages';
-import { map, Observable, switchMap, timer } from 'rxjs';
+import { Observable, switchMap, timer } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DisplayHelper } from '../_helpers/display-helper';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { OverlappingProjectHelper } from '../_helpers/overlapping-project-helper';
+import { AlertStoreService } from '../_stores/alert-store.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -39,6 +48,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     WrapFnPipe,
     ReactiveFormsModule,
     MessagesModule,
+    ToastModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -52,8 +62,6 @@ export class DashboardComponent implements OnInit {
 
   public visibilityOptions: VisibilityEnum[] = Object.values(VisibilityEnum);
 
-  public messages: any;
-
   /**
    * This observable handles fetching the dashboard data every minute
    */
@@ -65,14 +73,31 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-  protected readonly RolesEnum = RolesEnum;
+  protected readonly DisplayHelper = DisplayHelper;
 
   public form = new FormGroup({
     visibility: new FormControl<VisibilityEnum>(VisibilityEnum.Public, { nonNullable: true }),
-    project: new FormControl<ProjectDto | undefined>(undefined, { nonNullable: true }),
+    project: new FormControl<SimpleGroupxProjectDto | undefined>(undefined, { nonNullable: true }),
   });
 
-  constructor(private dashboardControllerService: DashboardControllerService, private storageService: StorageService, private destroyRef: DestroyRef) {
+  /*
+  Used for handling when a user is assigned to a project from multiple groups
+  Key is the projectId and value is an object containing the projects with the same projectId and the original name of the project
+   */
+  private duplicatedProjects: Map<string, {
+    projects: SimpleGroupxProjectDto[],
+    originalName: string
+  }> = new Map<string, {
+    projects: SimpleGroupxProjectDto[],
+    originalName: string
+  }>();
+
+  constructor(
+    private dashboardControllerService: DashboardControllerService,
+    private storageService: StorageService,
+    private destroyRef: DestroyRef,
+    private messageService: MessageService,
+    private alertStoreService: AlertStoreService) {
   }
 
   ngOnInit(): void {
@@ -81,16 +106,23 @@ export class DashboardComponent implements OnInit {
     if (this.user) {
       this.getData$(this.user.username).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: data => {
+          this.alertStoreService.refreshAlerts();
+
           this.dashboardData = data;
           this.colleagueTableFilterFields = Object.keys(this.dashboardData?.colleagueStates?.[0] ?? []);
+
+          this.duplicatedProjects = OverlappingProjectHelper.getDuplicatedProjects(this.dashboardData.availableProjects ?? []);
+          OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, this.dashboardData.availableProjects ?? []);
 
           // set form values in case of existing data
           this.form.controls.visibility.setValue(this.dashboardData.visibility);
           if (this.user?.roles?.includes(RolesEnum.Admin)) {
             this.form.controls.visibility.disable();
           }
-          if (this.dashboardData?.defaultProject?.id) {
-            this.form.controls.project.setValue(this.dashboardData?.defaultProject);
+          if (this.dashboardData.project) {
+            this.form.controls.project.setValue(this.dashboardData.project);
+          } else if (this.dashboardData?.defaultProject) {
+            this.form.controls.project.setValue(this.dashboardData.defaultProject);
           }
         },
         error: err => {
@@ -98,82 +130,25 @@ export class DashboardComponent implements OnInit {
         },
       });
     } else {
-      this.messages = [{ severity: 'error', summary: 'Error', detail: 'Failed to load user' }];
-    }
-  }
-
-  /**
-   * Get color of colleague state badges
-   */
-  getSeverity(colleague: ColleagueStateDto) {
-    if (!colleague.isVisible) {
-      return 'primary';
-    }
-    switch (colleague.state) {
-      case State.AVAILABLE:
-        return 'success';
-      case State.MEETING:
-        return 'warning';
-      case State.DEEPWORK:
-        return 'info';
-      case State.OUT_OF_OFFICE:
-        return 'danger';
-      default:
-        return 'primary';
-    }
-  }
-
-  /**
-   * Get display text for colleague state
-   */
-  showState(state: StateEnum | undefined) {
-    switch (state) {
-      case StateEnum.Available:
-        return 'Available';
-      case StateEnum.Meeting:
-        return 'In a meeting';
-      case StateEnum.Deepwork:
-        return 'Deep work';
-      case StateEnum.OutOfOffice:
-        return 'Out of office';
-      default:
-        return 'Unknown';
-
-    }
-  }
-
-  /**
-   * Get display text for colleague state but also consider visibility
-   */
-  showColleagueState(colleague: ColleagueStateDto | undefined) {
-    if (!colleague?.isVisible) {
-      return 'Hidden';
-    }
-    switch (colleague.state) {
-      case StateEnum.Available:
-        return 'Available';
-      case StateEnum.Meeting:
-        return 'In a meeting';
-      case StateEnum.Deepwork:
-        return 'Deep work';
-      case StateEnum.OutOfOffice:
-        return 'Out of office';
-      default:
-        return 'Unknown';
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load user' });
     }
   }
 
   onSubmit() {
     this.dashboardControllerService.updateDashboardData({
       visibility: this.form.controls.visibility.value,
-      project: this.form.controls.project.value,
+      groupxProject: this.form.controls.project.value,
     }).subscribe({
       next: data => {
-        this.messages = [{ severity: 'success', summary: 'Success', detail: 'Dashboard data updated successfully' }];
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Dashboard data updated successfully',
+        });
       },
       error: err => {
         console.log(err);
-        this.messages = [{ severity: 'error', summary: 'Error', detail: 'Failed to update dashboard data' }];
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update dashboard data' });
       },
     });
   }

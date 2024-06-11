@@ -9,12 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ProjectDto } from './projectDto';
+import { SimpleGroupxProjectDto } from './simpleGroupxProjectDto';
 
 
 export interface UpdateDashboardDataRequest { 
     visibility: UpdateDashboardDataRequest.VisibilityEnum;
-    project?: ProjectDto;
+    groupxProject?: SimpleGroupxProjectDto;
 }
 export namespace UpdateDashboardDataRequest {
     export type VisibilityEnum = 'PUBLIC' | 'PRIVATE' | 'HIDDEN';

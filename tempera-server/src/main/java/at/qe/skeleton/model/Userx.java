@@ -11,6 +11,7 @@ import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.model.enums.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
 import org.springframework.data.domain.Persistable;
 
 /**
@@ -28,7 +29,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   @Column(length = 100)
   private String username;
 
-  @ManyToOne(optional = false)
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   @JsonIgnore
   private Userx createUser;
 
@@ -37,7 +38,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   @JsonIgnore
   private LocalDateTime createDate;
 
-  @ManyToOne(optional = true)
+  @ManyToOne(optional = true, fetch = FetchType.LAZY)
   @JsonIgnore
   private Userx updateUser;
 
@@ -45,12 +46,13 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   @JsonIgnore
   private LocalDateTime updateDate;
 
-  @OneToOne (mappedBy = "user") private TemperaStation temperaStation;
+  @OneToOne (mappedBy = "user", fetch = FetchType.LAZY) private TemperaStation temperaStation;
 
-  @ManyToMany(cascade = CascadeType.ALL, mappedBy = "members")
-  private List<Group> groups;
-  @ManyToMany(cascade = CascadeType.ALL, mappedBy = "contributors")
-  private List<Project> projects;
+  @ManyToMany(mappedBy = "contributors")
+  private Set<GroupxProject> groupxProjects;
+
+  @ManyToMany(mappedBy = "members", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  private List<Groupx> groups;
 
   private String password;
 
@@ -62,8 +64,13 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
   private State state;
   @Enumerated(EnumType.STRING)
   private Visibility stateVisibility;
-  @ManyToOne()
-  private Project defaultProject;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumns({
+    @JoinColumn(name = "default_group_id", referencedColumnName = "group_id"),
+    @JoinColumn(name = "default_project_id", referencedColumnName = "project_id")
+
+  })
+  private GroupxProject defaultGroupxProject;
 
   @ElementCollection(targetClass = UserxRole.class, fetch = FetchType.EAGER)
   @CollectionTable(name = "Userx_UserxRole")
@@ -80,7 +87,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     this.createDate = createDate;
   }
 
-  public List<Group> getGroups() {
+  public List<Groupx> getGroups() {
     return groups;
   }
 
@@ -100,6 +107,9 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     }
   }
 
+  public Set<GroupxProject> getGroupxProjects() {
+    return this.groupxProjects;
+  }
   public String getUsername() {
     return username;
   }
@@ -163,24 +173,26 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     this.roles.add(role);
   }
 
-  public Project getDefaultProject() {
-    return defaultProject;
+  public void addGroup(Groupx group) {
+    groups.add(group);
+    group.getMembers().add(this);
   }
 
-  public void setGroups(List<Group> groups) {
-    this.groups = groups;
+  public void removeGroup(Groupx group) {
+    groups.remove(group);
+    group.getMembers().remove(this);
   }
 
-  public List<Project> getProjects() {
-    return projects;
+  public GroupxProject getDefaultGroupxProject() {
+    return defaultGroupxProject;
   }
 
-  public void setProjects(List<Project> projects) {
-    this.projects = projects;
+  public void setGroups(List<Groupx> groupxes) {
+    this.groups = groupxes;
   }
 
-  public void setDefaultProject(Project defaultProject) {
-    this.defaultProject = defaultProject;
+  public void setDefaultGroupxProject(GroupxProject defaultGroupxProject) {
+    this.defaultGroupxProject = defaultGroupxProject;
   }
 
   public Userx getCreateUser() {
@@ -251,7 +263,7 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
       return false;
     }
     final Userx other = (Userx) obj;
-    if (!Objects.equals(this.username, other.username)) {
+    if (!Objects.equals(this.username, other.getUsername())) {
       return false;
     }
     return true;

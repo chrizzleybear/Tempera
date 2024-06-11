@@ -1,5 +1,6 @@
 <div *ngIf="group">
-  <p-card header="Group Details" class="group-details-card">
+  <div class="details-card">
+    <h1 class="text-2xl font-bold mb-4">Group Details</h1>
     <div class="group-info">
       <p><strong>Name:</strong> {{ group.name }}</p>
       <p><strong>Description:</strong> {{ group.description }}</p>
@@ -13,9 +14,9 @@
       <p><strong>Email:</strong>{{ group.groupLead.email }}</p>
     </div>
     <div class="members-section">
-      <h3><strong>Members</strong></h3>
+      <h3 class="text-center"><strong>Members</strong></h3>
       <br>
-      <p-table [value]="group.members" [paginator]="true" [rows]="10" responsiveLayout="scroll" class="members-table">
+      <p-table [value]="members" [paginator]="true" [rows]="10" responsiveLayout="scroll" class="members-table">
         <ng-template pTemplate="header">
           <tr>
             <th scope="col" pSortableColumn="username">Benutzername
@@ -39,5 +40,5 @@
         </ng-template>
       </p-table>
     </div>
-  </p-card>
+  </div>
 </div>

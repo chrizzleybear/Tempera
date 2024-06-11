@@ -28,6 +28,10 @@ import {ProjectEditComponent} from "../project-edit/project-edit.component";
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.css'
 })
+/**
+ * @class ProjectsComponent
+ * This component is for managing and displaying all projects.
+ */
 export class ProjectsComponent implements OnInit{
 
   projects: Project[] = [];
@@ -89,7 +93,11 @@ export class ProjectsComponent implements OnInit{
       this.returnToProjects();
     }
   }
-
+  editProject(project: Project) {
+    console.log("Edit project:", project);
+    this.selectedProject = project;
+    this.displayEditDialog = true;
+  }
   onEditCompleted(success: boolean) {
     if (success) {
       this.messages = [{severity:'success', summary:'Success', detail:'Project updated successfully'}];
@@ -104,20 +112,11 @@ export class ProjectsComponent implements OnInit{
 
   viewProjectDetails(project: Project) {
     console.log("View project details:", project);
-    console.log("Project ID:", project.id);
-    this.router.navigate(['/project', project.id]);
+    console.log("Project ID:", project.projectId);
+    this.router.navigate(['/project', project.projectId]);
   }
-
-  editProject(project: Project) {
-    console.log("Edit project:", project);
-    this.selectedProject = project;
-    this.displayEditDialog = true;
-  }
-
   addGroupToProject(project: Project) {
-    console.log("Add group to project:", project);
-    this.router.navigate(['/project/groups', project.id]);
-
+    this.router.navigate(['/project/groups', project.projectId]);
   }
 
 }
