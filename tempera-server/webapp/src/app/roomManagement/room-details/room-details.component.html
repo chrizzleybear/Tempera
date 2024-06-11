@@ -13,7 +13,7 @@
       <p-table [value]="filteredThresholds" dataKey="id" [paginator]="true" [rows]="10" class="thresholds-table"
                [globalFilterFields]="['id', 'sensorType', 'thresholdType', 'value']">
         <ng-template pTemplate="header">
-          <input type="text" pInputText (input)="globalFilter($event)" placeholder="Global Search">
+          <input type="text" pInputText (input)="globalFilter($event)" placeholder="Search">
           <tr>
             <th>Sensor</th>
             <th>Type</th>
