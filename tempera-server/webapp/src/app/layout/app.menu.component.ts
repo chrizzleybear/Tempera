@@ -84,6 +84,11 @@ export class AppMenuComponent implements OnInit {
             routerLink: ['/temperaStations'],
             visible: this.storageService.getUser()?.roles.includes('ADMIN')
           },
+          { label: 'Tips',
+            icon: 'pi pi-fw pi-info-circle',
+            routerLink: ['/tips'],
+            visible: this.storageService.getUser()?.roles.includes('ADMIN')
+          },
         ],
       },
     ];
