@@ -117,4 +117,19 @@ export class UserEditComponent implements OnInit, OnChanges {
     });
   }
 
+  resendActivationEmail() {
+    this.usersService.resendActivationEmail(this.user).subscribe({
+      next: (response) => {
+        console.log('Activation email sent:', response);
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Activation email sent successfully' });
+        this.editCompleted.emit(true);
+      },
+      error: (error) => {
+        console.error('Error sending activation email:', error);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error sending activation email' });
+        this.editCompleted.emit(false);
+        },
+    });
+  }
+
 }

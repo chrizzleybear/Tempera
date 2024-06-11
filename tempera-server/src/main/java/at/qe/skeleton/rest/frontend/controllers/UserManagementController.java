@@ -87,4 +87,15 @@ public class UserManagementController {
         return ResponseEntity.ok(managers);
     }
 
+    @PostMapping("/resend")
+    public ResponseEntity<Map<String, String>> resendValidation(@RequestBody UserxDto userxDTO) {
+        try {
+            authenticationService.resendValidation(userxDTO);
+            return ResponseEntity.ok(Map.of("message", "Validation email sent"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", e.getMessage()));
+        }
+    }
+
 }
