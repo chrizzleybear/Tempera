@@ -45,7 +45,6 @@ export class RoomDetailsComponent implements OnInit{
   room: Room | undefined;
   accessPoint: AccessPoint | undefined;
   displayEditThresholdDialog = false;
-  expandedRows: { [key: string]: boolean } = {};
   selectedThreshold: Threshold | undefined;
   filteredThresholds: Threshold[] = [];
   thresholdForm: FormGroup;
@@ -126,33 +125,10 @@ export class RoomDetailsComponent implements OnInit{
         });
       }
   }
-
   closeEditThresholdDialog() {
     this.selectedThreshold = undefined;
     this.thresholdForm.reset();
     this.displayEditThresholdDialog = false;
-  }
-  /**
-   * This method is called when the edit threshold tip dialog is closed.
-   * It resets the selected threshold and reason.
-   */
-  editThresholdTipSave() {
-    if (this.selectedThreshold) {
-    const dto : ThresholdTipUpdateDto = {
-      id: this.selectedThreshold.id,
-      tip: this.selectedThreshold.tip.tip,
-    };
-    this.roomService.updateThresholdTip(dto).subscribe({
-      next: (data) => {
-        console.log('Threshold updated: ', data);
-      },
-      error: (error) => {
-        console.error('Failed to update threshold:', error);
-      },
-    });
-      this.selectedThreshold = undefined;
-      this.displayEditThresholdDialog = false;
-    }
   }
   globalFilter(event: any) {
     const filterValue = event.target.value.toLowerCase();
