@@ -33,7 +33,7 @@
       </p-table>
     </div>
     <p-dialog header="Create Room" [(visible)]="displayCreateDialog" [modal]="true" [style]="{ width: '50vw' }"
-              [closable]="true">
+              [closable]="true" (onHide)="this.newRoomId =''">
       <label for="roomId">Room ID: </label>
       <input id="roomId" type="text" pInputText [(ngModel)]="newRoomId" required>
       <br>
