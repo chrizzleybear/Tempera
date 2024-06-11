@@ -24,25 +24,33 @@
   <div class="flex flex-wrap w-full">
     <div class="w-full lg:w-1/2 flex flex-wrap">
       <div class="w-1/2 h-1/2 p-4">
-        <div class="card h-full grid place-items-center text-base lg:text-3xl">
+        <div class="card h-full grid place-items-center text-base lg:text-3xl relative">
+          <p-button icon="pi pi-question" class="absolute left-2 top-2 lg:left-8 lg:top-6" [rounded]="true" severity="success" pTooltip="Recommendations" tooltipPosition="left">
+          </p-button>
           <div>Temperature:</div>
           <div>{{ this.dashboardData.temperature }} °C</div>
         </div>
       </div>
       <div class="w-1/2 h-1/2 p-4">
-        <div class="card h-full grid place-items-center text-base lg:text-3xl">
+        <div class="card h-full grid place-items-center text-base lg:text-3xl relative">
+          <p-button icon="pi pi-question" class="absolute left-2 top-2 lg:left-8 lg:top-6" [rounded]="true" severity="success" pTooltip="Recommendations" tooltipPosition="left">
+          </p-button>
           <div>Humidity:</div>
           <div>{{ this.dashboardData.humidity }} %</div>
         </div>
       </div>
       <div class="w-1/2 h-1/2 p-4">
-        <div class="card h-full grid place-items-center text-base lg:text-3xl">
+        <div class="card h-full grid place-items-center text-base lg:text-3xl relative">
+          <p-button icon="pi pi-question" class="absolute left-2 top-2 lg:left-8 lg:top-6" [rounded]="true" severity="success" pTooltip="Recommendations" tooltipPosition="left">
+          </p-button>
           <div>Brightness:</div>
           <div>{{ this.dashboardData.irradiance }} lx</div>
         </div>
       </div>
       <div class="w-1/2 h-1/2 p-4">
-        <div class="card h-full grid place-items-center text-base lg:text-3xl">
+        <div class="card h-full grid place-items-center text-base lg:text-3xl relative">
+          <p-button icon="pi pi-question" class="absolute left-2 top-2 lg:left-8 lg:top-6" [rounded]="true" severity="success" pTooltip="Recommendations" tooltipPosition="left">
+          </p-button>
           <div>Air quality:</div>
           <div>{{ this.dashboardData.nmvoc | airQuality }}</div>
         </div>
@@ -65,9 +73,9 @@
           </ng-template>
           <ng-template pTemplate="header">
             <tr>
-              <th>Name</th>
-              <th>Workplace</th>
-              <th>State</th>
+              <th id="name">Name</th>
+              <th id="workplace">Workplace</th>
+              <th id="state">State</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-colleague>

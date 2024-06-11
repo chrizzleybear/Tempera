@@ -29,6 +29,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { OverlappingProjectHelper } from '../_helpers/overlapping-project-helper';
 import { AlertStoreService } from '../_stores/alert-store.service';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-dashboard',
@@ -49,6 +50,7 @@ import { AlertStoreService } from '../_stores/alert-store.service';
     ReactiveFormsModule,
     MessagesModule,
     ToastModule,
+    TooltipModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -139,7 +141,7 @@ export class DashboardComponent implements OnInit {
       visibility: this.form.controls.visibility.value,
       groupxProject: this.form.controls.project.value,
     }).subscribe({
-      next: data => {
+      next: () => {
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
