@@ -1,7 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {ThresholdTipUpdateDto} from "../models/threshold.model";
+import {Component, OnInit, signal} from '@angular/core';
 import {RoomService} from "../_services/room.service";
-import {ThresholdTip} from "../../api";
 import {ToastModule} from "primeng/toast";
 import {MessageService} from "primeng/api";
 import {DialogModule} from "primeng/dialog";
@@ -11,6 +9,7 @@ import {TableModule} from "primeng/table";
 import {ButtonModule} from "primeng/button";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {InputTextareaModule} from "primeng/inputtextarea";
+import {ThresholdTip} from "../models/threshold.model";
 
 @Component({
   selector: 'app-tips',
@@ -60,11 +59,7 @@ export class TipsComponent implements OnInit{
 
   updateThresholdTip() {
     if (this.selectedTip !== undefined) {
-      let tipUpdateDto: ThresholdTipUpdateDto = {
-        id: this.selectedTip.id!,
-        tip: this.selectedTip.tip!,
-      };
-      this.roomService.updateThresholdTip(tipUpdateDto).subscribe(() => {
+      this.roomService.updateThresholdTip(this.selectedTip).subscribe(() => {
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
@@ -76,5 +71,8 @@ export class TipsComponent implements OnInit{
         this.messageService.add({severity: 'error', summary: 'Error', detail: 'Failed to update threshold tip'});
       });
     }
+  }
+  reset() {
+    this.ngOnInit();
   }
 }

@@ -21,7 +21,7 @@ export enum ThresholdType {
   LOWERBOUND_WARNING = 'LOWERBOUND_WARNING'
 }
 
-interface ThresholdTip {
+export interface ThresholdTip {
   id: number;
   tip: string;
 }
@@ -29,8 +29,4 @@ interface ThresholdTip {
 export interface ThresholdUpdateDto {
   threshold: Threshold;
   reason: string;
-}
-export interface ThresholdTipUpdateDto {
-  id: number;
-  tip: string;
 }

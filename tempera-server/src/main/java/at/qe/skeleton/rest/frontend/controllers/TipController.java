@@ -22,12 +22,12 @@ public class TipController {
         return ResponseEntity.ok(thresholds);
     }
     @PostMapping("/update")
-    public ResponseEntity<String> updateTip(@RequestBody ThresholdTip threshold) {
+    public ResponseEntity<ThresholdTip> updateTip(@RequestBody ThresholdTip threshold) {
         try {
-            thresholdService.updateThresholdTip(threshold);
-            return ResponseEntity.ok("Threshold updated successfully.");
+            ThresholdTip tip = thresholdService.updateThresholdTip(threshold);
+            return ResponseEntity.ok(tip);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
         }
     }
 

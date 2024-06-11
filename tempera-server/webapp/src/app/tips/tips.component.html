@@ -103,15 +103,14 @@
       </div>
     </div>
   </p-tabPanel>
-
 </p-tabView>
 
-<p-dialog header="Tip bearbeiten" [(visible)]="viewEditDialog" [modal]="true">
+<p-dialog header="Edit Tip" [(visible)]="viewEditDialog" [modal]="true"  (onHide)="reset()">
   <div *ngIf="selectedTip">
     <div class="flex flex-col">
-      <label for="tip">Tip</label>
-      <textarea class="w-[50vw] h-[10vw]" id="tip" type="text" pInputTextarea [(ngModel)]="selectedTip.tip"></textarea>
+      <textarea class="w-[50vw] h-[12vw]" id="tip" type="text" pInputTextarea [(ngModel)]="selectedTip.tip"></textarea>
     </div>
+    <br>
     <button pButton type="button" label="Save" icon="pi pi-check" (click)="updateThresholdTip()"></button>
   </div>
 </p-dialog>

@@ -2,9 +2,8 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable, Subject} from "rxjs";
 import {FloorComponent, Room} from "../models/room.model";
-import {Threshold, ThresholdTipUpdateDto, ThresholdUpdateDto} from "../models/threshold.model";
+import {Threshold, ThresholdTip, ThresholdUpdateDto} from "../models/threshold.model";
 import {AccessPoint} from "../models/accessPoint.model";
-import {ThresholdTip} from "../../api";
 
 
 
@@ -48,8 +47,10 @@ export class RoomService {
   getAllThresholdTips(): Observable<ThresholdTip[]> {
     return this.http.get<ThresholdTip[]>('http://localhost:8080/api/tip/all');
   }
-  updateThresholdTip(dto: ThresholdTipUpdateDto) {
-    return this.http.post<Threshold>('http://localhost:8080/api/tip/update', dto);
+
+  updateThresholdTip(dto: ThresholdTip) {
+    console.log('Update Threshold Tip: ', dto);
+    return this.http.post<ThresholdTip>('http://localhost:8080/api/tip/update', dto);
   }
 
   private roomChangedSource = new Subject<void>();
