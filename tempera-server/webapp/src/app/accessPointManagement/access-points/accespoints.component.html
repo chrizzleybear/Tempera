@@ -16,7 +16,7 @@
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-accessPoint>
-    <tr (click)="viewAccessPointDetails(accessPoint)">
+    <tr (click)="viewAccessPointDetails(accessPoint)" style="cursor: pointer;">
       <td>{{ accessPoint.id }}</td>
       <td>{{ accessPoint.room }}</td>
       <td>{{ accessPoint.enabled ? 'Enabled' : 'Disabled' }}</td>
