@@ -86,7 +86,7 @@ public class ThresholdService {
     @Transactional
     public ThresholdTip updateThresholdTip(ThresholdTip tip) {
         ThresholdTip oldTip = thresholdTipRepository.findById(tip.getId()).orElseThrow(() -> new IllegalArgumentException("Threshold not found"));
-        sreturn thresholdTipRepository.save(tip);
+        return thresholdTipRepository.save(tip);
     }
 
 }
