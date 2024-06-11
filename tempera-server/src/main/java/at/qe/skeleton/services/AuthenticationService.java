@@ -26,6 +26,9 @@ public class AuthenticationService {
   @PreAuthorize("hasAuthority('ADMIN')")
   public UserxDto registerUser(UserxDto userxDTO) {
     Userx newUser = userxService.convertToEntity(userxDTO);
+    if(userxService.loadUser(newUser.getUsername()) != null) {
+      throw new IllegalArgumentException("Username already exists");
+    }
     userxService.saveUser(newUser);
     sendValidationEmail(newUser);
     return userxService.convertToDTO(newUser);
@@ -34,25 +37,30 @@ public class AuthenticationService {
   // Encode username for security
   public void sendValidationEmail(Userx user) {
     String password = generateAndSaveActivationToken(user);
-    emailService.sendEmail(
-        user.getEmail(),
-        "Registration successful",
-        "Hello "
-            + user.getFirstName()
-            + " "
-            + user.getLastName()
-            + ",\n\n"
-            + "Your registration was successful.\nYour username is: "
-            + user.getUsername()
-            + "\n"
-            + "Your password is: "
-            + password
-            + " \n\n"
-            + "Please follow the link to set your password.\n\n"
-            + "http://localhost:4200/validate"
-            + "\n\n"
-            + "Best regards,\n"
-            + "The Tempera Team");
+    try {
+      emailService.sendEmail(
+              user.getEmail(),
+              "Registration successful",
+              "Hello "
+                      + user.getFirstName()
+                      + " "
+                      + user.getLastName()
+                      + ",\n\n"
+                      + "Your registration was successful.\nYour username is: "
+                      + user.getUsername()
+                      + "\n"
+                      + "Your password is: "
+                      + password
+                      + " \n\n"
+                      + "Please follow the link to set your password.\n\n"
+                      + "http://localhost:4200/validate"
+                      + "\n\n"
+                      + "Best regards,\n"
+                      + "The Tempera Team");
+    }
+    catch (Exception e) {
+      throw new RuntimeException("Registration email could not be sent");
+    }
   }
 
   private String generateAndSaveActivationToken(Userx user) {

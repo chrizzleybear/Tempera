@@ -1,4 +1,4 @@
-<p-messages [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
+<p-toast></p-toast>
 <div *ngIf="!displayEditDialog && !displayCreateDialog">
   <div class="mb-4">
     <input type="text" pInputText placeholder="Search" (input)="applyFilter($event)" class="mr-2">
