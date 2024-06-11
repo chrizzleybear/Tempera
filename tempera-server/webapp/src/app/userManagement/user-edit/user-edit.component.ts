@@ -7,6 +7,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { User } from '../../models/user.model';
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-user-edit',
@@ -30,8 +31,9 @@ export class UserEditComponent implements OnInit, OnChanges {
    * Constructor for UserEditComponent that initializes the edit form.
    * @param fb
    * @param usersService
+   * @param messageService
    */
-  constructor(private fb: FormBuilder, private usersService: UsersService) {
+  constructor(private fb: FormBuilder, private usersService: UsersService, private messageService: MessageService) {
     this.roles = ['ADMIN', 'EMPLOYEE', 'MANAGER', 'GROUPLEAD'];
     this.userForm = this.fb.group({
       username: '',
@@ -58,6 +60,7 @@ export class UserEditComponent implements OnInit, OnChanges {
       },
       error: (error) => {
         console.error('Failed to load user details:', error);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load user details' });
       },
     });
   }
@@ -103,12 +106,29 @@ export class UserEditComponent implements OnInit, OnChanges {
     this.usersService.updateUser(this.userForm.value).subscribe({
       next: (response) => {
         console.log('User updated successfully:', response);
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User updated successfully' });
         this.editCompleted.emit(true);
       },
       error: (error) => {
         console.error('Error updating user:', error);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error updating user' });
         this.editCompleted.emit(false);
       },
+    });
+  }
+
+  resendActivationEmail() {
+    this.usersService.resendActivationEmail(this.user).subscribe({
+      next: (response) => {
+        console.log('Activation email sent:', response);
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Activation email sent successfully' });
+        this.editCompleted.emit(true);
+      },
+      error: (error) => {
+        console.error('Error sending activation email:', error);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error sending activation email' });
+        this.editCompleted.emit(false);
+        },
     });
   }
 
