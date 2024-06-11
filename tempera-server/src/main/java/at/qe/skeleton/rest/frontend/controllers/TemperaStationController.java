@@ -63,9 +63,10 @@ public class TemperaStationController {
 
     @PutMapping("/create")
     public ResponseEntity<MessageResponse> createTemperaStation(@RequestBody TemperaStationDto temperaStationDto) {
-        temperaStationService.createTemperaStation(temperaStationDto.id(), temperaStationDto.enabled(), temperaStationDto.user(), temperaStationDto.accessPointId());
+        temperaStationService.createTemperaStation(temperaStationDto.enabled(), temperaStationDto.user(), temperaStationDto.accessPointId());
         return ResponseEntity.ok(new MessageResponse("TemperaStation was created."));
     }
+
 
     @GetMapping("sensors/{temperaStationId}")
     public ResponseEntity<List<SensorDto>> getTemperaStationSensors(@PathVariable String temperaStationId) {

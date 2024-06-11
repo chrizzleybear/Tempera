@@ -41,7 +41,6 @@ export class TemperaStationCreateComponent implements OnInit, OnChanges{
     private messageService: MessageService
   ) {
     this.temperaForm = this.formBuilder.group({
-      id: [null, [Validators.required]],
       user: [null, [Validators.required]],
       accessPoint: [null, Validators.required]
     });
@@ -58,7 +57,7 @@ export class TemperaStationCreateComponent implements OnInit, OnChanges{
   onSubmit() {
     if (this.temperaForm.valid) {
       this.newTemperaStation = {
-        id: this.temperaForm.value.id,
+        id: '',
         user: this.temperaForm.value.user.value.username,
         enabled: false,
         isHealthy: false,
