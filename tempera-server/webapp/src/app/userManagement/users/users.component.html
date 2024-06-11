@@ -19,7 +19,7 @@
           <p-sortIcon field="lastName"></p-sortIcon>
         </th>
         <th scope="col">Roles</th>
-        <th scope="col">Enabled</th>
+        <th scope="col">Status</th>
         <!--  Empty headers for styling    -->
         <th></th>
         <th></th>
@@ -35,7 +35,7 @@
             <li *ngFor="let role of user.roles">{{ role }}</li>
           </ul>
         </td>
-        <td>{{ user.enabled ? "Yes" : "No" }}</td>
+        <td>{{ user.enabled ? "Enabled" : "Disabled" }}</td>
         <td>
           <p-button label="Edit" (onClick)="editUser(user); $event.stopPropagation()" icon="pi pi-pencil"></p-button>
         </td>

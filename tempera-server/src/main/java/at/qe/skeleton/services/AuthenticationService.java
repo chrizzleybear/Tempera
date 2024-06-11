@@ -84,7 +84,6 @@ public class AuthenticationService {
   @PreAuthorize("hasAuthority('ADMIN')")
   public void resendValidation(UserxDto userxDTO) {
     Userx user = userxService.loadUser(userxDTO.username());
-    System.out.println(user.getUsername());
     String password = generateAndSaveActivationToken(user);
     emailService.sendEmail(
         user.getEmail(),
