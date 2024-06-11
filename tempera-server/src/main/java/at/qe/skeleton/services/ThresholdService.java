@@ -5,7 +5,6 @@ import at.qe.skeleton.model.Threshold;
 import at.qe.skeleton.model.ThresholdTip;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.ThresholdType;
-import at.qe.skeleton.repositories.RoomRepository;
 import at.qe.skeleton.repositories.TemperaStationRepository;
 import at.qe.skeleton.repositories.ThresholdRepository;
 import at.qe.skeleton.repositories.ThresholdTipRepository;

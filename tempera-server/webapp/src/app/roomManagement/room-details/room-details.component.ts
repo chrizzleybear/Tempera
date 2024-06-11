@@ -14,8 +14,6 @@ import {InputTextModule} from "primeng/inputtext";
 import {AccessPoint} from "../../models/accessPoint.model";
 import {ToastModule} from "primeng/toast";
 import {MessageService} from "primeng/api";
-import _default from "chart.js/dist/plugins/plugin.tooltip";
-import numbers = _default.defaults.animations.numbers;
 
 @Component({
   selector: 'app-room-details',
