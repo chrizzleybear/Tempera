@@ -52,7 +52,7 @@ public class TemperaStationService {
   public TemperaStation createTemperaStation(boolean enabled, String username, String accessPointId) {
 
     // generate an 8 character id for the station, e.g. 9b3ead19
-    String id = null;
+    String id = "";
     do {
       id = RandomStringUtils.random(8, "0123456789abcdef");
     } while (temperaStationRepository.findById(id).isPresent());

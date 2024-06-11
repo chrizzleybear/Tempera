@@ -52,6 +52,16 @@ public class TemperaStation implements Persistable<String> {
   public TemperaStation() {
   }
 
+  /**
+   * direct creation of TemperaStations should be avoided, use {@link
+   * at.qe.skeleton.services.TemperaStationService#createTemperaStation} instead
+   */
+  public TemperaStation(@NotNull String id, boolean enabled, Userx user, boolean isHealthy) {
+    this.user = user;
+    this.id = Objects.requireNonNull(id);
+    this.enabled = enabled;
+    this.isHealthy = isHealthy;
+  }
 
   @Override
   public String getId() {
@@ -67,17 +77,6 @@ public class TemperaStation implements Persistable<String> {
   @PostLoad
   void markNotNew() {
     this.isNew = false;
-  }
-
-  /**
-   * direct creation of TemperaStations should be avoided, use {@link
-   * at.qe.skeleton.services.TemperaStationService#createTemperaStation} instead
-   */
-  public TemperaStation(@NotNull String id, boolean enabled, Userx user, boolean isHealthy) {
-    this.user = user;
-    this.id = Objects.requireNonNull(id);
-    this.enabled = enabled;
-    this.isHealthy = isHealthy;
   }
 
   public void setUser(Userx user) {
