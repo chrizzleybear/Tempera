@@ -9,6 +9,8 @@ import {InputTextModule} from "primeng/inputtext";
 import {TemperaStation} from "../../models/temperaStation.model";
 import {AccessPoint} from "../../models/accessPoint.model";
 import {AccessPointService} from "../../_services/access-point.service";
+import {MessageService} from "primeng/api";
+import {ToastModule} from "primeng/toast";
 
 @Component({
   selector: 'app-tempera-station-create',
@@ -18,7 +20,8 @@ import {AccessPointService} from "../../_services/access-point.service";
     DropdownModule,
     CheckboxModule,
     ButtonModule,
-    InputTextModule
+    InputTextModule,
+    ToastModule
   ],
   templateUrl: './tempera-station-create.component.html',
   styleUrl: './tempera-station-create.component.css'
@@ -35,10 +38,11 @@ export class TemperaStationCreateComponent implements OnInit, OnChanges{
     private temperaStationService: TemperaStationService,
     private accessPointService: AccessPointService,
     private formBuilder: FormBuilder,
+    private messageService: MessageService
   ) {
     this.temperaForm = this.formBuilder.group({
       id: [null, [Validators.required]],
-      user: [null, []],
+      user: [null, [Validators.required]],
       accessPoint: [null, Validators.required]
     });
   }
@@ -60,14 +64,14 @@ export class TemperaStationCreateComponent implements OnInit, OnChanges{
         isHealthy: false,
         accessPointId: this.temperaForm.value.accessPoint.value.id
       }
-      console.log('Creating temperaStation:', this.newTemperaStation);
       this.temperaStationService.createTemperaStation(this.newTemperaStation).subscribe({
         next: () => {
           this.temperaForm.reset();
+          this.messageService.add({severity:'success', summary:'Success', detail:'Tempera station created successfully'});
           this.onCreateCompleted.emit(true);
         },
         error: (error) => {
-          console.error('Failed to create temperaStation:', error);
+          this.messageService.add({severity:'error', summary:'Error', detail:'Failed to create tempera station'});
           this.onCreateCompleted.emit(false);
         },
       });
@@ -90,7 +94,7 @@ export class TemperaStationCreateComponent implements OnInit, OnChanges{
     this.accessPointService.getAllAccesspoints().subscribe({
       next: (accesspoints: AccessPoint[]) => {
         this.accessPoints = accesspoints.map(accessPoint => ({
-          label: accessPoint.id, // Change this to any property you want to display
+          label: accessPoint.id,
           value: accessPoint
         }));
         console.log(this.accessPoints);

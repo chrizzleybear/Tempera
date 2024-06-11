@@ -20,6 +20,6 @@
       <label class="form-check-label" for="enabled">Enabled</label>
     </div>
     <br>
-    <p-button type="submit" label="Save"></p-button>
+    <p-button type="submit" label="Save" [disabled]="!temperaForm.valid"></p-button>
   </form>
 </div>
