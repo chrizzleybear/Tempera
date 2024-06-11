@@ -8,6 +8,7 @@ import at.qe.skeleton.model.enums.ThresholdType;
 import at.qe.skeleton.repositories.RoomRepository;
 import at.qe.skeleton.repositories.TemperaStationRepository;
 import at.qe.skeleton.repositories.ThresholdRepository;
+import at.qe.skeleton.repositories.ThresholdTipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -21,16 +22,15 @@ import java.util.Set;
 public class ThresholdService {
 
     private final ThresholdRepository thresholdRepository;
-    private final RoomRepository roomRepository;
     private final TemperaStationRepository temperaStationRepository;
-
+    private final ThresholdTipRepository thresholdTipRepository;
     @Autowired
     public ThresholdService(ThresholdRepository thresholdRepository,
-                            RoomRepository roomRepository,
-                            TemperaStationRepository temperaStationRepository) {
+                            TemperaStationRepository temperaStationRepository,
+                            ThresholdTipRepository thresholdTipRepository) {
         this.thresholdRepository = thresholdRepository;
-        this.roomRepository = roomRepository;
         this.temperaStationRepository = temperaStationRepository;
+        this.thresholdTipRepository = thresholdTipRepository;
     }
 
     @Transactional
@@ -74,4 +74,19 @@ public class ThresholdService {
     public Threshold getThresholdById(Long id) {
         return thresholdRepository.findById(id).orElse(null);
     }
+
+    public List<ThresholdTip> getAllThresholdTips() {
+        return thresholdTipRepository.findAll();
+    }
+
+    public ThresholdTip getThresholdTipById(Long id) {
+        return thresholdTipRepository.findById(id).orElse(null);
+    }
+
+    @Transactional
+    public ThresholdTip updateThresholdTip(ThresholdTip tip) {
+        ThresholdTip oldTip = thresholdTipRepository.findById(tip.getId()).orElseThrow(() -> new IllegalArgumentException("Threshold not found"));
+        sreturn thresholdTipRepository.save(tip);
+    }
+
 }

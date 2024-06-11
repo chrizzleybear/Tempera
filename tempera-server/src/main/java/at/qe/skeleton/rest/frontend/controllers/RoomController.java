@@ -27,8 +27,6 @@ public class RoomController {
 
   @Autowired private FloorMapper flo;
 
-
-
     @GetMapping("/all")
     public ResponseEntity<List<Room>> getAllRooms() {
         List<Room> rooms = roomService.getAllRooms();
@@ -101,12 +99,6 @@ public class RoomController {
     public ResponseEntity<Threshold> updateThreshold(@RequestBody ThresholdUpdateDto dto) {
         Threshold updatedThreshold = roomService.updateThreshold(dto);
         return ResponseEntity.ok(updatedThreshold);
-    }
-
-    @PutMapping("/threshold/tip/update")
-    public ResponseEntity<ThresholdTip> updateThresholdTip(@RequestBody ThresholdTip dto) {
-        ThresholdTip updatedThreshold = roomService.updateThresholdTip(dto);
-            return ResponseEntity.ok(updatedThreshold);
     }
 
     @GetMapping("/floor")

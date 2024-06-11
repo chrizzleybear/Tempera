@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @Scope("application")
@@ -90,12 +89,5 @@ public class RoomService {
         updateThreshold.setValue(dto.threshold().value());
         String reason = dto.reason();
         return thresholdRepository.save(updateThreshold);
-    }
-    @Transactional
-    public ThresholdTip updateThresholdTip(ThresholdTip tip) {
-        Threshold threshold = thresholdRepository.findById(tip.getId()).orElseThrow(() -> new IllegalArgumentException("Threshold not found"));
-        ThresholdTip updateTip= threshold.getTip();
-        updateTip.setTip(tip.getTip());
-        return thresholdTipRepository.save(updateTip);
     }
 }
