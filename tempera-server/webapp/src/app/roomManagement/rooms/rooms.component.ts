@@ -45,6 +45,7 @@ export class RoomsComponent implements OnInit {
   newRoomId: string = '';
   displayCreateDialog: boolean = false;
   expandedRows: { [key: string]: boolean } = {};
+  protected filteredRooms: Room[] = [];
 
   constructor(private roomService: RoomService, private router: Router, private messageService: MessageService) {
   }
@@ -57,6 +58,7 @@ export class RoomsComponent implements OnInit {
     this.roomService.getAllRooms().subscribe({
       next: (rooms) => {
         console.log('Loaded rooms:', rooms);
+        this.filteredRooms = rooms;
         this.rooms = rooms;
       },
       error: (error) => console.error('Error fetching rooms:', error)
@@ -104,17 +106,8 @@ export class RoomsComponent implements OnInit {
 
   applyFilter($event: Event) {
     const filterValue = ($event.target as HTMLInputElement).value;
-    console.log('Filtering rooms by:', filterValue);
-    this.rooms = this.rooms.filter(room => room.id.includes(filterValue));
-  }
-
-  onRowToggle(room: Room): void {
-    if (this.expandedRows[room.id]) {
-      delete this.expandedRows[room.id];
-    } else {
-      this.expandedRows = {[room.id]: true};
-    }
-    console.log('Expanded rows:', this.expandedRows);
+    console.log('Filtering rooms:', filterValue);
+    this.filteredRooms = this.rooms.filter(room => room.id.includes(filterValue));
   }
 
   detailedView(id: string) {
