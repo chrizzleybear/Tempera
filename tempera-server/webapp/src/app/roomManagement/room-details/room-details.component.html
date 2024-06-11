@@ -11,7 +11,7 @@
       </div>
       <p class="thresholds-title"><strong>Thresholds</strong></p>
       <p-table [value]="filteredThresholds" dataKey="id" [paginator]="true" [rows]="10" class="thresholds-table"
-               [expandedRowKeys]="expandedRows" [globalFilterFields]="['id', 'sensorType', 'thresholdType', 'value']">
+               [globalFilterFields]="['id', 'sensorType', 'thresholdType', 'value']">
         <ng-template pTemplate="header">
           <input type="text" pInputText (input)="globalFilter($event)" placeholder="Global Search">
           <tr>
