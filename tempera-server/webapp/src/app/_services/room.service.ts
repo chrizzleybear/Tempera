@@ -37,7 +37,7 @@ export class RoomService {
     return this.http.get<Room[]>(this.API_URL + 'available');
   }
 //two way binding ->delete
-  getAccessPoints(roomId: string): Observable<AccessPoint> {
+  getAccessPoint(roomId: string): Observable<AccessPoint> {
     return this.http.get<AccessPoint>(`${this.API_URL}accesspoint/${roomId}`);
   }
 

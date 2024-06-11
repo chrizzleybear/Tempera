@@ -13,6 +13,7 @@ import {FloorPlanComponent} from "../floor-plan/floor-plan.component";
 import {RippleModule} from "primeng/ripple";
 import {ToastModule} from "primeng/toast";
 import {MessageService} from "primeng/api";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-rooms',
@@ -45,7 +46,7 @@ export class RoomsComponent implements OnInit {
   displayCreateDialog: boolean = false;
   expandedRows: { [key: string]: boolean } = {};
 
-  constructor(private roomService: RoomService, private messageService: MessageService) {
+  constructor(private roomService: RoomService, private router: Router, private messageService: MessageService) {
   }
 
   ngOnInit(): void {
@@ -114,5 +115,9 @@ export class RoomsComponent implements OnInit {
       this.expandedRows = {[room.id]: true};
     }
     console.log('Expanded rows:', this.expandedRows);
+  }
+
+  detailedView(id: string) {
+    this.router.navigate(['/room', id]);
   }
 }
