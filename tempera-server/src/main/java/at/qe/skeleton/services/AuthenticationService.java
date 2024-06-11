@@ -34,7 +34,6 @@ public class AuthenticationService {
     return userxService.convertToDTO(newUser);
   }
 
-  // Encode username for security
   public void sendValidationEmail(Userx user) {
     String password = generateAndSaveActivationToken(user);
     try {
@@ -84,7 +83,8 @@ public class AuthenticationService {
   @Transactional
   @PreAuthorize("hasAuthority('ADMIN')")
   public void resendValidation(UserxDto userxDTO) {
-    Userx user = userxService.convertToEntity(userxDTO);
+    Userx user = userxService.loadUser(userxDTO.username());
+    System.out.println(user.getUsername());
     String password = generateAndSaveActivationToken(user);
     emailService.sendEmail(
         user.getEmail(),
@@ -101,29 +101,9 @@ public class AuthenticationService {
             + password
             + " \n\n"
             + "Please follow the link to set your new password.\n\n"
-            + "http://localhost:4200/validate/"
-            + user.getUsername()
+            + "http://localhost:4200/validate"
             + "\n\n"
             + "Best regards,\n"
             + "The Tempera Team");
-  }
-
-  public void validateUser(String username, String password) {
-    Userx user = userxService.loadUser(username);
-    if (user == null) {
-      throw new IllegalArgumentException("User not found");
-    }
-    if (!encode.matches(password, user.getPassword())) {
-      throw new IllegalArgumentException("Password incorrect");
-    }
-  }
-
-  public void setPassword(String username, String password, String passwordRepeat) {
-    if (!password.equals(passwordRepeat)) {
-      throw new IllegalArgumentException("Passwords do not match");
-    }
-    Userx user = userxService.loadUser(username);
-    user.setPassword(encode.encode(password));
-    userxService.saveUser(user);
   }
 }
