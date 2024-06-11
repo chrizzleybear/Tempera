@@ -52,7 +52,7 @@ public class AuthenticationService {
                       + "Your password is: "
                       + password
                       + " \n\n"
-                      + "Please follow the link to set your password.\n\n"
+                      + "Please follow the link to set your new password.\n\n"
                       + "http://localhost:4200/validate"
                       + "\n\n"
                       + "Best regards,\n"
@@ -88,19 +88,19 @@ public class AuthenticationService {
     String password = generateAndSaveActivationToken(user);
     emailService.sendEmail(
         user.getEmail(),
-        "Registration successful",
+        "Reset Password",
         "Hello "
             + user.getFirstName()
             + " "
             + user.getLastName()
             + ",\n\n"
-            + "Your registration was successful. Your username is: "
+            + "Your username is: "
             + user.getUsername()
             + "\n"
             + "Your password is: "
             + password
             + " \n\n"
-            + "Please follow the link to set your password.\n\n"
+            + "Please follow the link to set your new password.\n\n"
             + "http://localhost:4200/validate/"
             + user.getUsername()
             + "\n\n"
