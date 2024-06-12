@@ -112,7 +112,7 @@ export class ProjectGroupsComponent implements OnInit {
       next: () => {
         console.log(groupId, ` removed Group ${groupId}from project with ID: `, this.projectId);
         this.fetchActiveGroupsOfThisProject(this.projectId);
-        this.messageService.add({ severity: 'info', summary: 'Success!', detail: `You have removed Group ${this.groupToBeRemoved?.name} from this Project` });
+        this.messageService.add({ severity: 'success', summary: 'Success!', detail: `You have removed Group ${this.groupToBeRemoved?.name} from this Project` });
         this.displayRemoveDialog = false;
         this.groupToBeRemoved = undefined;
       },

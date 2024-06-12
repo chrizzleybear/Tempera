@@ -18,12 +18,18 @@ import java.util.logging.Logger;
 @RequestMapping(value = "/api/project", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProjectController {
 
-  @Autowired ProjectService projectService;
-  @Autowired ProjectMapperService projectMapperService;
-  @Autowired GroupMapperService groupMapperService;
+ private final ProjectService projectService;
+ private final ProjectMapperService projectMapperService;
+ private final GroupMapperService groupMapperService;
   private final Logger logger = Logger.getLogger("ProjectController");
 
-    @GetMapping("/all")
+  public ProjectController(ProjectService projectService, ProjectMapperService projectMapperService, GroupMapperService groupMapperService) {
+    this.projectService = projectService;
+    this.projectMapperService = projectMapperService;
+    this.groupMapperService = groupMapperService;
+  }
+
+  @GetMapping("/all")
     public ResponseEntity<List<SimpleProjectDto>> getAllSimpleProjects() {
       List<SimpleProjectDto> projects = projectMapperService.getAllSimpleProjects();
       return ResponseEntity.ok(projects);
@@ -42,7 +48,6 @@ public class ProjectController {
   public ResponseEntity<SimpleProjectDto> updateProject(@RequestBody SimpleProjectDto projectData) {
 
     SimpleProjectDto updatedProject = projectMapperService.updateProject(projectData);
-    //todo: add method to projectMapperService
     return ResponseEntity.ok(updatedProject);
   }
 
@@ -52,7 +57,6 @@ public class ProjectController {
     return ResponseEntity.ok(createdProject);
   }
 
-  //todo: was ist hier mit?
   @DeleteMapping("/delete/{projectId}")
   public ResponseEntity<String> deleteProject(@PathVariable String projectId) {
     projectService.deleteProject(Long.parseLong(projectId));

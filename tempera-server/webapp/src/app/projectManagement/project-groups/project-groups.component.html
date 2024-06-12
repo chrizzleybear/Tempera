@@ -37,14 +37,6 @@
   </ng-template>
 </p-table>
 
-
-<!--<p-dialog header="Are You Sure?"-->
-<!--          [(visible)]="displayRemoveDialog" [modal]="true" [responsive]="true" [style]="{width: '50vw'}">-->
-<!--  <div> All existing Contributors to Project {{projectName}} from Group {{groupToBeRemoved}} will be removed. </div>-->
-<!--  <p-footer>-->
-<!--    <button type="button" pButton label="Yes" icon="pi pi-check" (click)="removeGroupFromProject()"></button>-->
-<!--    <button type="button" pButton label="No" icon="pi pi-times" (click)="displayRemoveDialog = false"></button>-->
-<!--  </p-footer>-->
 <p-dialog header="Add New Group" [(visible)]="displayAddDialog" [modal]="true" [responsive]="true" [style]="{width: '50vw'}">
   <div class="mb-4">
     <input type="text" pInputText placeholder="Search" (input)="applyFilter($event)" class="mr-2">

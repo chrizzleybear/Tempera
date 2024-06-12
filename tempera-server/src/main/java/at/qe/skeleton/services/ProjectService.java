@@ -10,11 +10,9 @@ import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.GroupxProjectRepository;
 import at.qe.skeleton.repositories.ProjectRepository;
 import at.qe.skeleton.repositories.UserxRepository;
-import at.qe.skeleton.rest.frontend.dtos.GroupxProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,10 +26,17 @@ import java.util.logging.Logger;
 @Service
 public class ProjectService {
 
-  @Autowired private ProjectRepository projectRepository;
-  @Autowired private UserxRepository userxRepository;
-  @Autowired private GroupRepository groupRepository;
-  @Autowired private GroupxProjectRepository groupxProjectRepository;
+ private final ProjectRepository projectRepository;
+ private final UserxRepository userxRepository;
+ private final  GroupRepository groupRepository;
+ private final GroupxProjectRepository groupxProjectRepository;
+
+  public ProjectService(ProjectRepository projectRepository, UserxRepository userxRepository, GroupRepository groupRepository, GroupxProjectRepository groupxProjectRepository) {
+    this.projectRepository = projectRepository;
+    this.userxRepository = userxRepository;
+    this.groupRepository = groupRepository;
+    this.groupxProjectRepository = groupxProjectRepository;
+  }
 
   private static final String USER_NOT_FOUND = "User not found";
   private static final String PROJECT_NOT_FOUND = "Project not found";
@@ -135,10 +140,8 @@ if(groupxProjectOptional.isPresent()){
   @Transactional
   public void deleteProject(Long projectId) {
     List<GroupxProject> groupxProjects = groupxProjectRepository.findAllByProjectId(projectId);
-    // todo: connected groupxProjects must be deactivated
     for (GroupxProject groupxProject : groupxProjects) {
-      groupxProject.setActive(false);
-      groupxProjectRepository.save(groupxProject);
+      deactivateGroupxProject(groupxProject);
     }
     Project project = projectRepository.findFirstById(projectId);
     project.deactivate();
@@ -313,9 +316,8 @@ if(groupxProjectOptional.isPresent()){
   }
 
   public GroupxProject findByGroupAndProject(Long groupId, Long projectId) {
-    GroupxProject groupxProject =
-        groupxProjectRepository.findByGroup_IdAndProject_Id(groupId, projectId).orElseThrow();
-    return groupxProject;
+    return groupxProjectRepository.findByGroup_IdAndProject_Id(groupId, projectId).orElseThrow();
+
   }
 
   /**

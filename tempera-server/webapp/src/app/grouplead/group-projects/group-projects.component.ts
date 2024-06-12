@@ -196,4 +196,6 @@ export class GroupProjectsComponent implements OnInit {
     this.filteredMembers = [];
     this.selectedProject = undefined;
   }
+
+  protected readonly onkeyup = onkeyup;
 }
