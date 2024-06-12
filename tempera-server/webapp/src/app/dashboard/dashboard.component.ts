@@ -12,7 +12,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import {
   DashboardControllerService,
   DashboardDataResponse,
-  SimpleGroupxProjectDto,
+  SimpleGroupxProjectDto, Threshold,
   UserxDto,
 } from '../../api';
 import VisibilityEnum = DashboardDataResponse.VisibilityEnum;
@@ -30,6 +30,34 @@ import { MessageService } from 'primeng/api';
 import { OverlappingProjectHelper } from '../_helpers/overlapping-project-helper';
 import { AlertStoreService } from '../_stores/alert-store.service';
 import { TooltipModule } from 'primeng/tooltip';
+import { MeasurementComponent } from './measurement/measurement.component';
+import { SensorType } from '../models/threshold.model';
+
+const tempHighHints = [
+  'Ventilate: Open windows and doors in the cooler morning or evening hours to let in fresh air',
+  'Use fans: Use fans to improve air circulation and provide a cooler atmosphere',
+  'Darkening: Close curtains or blinds to reduce direct sunlight',
+  'Use air conditioning: If possible, use air conditioning to effectively lower the room temperature.',
+  'Reduce internal heat sources: Turn off or reduce the use of electronic devices to minimize internal heat emission in the room.',
+];
+
+const tempLowHints = [
+  'Heating: Use radiators or the corresponding control panels for room climate control',
+  'Close draughts: Check windows and doors and close them to reduce draughts',
+  'Layering of clothing: In the event of a technical fault, several layers of warm clothing can provide temporary relief',
+];
+
+const humidityHighHints = [
+  'Use of dehumidifiers: Use dehumidifiers to remove excess moisture from the air',
+  'Ventilation: Ventilate the room regularly to remove moisture and improve air circulation',
+  'Avoiding water sources: Reduce the use of water vapor generating appliances such as kettles or humidifiers',
+];
+
+const humidityLowHints = [
+  'Use of humidifiers: Place humidifiers in the room to increase the humidity level',
+  'Plants: Place indoor plants as they release moisture',
+  'Avoid using air dryers/air conditioners: Avoid using air conditioners, as these can lower the humidity even further.',
+];
 
 @Component({
   selector: 'app-dashboard',
@@ -51,6 +79,7 @@ import { TooltipModule } from 'primeng/tooltip';
     MessagesModule,
     ToastModule,
     TooltipModule,
+    MeasurementComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -154,4 +183,8 @@ export class DashboardComponent implements OnInit {
       },
     });
   }
+
+  protected readonly Threshold = Threshold;
+  protected readonly SensorType = SensorType;
+  protected readonly tempHighHints = tempHighHints;
 }
