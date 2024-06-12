@@ -59,6 +59,24 @@ const humidityLowHints = [
   'Avoid using air dryers/air conditioners: Avoid using air conditioners, as these can lower the humidity even further.',
 ];
 
+const irradianceHighHints = [
+  'Use of dimmers: If given, use dimmer switches to flexibly adjust the brightness of the lighting and reduce it when needed',
+  'Use lampshades or diffusers: Place lampshades or diffusers over the light sources to diffuse the light and create softer lighting',
+  'Reducing the number of light sources: Turn off some lamps or lights',
+];
+
+const irradianceLowHints = [
+  'Use of additional light sources: Use additional light sources such as desk lamps or floor lamps',
+  'Use of daylight lamps: Use daylight lamps to simulate natural daylight',
+  'Optimize natural lighting: Open curtains or blinds to let in more natural light and position furniture so that it does not obscure light sources where possible',
+];
+
+const qualityHints = [
+  'Ventilation: Ensure regular ventilation in the office to improve the air quality. Open windows to let in fresh air.',
+  'Plants: Bring some air-purifying plants into the office. These can improve air quality. ',
+  'Environmentally friendly cleaning products: Make sure that environmentally friendly cleaning products are used in the office.',
+  ]
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -105,6 +123,15 @@ export class DashboardComponent implements OnInit {
   }
 
   protected readonly DisplayHelper = DisplayHelper;
+  protected readonly Threshold = Threshold;
+  protected readonly SensorType = SensorType;
+  protected readonly tempHighHints = tempHighHints;
+  protected readonly tempLowHints = tempLowHints;
+  protected readonly humidityHighHints = humidityHighHints;
+  protected readonly humidityLowHints = humidityLowHints;
+  protected readonly irradianceHighHints = irradianceHighHints;
+  protected readonly irradianceLowHints = irradianceLowHints;
+  protected readonly qualityHints = qualityHints;
 
   public form = new FormGroup({
     visibility: new FormControl<VisibilityEnum>(VisibilityEnum.Public, { nonNullable: true }),
@@ -183,8 +210,4 @@ export class DashboardComponent implements OnInit {
       },
     });
   }
-
-  protected readonly Threshold = Threshold;
-  protected readonly SensorType = SensorType;
-  protected readonly tempHighHints = tempHighHints;
 }

@@ -24,16 +24,20 @@
   <div class="flex flex-wrap w-full">
     <div class="w-full lg:w-1/2 flex flex-wrap">
       <div class="w-1/2 h-1/2 py-4 pr-4 lg:p-4">
-        <app-measurement [sensorType]="SensorType.TEMPERATURE" [measurement]="this.dashboardData.temperature" [highHints]="tempHighHints"></app-measurement>
+        <app-measurement [sensorType]="SensorType.TEMPERATURE" [measurement]="this.dashboardData.temperature"
+                         [highHints]="tempHighHints" [lowHints]="tempLowHints"></app-measurement>
       </div>
       <div class="w-1/2 h-1/2 py-4 pl-4 lg:p-4">
-        <app-measurement [sensorType]="SensorType.HUMIDITY" [measurement]="this.dashboardData.humidity"></app-measurement>
+        <app-measurement [sensorType]="SensorType.HUMIDITY" [measurement]="this.dashboardData.humidity"
+                          [highHints]="humidityHighHints" [lowHints]="humidityLowHints"></app-measurement>
       </div>
       <div class="w-1/2 h-1/2 py-4 pr-4 lg:p-4">
-        <app-measurement [sensorType]="SensorType.IRRADIANCE" [measurement]="this.dashboardData.irradiance"></app-measurement>
+        <app-measurement [sensorType]="SensorType.IRRADIANCE" [measurement]="this.dashboardData.irradiance"
+                          [highHints]="irradianceHighHints" [lowHints]="irradianceLowHints"></app-measurement>
       </div>
       <div class="w-1/2 h-1/2 py-4 pl-4 lg:p-4">
-        <app-measurement [sensorType]="SensorType.NMVOC" [measurement]="this.dashboardData.nmvoc"></app-measurement>
+        <app-measurement [sensorType]="SensorType.NMVOC" [measurement]="this.dashboardData.nmvoc"
+                          [qualityHints]="qualityHints"></app-measurement>
       </div>
     </div>
     <!-- Colleague state table -->

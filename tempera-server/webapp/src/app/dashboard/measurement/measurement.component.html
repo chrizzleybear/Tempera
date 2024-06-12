@@ -1,5 +1,6 @@
 <div class="card h-full grid place-items-center text-base lg:text-3xl relative">
-  <p-button (onClick)="dialogVisible = true" icon="pi pi-question" class="absolute left-2 top-2 lg:left-8 lg:top-6" [rounded]="true" severity="success"
+  <p-button (onClick)="dialogVisible = true" icon="pi pi-question" class="absolute left-2 top-2 lg:left-8 lg:top-6"
+            [rounded]="true" severity="success"
             pTooltip="Recommendations" tooltipPosition="left">
   </p-button>
   <ng-container [ngSwitch]="sensorType">
@@ -15,4 +16,24 @@
     <div>{{ measurement.value }} {{ getUnit | wrapFn: sensorType }}</div>
   </ng-template>
 </div>
-
+<p-dialog header="Suggestions" contentStyleClass="w-[80vw] lg:w-[33vw]" [(visible)]="dialogVisible"
+          [modal]="true">
+  <div class="pl-10" *ngIf="sensorType === SensorType.NMVOC && qualityHints; else otherHints">
+    <ul class="list-disc">
+      <li *ngFor="let hint of qualityHints">{{ hint }}</li>
+    </ul>
+  </div>
+  <ng-template #otherHints>
+    <div class="px-10">
+      <strong>If the upper limit is exceeded:</strong>
+      <ul class="list-disc">
+        <li *ngFor="let hint of highHints">{{ hint }}</li>
+      </ul>
+      <br>
+      <strong>If the lower limit is exceeded:</strong>
+      <ul class="list-disc">
+        <li *ngFor="let hint of lowHints">{{ hint }}</li>
+      </ul>
+    </div>
+  </ng-template>
+</p-dialog>
