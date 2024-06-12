@@ -34,6 +34,7 @@ model/extendedGroupDto.ts
 model/extendedProjectDto.ts
 model/externalRecordDto.ts
 model/floorComponent.ts
+model/frontendMeasurementDto.ts
 model/getTimetableDataResponse.ts
 model/groupAssignmentDto.ts
 model/groupDetailsDto.ts
