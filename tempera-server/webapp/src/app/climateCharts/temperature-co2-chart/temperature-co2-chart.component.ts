@@ -1,48 +1,94 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit} from "@angular/core";
 import {ChartModule} from "primeng/chart";
+import {ClimateDataControllerService, ClimateMeasurementDto, Sensor} from "../../../api";
+import {MessageService} from "primeng/api";
+import {MessageModule} from "primeng/message";
+
+
+const sensorTypes: Sensor.SensorTypeEnum[] = ["TEMPERATURE", "NMVOC"];
 
 @Component({
   selector: 'app-temperature-co2-chart',
   standalone: true,
   imports: [
-    ChartModule
+    ChartModule,
+    MessageModule,
   ],
   templateUrl: './temperature-co2-chart.component.html',
   styleUrl: './temperature-co2-chart.component.css'
 })
-export class TemperatureCo2ChartComponent implements OnInit{
+export class TemperatureCo2ChartComponent implements OnInit {
 
-  measurements: { timestamp: string, value: number }[] = [
-    { timestamp: '2022-01-01 08:30:00', value: 30 },
-    { timestamp: '2022-01-02 08:34:00', value: 31 },
-    { timestamp: '2022-01-03 08:35:00', value: 33 },
-    { timestamp: '2022-01-04 08:36:00', value: 29 },
-    { timestamp: '2022-01-05 08:37:00', value: 30 },
-    { timestamp: '2022-01-06 08:38:00', value: 31 },
-    { timestamp: '2022-01-07 08:39:00', value: 32 },
-    { timestamp: '2022-01-08 08:40:00', value: 32 },
-    { timestamp: '2022-01-09 08:41:00', value: 31 },
-    { timestamp: '2022-01-10 08:42:00', value: 30 },
-  ];
+  private intervalId: any;
 
-  measurements2: { timestamp: string, value: number }[] = [
-    { timestamp: '2022-01-01 08:30:00', value: 70 },
-    { timestamp: '2022-01-02 08:34:00', value: 72 },
-    { timestamp: '2022-01-03 08:35:00', value: 71 },
-    { timestamp: '2022-01-04 08:36:00', value: 72 },
-    { timestamp: '2022-01-05 08:37:00', value: 70 },
-    { timestamp: '2022-01-06 08:38:00', value: 70 },
-    { timestamp: '2022-01-07 08:39:00', value: 70 },
-    { timestamp: '2022-01-08 08:40:00', value: 65 },
-    { timestamp: '2022-01-09 08:41:00', value: 70 },
-    { timestamp: '2022-01-10 08:42:00', value: 60 },
-  ];
+  public timeout: number = 0.5;  // chart refresh rate in minutes
+
+  public chartData: any;
+
+  public chartOptions: any;
+
+  public accessPointUuid: string = "123e4567-e89b-12d3-a456-426614174001";
+
+  public temperaStationId: string = "tempera_station_1";
+
+  public temperatureData: ClimateMeasurementDto[] | undefined = [];
+
+  public co2Data: ClimateMeasurementDto[] | undefined = [];
+
+  constructor(public climateDataControllerService: ClimateDataControllerService, public messageService: MessageService) {
+  }
 
 
-  chartData: any;
-  chartOptions: any;
+  ngOnInit(): void {
+    this.getMeasurements();
+    // timeout is converted form minutes (for nicer display on the web app) to milliseconds (parameter taken by setInterval)
+    this.intervalId = setInterval(() => this.getMeasurements(), this.timeout * 60 * 1_000)
+  }
 
-  ngOnInit() {
+  ngOnDestroy(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
+
+  private getMeasurements(): void {
+    for (let sensorType of sensorTypes) {
+      this.climateDataControllerService.getMeasurementsBySensorType(
+        this.accessPointUuid, this.temperaStationId, sensorType
+      ).subscribe({
+        next: climateDataDto => {
+          if (sensorType == "TEMPERATURE") {
+            this.temperatureData = climateDataDto.measurementDtos;
+          } else if (sensorType == "NMVOC") {
+            this.co2Data = climateDataDto.measurementDtos;
+          }
+          console.log("Climate data's measurement DTOs: " + climateDataDto.measurementDtos?.map(item => `${item.timestamp}, ${item.value}`));
+          this.updateChart();
+          this.printSettings();
+        },
+        error: err => {
+          console.error('Failed to fetch data from back end:', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to fetch data from back end:' + err
+          });
+        },
+      });
+    }
+  }
+
+  private updateChart(): void {
+    if (this.temperatureData == undefined || this.temperatureData.length == 0) {
+      this.messageService.add({severity: 'warning', summary: 'Warning', detail: "No data available."});
+    } else {
+      this.temperatureData?.map(item => {
+        console.log("Available data for chart display: " + `${item.timestamp}, ${item.value}`);
+        if (item.timestamp == null || item.value == null) {
+          this.messageService.add({severity: 'warning', summary: 'Warning', detail: "Can't display void measurement."});
+        }
+      })
+    }
 
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
@@ -50,11 +96,11 @@ export class TemperatureCo2ChartComponent implements OnInit{
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
     this.chartData = {
-      labels: this.measurements.map(m => m.timestamp),
+      labels: this.temperatureData?.map(measurement => measurement.timestamp),
       datasets: [
         {
           label: 'Temperature (°C)',
-          data: this.measurements.map(m => m.value),
+          data: this.temperatureData?.map(measurement => measurement.value),
           fill: false,
           yAxisID: 'y',
           borderColor: '#42A5F5',
@@ -62,7 +108,7 @@ export class TemperatureCo2ChartComponent implements OnInit{
         },
         {
           label: 'CO2 (ppm)',
-          data: this.measurements2.map(m => m.value),
+          data: this.co2Data?.map(measurement => measurement.value),
           fill: false,
           yAxisID: 'y1',
           borderColor: '#66BB6A',
@@ -90,10 +136,10 @@ export class TemperatureCo2ChartComponent implements OnInit{
             yMax: 20,
             borderColor: 'rgb(255, 99, 132)',
             borderWidth: 2,
-            borderDash: [10,10]
+            borderDash: [10, 10]
           }
         }
-    },
+      },
       responsive: true,
       scales: {
         x: {
@@ -144,6 +190,10 @@ export class TemperatureCo2ChartComponent implements OnInit{
         }
       }
     };
+  }
+
+  printSettings(): void {
+    console.log("Timeout: " + this.timeout);
   }
 }
 
