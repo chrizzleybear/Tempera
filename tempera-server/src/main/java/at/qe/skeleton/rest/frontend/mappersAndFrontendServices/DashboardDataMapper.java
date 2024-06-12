@@ -5,10 +5,7 @@ import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.Visibility;
-import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
-import at.qe.skeleton.rest.frontend.dtos.ExtendedProjectDto;
-import at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto;
-import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.*;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateDashboardDataRequest;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
 import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
@@ -140,10 +137,12 @@ public class DashboardDataMapper {
     Optional<Measurement> nmvocMeasurement =
         measurementService.findLatestMeasurementBySensor(nmvocSensor);
 
-    Double temperature = temperatureMeasurement.map(Measurement::getValue).orElse(null);
-    Double humidity = humidityMeasurement.map(Measurement::getValue).orElse(null);
-    Double irradiance = irradianceMeasurement.map(Measurement::getValue).orElse(null);
-    Double nmvoc = nmvocMeasurement.map(Measurement::getValue).orElse(null);
+    Double temperature = temperatureMeasurement.map(Measurement::getValue).orElseThrow();
+    Double humidity = humidityMeasurement.map(Measurement::getValue).orElseThrow();
+    Double irradiance = irradianceMeasurement.map(Measurement::getValue).orElseThrow();
+    Double nmvoc = nmvocMeasurement.map(Measurement::getValue).orElseThrow();
+
+    FrontendMeasurementDto temperatureDto = measurementService.createFrontendMeasurementDto(temperatureMeasurement);
 
     Optional<ExternalRecord> externalRecordOptional =
         timeRecordService.findLatestExternalRecordByUser(user);
