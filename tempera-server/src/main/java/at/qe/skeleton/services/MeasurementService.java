@@ -2,17 +2,12 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.*;
-import at.qe.skeleton.model.enums.AlertType;
-import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.ThresholdType;
 import at.qe.skeleton.repositories.MeasurementRepository;
-import at.qe.skeleton.repositories.SensorRepository;
-import at.qe.skeleton.repositories.TemperaStationRepository;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
 import java.util.*;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 @Component
 @Scope("application")
@@ -21,13 +16,12 @@ public class MeasurementService {
   private final MeasurementRepository measurementRepository;
   private final ThresholdService thresholdService;
   private final AlertService alertService;
+  private static final String INVALID_MEASUREMENT_ID = "Invalid Measurement ID: ";
 
   public MeasurementService(
       AlertService alertService,
       ThresholdService thresholdService,
-      TemperaStationRepository temperaStationRepository,
-      MeasurementRepository measurementRepository,
-      SensorRepository sensorRepository) {
+      MeasurementRepository measurementRepository) {
     this.alertService = alertService;
     this.thresholdService = thresholdService;
     this.measurementRepository = measurementRepository;
@@ -43,13 +37,13 @@ public class MeasurementService {
 
     return measurementRepository
         .findById(id)
-        .orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id));
+        .orElseThrow(() -> new CouldNotFindEntityException(INVALID_MEASUREMENT_ID + id));
   }
 
   public Measurement loadMeasurement(MeasurementId id) throws CouldNotFindEntityException {
     return measurementRepository
         .findById(id)
-        .orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id));
+        .orElseThrow(() -> new CouldNotFindEntityException(INVALID_MEASUREMENT_ID + id));
   }
 
   public Measurement saveMeasurement(Measurement measurement) {
@@ -80,7 +74,7 @@ public class MeasurementService {
     for (var id : measurementIds) {
       measurements.add(
           (measurementRepository.findByIdDetailed(id))
-              .orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id)));
+              .orElseThrow(() -> new CouldNotFindEntityException(INVALID_MEASUREMENT_ID + id)));
     }
     for (var measurement : measurements) {
       // ein Measurement kann maximal einen Alert auslösen, da es entweder gar keinen Alert, einen
@@ -131,13 +125,13 @@ public class MeasurementService {
 
     double value = measurement.getValue();
 
-    if (value <= lowerWarnThreshold.getValue()) {
+    if (lowerWarnThreshold != null && value <= lowerWarnThreshold.getValue()) {
       return alertBuilder(lowerWarnThreshold, measurement);
-    } else if (value <= lowerInfoThreshold.getValue()) {
+    } else if (lowerInfoThreshold != null && value <= lowerInfoThreshold.getValue()) {
       return alertBuilder(lowerInfoThreshold, measurement);
-    } else if (value >= upperWarnThreshold.getValue()) {
+    } else if (upperWarnThreshold != null && value >= upperWarnThreshold.getValue()) {
       return alertBuilder(upperWarnThreshold, measurement);
-    } else if (value >= upperInfoThreshold.getValue()) {
+    } else if (upperInfoThreshold != null && value >= upperInfoThreshold.getValue()) {
       return alertBuilder(upperInfoThreshold, measurement);
     } else {
       return null;
@@ -179,7 +173,13 @@ public class MeasurementService {
     return measurementRepository.findFirstBySensorIdOrderById_TimestampDesc(id);
   }
 
+  public Optional<List<Measurement>> find100LatestMeasurementsBySensor(Sensor sensor) {
+    SensorId id = sensor.getSensorId();
+    return measurementRepository.findTop100BySensorIdOrderById_TimestampAsc(id);
+  }
+
+
   public List<Measurement> loadAllMeasurementsFromTempera() {
-    return null;
+    return measurementRepository.findAll();
   }
 }
