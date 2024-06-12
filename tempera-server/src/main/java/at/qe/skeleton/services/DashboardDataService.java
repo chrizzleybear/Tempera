@@ -1,4 +1,4 @@
-package at.qe.skeleton.rest.frontend.mappersAndFrontendServices;
+package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.exceptions.MissingTemperaStationException;
@@ -7,17 +7,17 @@ import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.*;
+import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.GroupxProjectMapper;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateDashboardDataRequest;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
 import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
-import at.qe.skeleton.services.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @Service
-public class DashboardDataMapper {
+public class DashboardDataService {
 
   private final UserxService userService;
   private final TemperaStationService temperaService;
@@ -28,7 +28,7 @@ public class DashboardDataMapper {
 
   private final ThresholdService thresholdService;
 
-  public DashboardDataMapper(
+  public DashboardDataService(
           TemperaStationService temperaService,
           MeasurementService measurementService,
           TimeRecordService timeRecordService,
@@ -95,7 +95,7 @@ public class DashboardDataMapper {
    * the user itself and the states of the colleagues (if they are visible and their temperaStation
    * is enabled).
    *
-   * @param String username The username of the user for which the data should be mapped.
+   * @param  username The username of the user for which the data should be mapped.
    * @return DashboardDataResponse If there are no existing measurements for this user, it will
    *     return null as values. If there is no existing * TimeRecord for this user, it will return
    *     null as stateTimeStamp. If there is no default project assigned to this user, * it will

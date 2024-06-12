@@ -1,13 +1,11 @@
-package at.qe.skeleton.rest.frontend.mappersAndFrontendServices;
+package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.GroupxProject;
-import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto;
-import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateDashboardDataRequest;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
 import at.qe.skeleton.services.*;
@@ -29,13 +27,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @WebAppConfiguration
-class DashboardDataMapperTest {
+class DashboardDataServiceTest {
     @Autowired
     private UserxService userService;
     @Autowired private TemperaStationService temperaService;
     @Autowired private MeasurementService measurementService;
     @Autowired private TimeRecordService timeRecordService;
-    @Autowired private DashboardDataMapper dashboardDataMapper;
+    @Autowired private DashboardDataService dashboardDataService;
     @Autowired private ProjectService projectService;
 
     @BeforeEach
@@ -52,8 +50,8 @@ class DashboardDataMapperTest {
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:DashboardDataMapper.sql")
     void mapUserToHomeDataResponse() {
         String johndoe = "johndoe";
-        DashboardDataResponse homeDataResponse = dashboardDataMapper.mapUserToHomeDataResponse(johndoe);
-        assertEquals(8, homeDataResponse.colleagueStates().size(), "ColleagueStates size should be 8, for reference look at DashboardDataMapper.sql");
+        DashboardDataResponse homeDataResponse = dashboardDataService.mapUserToHomeDataResponse(johndoe);
+        assertEquals(8, homeDataResponse.colleagueStates().size(), "ColleagueStates size should be 8, for reference look at DashboardDataService.sql");
         assertEquals(20.0, homeDataResponse.temperature(), "Temperature of johndoe should be 20");
         assertEquals(50.0, homeDataResponse.humidity(), "Humidity of johndoe should be 50.0");
         assertEquals(1000.0, homeDataResponse.irradiance(), "Irradiance of johndoe should be 1000.0");
@@ -89,7 +87,7 @@ class DashboardDataMapperTest {
       scripts = "classpath:DashboardDataMapper.sql")
   void mapUserToDataResponseGroupxProjects() {
     String johndoe = "johndoe";
-    DashboardDataResponse homeDataResponse = dashboardDataMapper.mapUserToHomeDataResponse(johndoe);
+    DashboardDataResponse homeDataResponse = dashboardDataService.mapUserToHomeDataResponse(johndoe);
 
       assertEquals(6, homeDataResponse.availableProjects().size(), "Johndoe should have 6 available Projects, since he is assigned to 6 GroupxProjects");
       assertTrue(homeDataResponse.availableProjects().stream().anyMatch(p -> p.projectName().equals("Cost Reduction Initiative")), "Johndoe should have the Project 'Cost Reduction Initiative' available");
@@ -104,8 +102,8 @@ class DashboardDataMapperTest {
   @WithMockUser(username = "tonystark", authorities = "EMPLOYEE")
   void mapUserToHomeDataResponseNullValues() {
         String user = "tonystark";
-        DashboardDataResponse homeDataResponse = dashboardDataMapper.mapUserToHomeDataResponse(user);
-        assertEquals(8, homeDataResponse.colleagueStates().size(), "ColleagueStates size should be 8, for reference look at DashboardDataMapper.sql");
+        DashboardDataResponse homeDataResponse = dashboardDataService.mapUserToHomeDataResponse(user);
+        assertEquals(8, homeDataResponse.colleagueStates().size(), "ColleagueStates size should be 8, for reference look at DashboardDataService.sql");
         assertNull(homeDataResponse.temperature(), "Temperature of johndoe should be 20");
         assertNull(homeDataResponse.humidity(), "Humidity of johndoe should be 50.0");
         assertNull( homeDataResponse.irradiance(), "Irradiance of johndoe should be 1000.0");
@@ -148,7 +146,7 @@ class DashboardDataMapperTest {
             "-12",
             "Infrastructure Upgrade");
         UpdateDashboardDataRequest request = new UpdateDashboardDataRequest(visibilityUpdate, gxpUpdate);
-        dashboardDataMapper.updateUserVisibilityAndTimeStampProject(request, johndoe);
+        dashboardDataService.updateUserVisibilityAndTimeStampProject(request, johndoe);
         assertEquals(Visibility.HIDDEN, johndoe.getStateVisibility(), "Visibility of johndoe should be HIDDEN after the update");
         GroupxProject gxpAfter = timeRecordService.findLatestInternalRecordByUser(johndoe).get().getGroupxProject();
         assertEquals("Infrastructure Upgrade", gxpAfter.getProject().getName(), "Project of johndoe should be Infrastructure Upgrade after the update");
