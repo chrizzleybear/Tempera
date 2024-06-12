@@ -28,7 +28,7 @@
           <p-button icon="pi pi-question" class="absolute left-2 top-2 lg:left-8 lg:top-6" [rounded]="true" severity="success" pTooltip="Recommendations" tooltipPosition="left">
           </p-button>
           <div>Temperature:</div>
-          <div>{{ this.dashboardData.temperature }} °C</div>
+          <div>{{ this.dashboardData.temperature.value }} °C</div>
         </div>
       </div>
       <div class="w-1/2 h-1/2 py-4 pl-4 lg:p-4">
@@ -36,7 +36,7 @@
           <p-button icon="pi pi-question" class="absolute left-2 top-2 lg:left-8 lg:top-6" [rounded]="true" severity="success" pTooltip="Recommendations" tooltipPosition="left">
           </p-button>
           <div>Humidity:</div>
-          <div>{{ this.dashboardData.humidity }} %</div>
+          <div>{{ this.dashboardData.humidity.value }} %</div>
         </div>
       </div>
       <div class="w-1/2 h-1/2 py-4 pr-4 lg:p-4">
@@ -44,7 +44,7 @@
           <p-button icon="pi pi-question" class="absolute left-2 top-2 lg:left-8 lg:top-6" [rounded]="true" severity="success" pTooltip="Recommendations" tooltipPosition="left">
           </p-button>
           <div>Brightness:</div>
-          <div>{{ this.dashboardData.irradiance }} lx</div>
+          <div>{{ this.dashboardData.irradiance.value }} lx</div>
         </div>
       </div>
       <div class="w-1/2 h-1/2 py-4 pl-4 lg:p-4">
@@ -52,7 +52,7 @@
           <p-button icon="pi pi-question" class="absolute left-2 top-2 lg:left-8 lg:top-6" [rounded]="true" severity="success" pTooltip="Recommendations" tooltipPosition="left">
           </p-button>
           <div>Air quality:</div>
-          <div>{{ this.dashboardData.nmvoc | airQuality }}</div>
+          <div>{{ this.dashboardData.nmvoc.value | airQuality }}</div>
         </div>
       </div>
     </div>
