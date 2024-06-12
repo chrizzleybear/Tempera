@@ -8,6 +8,7 @@ import at.qe.skeleton.model.enums.ThresholdType;
 import at.qe.skeleton.repositories.MeasurementRepository;
 import at.qe.skeleton.repositories.SensorRepository;
 import at.qe.skeleton.repositories.TemperaStationRepository;
+import at.qe.skeleton.rest.frontend.dtos.FrontendMeasurementDto;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -58,6 +59,20 @@ public class MeasurementService {
     return measurementRepository.save(measurement);
   }
 
+  public FrontendMeasurementDto createFrontendMeasurementDto(Double value){
+    if (value <= lowerWarnThreshold.getValue()) {
+      return alertBuilder(lowerWarnThreshold, measurement);
+    } else if (value <= lowerInfoThreshold.getValue()) {
+      return alertBuilder(lowerInfoThreshold, measurement);
+    } else if (value >= upperWarnThreshold.getValue()) {
+      return alertBuilder(upperWarnThreshold, measurement);
+    } else if (value >= upperInfoThreshold.getValue()) {
+      return alertBuilder(upperInfoThreshold, measurement);
+    } else {
+      return null;
+    }
+  }
+
   // delete
   public void deleteMeasurement(Measurement measurement) {
     measurementRepository.delete(measurement);
@@ -103,7 +118,7 @@ public class MeasurementService {
                     t.getSensorType().equals(measurement.getSensor().getSensorType())
                         && t.getThresholdType().equals(ThresholdType.LOWERBOUND_INFO))
             .findFirst()
-            .orElse(null);
+            .orElseThrow();
     Threshold lowerWarnThreshold =
         thresholds.stream()
             .filter(
@@ -111,7 +126,7 @@ public class MeasurementService {
                     t.getSensorType().equals(measurement.getSensor().getSensorType())
                         && t.getThresholdType().equals(ThresholdType.LOWERBOUND_WARNING))
             .findFirst()
-            .orElse(null);
+            .orElseThrow();
     Threshold upperInfoThreshold =
         thresholds.stream()
             .filter(
@@ -119,7 +134,7 @@ public class MeasurementService {
                     t.getSensorType().equals(measurement.getSensor().getSensorType())
                         && t.getThresholdType().equals(ThresholdType.UPPERBOUND_INFO))
             .findFirst()
-            .orElse(null);
+            .orElseThrow();
     Threshold upperWarnThreshold =
         thresholds.stream()
             .filter(
@@ -127,7 +142,7 @@ public class MeasurementService {
                     t.getSensorType().equals(measurement.getSensor().getSensorType())
                         && t.getThresholdType().equals(ThresholdType.UPPERBOUND_WARNING))
             .findFirst()
-            .orElse(null);
+            .orElseThrow();
 
     double value = measurement.getValue();
 
@@ -143,6 +158,7 @@ public class MeasurementService {
       return null;
     }
   }
+
 
   /**
    * Builds an alert object based on the threshold and measurement. If an alert is already open for the
