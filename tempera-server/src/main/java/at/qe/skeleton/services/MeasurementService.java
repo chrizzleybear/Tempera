@@ -4,13 +4,10 @@ import at.qe.skeleton.exceptions.AirQualityCouldNotBeDeterminedException;
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.exceptions.ThresholdNotAvailableException;
 import at.qe.skeleton.model.*;
-import at.qe.skeleton.model.enums.AlertType;
 import at.qe.skeleton.model.enums.ClimateQuality;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.ThresholdType;
 import at.qe.skeleton.repositories.MeasurementRepository;
-import at.qe.skeleton.repositories.SensorRepository;
-import at.qe.skeleton.repositories.TemperaStationRepository;
 import at.qe.skeleton.rest.frontend.dtos.FrontendMeasurementDto;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -110,7 +107,7 @@ public class MeasurementService {
     for (var id : measurementIds) {
       measurements.add(
           (measurementRepository.findByIdDetailed(id))
-              .orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id)));
+              .orElseThrow(() -> new CouldNotFindEntityException(INVALID_MEASUREMENT + id)));
     }
     for (var measurement : measurements) {
       // ein Measurement wird maximal einen Alert auslösen, da es entweder gar keinen Alert, einen
