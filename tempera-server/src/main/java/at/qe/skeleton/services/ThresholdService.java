@@ -58,6 +58,10 @@ public class ThresholdService {
     return thresholdRepository.getThresholdsByUsername(username);
   }
 
+  public Threshold saveThreshold(Threshold threshold) {
+    return thresholdRepository.save(threshold);
+  }
+
   @Transactional
   public Threshold updateThreshold(
       Threshold oldThreshold,

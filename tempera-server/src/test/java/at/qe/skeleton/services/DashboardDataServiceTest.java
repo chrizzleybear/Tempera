@@ -21,6 +21,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -37,6 +38,8 @@ class DashboardDataServiceTest {
   @Autowired private DashboardDataService dashboardDataService;
   @Autowired private ProjectService projectService;
   @Autowired private RoomService roomService;
+  @Autowired
+  private ThresholdService thresholdService;
 
   @BeforeEach
   void setUp() {}
@@ -110,7 +113,7 @@ class DashboardDataServiceTest {
   @WithMockUser(username = "johndoe", authorities = "EMPLOYEE")
   @Sql(
       executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
-      scripts = "classpath:DashboardDataMapper.sql")
+      scripts = "classpath:DashboardDataMapperExceptions.sql")
   void mapUserToHomeDataResponseExceptions() {
 
     String johndoe = "johndoe";
@@ -127,17 +130,19 @@ class DashboardDataServiceTest {
     Modification modification = new Modification("reason");
     ThresholdTip tip = new ThresholdTip("tip");
     // Lower bound Warning
-    Set<Threshold> thresholdsLowWarning =
-        Set.of(
-            new Threshold(
-                SensorType.TEMPERATURE, ThresholdType.LOWERBOUND_WARNING, 10.0, modification, tip),
-            new Threshold(
-                SensorType.HUMIDITY, ThresholdType.LOWERBOUND_WARNING, 10.0, modification, tip),
-            new Threshold(
-                SensorType.IRRADIANCE, ThresholdType.LOWERBOUND_WARNING, 10.0, modification, tip),
-            new Threshold(
-                SensorType.NMVOC, ThresholdType.LOWERBOUND_WARNING, 10.0, modification, tip));
-    room.setThresholds(thresholdsLowWarning);
+      Set<Threshold> thresholdsLowWarning = Set.of(
+              new Threshold(
+                      SensorType.TEMPERATURE, ThresholdType.LOWERBOUND_WARNING, 10.0, modification, tip),
+              new Threshold(
+                      SensorType.HUMIDITY, ThresholdType.LOWERBOUND_WARNING, 10.0, modification, tip),
+              new Threshold(
+                      SensorType.IRRADIANCE, ThresholdType.LOWERBOUND_WARNING, 10.0, modification, tip),
+              new Threshold(
+                      SensorType.NMVOC, ThresholdType.LOWERBOUND_WARNING, 10.0, modification, tip));
+    for (Threshold threshold : thresholdsLowWarning) {
+      thresholdService.saveThreshold(threshold);
+      room.addThreshold(threshold);
+    }
     roomService.saveRoom(room);
     assertThrows(
         ThresholdNotAvailableException.class,

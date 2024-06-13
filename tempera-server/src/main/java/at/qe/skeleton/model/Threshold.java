@@ -29,11 +29,11 @@ public class Threshold implements Serializable {
   @Column(name = "threshold_value")
   private double value;
 
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "modification_id")
   private Modification modification;
 
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "tip_id")
   private ThresholdTip tip;
 
