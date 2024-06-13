@@ -60,8 +60,19 @@ public class MeasurementService {
     return measurementRepository.save(measurement);
   }
 
+  /**
+   * Creates a FrontendMeasurementDto based on the value of the measurement and the thresholds of the
+   * room the Temperastation where the User is located. The method determines the ClimateQuality of the
+   * measurement based on the thresholds and the value of the measurement.
+   * @param value If the value is null, the method returns null.
+   * @param thresholds The thresholds of the room the Temperastation of the User is located.
+   * @param sensorType The SensorType of the measurement.
+   */
   public FrontendMeasurementDto createFrontendMeasurementDto(
       Double value, Set<Threshold> thresholds, SensorType sensorType) {
+    if (value == null){
+      return null;
+    }
     Optional<Threshold> optionalThreshold = getViolatedThreshold(value, sensorType, thresholds);
     if (optionalThreshold.isEmpty()) {
       return new FrontendMeasurementDto(value, ClimateQuality.GOOD);

@@ -97,7 +97,7 @@ public class DashboardDataService {
    *
    * @param  username The username of the user for which the data should be mapped.
    * @return DashboardDataResponse If there are no existing measurements for this user, it will
-   *     return null as values. If there is no existing * TimeRecord for this user, it will return
+   *     return null as FrontendMeasurementDto. If there is no existing * TimeRecord for this user, it will return
    *     null as stateTimeStamp. If there is no default project assigned to this user, * it will
    *     return null as defaultProject. If there are no projects assigned to this user, it will
    *     return an empty list as projects.
@@ -138,10 +138,11 @@ public class DashboardDataService {
     Optional<Measurement> nmvocMeasurement =
         measurementService.findLatestMeasurementBySensor(nmvocSensor);
 
-    Double temperature = temperatureMeasurement.map(Measurement::getValue).orElseThrow();
-    Double humidity = humidityMeasurement.map(Measurement::getValue).orElseThrow();
-    Double irradiance = irradianceMeasurement.map(Measurement::getValue).orElseThrow();
-    Double nmvoc = nmvocMeasurement.map(Measurement::getValue).orElseThrow();
+    Double temperature = temperatureMeasurement.map(Measurement::getValue).orElse(null);
+    Double humidity = humidityMeasurement.map(Measurement::getValue).orElse(null);
+    Double irradiance = irradianceMeasurement.map(Measurement::getValue).orElse(null);
+    Double nmvoc = nmvocMeasurement.map(Measurement::getValue).orElse(null);
+
     Set<Threshold> thresholds = thresholdService.getThresholdsByUsername(username);
 
     FrontendMeasurementDto temperatureDto = measurementService.createFrontendMeasurementDto(temperature, thresholds, SensorType.TEMPERATURE);
