@@ -118,7 +118,7 @@ export class GroupProjectsComponent implements OnInit {
   private addContributorToProject(memberId: string) {
     const dto: ContributorAssignmentDto = {
       projectId: this.selectedProject!.projectId,
-      groupId: this.groupId!,
+      groupId: this.groupId,
       contributorId: memberId
     };
     return this.projectService.addContributor(dto);

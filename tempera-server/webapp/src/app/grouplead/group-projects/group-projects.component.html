@@ -12,15 +12,15 @@
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-project>
-    <tr (click)="viewProjectDetails(project)" (keydown.enter)="viewProjectDetails(project)")>
+    <tr (click)="viewProjectDetails(project)">
       <td>{{ project.name }}</td>
       <td>{{ project.description }}</td>
       <td>{{ project.manager }}</td>
       <td>
-        <p-button label="Add Member" (onClick)="addContributorsToProjectDialog(project) ; $event.stopPropagation()" (keydown.enter)="addContributorsToProjectDialog(project) ; $event.stopPropagation()"  icon="pi pi-users"></p-button>
+        <p-button label="Add Member" (onClick)="addContributorsToProjectDialog(project) ; $event.stopPropagation()"   icon="pi pi-users"></p-button>
       </td>
       <td>
-        <p-button label="Delete Member" (onClick)="deleteContributorDialog(project); $event.stopPropagation()" (keydown.enter)="deleteContributorDialog(project); $event.stopPropagation()" icon="pi pi-trash"></p-button>
+        <p-button label="Delete Member" (onClick)="deleteContributorDialog(project); $event.stopPropagation()" icon="pi pi-trash"></p-button>
       </td>
     </tr>
   </ng-template>
