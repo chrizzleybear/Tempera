@@ -1,1 +1,12 @@
+<p-toast position="bottom-right"></p-toast>
+<div>
+  <input pInputText id="timeout" type="number" [(ngModel)]="this.timeout" (keydown.enter)="this.updateTimeout()"
+         aria-describedby="timeout-help"/>
+  <input pInputText id="timeAmount" type="number" [(ngModel)]="this.timeAmount" (keydown.enter)="this.updateTimeAmount()"
+         aria-describedby="timeAmount-help"/>
+  <p-dropdown id="timeUnit" [options]="this.timeUnits" [(ngModel)]="this.timeUnit" placeholder="Select a time unit"/>
+  <br/>
+  <small id="timeout-help">Enter timeout in minutes           </small>
+  <small id="timeAmount-help">Enter time amount</small>
+</div>
 <p-chart type="line" [data]="chartData" [options]="chartOptions"></p-chart>
