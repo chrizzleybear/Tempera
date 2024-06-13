@@ -66,7 +66,7 @@ export class AccessPointCreateComponent implements OnInit {
         id: this.accessPointForm.value.id,
         room: this.accessPointForm.value.room.id
       }
-      this.accessPointService.createAccessPointViaDto(dto
+      this.accessPointService.createAccesspoint(dto
       ).subscribe({
         next: (response) => {
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Access point created successfully'});

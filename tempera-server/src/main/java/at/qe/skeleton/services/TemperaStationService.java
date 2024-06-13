@@ -13,6 +13,8 @@ import at.qe.skeleton.repositories.UserxRepository;
 import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
 import at.qe.skeleton.rest.frontend.dtos.TemperaStationDto;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 @Scope("application")
 public class TemperaStationService {
 
+  private static final Logger logger = LoggerFactory.getLogger(TemperaStationService.class);
   private final TemperaStationRepository temperaStationRepository;
   private final SensorService sensorService;
   private final UserxRepository userxRepository;
@@ -56,6 +59,7 @@ public class TemperaStationService {
     do {
       id = RandomStringUtils.random(8, "0123456789abcdef");
     } while (temperaStationRepository.findById(id).isPresent());
+    logger.info("Generated station id " + id);
 
     Userx user = userxRepository.findByUsername(username).orElse(null);
     AccessPoint accessPoint = accessPointRepository.findById(UUID.fromString(accessPointId)).orElse(null);
@@ -84,7 +88,7 @@ public class TemperaStationService {
    * @param dto
    * @return
    */
-  public TemperaStation createTemperaStationViaDto(TemperaStationDto dto) {
+  public TemperaStation createTemperaStation(TemperaStationDto dto) {
     return this.createTemperaStation(false, dto.user(), dto.accessPointId());
   }
 

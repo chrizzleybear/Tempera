@@ -23,11 +23,7 @@ export class TemperaStationService {
     return this.http.get<TemperaStation>(this.apiUrl + 'load/' + id);
   }
 
-  createTemperaStation(temperaStation: TemperaStation): Observable<TemperaStation> {
-    return this.http.put<TemperaStation>(this.apiUrl + 'create', temperaStation);
-  }
-
-  createTemperaStationViaDto(dto: TemperaStationCreateDto): Observable<TemperaStation> {
+  createTemperaStation(dto: TemperaStationCreateDto): Observable<TemperaStation> {
     return this.http.put<TemperaStation>(this.apiUrl + 'create', dto);
   }
 

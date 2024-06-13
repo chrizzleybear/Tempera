@@ -56,7 +56,7 @@ export class TemperaStationCreateComponent implements OnInit {
         accessPointId: this.temperaForm.value.accessPoint.value.id
       };
 
-      this.temperaStationService.createTemperaStationViaDto(dto).subscribe({
+      this.temperaStationService.createTemperaStation(dto).subscribe({
         next: () => {
           this.temperaForm.reset();
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Tempera station created successfully' });

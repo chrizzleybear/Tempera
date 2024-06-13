@@ -38,7 +38,7 @@ public class AccessPointService {
     return accessPointRepository.save(ap);
   }
 
-  public AccessPoint createAccessPointViaDto(AccessPointDto accessPointDto) {
+  public AccessPoint createAccessPoint(AccessPointDto accessPointDto) {
     return createAccessPoint(
             accessPointDto.room(),
             false,

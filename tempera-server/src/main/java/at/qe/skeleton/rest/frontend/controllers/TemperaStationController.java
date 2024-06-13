@@ -63,7 +63,11 @@ public class TemperaStationController {
 
     @PutMapping("/create")
     public ResponseEntity<MessageResponse> createTemperaStation(@RequestBody TemperaStationDto temperaStationDto) {
-        temperaStationService.createTemperaStation(temperaStationDto.enabled(), temperaStationDto.user(), temperaStationDto.accessPointId());
+        try {
+            TemperaStation t = temperaStationService.createTemperaStation(temperaStationDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
         return ResponseEntity.ok(new MessageResponse("TemperaStation was created."));
     }
 
