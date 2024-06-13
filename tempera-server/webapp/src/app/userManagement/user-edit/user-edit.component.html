@@ -59,8 +59,9 @@
     </label>
   </div>
   <br>
-  <div class="p-col-12">
-    <button pButton type="submit" label="Save Changes" [disabled]="!userForm.valid"></button>
+  <div class="p-col-12 space-x-4">
+    <p-button type="submit" label="Save Changes" [disabled]="!userForm.valid"></p-button>
+    <p-button type="button" label="Resend Password" [disabled]="!userForm.valid" (click)="resendActivationEmail()"></p-button>
   </div>
   <br>
 </form>
