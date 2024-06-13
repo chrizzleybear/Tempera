@@ -7,6 +7,7 @@ import { SensorType } from '../../models/threshold.model';
 import { WrapFnPipe } from '../../_pipes/wrap-fn.pipe';
 import { AirQualityPipe } from '../../_pipes/air-quality.pipe';
 import { DialogModule } from 'primeng/dialog';
+import { MeasurementColorPipe } from './measurement-color.pipe';
 
 @Component({
   selector: 'app-measurement',
@@ -21,6 +22,7 @@ import { DialogModule } from 'primeng/dialog';
     AirQualityPipe,
     DialogModule,
     NgForOf,
+    MeasurementColorPipe,
   ],
   templateUrl: './measurement.component.html',
   styleUrl: './measurement.component.css',

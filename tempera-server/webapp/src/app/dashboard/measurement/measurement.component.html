@@ -1,6 +1,6 @@
 <div class="card h-full grid place-items-center text-base lg:text-3xl relative">
   <p-button (onClick)="dialogVisible = true" icon="pi pi-question" class="absolute left-2 top-2 lg:left-8 lg:top-6"
-            [rounded]="true" severity="success"
+            [rounded]="true" [severity]="measurement.quality | measurementColor"
             pTooltip="Recommendations" tooltipPosition="left">
   </p-button>
   <ng-container [ngSwitch]="sensorType">
