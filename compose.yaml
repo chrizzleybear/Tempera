@@ -25,7 +25,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=g4t1
       - SPRING_DATASOURCE_PASSWORD=/run/secrets/database_password
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - EMAIL_KEY=/run/secrets/email_key
+      - EMAIL_KEY=tokfgngfxqjyxhxu
     depends_on:
       - postgres_db
     ports:

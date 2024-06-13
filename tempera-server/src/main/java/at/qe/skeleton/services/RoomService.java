@@ -6,6 +6,8 @@ import at.qe.skeleton.repositories.RoomRepository;
 import at.qe.skeleton.repositories.ThresholdRepository;
 import at.qe.skeleton.repositories.ThresholdTipRepository;
 import at.qe.skeleton.rest.frontend.dtos.ThresholdUpdateDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -19,6 +21,7 @@ import java.util.Optional;
 public class RoomService {
 
     private static final String ROOM_NOT_FOUND = "Room not found: ";
+    private static final Logger log = LoggerFactory.getLogger(RoomService.class);
     private final RoomRepository roomRepository;
 
     @Autowired private ThresholdRepository thresholdRepository;
@@ -75,8 +78,11 @@ public class RoomService {
     }
 
     public List<Room> getAvailableRooms() {
-        return roomRepository.findAll().stream().filter(room -> room.getAccessPoint() == null).toList();
+        List<Room> rooms = roomRepository.findAll().stream().filter(room -> room.getAccessPoint() == null).toList();
+        log.info("Available rooms: {}", rooms);
+        return rooms;
     }
+
     //two way binding ->delete
     public AccessPoint getAccesspoint(String roomId) {
         Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException(ROOM_NOT_FOUND + roomId));
