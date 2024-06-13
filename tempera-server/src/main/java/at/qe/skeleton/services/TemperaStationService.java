@@ -59,7 +59,7 @@ public class TemperaStationService {
     do {
       id = RandomStringUtils.random(8, "0123456789abcdef");
     } while (temperaStationRepository.findById(id).isPresent());
-    logger.info("Generated station id " + id);
+    logger.info("Generated station with id " + id);
 
     Userx user = userxRepository.findByUsername(username).orElse(null);
     AccessPoint accessPoint = accessPointRepository.findById(UUID.fromString(accessPointId)).orElse(null);

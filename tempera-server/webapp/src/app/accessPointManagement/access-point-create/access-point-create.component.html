@@ -13,10 +13,11 @@
                   [virtualScroll]="true"
                   [virtualScrollItemSize]="38"
                   appendTo="body"
-                  optionLabel="name"
+                  optionLabel="id"
                   formControlName="room"
                   placeholder="Select a Room"
-                  id="room"></p-dropdown>
+                  id="room">
+      </p-dropdown>
     </div>
     <br>
     <p-button type="submit" label="Create Access Point" [disabled]="!accessPointForm.valid"></p-button>

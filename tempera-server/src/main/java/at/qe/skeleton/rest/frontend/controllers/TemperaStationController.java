@@ -65,10 +65,10 @@ public class TemperaStationController {
     public ResponseEntity<MessageResponse> createTemperaStation(@RequestBody TemperaStationDto temperaStationDto) {
         try {
             TemperaStation t = temperaStationService.createTemperaStation(temperaStationDto);
+            return ResponseEntity.ok(new MessageResponse("TemperaStation was created with id " + t.getId() + "."));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);
         }
-        return ResponseEntity.ok(new MessageResponse("TemperaStation was created."));
     }
 
 

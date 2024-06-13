@@ -27,8 +27,6 @@ public class RoomController {
 
   @Autowired private FloorMapper flo;
 
-
-
     @GetMapping("/all")
     public ResponseEntity<List<Room>> getAllRooms() {
         List<Room> rooms = roomService.getAllRooms();

@@ -40,7 +40,6 @@ export class AccessPointCreateComponent implements OnInit {
     private messageService: MessageService
     ) {
     this.accessPointForm = this.formBuilder.group({
-      id: [null, [Validators.required]],
       room: [null , [Validators.required]]
     });
   }
@@ -63,7 +62,6 @@ export class AccessPointCreateComponent implements OnInit {
   onSubmit() {
     if (this.accessPointForm.valid) {
       const dto: AccessPointCreateDto = {
-        id: this.accessPointForm.value.id,
         room: this.accessPointForm.value.room.id
       }
       this.accessPointService.createAccesspoint(dto
