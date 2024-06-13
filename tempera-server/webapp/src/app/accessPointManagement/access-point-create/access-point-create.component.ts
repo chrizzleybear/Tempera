@@ -34,9 +34,12 @@ export class AccessPointCreateComponent implements OnInit {
 
   @Output() createComplete = new EventEmitter<boolean>();
 
-  constructor(private formBuilder: FormBuilder, private accessPointService: AccessPointService, private messageService: MessageService) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private accessPointService: AccessPointService,
+    private messageService: MessageService
+    ) {
     this.accessPointForm = this.formBuilder.group({
-      id: [null, [Validators.required]],
       room: [null , [Validators.required]]
     });
   }
@@ -59,8 +62,7 @@ export class AccessPointCreateComponent implements OnInit {
   onSubmit() {
     if (this.accessPointForm.valid) {
       const dto: AccessPointCreateDto = {
-        id: this.accessPointForm.value.id,
-        room: this.accessPointForm.value.room.id,
+        room: this.accessPointForm.value.room.id
       }
       this.accessPointService.createAccesspoint(dto
       ).subscribe({
