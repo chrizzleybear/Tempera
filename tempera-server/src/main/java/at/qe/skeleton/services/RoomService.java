@@ -83,6 +83,10 @@ public class RoomService {
         return accessPointRepository.findByRoom(room).orElseThrow(() -> new IllegalArgumentException("AccessPoint not found"));
     }
 
+    public Room saveRoom(Room room) {
+        return roomRepository.save(room);
+    }
+
     //TODO: Save modification reason in AuditLog
     @Transactional
     public Threshold updateThreshold(ThresholdUpdateDto dto) {

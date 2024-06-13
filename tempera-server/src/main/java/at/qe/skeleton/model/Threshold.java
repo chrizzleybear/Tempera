@@ -17,6 +17,7 @@ public class Threshold implements Serializable {
   @Column(name = "default_threshold")
   private boolean defaultThreshold;
 
+
   @Column(name = "sensor_type")
   @Enumerated(EnumType.STRING)
   private SensorType sensorType;
@@ -110,7 +111,7 @@ public class Threshold implements Serializable {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Threshold threshold = (Threshold) o;
-    return sensorType.equals(threshold.getSensorType()) && thresholdType.equals(threshold.getThresholdType()) && value == threshold.getValue();
+    return this.getSensorType().equals(threshold.getSensorType()) && this.getThresholdType().equals(threshold.getThresholdType()) && this.getValue() == threshold.getValue();
   }
 
   @Override

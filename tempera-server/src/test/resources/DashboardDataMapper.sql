@@ -16,8 +16,6 @@ DELETE FROM userx WHERE default_project_id Is Not NULL;
 DELETE FROM project;
 DELETE FROM userx;
 
---Todo: add this data to the db for real frontend testing
-
 
 INSERT INTO userx (enabled, default_project_id, state, state_visibility, create_date, update_date, create_user_username, update_user_username, username, email, first_name, last_name, password)
 VALUES

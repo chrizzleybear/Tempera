@@ -2,6 +2,7 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.AirQualityCouldNotBeDeterminedException;
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
+import at.qe.skeleton.exceptions.ThresholdNotAvailableException;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.AlertType;
 import at.qe.skeleton.model.enums.ClimateQuality;
@@ -137,7 +138,7 @@ public class MeasurementService {
                     t.getSensorType().equals(sensorType)
                         && t.getThresholdType().equals(ThresholdType.LOWERBOUND_WARNING))
             .findFirst()
-            .orElseThrow();
+            .orElseThrow(() -> new ThresholdNotAvailableException(sensorType, ThresholdType.LOWERBOUND_WARNING));
     Threshold lowerInfoThreshold =
         thresholds.stream()
             .filter(
@@ -145,7 +146,7 @@ public class MeasurementService {
                     t.getSensorType().equals(sensorType)
                         && t.getThresholdType().equals(ThresholdType.LOWERBOUND_INFO))
             .findFirst()
-            .orElseThrow();
+            .orElseThrow(() -> new ThresholdNotAvailableException(sensorType, ThresholdType.LOWERBOUND_INFO));
     Threshold upperInfoThreshold =
         thresholds.stream()
             .filter(
@@ -153,7 +154,7 @@ public class MeasurementService {
                     t.getSensorType().equals(sensorType)
                         && t.getThresholdType().equals(ThresholdType.UPPERBOUND_INFO))
             .findFirst()
-            .orElseThrow();
+            .orElseThrow(() -> new ThresholdNotAvailableException(sensorType, ThresholdType.UPPERBOUND_INFO));
     Threshold upperWarnThreshold =
         thresholds.stream()
             .filter(
@@ -161,7 +162,7 @@ public class MeasurementService {
                     t.getSensorType().equals(sensorType)
                         && t.getThresholdType().equals(ThresholdType.UPPERBOUND_WARNING))
             .findFirst()
-            .orElseThrow();
+            .orElseThrow(() -> new ThresholdNotAvailableException(sensorType, ThresholdType.UPPERBOUND_WARNING));
     if (value <= lowerWarnThreshold.getValue()) {
       return Optional.of(lowerWarnThreshold);
     } else if (value <= lowerInfoThreshold.getValue()) {

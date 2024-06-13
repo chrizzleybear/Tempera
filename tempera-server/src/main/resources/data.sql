@@ -278,6 +278,11 @@ INSERT INTO threshold_tip (id, tip) VALUES
 INSERT INTO Modification (id, reason, time_stamp) VALUES
     (-1, 'Default threshold.', NULL);
 
+-- auto-generated definition
+create sequence threshold_id_seq;
+
+alter sequence threshold_id_seq owned by threshold.id;
+
 INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (true, 20, -11, -1, -1, 'TEMPERATURE', 'LOWERBOUND_INFO');
 INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (true, 19, -12, -1, -1, 'TEMPERATURE', 'LOWERBOUND_WARNING');
 INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (true, 24, -13, -1, -2, 'TEMPERATURE', 'UPPERBOUND_INFO');
