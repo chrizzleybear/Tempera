@@ -7,7 +7,6 @@ import at.qe.skeleton.repositories.TemperaStationRepository;
 import at.qe.skeleton.rest.frontend.dtos.AccessPointDto;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +38,7 @@ public class AccessPointService {
     return accessPointRepository.save(ap);
   }
 
-  public AccessPoint createAccessPoint(AccessPointDto accessPointDto) {
+  public AccessPoint createAccessPointViaDto(AccessPointDto accessPointDto) {
     return createAccessPoint(
             accessPointDto.room(),
             false,

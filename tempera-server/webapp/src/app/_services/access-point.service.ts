@@ -27,6 +27,10 @@ export class AccessPointService {
     return this.http.put<AccessPoint>(this.API_URL + 'create', dto);
   }
 
+  createAccessPointViaDto(dto: AccessPointCreateDto): Observable<AccessPoint>{
+      return this.http.put<AccessPoint>(this.API_URL + 'create', dto);
+  }
+
   updateAccesspoint(dto: AccessPointEditDto): Observable<AccessPoint> {
     return this.http.put<AccessPoint>(this.API_URL + 'update', dto);
   }

@@ -78,6 +78,15 @@ public class TemperaStationService {
     return temperaStation;
   }
 
+  /**
+   * Overloaded construction method used for front-end mask.
+   *
+   * @param dto
+   * @return
+   */
+  public TemperaStation createTemperaStationViaDto(TemperaStationDto dto) {
+    return this.createTemperaStation(false, dto.user(), dto.accessPointId());
+  }
 
   public List<TemperaStationDto> getAllTemperaStations() {
     List<TemperaStation> temperaStations = temperaStationRepository.findAll();

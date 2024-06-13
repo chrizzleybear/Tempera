@@ -72,7 +72,7 @@ public class AccessPointController {
     public ResponseEntity<AccessPointDto> createAccesspoint(@RequestBody AccessPointDto accessPointDto) {
         // String id, String roomId
         try {
-            AccessPoint a = accessPointService.createAccessPoint(accessPointDto);
+            AccessPoint a = accessPointService.createAccessPointViaDto(accessPointDto);
             return ResponseEntity.ok(new AccessPointDto(
                     a.getId().toString(),
                     a.getRoom().getId(),
