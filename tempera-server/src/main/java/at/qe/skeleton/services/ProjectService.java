@@ -270,11 +270,6 @@ if(groupxProjectOptional.isPresent()){
     return groupxProjectRepository.getSimpleGroupxProjectDtoByUser(username);
   }
 
-  @PreAuthorize("hasAuthority('MANAGER')")
-  public void deleteProject(Project project) {
-    projectRepository.delete(project);
-  }
-
   @PreAuthorize("isAuthenticated()")
   public void saveProject(Project project) {
     projectRepository.save(project);

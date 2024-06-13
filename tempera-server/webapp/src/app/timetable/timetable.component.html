@@ -82,6 +82,8 @@
                       [disabled]="true"
                       optionLabel="projectName"
                       placeholder="Select project"
+                      pTooltip="This project is deactivated or you are no longer part of it."
+                      tooltipPosition="left"
                       appendTo="body"></p-dropdown>
 
           <p-dropdown *ngIf="timeEntry.isEditable" [options]="availableProjects"

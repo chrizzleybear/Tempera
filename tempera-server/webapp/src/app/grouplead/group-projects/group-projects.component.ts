@@ -70,7 +70,7 @@ export class GroupProjectsComponent implements OnInit {
       next: (projects) => {
         console.log('Loaded projects:', groupId);
         console.log('Project of group projects:', projects);
-        this.projects = projects;
+        this.projects = projects.filter(project => project.isActive);
       },
       error: (error) => {
         console.error('Error loading projects:', error);

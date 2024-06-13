@@ -167,8 +167,11 @@ export class TimetableComponent implements OnInit {
     }),
   });
 
+
   constructor(public timetableControllerService: TimetableControllerService, private messageService: MessageService, private cd: ChangeDetectorRef) {
   }
+
+
 
   ngOnInit(): void {
     this.fillTable();
@@ -284,10 +287,12 @@ export class TimetableComponent implements OnInit {
       },
     );
   }
+  TOOLTIP_SHOW_DELAY: number = 1000;
 
   /*
   Calculates the total work time with the current active filters
    */
+
   calculateTotalTime() {
     const filteredEntries = TotalTimeHelper.getFilteredEntries<InternalTimetableEntryDto>(this.table);
     this.totalTime = TotalTimeHelper.calculate(filteredEntries);

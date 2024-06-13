@@ -53,8 +53,8 @@ export class ProjectsComponent implements OnInit{
     this.projectService.getAllSimpleProjects().subscribe({
       next: (projects) => {
         console.log("Loaded projects:", projects);
-        this.projects = projects;
-        this.filteredProjects = projects;
+        this.projects = projects.filter(project => project.isActive);
+        this.filteredProjects = this.projects;
       },
       error: (error) => {
         console.error("Error loading projects:", error);

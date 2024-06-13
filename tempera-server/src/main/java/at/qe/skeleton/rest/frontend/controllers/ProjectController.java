@@ -4,8 +4,8 @@ import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.rest.frontend.dtos.*;
 import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.GroupMapperService;
 import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.ProjectMapperService;
+import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
 import at.qe.skeleton.services.ProjectService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,9 +58,9 @@ public class ProjectController {
   }
 
   @DeleteMapping("/delete/{projectId}")
-  public ResponseEntity<String> deleteProject(@PathVariable String projectId) {
+  public ResponseEntity<MessageResponse> deleteProject(@PathVariable String projectId) {
     projectService.deleteProject(Long.parseLong(projectId));
-    return ResponseEntity.ok("Project deleted");
+    return ResponseEntity.ok().body(new MessageResponse("Project deleted successfully!"));
   }
 
   @GetMapping("/loadExtendedProject/{projectId}")
