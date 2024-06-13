@@ -20,58 +20,74 @@ import java.util.Set;
 @Scope("application")
 public class ThresholdService {
 
-    private final ThresholdRepository thresholdRepository;
-    private final RoomRepository roomRepository;
-    private final TemperaStationRepository temperaStationRepository;
+  private final ThresholdRepository thresholdRepository;
 
-    @Autowired
-    public ThresholdService(ThresholdRepository thresholdRepository,
-                            RoomRepository roomRepository,
-                            TemperaStationRepository temperaStationRepository) {
-        this.thresholdRepository = thresholdRepository;
-        this.roomRepository = roomRepository;
-        this.temperaStationRepository = temperaStationRepository;
-    }
+  private final TemperaStationRepository temperaStationRepository;
 
-    @Transactional
-    public List<Threshold> getAllThresholds() {
-        return thresholdRepository.findAll();
-    }
+  @Autowired
+  public ThresholdService(
+      ThresholdRepository thresholdRepository, TemperaStationRepository temperaStationRepository) {
+    this.thresholdRepository = thresholdRepository;
+    this.temperaStationRepository = temperaStationRepository;
+  }
 
-    @Transactional
-    public List<Threshold> getDefaultThresholds() {
-        return thresholdRepository.findDefaultThresholds();
-    }
+  @Transactional
+  public List<Threshold> getAllThresholds() {
+    return thresholdRepository.findAll();
+  }
 
-    @Transactional
-    public Threshold createThreshold(SensorType sensorType, ThresholdType thresholdType, double value, String reason, String tip) {
-        Threshold t = new Threshold(sensorType, thresholdType, value,
-                new Modification(reason),
-                new ThresholdTip(tip)
-        );
-        return thresholdRepository.save(t);
-    }
+  @Transactional
+  public List<Threshold> getDefaultThresholds() {
+    return thresholdRepository.findDefaultThresholds();
+  }
 
-    public Set<Threshold> getThresholdsByTemperaId(String temperaId) {
-        return temperaStationRepository.getThresholdsByTemperaId(temperaId);
-    }
-    @Transactional
-    public Threshold updateThreshold(Threshold oldThreshold, SensorType newSensorType, ThresholdType newThresholdType, double newValue, String newReason, String newTip) {
-        oldThreshold.setSensorType(newSensorType);
-        oldThreshold.setThresholdType(newThresholdType);
-        oldThreshold.setValue(newValue);
-        oldThreshold.setModificationReason(new Modification(newReason));
-        oldThreshold.setTip(new ThresholdTip(newTip));
-        return thresholdRepository.save(oldThreshold);
-    }
+  @Transactional
+  public Threshold createThreshold(
+      SensorType sensorType, ThresholdType thresholdType, double value, String reason, String tip) {
+    Threshold t =
+        new Threshold(
+            sensorType, thresholdType, value, new Modification(reason), new ThresholdTip(tip));
+    return thresholdRepository.save(t);
+  }
 
-    @Transactional
-    public void deleteThreshold(Long id) {
-        Threshold t = thresholdRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Threshold not found: " + id));
-        thresholdRepository.delete(t);
-    }
+  public Set<Threshold> getThresholdsByTemperaId(String temperaId) {
+    return temperaStationRepository.getThresholdsByTemperaId(temperaId);
+  }
 
-    public Threshold getThresholdById(Long id) {
-        return thresholdRepository.findById(id).orElse(null);
-    }
+  public Set<Threshold> getThresholdsByUsername(String username) {
+    return thresholdRepository.getThresholdsByUsername(username);
+  }
+
+  public Threshold saveThreshold(Threshold threshold) {
+    return thresholdRepository.save(threshold);
+  }
+
+  @Transactional
+  public Threshold updateThreshold(
+      Threshold oldThreshold,
+      SensorType newSensorType,
+      ThresholdType newThresholdType,
+      double newValue,
+      String newReason,
+      String newTip) {
+    oldThreshold.setSensorType(newSensorType);
+    oldThreshold.setThresholdType(newThresholdType);
+    oldThreshold.setValue(newValue);
+    oldThreshold.setModificationReason(new Modification(newReason));
+    oldThreshold.setTip(new ThresholdTip(newTip));
+    return thresholdRepository.save(oldThreshold);
+  }
+
+  @Transactional
+  public void deleteThreshold(Long id) {
+    Threshold t =
+        thresholdRepository
+            .findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Threshold not found: " + id));
+    thresholdRepository.delete(t);
+  }
+
+  public Threshold getThresholdById(Long id) {
+    return thresholdRepository.findById(id).orElse(null);
+  }
 }

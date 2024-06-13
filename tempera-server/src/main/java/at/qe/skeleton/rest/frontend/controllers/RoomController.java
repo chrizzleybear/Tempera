@@ -6,28 +6,28 @@ import at.qe.skeleton.rest.frontend.dtos.FloorComponent;
 import at.qe.skeleton.rest.frontend.dtos.ThresholdUpdateDto;
 import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.FloorMapper;
 import at.qe.skeleton.services.RoomService;
-import at.qe.skeleton.services.TemperaStationService;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 @RequestMapping(value = "/api/rooms", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RoomController {
 
-  @Autowired private RoomService roomService;
+  private final RoomService roomService;
 
-  @Autowired private TemperaStationService temp;
+  private final FloorMapper flo;
 
-  @Autowired private FloorMapper flo;
-
-
+    public RoomController(RoomService roomService, FloorMapper flo) {
+        this.roomService = roomService;
+        this.flo = flo;
+    }
 
     @GetMapping("/all")
     public ResponseEntity<List<Room>> getAllRooms() {
@@ -62,7 +62,7 @@ public class RoomController {
       boolean result = roomService.addThresholdToRoom(roomId, threshold);
       return result
           ? ResponseEntity.ok("Threshold added successfully.")
-          : ResponseEntity.badRequest().body("Failed to add threshold.");
+          : ResponseEntity.internalServerError().body("Failed to add threshold.");
     } catch (IllegalArgumentException e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
@@ -75,7 +75,7 @@ public class RoomController {
       boolean result = roomService.removeThresholdFromRoom(roomId, threshold);
       return result
           ? ResponseEntity.ok("Threshold removed successfully.")
-          : ResponseEntity.badRequest().body("Failed to remove threshold.");
+          : ResponseEntity.internalServerError().body("Failed to remove threshold.");
     } catch (IllegalArgumentException e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
@@ -118,9 +118,13 @@ public class RoomController {
   //dummy methods
     @GetMapping("/accesspoint/{roomId}")
     public ResponseEntity<AccessPointDto> getAccessPoints(@PathVariable String roomId) {
+        try{
         AccessPoint ap = this.roomService.getAccesspoint(roomId);
         AccessPointDto dto = new AccessPointDto(ap.getId().toString(), ap.getRoom().getId() ,ap.isEnabled(), ap.isHealthy());
         return ResponseEntity.ok(dto);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
 }

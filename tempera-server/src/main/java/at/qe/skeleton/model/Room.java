@@ -35,7 +35,7 @@ public class Room implements Persistable<String>, Serializable {
 
   @Id private String roomId;
 
-  @OneToMany private Set<Threshold> thresholds;
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER) private Set<Threshold> thresholds;
 
   @OneToOne private AccessPoint accessPoint;
 
