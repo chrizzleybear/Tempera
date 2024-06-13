@@ -8,6 +8,8 @@ import at.qe.skeleton.rest.frontend.dtos.ClimateDataDto;
 import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.ClimateDataMapper;
 import at.qe.skeleton.services.MeasurementService;
 import at.qe.skeleton.services.SensorService;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -37,7 +39,9 @@ public class ClimateDataController {
   public ResponseEntity<ClimateDataDto> getMeasurementsBySensorType(
       @PathVariable UUID accessPointUuid,
       @PathVariable String temperaId,
-      @PathVariable SensorType sensorType) {
+      @PathVariable SensorType sensorType,
+      ChronoUnit unit,
+      int amount) {
     Sensor sensor =
         sensorService.findAllSensorsByTemperaStationId(temperaId).stream()
             .filter(s -> s.getSensorType() == sensorType)
@@ -49,12 +53,26 @@ public class ClimateDataController {
         return ResponseEntity.ok().build();
     }
     List<Measurement> measurements = measurementService.find100LatestMeasurementsBySensor(sensor).orElse(null);
-    if (measurements == null){
+    if (measurements == null || measurements.isEmpty()){
         String message = "No measurements found for sensor %s".formatted(sensor);
         logger.warning(message);
         return ResponseEntity.ok().build();
     }
-    ClimateDataDto climateDataDtos = climateDataMapper.mapToDto(sensor, accessPointUuid, measurements);
+
+    List<Measurement> filteredMeasurements = new ArrayList<>();
+    Measurement measurement = measurements.get(0);
+    for (Measurement currentMeasurement : measurements) {
+        if (measurement
+                .getId()
+                .getTimestamp()
+                .until(currentMeasurement.getId().getTimestamp(), unit)
+                >= amount) {
+            filteredMeasurements.add(currentMeasurement);
+            measurement = currentMeasurement;
+        }
+      }
+
+    ClimateDataDto climateDataDtos = climateDataMapper.mapToDto(sensor, accessPointUuid, filteredMeasurements);
     String message = "Sending" + climateDataDtos.toString();
     logger.info(message);
     return ResponseEntity.ok(climateDataDtos);
