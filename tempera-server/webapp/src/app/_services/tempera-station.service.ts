@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {TemperaStation} from "../models/temperaStation.model";
+import { TemperaStationCreateDto } from "../models/TemperaStationDtos";
 import {Sensor} from "../models/sensor.model";
 import {User} from "../models/user.model";
 
@@ -22,8 +23,8 @@ export class TemperaStationService {
     return this.http.get<TemperaStation>(this.apiUrl + 'load/' + id);
   }
 
-  createTemperaStation(temperaStation: TemperaStation): Observable<TemperaStation> {
-    return this.http.put<TemperaStation>(this.apiUrl + 'create', temperaStation);
+  createTemperaStation(dto: TemperaStationCreateDto): Observable<TemperaStation> {
+    return this.http.put<TemperaStation>(this.apiUrl + 'create', dto);
   }
 
   updateTemperaStation(temperaStation: TemperaStation): Observable<TemperaStation> {
