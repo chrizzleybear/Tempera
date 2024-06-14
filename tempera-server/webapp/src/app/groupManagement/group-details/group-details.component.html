@@ -9,23 +9,23 @@
     <div class="manager-details">
       <h3><strong>Manager Details</strong></h3>
       <br>
-      <p><strong>Username:</strong> {{ group.groupLead }}</p>
+      <p><strong>Username:</strong> {{ group.groupLead.username }}</p>
       <p><strong>Name:</strong> {{ group.groupLead.firstName }} {{ group.groupLead.lastName }}</p>
       <p><strong>Email:</strong>{{ group.groupLead.email }}</p>
     </div>
+
     <div class="members-section">
-      <h3 class="text-center"><strong>Members</strong></h3>
-      <br>
+      <p-panel header="Members" [toggleable]="true">
       <p-table [value]="members" [paginator]="true" [rows]="10" responsiveLayout="scroll" class="members-table">
         <ng-template pTemplate="header">
           <tr>
-            <th scope="col" pSortableColumn="username">Benutzername
+            <th scope="col" pSortableColumn="username">Username
               <p-sortIcon field="username"></p-sortIcon>
             </th>
-            <th scope="col" pSortableColumn="firstName">Vorname
+            <th scope="col" pSortableColumn="firstName">First Name
               <p-sortIcon field="firstName"></p-sortIcon>
             </th>
-            <th scope="col" pSortableColumn="lastName">Nachname
+            <th scope="col" pSortableColumn="lastName">Last Name
               <p-sortIcon field="lastName"></p-sortIcon>
             </th>
             <!-- Responsive design may not require these empty headers if properly styled -->
@@ -39,6 +39,44 @@
           </tr>
         </ng-template>
       </p-table>
+      </p-panel>
+    </div>
+    <br>
+    <br>
+    <div class="associatedProjects-section">
+      <p-panel header="Associated Projects" [toggleable]="true">
+        <ng-template pTemplate="header">
+          <div class="flex flex-wrap align-items-center justify-content-between gap-3">
+            <div class="flex align-items-center gap-2">
+              <p-button icon="pi pi-user" [rounded]="true" [text]="true" />
+              <p-button icon="pi pi-bookmark" severity="secondary" [rounded]="true" [text]="true" />
+            </div>
+          </div>
+        </ng-template>
+      <p-table [value]="associatedProjects" [paginator]="true"  [rows]="10" responsiveLayout="scroll" class="project-table">
+        <ng-template pTemplate="header">
+          <tr>
+            <th scope="col" pSortableColumn="name">Project
+              <p-sortIcon field="name"></p-sortIcon>
+            </th>
+            <th scope="col" pSortableColumn="description">Description
+              <p-sortIcon field="description"></p-sortIcon>
+            </th>
+            <th scope="col" pSortableColumn="manager">Manager
+              <p-sortIcon field="manager"></p-sortIcon>
+            </th>
+            <!-- Responsive design may not require these empty headers if properly styled -->
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-project>
+          <tr>
+            <td>{{ project.name }}</td>
+            <td>{{ project.description }}</td>
+            <td>{{ project.manager }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+      </p-panel>
     </div>
   </div>
 </div>

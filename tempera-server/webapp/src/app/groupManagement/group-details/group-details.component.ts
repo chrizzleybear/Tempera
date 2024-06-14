@@ -7,10 +7,11 @@ import {ButtonModule} from "primeng/button";
 
 import {
   GroupDetailsDto,
-  GroupManagementControllerService,
+  GroupManagementControllerService, ProjectControllerService,
   SimpleProjectDto,
   SimpleUserDto,
 } from '../../../api';
+import { PanelModule } from 'primeng/panel';
 
 @Component({
   selector: 'app-group-details',
@@ -20,7 +21,8 @@ import {
     NgIf,
     NgForOf,
     TableModule,
-    ButtonModule
+    ButtonModule,
+    PanelModule,
   ],
   templateUrl: './group-details.component.html',
   styleUrl: './group-details.component.css'
@@ -35,6 +37,7 @@ export class GroupDetailsComponent implements OnInit{
   constructor(
     private route: ActivatedRoute,
     private groupService: GroupManagementControllerService,
+    private projectService: ProjectControllerService
   ) {
   }
 
@@ -42,7 +45,7 @@ export class GroupDetailsComponent implements OnInit{
     this.groupId = this.route.snapshot.paramMap.get('id');
     if (this.groupId) {
       this.fetchGroupDetails(this.groupId);
-      this.fetchGroupMembers(this.groupId);
+      this.fetchProjects(this.groupId);
     }
   }
 
@@ -50,23 +53,27 @@ export class GroupDetailsComponent implements OnInit{
     this.groupService.getExtendedGroup(id).subscribe({
       next: (data) => {
         this.group = data.groupDetailsDto;
+        this.members = Array.from(data.members);
         this.associatedProjects = data.activeProjects;
-        console.log('Group details: ', this.group);
+        console.log('Group : ', this.group);
+        console.log('Group members: ', this.members);
+        console.log('Group projects: ', this.associatedProjects);
       },
       error: (error) => {
         console.error('Failed to load group details:', error);
       },
     });
   }
-  fetchGroupMembers(id: string) {
-    this.groupService.getMembers(id).subscribe({
+
+  fetchProjects(id: string) {
+    this.projectService.getProjectsByGroupId(id).subscribe({
       next: (data) => {
-        this.members = data;
-        console.log('Group members: ', this.members);
+        this.associatedProjects = data;
+        console.log('Group projects: ', this.associatedProjects);
       },
       error: (error) => {
-        console.error('Failed to load group members:', error);
+        console.error('Failed to load group projects:', error);
       },
     });
-  }
+    }
 }
