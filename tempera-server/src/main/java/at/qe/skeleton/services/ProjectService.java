@@ -185,7 +185,7 @@ public class ProjectService {
     }
     groupxProject.addContributor(contributor);
     auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.PROJECT,
-          "User " + contributor.getUsername() + ", " + contributor.getId() +
+          "User " + contributor.getUsername() +
                   " was added to project " + groupxProject.getProject().getName() +
                   " of group " + groupxProject.getGroup().getName() + ".");
     groupxProjectRepository.save(groupxProject);
@@ -230,7 +230,7 @@ public class ProjectService {
             .findByUsername(username)
             .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND));
     auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.PROJECT,
-          "User " + contributor.getUsername() + ", " + contributor.getId() +
+          "User " + contributor.getUsername() +
                   " was removed from project " + groupxProject.getProject().getName() +
                   " of group " + groupxProject.getGroup().getName() + ".");
     groupxProject.removeContributor(contributor);

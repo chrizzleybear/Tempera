@@ -48,7 +48,7 @@ public class AccessPointService {
   public AccessPoint createAccessPoint(AccessPointDto accessPointDto) {
     return createAccessPoint(
             accessPointDto.room(),
-            false,
+            true,
             true
     );
   }

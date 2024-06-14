@@ -84,7 +84,7 @@ public class TemperaStationService {
     sensorService.saveSensor(nmvocSensor);
 
     auditLogService.logEvent(LogEvent.CREATE, LogAffectedType.TEMPERA_STATION,
-          "Station " + id + " for user " + user.getUsername() + ", " + user.getId() + " was created.");
+          "Station " + id + " for user " + user.getUsername() + " was created.");
 
       return temperaStation;
   }

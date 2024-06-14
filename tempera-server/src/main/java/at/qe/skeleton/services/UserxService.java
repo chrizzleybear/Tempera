@@ -97,12 +97,12 @@ public class UserxService implements UserDetailsService {
       }
       user.setPassword(passwordEncoder.encode(password));
       auditLogService.logEvent(LogEvent.CREATE, LogAffectedType.USER,
-              "New user " + user.getUsername() + ", " + user.getId() + " was saved.");
+              "New user " + user.getUsername() + " was saved.");
     } else {
       user.setUpdateDate(LocalDateTime.now());
       user.setUpdateUser(getAuthenticatedUser());
       auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.USER,
-              "User " + user.getUsername() + ", " + user.getId() + " was saved.");
+              "User " + user.getUsername() + " was saved.");
     }
     return userRepository.save(user);
   }
@@ -212,7 +212,7 @@ public class UserxService implements UserDetailsService {
     user.setUpdateDate(LocalDateTime.now());
     user.setUpdateUser(getAuthenticatedUser());
     auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.USER,
-            "User " + user.getUsername() + ", " + user.getId() + " with roles " + user.getRoles() + " was edited.");
+            "User " + user.getUsername() + " with roles " + user.getRoles() + " was edited.");
     return userRepository.save(user);
   }
 
@@ -261,7 +261,7 @@ public class UserxService implements UserDetailsService {
     user.setPassword(passwordEncoder.encode(password));
     user.setEnabled(true);
     auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.USER,
-            "User " + user.getUsername() + ", " + user.getId() + " was enabled.");
+            "User " + user.getUsername() + " was enabled.");
     userRepository.save(user);
   }
 

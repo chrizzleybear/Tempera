@@ -67,7 +67,7 @@ public class AuthenticationService {
     }
     catch (Exception e) {
       auditLogService.logEvent(LogEvent.WARN, LogAffectedType.USER,
-              "Validation Email to " + user.getUsername() + ", " + user.getId() + " could not be send.");
+              "Validation Email to " + user.getUsername() + " could not be send.");
       throw new RuntimeException("Registration email could not be sent");
     }
   }

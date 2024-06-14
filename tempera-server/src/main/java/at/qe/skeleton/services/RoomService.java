@@ -105,6 +105,7 @@ public class RoomService {
         Threshold updateThreshold = thresholdRepository.findById(dto.threshold().id()).orElseThrow(() -> new IllegalArgumentException("Threshold not found"));
         updateThreshold.setValue(dto.threshold().value());
         String reason = dto.reason();
+        // TO-DO: add info for which station/room the threshold has been edited
         auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.THRESHOLD,
                 "Threshold " + updateThreshold.getThresholdType() + " was updated. Reason: " +  reason);
         return thresholdRepository.save(updateThreshold);
@@ -114,6 +115,7 @@ public class RoomService {
         Threshold threshold = thresholdRepository.findById(tip.getId()).orElseThrow(() -> new IllegalArgumentException("Threshold not found"));
         ThresholdTip updateTip = threshold.getTip();
         updateTip.setTip(tip.getTip());
+        // TO-DO: add info for which station/room the tip has been edited
         auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.THRESHOLD,
                 "Tip of threshold " + threshold.getThresholdType() + " was updated to " + updateTip.getTip() + ".");
         return thresholdTipRepository.save(updateTip);

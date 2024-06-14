@@ -52,7 +52,7 @@ public class MeasurementService {
         .findById(id)
         .orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id));
       auditLogService.logEvent(LogEvent.LOAD, LogAffectedType.MEASUREMENT,
-              "Measurement from sensor " + id.getSensorId() + " at " + id.getTimestamp() + "was loaded.");
+              "Measurement from station " + id.getSensorId().getTemperaId() + " at " + id.getTimestamp() + "was loaded.");
       return m;
   }
 
@@ -181,7 +181,7 @@ public class MeasurementService {
   public Optional<Measurement> findLatestMeasurementBySensor(Sensor sensor) {
     SensorId id = sensor.getSensorId();
     auditLogService.logEvent(LogEvent.LOAD, LogAffectedType.MEASUREMENT,
-              "Lastest measurement of sensor " + sensor.getId() + "was loaded.");
+              "Lastest measurement of station " + sensor.getTemperaStation().getId() + "was loaded.");
     return measurementRepository.findFirstBySensorIdOrderById_TimestampDesc(id);
   }
 
