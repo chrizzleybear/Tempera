@@ -36,7 +36,7 @@ public class AuthenticationService {
     userxService.saveUser(newUser);
     sendValidationEmail(newUser);
     auditLogService.logEvent(LogEvent.CREATE, LogAffectedType.USER,
-            "New user " + newUser.getUsername() + ", " + newUser.getId() + " was registered.");
+            "New user " + newUser.getUsername() + " with id " + newUser.getId() + " was registered.");
     return userxService.convertToDTO(newUser);
   }
 
@@ -63,7 +63,7 @@ public class AuthenticationService {
                       + "Best regards,\n"
                       + "The Tempera Team");
       auditLogService.logEvent(LogEvent.LOGIN, LogAffectedType.USER,
-              "Validation Email was sent to " + user.getUsername() + ", " + user.getId());
+              "Validation Email was sent to " + user.getUsername());
     }
     catch (Exception e) {
       auditLogService.logEvent(LogEvent.WARN, LogAffectedType.USER,
@@ -115,6 +115,6 @@ public class AuthenticationService {
             + "Best regards,\n"
             + "The Tempera Team");
     auditLogService.logEvent(LogEvent.LOGIN, LogAffectedType.USER,
-            "Resent Validation Email to " + user.getUsername() + ", " + user.getId());
+            "Resent Validation Email to " + user.getUsername());
   }
 }
