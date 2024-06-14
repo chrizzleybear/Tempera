@@ -2,6 +2,8 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.*;
+import at.qe.skeleton.model.enums.LogAffectedType;
+import at.qe.skeleton.model.enums.LogEvent;
 import at.qe.skeleton.repositories.AccessPointRepository;
 import at.qe.skeleton.repositories.TemperaStationRepository;
 import at.qe.skeleton.rest.frontend.dtos.AccessPointDto;
@@ -19,13 +21,15 @@ public class AccessPointService {
   private final TemperaStationService temperaStationService;
   private final TemperaStationRepository temperaStationRepository;
   private final RoomService roomService;
+  private final AuditLogService auditLogService;
 
   public AccessPointService(
-          AccessPointRepository accessPointRepository, TemperaStationService temperaStationService, TemperaStationRepository temperaStationRepository, RoomService roomService) {
+          AccessPointRepository accessPointRepository, TemperaStationService temperaStationService, TemperaStationRepository temperaStationRepository, RoomService roomService, AuditLogService auditLogService) {
     this.accessPointRepository = accessPointRepository;
     this.temperaStationService = temperaStationService;
     this.temperaStationRepository = temperaStationRepository;
     this.roomService = roomService;
+    this.auditLogService = auditLogService;
   }
 
   public AccessPoint createAccessPoint(String roomId, boolean enabled, boolean isHealthy) {
@@ -35,17 +39,19 @@ public class AccessPointService {
 
     Room room = roomService.getRoomById(roomId);
     AccessPoint ap = new AccessPoint(uuid, room, enabled, isHealthy);
+    auditLogService.logEvent(LogEvent.CREATE, LogAffectedType.ACCESS_POINT,
+            "Created accesspoint for room " + ap.getRoom() + " with id " + ap.getId()
+    );
     return accessPointRepository.save(ap);
   }
 
   public AccessPoint createAccessPoint(AccessPointDto accessPointDto) {
     return createAccessPoint(
             accessPointDto.room(),
-            false,
+            true,
             true
     );
   }
-
 
   public AccessPoint getAccessPointById(UUID id) throws CouldNotFindEntityException {
     if (id == null) {
@@ -97,12 +103,17 @@ public class AccessPointService {
     AccessPoint a = accessPointRepository.findById(UUID.fromString(accessPointDto.id())).orElseThrow(() -> new IllegalArgumentException("Could not find AccessPoint."));
     a.setRoom(roomService.getRoomById(accessPointDto.room()));
     a.setEnabled(accessPointDto.enabled());
+    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.ACCESS_POINT,
+            "Edited accesspoint " + a.getId() + ", Room set to " + a.getRoom() + ", Enabled: " + a.isEnabled() + "."
+    );
     return accessPointRepository.save(a);
   }
 
   public void delete(AccessPoint accessPoint) {
     var tempStations = accessPoint.getTemperaStations();
     tempStations.stream().forEach(t -> t.setAccessPoint(null));
+    auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.ACCESS_POINT,
+          "Accesspoint of room " + accessPoint.getRoom() + " was deleted.");
     accessPointRepository.delete(accessPoint);
   }
 
@@ -125,6 +136,9 @@ public class AccessPointService {
     }
 
     TemperaStation station = queryStation.get();
+    station.setIsHealthy(connectionStatus);
+    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.ACCESS_POINT,
+            "Connection status to station " + station.getId() + "was updated to " + station.isHealthy() + ".");
     return temperaStationService.save(station);
   }
 }

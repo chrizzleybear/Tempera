@@ -1,0 +1,90 @@
+<ng-container *ngIf="auditLogs; else loading">
+  <p-table #table [value]="auditLogs" [paginator]="true" [rows]="12" sortMode="multiple">
+    <ng-template pTemplate="header">
+      <tr>
+        <th id="time" pSortableColumn="time">Time
+          <p-sortIcon field="time"></p-sortIcon>
+        </th>
+        <th id="triggeringUserName" pSortableColumn="triggeringUserName">Triggering User
+          <p-sortIcon field="triggeringUserName"></p-sortIcon>
+        </th>
+        <th id="actionType" pSortableColumn="actionType">Action Type
+          <p-sortIcon field="actionType"></p-sortIcon>
+        </th>
+        <th id="affectedType" pSortableColumn="affectedType">Affected Type
+          <p-sortIcon field="affectedType"></p-sortIcon>
+        </th>
+        <th id="message">Message</th>
+      </tr>
+      <!--  Filters   -->
+      <tr>
+        <th id="timeFilter">
+          <p-columnFilter type="date" field="time" [showMenu]="false" [showClearButton]="false">
+            <ng-template pTemplate="filter" let-filter="filterCallback">
+              <p-calendar
+                [(ngModel)]="rangeDates"
+                selectionMode="range"
+                appendTo="body"
+                (onSelect)="table.filter(rangeDates, 'time', 'range-filter')"
+                (onClear)="filter(null)"
+                [showClear]="true"
+                [readonlyInput]="true"
+                placeholder="Select range"
+              ></p-calendar>
+            </ng-template>
+          </p-columnFilter>
+        </th>
+        <th id="userFilter">
+          <p-columnFilter type="text" field="triggeringUserName" matchMode="contains" placeholder="Search"
+                          [showMenu]="false"></p-columnFilter>
+        </th>
+        <th id="actionTypeFilter">
+          <p-columnFilter field="actionType" [showMenu]="false" matchMode="in" [showClearButton]="false">
+            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+              <p-multiSelect
+                [options]="actionTypeOptions"
+                [showClear]="true"
+                (onChange)="filter($event.value)"
+                (onClear)="filter(null)"
+                appendTo="body"
+                placeholder="Any"
+              ></p-multiSelect>
+            </ng-template>
+          </p-columnFilter>
+        </th>
+        <th id="affectedTypeFilter">
+          <p-columnFilter field="affectedType" [showMenu]="false" matchMode="in" [showClearButton]="false">
+            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+              <p-multiSelect
+                [options]="affectedTypeOptions"
+                [showClear]="true"
+                (onChange)="filter($event.value)"
+                (onClear)="filter(null)"
+                appendTo="body"
+                placeholder="Any"
+              ></p-multiSelect>
+            </ng-template>
+          </p-columnFilter>
+        </th>
+        <th id="messageFilter">
+          <p-columnFilter type="text" field="message" matchMode="contains" placeholder="Search"
+                          [showMenu]="false"></p-columnFilter>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-auditLog>
+      <tr>
+        <td>{{ auditLog.time | date: 'ccc, MMM dd, y, HH:mm' }}</td>
+        <td>{{ auditLog.triggeringUserName }}</td>
+        <td>{{ auditLog.actionType }}</td>
+        <td>{{ auditLog.affectedType }}</td>
+        <td>{{ auditLog.message }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</ng-container>
+<ng-template #loading>
+  <div class="flex justify-center">
+    <p-progressSpinner ariaLabel="loading" />
+  </div>
+</ng-template>

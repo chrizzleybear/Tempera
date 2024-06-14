@@ -1,5 +1,7 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.model.enums.LogAffectedType;
+import at.qe.skeleton.model.enums.LogEvent;
 import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.model.Userx;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ public class AuthenticationService {
   @Autowired private PasswordEncoder encode;
   static int tokenLength = 6;
 
+  @Autowired private AuditLogService auditLogService;
+
   @Transactional
   @PreAuthorize("hasAuthority('ADMIN')")
   public UserxDto registerUser(UserxDto userxDTO) {
@@ -31,6 +35,8 @@ public class AuthenticationService {
     }
     userxService.saveUser(newUser);
     sendValidationEmail(newUser);
+    auditLogService.logEvent(LogEvent.CREATE, LogAffectedType.USER,
+            "New user " + newUser.getUsername() + " with id " + newUser.getId() + " was registered.");
     return userxService.convertToDTO(newUser);
   }
 
@@ -56,8 +62,12 @@ public class AuthenticationService {
                       + "\n\n"
                       + "Best regards,\n"
                       + "The Tempera Team");
+      auditLogService.logEvent(LogEvent.LOGIN, LogAffectedType.USER,
+              "Validation Email was sent to " + user.getUsername());
     }
     catch (Exception e) {
+      auditLogService.logEvent(LogEvent.WARN, LogAffectedType.USER,
+              "Validation Email to " + user.getUsername() + " could not be send.");
       throw new RuntimeException("Registration email could not be sent");
     }
   }
@@ -104,5 +114,7 @@ public class AuthenticationService {
             + "\n\n"
             + "Best regards,\n"
             + "The Tempera Team");
+    auditLogService.logEvent(LogEvent.LOGIN, LogAffectedType.USER,
+            "Resent Validation Email to " + user.getUsername());
   }
 }

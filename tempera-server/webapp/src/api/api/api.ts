@@ -4,6 +4,8 @@ export * from './accumulatedTimeController.service';
 import { AccumulatedTimeControllerService } from './accumulatedTimeController.service';
 export * from './alertController.service';
 import { AlertControllerService } from './alertController.service';
+export * from './auditLogController.service';
+import { AuditLogControllerService } from './auditLogController.service';
 export * from './authController.service';
 import { AuthControllerService } from './authController.service';
 export * from './dashboardController.service';
