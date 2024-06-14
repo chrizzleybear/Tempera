@@ -128,6 +128,6 @@ public class AuthenticationService {
     user.setPassword(encode.encode(password));
     userxService.saveUser(user);
     auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.USER,
-            "Password was changed for user " + user.getUsername() + ", " + user.getId());
+            "Password was set for user " + user.getUsername() + ", " + user.getId());
   }
 }

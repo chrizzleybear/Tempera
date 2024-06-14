@@ -107,11 +107,11 @@ public class TemperaStation implements Persistable<String> {
     this.enabled = enabled;
   }
 
-    public boolean isHealthy() {
+  public boolean isHealthy() {
         return isHealthy;
     }
 
-    public void setIsHealthy(boolean active) {
+  public void setIsHealthy(boolean active) {
         this.isHealthy = active;
     }
 

@@ -42,6 +42,9 @@ public class AccessPointService {
     }
     Room room = roomService.getRoomById(roomId);
     AccessPoint a = new AccessPoint(uuid, room, enabled, isHealthy);
+    auditLogService.logEvent(LogEvent.CREATE, LogAffectedType.ACCESS_POINT,
+            "Created accesspoint for room " + a.getRoom() + " with id " + a.getId()
+    );
     return accessPointRepository.save(a);
   }
 
@@ -104,6 +107,9 @@ public class AccessPointService {
     AccessPoint a = accessPointRepository.findById(UUID.fromString(accessPointDto.id())).orElseThrow(() -> new IllegalArgumentException("Could not find AccessPoint."));
     a.setRoom(roomService.getRoomById(accessPointDto.room()));
     a.setEnabled(accessPointDto.enabled());
+    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.ACCESS_POINT,
+            "Edited accesspoint " + a.getId() + ", Room set to " + a.getRoom() + ", Enabled: " + a.isEnabled() + "."
+    );
     return accessPointRepository.save(a);
   }
 
@@ -134,9 +140,9 @@ public class AccessPointService {
     }
 
     TemperaStation station = queryStation.get();
-      station.setIsHealthy(connectionStatus);
-      auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.ACCESS_POINT,
-              "Connection status to station " + temperaStationId + "was updated to " + connectionStatus + ".");
-      return temperaStationService.save(station);
+    station.setIsHealthy(connectionStatus);
+    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.ACCESS_POINT,
+            "Connection status to station " + station.getId() + "was updated to " + station.isHealthy() + ".");
+    return temperaStationService.save(station);
   }
 }
