@@ -15,6 +15,7 @@ import { TagModule } from 'primeng/tag';
 import StateEnum = ColleagueStateDto.StateEnum;
 import { DisplayHelper } from '../_helpers/display-helper';
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
+import { FilterMatchMode } from 'primeng/api';
 
 interface InternalAccumulatedTimeDto extends AccumulatedTimeDto {
   startTime: Date;
@@ -111,6 +112,20 @@ export class AccumulatedTimeComponent implements OnInit {
         },
       },
     });
+  }
+
+  /*
+* Filters the table so only entries with unassigned projects are shown.
+* Also filters out entries with the state OutOfOffice.
+ */
+  filterAssignedProjects() {
+    // this.table?.reset();
+    this.table?.filter({}, 'assignedGroupxProject', FilterMatchMode.IS_NOT);
+    this.table?.filter(StateEnum.OutOfOffice, 'state', FilterMatchMode.IS_NOT);
+    this.selectedProjects = [];
+    this.selectedStates = [];
+    this.onlyUnassignedProjectsShown = true;
+    this.projectFilterOverlay.hide();
   }
 
   /*
