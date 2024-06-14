@@ -16,6 +16,7 @@ import StateEnum = ColleagueStateDto.StateEnum;
 import { DisplayHelper } from '../_helpers/display-helper';
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
 import { FilterMatchMode } from 'primeng/api';
+import { MultiSelect } from 'primeng/multiselect';
 
 interface InternalAccumulatedTimeDto extends AccumulatedTimeDto {
   startTime: Date;
@@ -42,6 +43,8 @@ export class AccumulatedTimeComponent implements OnInit {
   public allGroups: SimpleGroupDto[] = [];
   public activeProjects: SimpleProjectDto[] = [];
   public activeGroups: SimpleGroupDto[] = [];
+  public availableProjects: SimpleProjectDto[] = [];
+  public availableGroups: SimpleGroupDto[] = [];
   public onlyActiveProjectsAndGroupsShown: boolean = false;
   public stateTimes: TotalTimeWithStates = {
     AVAILABLE: 0,
@@ -60,6 +63,8 @@ export class AccumulatedTimeComponent implements OnInit {
   * This reference to the PrimeNG table is used because its entries also reflect the correct order if the table is sorted and the available entries when filtered.
   */
   @ViewChild('table') table!: Table;
+  @ViewChild('projectFilter') projectFilterOverlay!: MultiSelect;
+
 
   chart: any;
 
@@ -76,8 +81,12 @@ export class AccumulatedTimeComponent implements OnInit {
               endTime: new Date(entry.endTimestamp),
             }),
           ) ?? [];
-          this.activeProjects = response.availableProjects?.filter(project => project.isActive) ?? [];
-          this.activeGroups = response.availableGroups ?? [];
+          this.allProjects = response.availableProjects;
+          this.allGroups = response.availableGroups;
+          this.availableProjects = this.allProjects;
+          this.availableGroups = this.allGroups;
+          this.activeProjects = this.allProjects.filter(project => project.isActive);
+          this.activeGroups = this.allGroups.filter(group => group.isActive);
         },
         error: error => {
           console.error('Error while fetching accumulated time data', error);
@@ -120,19 +129,20 @@ export class AccumulatedTimeComponent implements OnInit {
 * Filters the table-data so only active are flowing into the calculation
  */
   filterActiveProjects() {
-    // this.table?.filter({}, 'assignedGroupxProject', FilterMatchMode.IS_NOT);
     this.table?.filter(this.activeProjects, 'project', FilterMatchMode.IN);
     this.table?.filter(this.activeGroups, 'group', FilterMatchMode.IN);
-    // this.selectedProjects = [];
-    // this.selectedStates = [];
+    this.availableProjects = this.activeProjects;
+    this.availableGroups = this.activeGroups;
     this.onlyActiveProjectsAndGroupsShown = true;
-    // this.projectFilterOverlay.hide();
+    this.projectFilterOverlay.hide();
   }
 
   removeAssignedProjectsFilter() {
     this.table?.filter(this.allProjects, 'project', FilterMatchMode.IN);
     this.table?.filter(this.allGroups, 'group', FilterMatchMode.IN);
     this.table?.reset();
+    this.availableProjects = this.allProjects;
+    this.availableGroups = this.allGroups;
     this.onlyActiveProjectsAndGroupsShown = false;
   }
 
