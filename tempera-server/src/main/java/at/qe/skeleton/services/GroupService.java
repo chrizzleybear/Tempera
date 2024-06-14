@@ -59,7 +59,7 @@ public class GroupService {
         groupLead.addRole(UserxRole.GROUPLEAD);
         Groupx group = new Groupx(name, description, groupLead);
         auditLogService.logEvent(LogEvent.CREATE, LogAffectedType.GROUP,
-                "New Group with name " + group.getName() + " and group leader " + groupLead.getUsername() + ", " + groupLead.getId() + " was created.");
+                "New Group with name " + group.getName() + " and group leader " + groupLead.getUsername() + " was created.");
         return groupRepository.save(group);
     }
 
@@ -100,7 +100,7 @@ public class GroupService {
         group.addMember(member);
         groupRepository.save(group);
         auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.GROUP,
-                "Member " + member.getUsername() + ", " + member.getId() + " was added to group " + group.getName());
+                "Member " + member.getUsername() + " was added to group " + group.getName());
         return member;
     }
 
@@ -118,7 +118,7 @@ public class GroupService {
         Userx member = userxRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
         group.removeMember(member);
         auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.GROUP,
-                "Member " + member.getUsername() + ", " + member.getId() + " was removed from group " + group.getName());
+                "Member " + member.getUsername() + " was removed from group " + group.getName());
         groupRepository.save(group);
     }
 
