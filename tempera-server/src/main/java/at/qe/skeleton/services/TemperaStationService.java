@@ -138,6 +138,7 @@ public class TemperaStationService {
           "Station " + temperaStation.getId() + " was deleted.");
     temperaStationRepository.delete(temperaStation);
   }
+
   /**
    * Checks whether the tempera Station with the passed on ID is enabled or not.
    *
@@ -162,9 +163,12 @@ public class TemperaStationService {
   }
 
     public void updateTemperaStation(String id, boolean enabled, String user) {
-        TemperaStation temperaStation = temperaStationRepository.findById(id).orElseThrow();
-        temperaStation.setEnabled(enabled);
-        temperaStation.setUser(userxRepository.findByUsername(user).orElse(null));
-        temperaStationRepository.save(temperaStation);
+      TemperaStation temperaStation = temperaStationRepository.findById(id).orElseThrow();
+      temperaStation.setEnabled(enabled);
+      temperaStation.setUser(userxRepository.findByUsername(user).orElse(null));
+      temperaStationRepository.save(temperaStation);
+      auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.TEMPERA_STATION,
+              "Updated Tempera station " + temperaStation.getId() + ", Enabled: " + temperaStation.isEnabled() + "."
+      );
     }
 }

@@ -52,6 +52,9 @@ public class ProjectService {
     project.setName(name);
     project.setDescription(description);
     project.setManager(managerUser);
+    auditLogService.logEvent(LogEvent.CREATE, LogAffectedType.PROJECT,
+            "Created project " + project.getName() + " with manager " + project.getManager().getUsername() + "."
+    );
     return projectRepository.save(project);
   }
 
@@ -79,7 +82,7 @@ public class ProjectService {
             .findById(manager)
             .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND)));
     auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.PROJECT,
-          "Project " + project.getName() + " was edited.");
+          "Project " + project.getName() + " was updated.");
     return projectRepository.save(project);
   }
 

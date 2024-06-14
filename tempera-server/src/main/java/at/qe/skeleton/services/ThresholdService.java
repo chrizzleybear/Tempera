@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Set;
 
 @Component
@@ -21,8 +20,8 @@ import java.util.Set;
 public class ThresholdService {
 
     private final ThresholdRepository thresholdRepository;
-    private final RoomRepository roomRepository;
     private final TemperaStationRepository temperaStationRepository;
+    private final RoomRepository roomRepository;
 
     @Autowired
     public ThresholdService(ThresholdRepository thresholdRepository,
@@ -32,17 +31,7 @@ public class ThresholdService {
         this.roomRepository = roomRepository;
         this.temperaStationRepository = temperaStationRepository;
     }
-
-    @Transactional
-    public List<Threshold> getAllThresholds() {
-        return thresholdRepository.findAll();
-    }
-
-    @Transactional
-    public List<Threshold> getDefaultThresholds() {
-        return thresholdRepository.findDefaultThresholds();
-    }
-
+    
     @Transactional
     public Threshold createThreshold(SensorType sensorType, ThresholdType thresholdType, double value, String reason, String tip) {
         Threshold t = new Threshold(sensorType, thresholdType, value,
