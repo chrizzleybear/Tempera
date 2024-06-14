@@ -16,7 +16,9 @@ import StateEnum = ColleagueStateDto.StateEnum;
 import { DisplayHelper } from '../_helpers/display-helper';
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
 import { FilterMatchMode } from 'primeng/api';
-import { MultiSelect } from 'primeng/multiselect';
+import { MultiSelect, MultiSelectModule } from 'primeng/multiselect';
+import { ButtonModule } from 'primeng/button';
+import { NgIf } from '@angular/common';
 
 interface InternalAccumulatedTimeDto extends AccumulatedTimeDto {
   startTime: Date;
@@ -33,6 +35,9 @@ interface InternalAccumulatedTimeDto extends AccumulatedTimeDto {
     ChartModule,
     TagModule,
     WrapFnPipe,
+    ButtonModule,
+    MultiSelectModule,
+    NgIf,
   ],
   templateUrl: './accumulated-time.component.html',
   styleUrl: './accumulated-time.component.css',
@@ -43,6 +48,8 @@ export class AccumulatedTimeComponent implements OnInit {
   public allGroups: SimpleGroupDto[] = [];
   public activeProjects: SimpleProjectDto[] = [];
   public activeGroups: SimpleGroupDto[] = [];
+  public activeProjectIds: string[] = [];
+  public activeGroupIds: string[] = [];
   public availableProjects: SimpleProjectDto[] = [];
   public availableGroups: SimpleGroupDto[] = [];
   public onlyActiveProjectsAndGroupsShown: boolean = false;
@@ -63,7 +70,7 @@ export class AccumulatedTimeComponent implements OnInit {
   * This reference to the PrimeNG table is used because its entries also reflect the correct order if the table is sorted and the available entries when filtered.
   */
   @ViewChild('table') table!: Table;
-  @ViewChild('projectFilter') projectFilterOverlay!: MultiSelect;
+  // @ViewChild('projectFilter') projectFilterOverlay!: MultiSelect;
 
 
   chart: any;
@@ -86,6 +93,8 @@ export class AccumulatedTimeComponent implements OnInit {
           this.availableProjects = this.allProjects;
           this.availableGroups = this.allGroups;
           this.activeProjects = this.allProjects.filter(project => project.isActive);
+          this.activeProjectIds = this.activeProjects.map(project => project.projectId);
+          this.activeGroupIds = this.activeGroups.map(group => group.id);
           this.activeGroups = this.allGroups.filter(group => group.isActive);
         },
         error: error => {
@@ -129,15 +138,15 @@ export class AccumulatedTimeComponent implements OnInit {
 * Filters the table-data so only active are flowing into the calculation
  */
   filterActiveProjects() {
-    this.table?.filter(this.activeProjects, 'project', FilterMatchMode.IN);
-    this.table?.filter(this.activeGroups, 'group', FilterMatchMode.IN);
+    console.log('Table Data', this.table?.value);
+    this.table?.filter(this.activeProjectIds, 'projectId', FilterMatchMode.IN);
+    this.table?.filter(this.activeGroupIds, 'groupId', FilterMatchMode.IN);
     this.availableProjects = this.activeProjects;
     this.availableGroups = this.activeGroups;
     this.onlyActiveProjectsAndGroupsShown = true;
-    this.projectFilterOverlay.hide();
   }
 
-  removeAssignedProjectsFilter() {
+  removeOnlyActiveProjectsFilter() {
     this.table?.filter(this.allProjects, 'project', FilterMatchMode.IN);
     this.table?.filter(this.allGroups, 'group', FilterMatchMode.IN);
     this.table?.reset();
