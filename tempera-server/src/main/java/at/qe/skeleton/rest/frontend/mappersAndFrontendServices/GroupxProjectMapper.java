@@ -19,7 +19,7 @@ public class GroupxProjectMapper {
 
     }
 
-    public GroupxProjectDto groupxProjectDtoMapper(GroupxProject groupxProject) {
+    public GroupxProjectDto mapToGroupxProjectDto(GroupxProject groupxProject) {
         Project project = groupxProject.getProject();
         Groupx group = groupxProject.getGroup();
         SimpleGroupDto simpleGroupDto = new SimpleGroupDto(group.getId().toString(), group.isActive(), group.getName(), group.getDescription(), group.getGroupLead().getUsername());
@@ -32,6 +32,16 @@ public class GroupxProjectMapper {
                 managerDetails,
                 contributors,
                 groupxProject.isActive()
+        );
+    }
+
+    public SimpleProjectDto mapToSimpleProjectDto(GroupxProject groupxProject) {
+        return new SimpleProjectDto(
+                groupxProject.getProject().getId().toString(),
+                groupxProject.getProject().isActive(),
+                groupxProject.getProject().getName(),
+                groupxProject.getProject().getDescription(),
+                groupxProject.getProject().getManager().getUsername()
         );
     }
 }

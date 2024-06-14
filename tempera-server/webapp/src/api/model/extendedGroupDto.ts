@@ -10,13 +10,13 @@
  * Do not edit the class manually.
  */
 import { SimpleUserDto } from './simpleUserDto';
-import { GroupxProjectDto } from './groupxProjectDto';
-import { SimpleGroupDto } from './simpleGroupDto';
+import { SimpleProjectDto } from './simpleProjectDto';
+import { GroupDetailsDto } from './groupDetailsDto';
 
 
 export interface ExtendedGroupDto { 
-    simpleGroupDto?: SimpleGroupDto;
-    projects?: Set<GroupxProjectDto>;
-    members?: Set<SimpleUserDto>;
+    groupDetailsDto: GroupDetailsDto;
+    activeProjects: Array<SimpleProjectDto>;
+    members: Set<SimpleUserDto>;
 }
 

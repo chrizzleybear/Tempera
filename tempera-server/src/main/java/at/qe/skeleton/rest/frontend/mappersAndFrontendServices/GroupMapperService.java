@@ -1,6 +1,5 @@
 package at.qe.skeleton.rest.frontend.mappersAndFrontendServices;
 
-import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.Groupx;
 import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.Userx;
@@ -22,13 +21,13 @@ public class GroupMapperService {
     private final ProjectService projectService;
     private final GroupxProjectMapper groupxProjectMapper;
 
-  public GroupMapperService(
-      GroupService groupService, UserMapper userMapper, ProjectService projectService, GroupxProjectMapper groupxProjectMapper) {
+    public GroupMapperService(
+            GroupService groupService, UserMapper userMapper, ProjectService projectService, GroupxProjectMapper groupxProjectMapper) {
     this.userMapper = userMapper;
     this.groupService = groupService;
     this.projectService = projectService;
     this.groupxProjectMapper = groupxProjectMapper;
-        }
+    }
 
     public List<SimpleGroupDto> getSimpleGroupDtosByGroupLead(String groupLeadI) {
         List<Groupx> groups = groupService.getGroupsByGroupLead(groupLeadI);
@@ -51,17 +50,16 @@ public class GroupMapperService {
         return mapToSimpleGroupDto(group);
     }
 
-    public ExtendedGroupDto loadExtendedGroupDto(Long groupId)
-            throws CouldNotFindEntityException {
+    public ExtendedGroupDto loadExtendedGroupDto(Long groupId){
         Groupx group =
                 groupService
-                        .getGroup(groupId);
-        SimpleGroupDto simpleGroupDto = this.mapToSimpleGroupDto(group);
+                        .getGroupDetailedGroupLead(groupId);
+        GroupDetailsDto groupDetailsDto = this.mapToGroupDetailsDto(group);
         List<GroupxProject> groupxProjects = projectService.getGroupxProjectsByGroupId(groupId);
-        Set<GroupxProjectDto> groupxProjectsDto = groupxProjects.stream().map(groupxProjectMapper::groupxProjectDtoMapper).collect(Collectors.toSet());
+        List<SimpleProjectDto> simpleProjectDtos = groupxProjects.stream().filter(GroupxProject::isActive).map(groupxProjectMapper::mapToSimpleProjectDto).toList();
         List<Userx> groupMembers = groupService.getMembers(groupId);
         Set<SimpleUserDto> groupMembersDto = groupMembers.stream().map(userMapper::getSimpleUser).collect(Collectors.toSet());
-        return new ExtendedGroupDto(simpleGroupDto, groupxProjectsDto, groupMembersDto);
+        return new ExtendedGroupDto(groupDetailsDto, simpleProjectDtos, groupMembersDto);
     }
 
     public SimpleGroupDto updateGroup(SimpleGroupDto group) {
@@ -78,13 +76,22 @@ public class GroupMapperService {
         return mapToSimpleGroupDto(groupxProject.getGroup());
     }
 
-    public SimpleGroupDto mapToSimpleGroupDto(Groupx groupx) {
+    public SimpleGroupDto mapToSimpleGroupDto(Groupx group) {
         return new SimpleGroupDto(
-                groupx.getId().toString(),
-                groupx.isActive(),
-                groupx.getName(),
-                groupx.getDescription(),
-                groupx.getGroupLead().getUsername()
+                group.getId().toString(),
+                group.isActive(),
+                group.getName(),
+                group.getDescription(),
+                group.getGroupLead().getUsername()
+        );
+    }
+
+    public GroupDetailsDto mapToGroupDetailsDto (Groupx group) {
+        return new GroupDetailsDto(
+                group.getId().toString(),
+                group.getName(),
+                group.getDescription(),
+                userMapper.getSimpleUser(group.getGroupLead())
         );
     }
 

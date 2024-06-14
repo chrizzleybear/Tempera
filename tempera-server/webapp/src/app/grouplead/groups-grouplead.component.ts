@@ -13,6 +13,7 @@ import {NgForOf, NgIf} from "@angular/common";
 import {SharedModule} from "primeng/api";
 import {TableModule} from "primeng/table";
 import {CardModule} from "primeng/card";
+import { GroupManagementControllerService, SimpleGroupDto } from '../../api';
 
 @Component({
   selector: 'app-groups-grouplead',
@@ -39,12 +40,12 @@ import {CardModule} from "primeng/card";
  */
 export class GroupsGroupleadComponent implements OnInit{
 
-  groups: Group[] = [];
-  filteredGroups: Group[] = [];
+  groups: SimpleGroupDto[] = [];
+  filteredGroups: SimpleGroupDto[] = [];
   messages: any;
   currentUserId!: string;
 
-  constructor(private groupService: GroupService, private router: Router, private storageService: StorageService) {}
+  constructor(private groupService: GroupManagementControllerService, private router: Router, private storageService: StorageService) {}
 
   ngOnInit(): void {
     this.currentUserId = this.storageService.getUser()?.username!;
@@ -52,11 +53,11 @@ export class GroupsGroupleadComponent implements OnInit{
   }
 
   private loadGroups() {
-    this.groupService.getGroupByLead(this.currentUserId).subscribe({
+    this.groupService.getGroupsByGroupLead(this.currentUserId).subscribe({
       next: (groups) => {
         console.log("Loaded groups:", groups);
-        this.groups = groups;
-        this.filteredGroups = groups;
+        this.groups = groups.filter(g => g.isActive);
+        this.filteredGroups = this.groups;
       },
       error: (error) => {
         console.error("Error loading groups:", error);
@@ -64,16 +65,15 @@ export class GroupsGroupleadComponent implements OnInit{
     });
   }
 
-  viewGroupDetails(group: Group) {
+  viewGroupDetails(group: SimpleGroupDto) {
     this.router.navigate(['/group', group.id]);
   }
 
-  members(group: Group) {
+  members(group: SimpleGroupDto) {
     this.router.navigate(['/group/members',group.name, group.id]);
   }
 
-  projects(group: Group) {
+  projects(group: SimpleGroupDto) {
     this.router.navigate(['/group/projects', group.name, group.id]);
-
   }
 }

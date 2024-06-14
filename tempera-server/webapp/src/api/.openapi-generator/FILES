@@ -38,7 +38,6 @@ model/getTimetableDataResponse.ts
 model/groupDetailsDto.ts
 model/groupx.ts
 model/groupxProject.ts
-model/groupxProjectDto.ts
 model/groupxProjectId.ts
 model/loginRequest.ts
 model/measurement.ts

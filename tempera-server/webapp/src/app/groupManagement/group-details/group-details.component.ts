@@ -1,12 +1,16 @@
 import {Component, OnInit} from '@angular/core';
-import {Group} from "../../models/group.model";
 import {ActivatedRoute} from "@angular/router";
-import {GroupService} from "../../_services/group.service";
 import {CardModule} from "primeng/card";
 import {NgForOf, NgIf} from "@angular/common";
 import {TableModule} from "primeng/table";
 import {ButtonModule} from "primeng/button";
-import {User} from "../../models/user.model";
+
+import {
+  GroupDetailsDto,
+  GroupManagementControllerService,
+  SimpleProjectDto,
+  SimpleUserDto,
+} from '../../../api';
 
 @Component({
   selector: 'app-group-details',
@@ -23,13 +27,14 @@ import {User} from "../../models/user.model";
 })
 export class GroupDetailsComponent implements OnInit{
 
-  group: Group | undefined;
+  group: GroupDetailsDto | undefined;
+  associatedProjects: SimpleProjectDto[] = [];
   groupId: string | null | undefined;
-  members: User[] = [];
+  members: SimpleUserDto[] = [];
 
   constructor(
     private route: ActivatedRoute,
-    private groupService: GroupService,
+    private groupService: GroupManagementControllerService,
   ) {
   }
 
@@ -42,9 +47,10 @@ export class GroupDetailsComponent implements OnInit{
   }
 
   fetchGroupDetails(id: string) {
-    this.groupService.getGroupById(Number(id)).subscribe({
+    this.groupService.getExtendedGroup(id).subscribe({
       next: (data) => {
-        this.group = data;
+        this.group = data.groupDetailsDto;
+        this.associatedProjects = data.activeProjects;
         console.log('Group details: ', this.group);
       },
       error: (error) => {
@@ -53,7 +59,7 @@ export class GroupDetailsComponent implements OnInit{
     });
   }
   fetchGroupMembers(id: string) {
-    this.groupService.getGroupMembers(Number(id)).subscribe({
+    this.groupService.getMembers(id).subscribe({
       next: (data) => {
         this.members = data;
         console.log('Group members: ', this.members);

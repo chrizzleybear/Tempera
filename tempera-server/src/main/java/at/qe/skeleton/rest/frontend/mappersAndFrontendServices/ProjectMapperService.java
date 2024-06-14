@@ -4,18 +4,13 @@ import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.Groupx;
 import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.Project;
-import at.qe.skeleton.model.Userx;
-import at.qe.skeleton.model.dtos.SimpleProjectDbDto;
 import at.qe.skeleton.rest.frontend.dtos.*;
-import at.qe.skeleton.services.GroupService;
 import at.qe.skeleton.services.ProjectService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -37,7 +32,7 @@ public class ProjectMapperService {
     @Transactional
     public List<ProjectDetailsDto> getAllDetailedProjects() {
         List<Project> projects = projectService.findAllProjects();
-        return projects.stream().map(this::detailedProjectDtoMapper).collect(toList());
+        return projects.stream().map(this::detailedProjectDtoMapper).toList();
     }
 
     @Transactional
@@ -75,12 +70,12 @@ public class ProjectMapperService {
 
     public List<SimpleGroupDto> getAllActiveSimpleGroups(String projectId){
         List<GroupxProject> groupxProjects = projectService.findAllGroupxProjectsByProjectId(Long.valueOf(projectId));
-        return groupxProjects.stream().filter(GroupxProject::isActive).map(groupMapperService::mapToSimpleGroupDto).collect(toList());
+        return groupxProjects.stream().filter(GroupxProject::isActive).map(groupMapperService::mapToSimpleGroupDto).toList();
     }
 
     public List<SimpleGroupDto> getAllDeactivatedSimpleGroups(String projectId){
         List<GroupxProject> groupxProjects = projectService.findAllGroupxProjectsByProjectId(Long.valueOf(projectId));
-        return groupxProjects.stream().filter(groupxProject -> !groupxProject.isActive()).map(groupMapperService::mapToSimpleGroupDto).collect(toList());
+        return groupxProjects.stream().filter(groupxProject -> !groupxProject.isActive()).map(groupMapperService::mapToSimpleGroupDto).toList();
     }
 
 
@@ -92,13 +87,12 @@ public class ProjectMapperService {
 
     public List<SimpleProjectDto> getSimpleProjectsByGroupId(Long groupId) {
         List<Project> projects = projectService.getProjectsByGroupId(groupId);
-        return projects.stream().map(this::mapToSimpleProjectDto).collect(toList());
+        return projects.stream().map(this::mapToSimpleProjectDto).toList();
     }
     public List<SimpleUserDto> findAllContributorsByGroupIdAndProjectId(Long groupId, Long projectId) {
         GroupxProject groupxProject = projectService.findByGroupAndProject(groupId, projectId);
-        GroupxProjectDto groupxProjectdto = groupxProjectMapper.groupxProjectDtoMapper(groupxProject);
-        List<SimpleUserDto> simpleUserDtos =  groupxProjectdto.contributors();
-        return simpleUserDtos;
+        GroupxProjectDto groupxProjectdto = groupxProjectMapper.mapToGroupxProjectDto(groupxProject);
+        return groupxProjectdto.contributors();
     }
   public SimpleProjectDto mapToSimpleProjectDto(Project project) {
         return new SimpleProjectDto(
@@ -109,6 +103,8 @@ public class ProjectMapperService {
                 project.getManager().getUsername()
         );
     }
+
+
 
     public SimpleGroupxProjectDto mapToSimpleGroupxProjectDto(GroupxProject gxp) {
         return new SimpleGroupxProjectDto(

@@ -20,13 +20,11 @@ public class ProjectController {
 
  private final ProjectService projectService;
  private final ProjectMapperService projectMapperService;
- private final GroupMapperService groupMapperService;
   private final Logger logger = Logger.getLogger("ProjectController");
 
-  public ProjectController(ProjectService projectService, ProjectMapperService projectMapperService, GroupMapperService groupMapperService) {
+  public ProjectController(ProjectService projectService, ProjectMapperService projectMapperService) {
     this.projectService = projectService;
     this.projectMapperService = projectMapperService;
-    this.groupMapperService = groupMapperService;
   }
 
   @GetMapping("/all")
@@ -85,18 +83,7 @@ public class ProjectController {
         }
     }
 
-  @GetMapping("/loadExtendedGroup/{groupId}")
-  public ResponseEntity<ExtendedGroupDto> getExtendedGroupById(@PathVariable String groupId) {
-    try {
-      ExtendedGroupDto groupDto = groupMapperService.loadExtendedGroupDto(Long.parseLong(groupId));
-      return ResponseEntity.ok(groupDto);
-    } catch (CouldNotFindEntityException e) {
-      logger.warning(e.getMessage());
-      return ResponseEntity.badRequest().build();
-    }
-  }
 
-  //ehemals getGroups
   @GetMapping("/getActiveGroupsOfProject/{projectId}")
   public ResponseEntity<List<SimpleGroupDto>> getActiveGroupsByProjectId(@PathVariable String projectId) {
     List<SimpleGroupDto> activeGroups = projectMapperService.getAllActiveSimpleGroups(projectId);

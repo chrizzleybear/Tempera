@@ -13,7 +13,6 @@ public class Groupx {
 
   private String name;
   private String description;
-
   private boolean active;
 
   @ManyToOne(fetch = FetchType.LAZY) private Userx groupLead;
@@ -32,12 +31,6 @@ public class Groupx {
    * @param groupLead the Grouplead in Charge of that group
    */
   public Groupx(@NotNull String name, @NotNull String description, @NotNull Userx groupLead) {
-    if (name == null || name.isBlank()) {
-      throw new IllegalArgumentException("Name must not be null or empty");
-    }
-    if (description == null || description.isBlank()) {
-      throw new IllegalArgumentException("Description must not be null or empty");
-    }
     this.name = name;
     this.description = description;
     this.groupLead = Objects.requireNonNull(groupLead, "GroupLead must not be null");
@@ -124,6 +117,13 @@ public class Groupx {
       }
     members.remove(member);
     member.getGroups().remove(this);
+  }
+
+  public void removeAllMembers() {
+    for (Userx member : members) {
+      member.getGroups().remove(this);
+    }
+    members.clear();
   }
 
   @Override

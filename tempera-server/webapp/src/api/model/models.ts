@@ -16,7 +16,6 @@ export * from './getTimetableDataResponse';
 export * from './groupDetailsDto';
 export * from './groupx';
 export * from './groupxProject';
-export * from './groupxProjectDto';
 export * from './groupxProjectId';
 export * from './loginRequest';
 export * from './measurement';

@@ -71,8 +71,8 @@ export class ProjectGroupsComponent implements OnInit {
   }
 
   fetchAllActiveGroups() {
-    this.groupControllerService.getAllActiveGroups().subscribe((groups: SimpleGroupDto[]) => {
-      this.availableGroups = groups.filter((group: { id: string; }) =>
+    this.groupControllerService.getAllGroups().subscribe((groups: SimpleGroupDto[]) => {
+      this.availableGroups = groups.filter(group => group.isActive).filter((group: { id: string; }) =>
         !this.activeContributingGroups.some(groupP => group.id === groupP.id));
       this.filteredAvailableGroups = this.availableGroups;
     });
