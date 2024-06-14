@@ -211,8 +211,8 @@ public class UserxService implements UserDetailsService {
     user.setEnabled(userxDTO.enabled());
     user.setUpdateDate(LocalDateTime.now());
     user.setUpdateUser(getAuthenticatedUser());
-    //auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.USER,
-    //        "User " + user.getUsername() + ", " + user.getId() + " with roles " + user.getRoles() + " was edited.");
+    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.USER,
+            "User " + user.getUsername() + ", " + user.getId() + " with roles " + user.getRoles() + " was edited.");
     return userRepository.save(user);
   }
 
@@ -242,8 +242,14 @@ public class UserxService implements UserDetailsService {
   public UserxDto validateUser(String username, String password) {
     Userx user = userRepository.findFirstByUsername(username);
     if (passwordEncoder.matches(password, user.getPassword())) {
+      auditLogService.logEvent(LogEvent.LOAD, LogAffectedType.USER,
+              "Successfully validated user " + user.getUsername() + "."
+      );
       return convertToDTO(user);
     }
+    auditLogService.logEvent(LogEvent.WARN, LogAffectedType.USER,
+            "Could not validate user with details " + user.getUsername() + ", " + user.getPassword() + " ."
+    );
     return null;
   }
 
