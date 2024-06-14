@@ -32,7 +32,6 @@ export class AppMenuComponent implements OnInit {
       {
         label: 'UI Components',
         items: [
-          { label: 'Logout', icon: 'pi pi-fw pi-id-card', command: () => this.logout() },
           {
             label: 'Timetable',
             icon: 'pi pi-calendar-clock',

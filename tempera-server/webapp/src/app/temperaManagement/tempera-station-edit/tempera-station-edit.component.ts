@@ -7,7 +7,7 @@ import {CheckboxModule} from "primeng/checkbox";
 import {ButtonModule} from "primeng/button";
 import {User} from "../../models/user.model";
 import {DropdownModule} from "primeng/dropdown";
-import {UsersService} from "../../_services/users.service";
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-tempera-station-edit',
@@ -34,6 +34,7 @@ export class TemperaStationEditComponent implements OnInit, OnChanges {
   constructor(
     private temperaStationService: TemperaStationService,
     private formBuilder: FormBuilder,
+    private messageService: MessageService
   ) {
     this.temperaForm = this.formBuilder.group({
       user: [null, [Validators.required]],
@@ -56,6 +57,7 @@ export class TemperaStationEditComponent implements OnInit, OnChanges {
         this.fetchUsers();
       },
       error: (error) => {
+        this.messageService.add({severity:'error', summary:'Error', detail:'Failed to load temperaStation details'});
         console.error('Failed to load temperaStation details:', error);
       },
     });
@@ -70,14 +72,15 @@ export class TemperaStationEditComponent implements OnInit, OnChanges {
         this.temperaStation.user = this.temperaForm.value.user.value.username;
         this.temperaStation.enabled = this.temperaForm.value.enabled;
       }
-      console.log("Update ", this.temperaStation);
       this.temperaStationService.updateTemperaStation(this.temperaStation).subscribe({
         next: () => {
+          this.messageService.add({severity:'success', summary:'Success', detail:'Tempera station updated successfully'});
           this.temperaForm?.reset();
           this.onEditComplete.emit(true);
 
         },
         error: (error) => {
+          this.messageService.add({severity:'error', summary:'Error', detail:'Failed to update tempera station'});
           console.error('Failed to update temperaStation:', error);
           this.onEditComplete.emit(false);
         },

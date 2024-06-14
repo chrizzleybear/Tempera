@@ -186,11 +186,6 @@ export class GroupProjectsComponent implements OnInit {
     };
     return this.projectService.removeMemberFromProject(dto);
   }
-
-  backToGroups() {
-    this.router.navigate(['/myGroups']);
-  }
-
   resetMembers() {
     this.selectedMembers = [];
     this.availableProjectContributors = [];

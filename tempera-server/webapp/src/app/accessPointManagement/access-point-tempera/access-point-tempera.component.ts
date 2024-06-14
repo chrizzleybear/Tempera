@@ -7,6 +7,7 @@ import {ButtonModule} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
 import {DialogModule} from "primeng/dialog";
 import {TemperaStationService} from "../../_services/tempera-station.service";
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-access-point-tempera',
@@ -28,7 +29,10 @@ export class AccessPointTemperaComponent implements OnInit, OnChanges{
   @Output() accessPointChange: EventEmitter<AccessPoint> = new EventEmitter<AccessPoint>();
   filteredTemperaStations: TemperaStation[] = [];
 
-  constructor(private accessPointService: AccessPointService, private temperaStationService: TemperaStationService) {
+  constructor(
+    private accessPointService: AccessPointService,
+    private temperaStationService: TemperaStationService,
+    private messageService: MessageService) {
   }
 
   ngOnInit(): void {
@@ -47,6 +51,7 @@ export class AccessPointTemperaComponent implements OnInit, OnChanges{
           console.log("Loaded tempera:", tempera);
         },
         error: (error) => {
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error loading tempera station'});
           console.error("Error loading tempera:", error);
         }
       });
@@ -63,8 +68,10 @@ export class AccessPointTemperaComponent implements OnInit, OnChanges{
     this.temperaStationService.deleteTemperaStation(temperaStation.id).subscribe({
       next: () => {
         this.fetchTempera();
+        this.messageService.add({severity: 'success', summary: 'Success', detail: 'Tempera station removed'});
       },
       error: (error) => {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error removing tempera station'});
         console.error("Error removing tempera:", error);
       }
     });

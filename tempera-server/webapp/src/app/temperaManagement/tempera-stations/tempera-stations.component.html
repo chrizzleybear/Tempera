@@ -1,5 +1,5 @@
+<p-toast></p-toast>
 <div *ngIf="temperaStations">
-  <p-messages [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
   <div class="mb-4">
     <input type="text" pInputText placeholder="Search" (input)="applyFilter($event)" class="mr-2">
     <p-button label="Add New Tempera Station" (click)="createTemperaStation()" class="mr-2" icon="pi pi-plus"></p-button>
@@ -9,7 +9,7 @@
       <tr>
         <th scope="col">Id</th>
         <th scope="col">User</th>
-        <th scope="col">Enabled</th>
+        <th scope="col">Status</th>
         <th scope="col">Healthy</th>
         <th></th>
         <th></th>
