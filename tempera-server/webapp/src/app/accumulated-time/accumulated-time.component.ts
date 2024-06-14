@@ -38,9 +38,11 @@ interface InternalAccumulatedTimeDto extends AccumulatedTimeDto {
 })
 export class AccumulatedTimeComponent implements OnInit {
   public accumulatedTimes: InternalAccumulatedTimeDto[] = [];
-  public availableProjects: SimpleProjectDto[] = [];
-  public availableGroups: SimpleGroupDto[] = [];
-
+  public allProjects: SimpleProjectDto[] = [];
+  public allGroups: SimpleGroupDto[] = [];
+  public activeProjects: SimpleProjectDto[] = [];
+  public activeGroups: SimpleGroupDto[] = [];
+  public onlyActiveProjectsAndGroupsShown: boolean = false;
   public stateTimes: TotalTimeWithStates = {
     AVAILABLE: 0,
     MEETING: 0,
@@ -74,8 +76,8 @@ export class AccumulatedTimeComponent implements OnInit {
               endTime: new Date(entry.endTimestamp),
             }),
           ) ?? [];
-          this.availableProjects = response.availableProjects ?? [];
-          this.availableGroups = response.availableGroups ?? [];
+          this.activeProjects = response.availableProjects?.filter(project => project.isActive) ?? [];
+          this.activeGroups = response.availableGroups ?? [];
         },
         error: error => {
           console.error('Error while fetching accumulated time data', error);
@@ -115,17 +117,16 @@ export class AccumulatedTimeComponent implements OnInit {
   }
 
   /*
-* Filters the table so only entries with unassigned projects are shown.
-* Also filters out entries with the state OutOfOffice.
+* Filters the table-data so only active are flowing into the calculation
  */
-  filterAssignedProjects() {
-    // this.table?.reset();
-    this.table?.filter({}, 'assignedGroupxProject', FilterMatchMode.IS_NOT);
-    this.table?.filter(StateEnum.OutOfOffice, 'state', FilterMatchMode.IS_NOT);
-    this.selectedProjects = [];
-    this.selectedStates = [];
-    this.onlyUnassignedProjectsShown = true;
-    this.projectFilterOverlay.hide();
+  filterActiveProjects() {
+    // this.table?.filter({}, 'assignedGroupxProject', FilterMatchMode.IS_NOT);
+    this.table?.filter(this.activeProjects, 'project', FilterMatchMode.IN);
+    this.table?.filter(this.activeGroups, 'group', FilterMatchMode.IN);
+    // this.selectedProjects = [];
+    // this.selectedStates = [];
+    this.onlyActiveProjectsAndGroupsShown = true;
+    // this.projectFilterOverlay.hide();
   }
 
   /*

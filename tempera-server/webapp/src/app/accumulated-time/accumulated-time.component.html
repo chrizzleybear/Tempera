@@ -15,7 +15,7 @@
       <th id="groupFilter">
         <p-columnFilter field="groupId" [showMenu]="true" [showClearButton]="false">
           <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-            <p-dropdown [options]="availableGroups" [showClear]="true" (onChange)="filter($event.value?.id)"
+            <p-dropdown [options]="activeGroups" [showClear]="true" (onChange)="filter($event.value?.id)"
                         optionLabel="name" appendTo="body" placeholder="Select one"></p-dropdown>
           </ng-template>
         </p-columnFilter>
