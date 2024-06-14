@@ -117,9 +117,8 @@ public class AuthController {
 
   @PostMapping("/signout")
   public ResponseEntity<?> logoutUser() {
-    //TO-DO: add user details
     auditLogService.logEvent(LogEvent.LOGOUT, LogAffectedType.USER,
-            "Current user with details " + null + " logged out."
+            "Current user logged out."
     );
     ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
     return ResponseEntity.ok()

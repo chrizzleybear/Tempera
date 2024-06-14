@@ -151,7 +151,7 @@ public class UserxService implements UserDetailsService {
       Userx user = userx.get();
       if (user.getRoles().contains(UserxRole.ADMIN)) {
         auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.USER,
-                "Deletion of user " + user.getUsername() + ", " + user.getId() + " failed. User is ADMIN.");
+                "Deletion of user " + user.getUsername() + " failed. User is ADMIN.");
         return;
       }
       if (user.getRoles().contains(UserxRole.MANAGER)
@@ -180,18 +180,18 @@ public class UserxService implements UserDetailsService {
 
       externalRecordRepository.deleteAllByUser(user);
       auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.TIME_RECORD,
-              "External time records of user " + user.getUsername() + ", " + user.getId() + " were deleted.");
+              "External time records of user " + user.getUsername() + " were deleted.");
 
       user.removeTemperaStation();
       auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.TEMPERA_STATION,
-              "Station of user " + user.getUsername() + ", " + user.getId() + " was deleted.");
+              "Station of user " + user.getUsername() + " was deleted.");
 
       // we are saving the user so that all the other objects, where we set the user reference to null are being
       // saved via cascading
       saveUser(user);
 
       auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.USER,
-              "User " + user.getUsername() + ", " + user.getId() + " was deleted.");
+              "User " + user.getUsername()  + " was deleted.");
       userRepository.delete(user);
       }
   }

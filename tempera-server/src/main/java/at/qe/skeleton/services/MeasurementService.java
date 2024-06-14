@@ -135,17 +135,18 @@ public class MeasurementService {
 
     double value = measurement.getValue();
 
-    if (value <= lowerWarnThreshold.getValue()) {
-      return alertBuilder(lowerWarnThreshold, measurement);
-    } else if (value <= lowerInfoThreshold.getValue()) {
-      return alertBuilder(lowerInfoThreshold, measurement);
-    } else if (value >= upperWarnThreshold.getValue()) {
-      return alertBuilder(upperWarnThreshold, measurement);
+    if (value <= lowerInfoThreshold.getValue()) {
+      auditLogService.logEvent(LogEvent.WARN, LogAffectedType.THRESHOLD,
+              "Value for " + measurement.getSensor().getSensorType() + " of station " + measurement.getSensor().getTemperaStation().getId() + " is below " + ((value <= lowerWarnThreshold.getValue()) ? "WARNING-" : "INFO-") + "Threshold."
+      );
+      return alertBuilder( (value <= lowerWarnThreshold.getValue()) ? lowerWarnThreshold : lowerInfoThreshold  , measurement);
     } else if (value >= upperInfoThreshold.getValue()) {
-      return alertBuilder(upperInfoThreshold, measurement);
-    } else {
-      return null;
+      auditLogService.logEvent(LogEvent.WARN, LogAffectedType.THRESHOLD,
+              "Value for " + measurement.getSensor().getSensorType() + " of station " + measurement.getSensor().getTemperaStation().getId() + " is above " + ((value <= lowerWarnThreshold.getValue()) ? "WARNING-" : "INFO-") + "Threshold."
+      );
+      return alertBuilder( (value >= upperWarnThreshold.getValue()) ? upperWarnThreshold : upperInfoThreshold  , measurement);
     }
+    return null;
   }
 
   /**
@@ -164,7 +165,6 @@ public class MeasurementService {
       openAlert.setFirstIncident(measurement.getId().getTimestamp());
       openAlert.setLastIncident(measurement.getId().getTimestamp());
       openAlert.setPeakDeviationValue(measurement.getValue());
-
       return openAlert;
     }
     openAlert.setLastIncident(measurement.getId().getTimestamp());
