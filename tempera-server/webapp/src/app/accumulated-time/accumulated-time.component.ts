@@ -129,6 +129,13 @@ export class AccumulatedTimeComponent implements OnInit {
     // this.projectFilterOverlay.hide();
   }
 
+  removeAssignedProjectsFilter() {
+    this.table?.filter(this.allProjects, 'project', FilterMatchMode.IN);
+    this.table?.filter(this.allGroups, 'group', FilterMatchMode.IN);
+    this.table?.reset();
+    this.onlyActiveProjectsAndGroupsShown = false;
+  }
+
   /*
   Calculates the total work time with the current active filters
    */
