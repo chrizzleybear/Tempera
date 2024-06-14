@@ -10,6 +10,7 @@ import {ButtonModule} from "primeng/button";
 import {NgIf} from "@angular/common";
 import {MessageModule} from "primeng/message";
 import {GroupUpdateDTO} from "../../models/groupDtos";
+import { SimpleGroupDto } from '../../../api';
 
 @Component({
   selector: 'app-group-edit',
@@ -30,7 +31,7 @@ export class GroupEditComponent implements OnInit, OnChanges{
   groupForm: FormGroup;
   groupLeads: any[] = [];
 
-  @Input({required: true}) group!: Group;
+  @Input({required: true}) group!: SimpleGroupDto;
   @Output() editComplete = new EventEmitter<unknown>();
 
   constructor(

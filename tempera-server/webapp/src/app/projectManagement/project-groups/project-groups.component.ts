@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { MessagesModule } from 'primeng/messages';
 import { ButtonModule } from 'primeng/button';
@@ -15,6 +15,7 @@ import {
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   providers: [ConfirmationService, MessageService],
@@ -31,6 +32,7 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
     InputTextModule,
     ToastModule,
     ConfirmPopupModule,
+    TooltipModule,
   ],
   templateUrl: './project-groups.component.html',
   styleUrl: './project-groups.component.css',
@@ -52,7 +54,7 @@ export class ProjectGroupsComponent implements OnInit {
   groupToBeRemoved?: SimpleGroupDto;
   messages: any;
 
-  constructor(private projectControllerService: ProjectControllerService, private confirmationService: ConfirmationService, private route: ActivatedRoute, private groupControllerService: GroupManagementControllerService, private messageService: MessageService) {
+  constructor(private projectControllerService: ProjectControllerService, private confirmationService: ConfirmationService, private route: ActivatedRoute, private router: Router, private groupControllerService: GroupManagementControllerService, private messageService: MessageService) {
 
   }
 
@@ -79,9 +81,9 @@ export class ProjectGroupsComponent implements OnInit {
   }
 
 
-  RemoveGroupDialogue(groupId: string) {
-    this.displayRemoveDialog = true;
-
+  switchToGroup(groupId: string) {
+    console.log('Switch to Group with id: ' + groupId);
+    this.router.navigate(['group', groupId]);
   }
 
   confirm(event: Event, groupId: string) {

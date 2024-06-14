@@ -37,7 +37,7 @@ export class GroupsComponent implements OnInit {
   filteredGroups: SimpleGroupDto[] = [];
   displayCreateDialog: boolean = false;
   displayEditDialog: boolean = false;
-  selectedGroup: Group | undefined;
+  selectedGroup: SimpleGroupDto | undefined;
   messages: any;
 
   constructor(private groupService: GroupManagementControllerService, private router: Router) {}
@@ -85,7 +85,7 @@ export class GroupsComponent implements OnInit {
     this.router.navigate(['/group', group.id]);
   }
 
-  editGroup(group: Group) {
+  editGroup(group: SimpleGroupDto) {
     console.log("Edit group:", group);
     this.selectedGroup = group;
     this.displayEditDialog = true;
