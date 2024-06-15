@@ -1,7 +1,5 @@
 package at.qe.skeleton.rest.raspberry.dtos;
 
-import at.qe.skeleton.model.enums.Unit;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 

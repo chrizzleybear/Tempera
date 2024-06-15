@@ -50,6 +50,8 @@ export class AccumulatedTimeComponent implements OnInit {
   public activeGroups: SimpleGroupDto[] = [];
   public activeProjectIds: string[] = [];
   public activeGroupIds: string[] = [];
+  public allProjectIds: string[] = [];
+  public allGroupIds: string[] = [];
   public availableProjects: SimpleProjectDto[] = [];
   public availableGroups: SimpleGroupDto[] = [];
   public onlyActiveProjectsAndGroupsShown: boolean = false;
@@ -88,15 +90,17 @@ export class AccumulatedTimeComponent implements OnInit {
               endTime: new Date(entry.endTimestamp),
             }),
           ) ?? [];
+          // need to seperate between active and all projects and groups
+          // available Projects changes between active and all projects when the filter is applied
           this.allProjects = response.availableProjects;
           this.allGroups = response.availableGroups;
-          this.availableProjects = this.allProjects;
-          this.availableGroups = this.allGroups;
+
           this.activeProjects = this.allProjects.filter(project => project.isActive);
           this.activeGroups = this.allGroups.filter(group => group.isActive);
 
-          this.activeProjectIds = this.activeProjects.map(project => project.projectId);
-          this.activeGroupIds = this.activeGroups.map(group => group.id);
+
+          this.availableProjects = this.allProjects;
+          this.availableGroups = this.allGroups;
 
         },
         error: error => {
@@ -137,19 +141,42 @@ export class AccumulatedTimeComponent implements OnInit {
   }
 
   /*
-* Filters the table-data so only active are flowing into the calculation
+* Filters the table-data so only active projects & groups are being
+* taken into account. If the array that the filter compares against the filter has
+* problems, thats why the if-clauses are there.
  */
   filterActiveProjects() {
-    this.table?.filter(this.activeProjectIds, 'projectId', FilterMatchMode.IN);
-    this.table?.filter(this.activeGroupIds, 'groupId', FilterMatchMode.IN);
+    if (this.activeProjects.length === 0) {
+      this.table?.filter([''], 'projectId', FilterMatchMode.IN);
+    } else {
+      this.table?.filter(this.activeProjects.map(p => p.projectId), 'projectId', FilterMatchMode.IN);
+    }
+    if (this.activeGroups.length === 0) {
+      this.table?.filter([''], 'groupId', FilterMatchMode.IN);
+    } else {
+      this.table?.filter(this.activeGroups.map(g => g.id), 'groupId', FilterMatchMode.IN);
+    }
     this.availableProjects = this.activeProjects;
     this.availableGroups = this.activeGroups;
     this.onlyActiveProjectsAndGroupsShown = true;
   }
 
+  /*
+* Removes the filter condition for the table-data so all projects & groups are being
+* taken into account. If the array that the filter compares against the filter has
+* problems, thats why the if-clause is there.
+*/
   removeOnlyActiveProjectsFilter() {
-    this.table?.filter(this.allProjects, 'projectId', FilterMatchMode.IN);
-    this.table?.filter(this.allGroups, 'groupId', FilterMatchMode.IN);
+    if (this.allProjects.length === 0) {
+      this.table?.filter([''], 'projectId', FilterMatchMode.IN);
+    } else {
+      this.table?.filter(this.allProjects.map(p => p.projectId), 'projectId', FilterMatchMode.IN);
+    }
+    if (this.allGroups.length === 0) {
+      this.table?.filter([''], 'groupId', FilterMatchMode.IN);
+    } else {
+      this.table?.filter(this.allGroups.map(g => g.id), 'groupId', FilterMatchMode.IN);
+    }
     this.table?.reset();
     this.availableProjects = this.allProjects;
     this.availableGroups = this.allGroups;
