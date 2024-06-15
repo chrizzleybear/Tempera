@@ -132,6 +132,8 @@ public class MeasurementService {
   /**
    * Helper Method, that returns an Optional that either contains a specific Threshold that was violated
    * by the measurement represented by value and sensorType or is empty if no threshold was violated.
+   * NMVOC is handled little differently, since it can not be too high (it is measured in OHM and high values are good).
+   * Therefore the upperbound thresholds are not considered for NMVOC.
    * @param value
    * @param sensorType
    * @param thresholds
@@ -173,11 +175,12 @@ public class MeasurementService {
             .orElseThrow(() -> new ThresholdNotAvailableException(sensorType, ThresholdType.UPPERBOUND_WARNING));
     if (value <= lowerWarnThreshold.getValue()) {
       return Optional.of(lowerWarnThreshold);
-    } else if (value <= lowerInfoThreshold.getValue()) {
+    } else if (value <= lowerInfoThreshold.getValue() ) {
       return Optional.of(lowerInfoThreshold);
-    } else if (value >= upperWarnThreshold.getValue()) {
+      // airquality does not have upper limit. it is measured via ohm and high values are good (look at wiki).
+    } else if (value >= upperWarnThreshold.getValue() && sensorType!=SensorType.NMVOC) {
       return Optional.of(upperWarnThreshold);
-    } else if (value >= upperInfoThreshold.getValue()) {
+    } else if (value >= upperInfoThreshold.getValue() &&sensorType!=SensorType.NMVOC) {
       return Optional.of(upperInfoThreshold);
     } else {
       return Optional.empty();
