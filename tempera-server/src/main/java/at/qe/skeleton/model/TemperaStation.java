@@ -10,26 +10,57 @@ import java.util.Objects;
 @Entity
 public class TemperaStation implements Persistable<String> {
 
-//todo: as io pointed out this has to be a uuid or similar
-@Id private String id;
-  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY) private Userx user;
+  @Id
+  private String id;
+
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private Userx user;
+
   private boolean enabled;
 
   private boolean isHealthy;
 
-  @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY) private AccessPoint accessPoint;
-  @OneToMany(mappedBy = "temperaStation", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, orphanRemoval = true) private List<Sensor> sensors;
+  @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+  private AccessPoint accessPoint;
+
+  @OneToMany(mappedBy = "temperaStation", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, orphanRemoval = true)
+  private List<Sensor> sensors;
 
   // We need to implement Persistable since we set Id manually
   // the following strategy for the isNew Method comes from spring documentation:
   // https://docs.spring.io/spring-data/jpa/reference/jpa/entity-persistence.html
   @Transient private boolean isNew = true;
 
-    public TemperaStation(String id, boolean enabled, Userx user) {
-    }
+  /**
+   * Do not use, for testing purposes only.
+   * Also, direct creation of TemperaStations should be avoided, use {@link
+   * at.qe.skeleton.services.TemperaStationService#createTemperaStation} instead
+   *
+   * @param id
+   * @param enabled
+   * @param user
+   */
+  @Deprecated
+  public TemperaStation(String id, boolean enabled, Userx user) {
+  }
 
+  /**
+   * Do not use, a proper id will only be set using the service method.
+   * {@link at.qe.skeleton.services.TemperaStationService#createTemperaStation}
+   */
+  @Deprecated
   public TemperaStation() {
+  }
 
+  /**
+   * direct creation of TemperaStations should be avoided, use {@link
+   * at.qe.skeleton.services.TemperaStationService#createTemperaStation} instead
+   */
+  public TemperaStation(@NotNull String id, boolean enabled, Userx user, boolean isHealthy) {
+    this.user = user;
+    this.id = Objects.requireNonNull(id);
+    this.enabled = enabled;
+    this.isHealthy = isHealthy;
   }
 
   @Override
@@ -46,17 +77,6 @@ public class TemperaStation implements Persistable<String> {
   @PostLoad
   void markNotNew() {
     this.isNew = false;
-  }
-
-  /**
-   * direct creation of TemperaStations should be avoided, use {@link
-   * at.qe.skeleton.services.TemperaStationService#createTemperaStation} instead
-   */
-  public TemperaStation(@NotNull String id, boolean enabled, Userx user, boolean isHealthy) {
-    this.user = user;
-    this.id = Objects.requireNonNull(id);
-    this.enabled = enabled;
-    this.isHealthy = isHealthy;
   }
 
   public void setUser(Userx user) {
@@ -107,11 +127,11 @@ public class TemperaStation implements Persistable<String> {
     this.enabled = enabled;
   }
 
-    public boolean isHealthy() {
+  public boolean isHealthy() {
         return isHealthy;
     }
 
-    public void setIsHealthy(boolean active) {
+  public void setIsHealthy(boolean active) {
         this.isHealthy = active;
     }
 

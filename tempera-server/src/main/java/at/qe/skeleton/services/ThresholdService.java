@@ -5,7 +5,6 @@ import at.qe.skeleton.model.Threshold;
 import at.qe.skeleton.model.ThresholdTip;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.ThresholdType;
-import at.qe.skeleton.repositories.RoomRepository;
 import at.qe.skeleton.repositories.TemperaStationRepository;
 import at.qe.skeleton.repositories.ThresholdRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Set;
 
 @Component
@@ -24,31 +22,21 @@ public class ThresholdService {
 
   private final TemperaStationRepository temperaStationRepository;
 
-  @Autowired
-  public ThresholdService(
-      ThresholdRepository thresholdRepository, TemperaStationRepository temperaStationRepository) {
-    this.thresholdRepository = thresholdRepository;
-    this.temperaStationRepository = temperaStationRepository;
-  }
+    @Autowired
+    public ThresholdService(ThresholdRepository thresholdRepository,
+                            TemperaStationRepository temperaStationRepository) {
+        this.thresholdRepository = thresholdRepository;
+        this.temperaStationRepository = temperaStationRepository;
+    }
 
-  @Transactional
-  public List<Threshold> getAllThresholds() {
-    return thresholdRepository.findAll();
-  }
-
-  @Transactional
-  public List<Threshold> getDefaultThresholds() {
-    return thresholdRepository.findDefaultThresholds();
-  }
-
-  @Transactional
-  public Threshold createThreshold(
-      SensorType sensorType, ThresholdType thresholdType, double value, String reason, String tip) {
-    Threshold t =
-        new Threshold(
-            sensorType, thresholdType, value, new Modification(reason), new ThresholdTip(tip));
-    return thresholdRepository.save(t);
-  }
+    @Transactional
+    public Threshold createThreshold(SensorType sensorType, ThresholdType thresholdType, double value, String reason, String tip) {
+        Threshold t = new Threshold(sensorType, thresholdType, value,
+                new Modification(reason),
+                new ThresholdTip(tip)
+        );
+        return thresholdRepository.save(t);
+    }
 
   public Set<Threshold> getThresholdsByTemperaId(String temperaId) {
     return temperaStationRepository.getThresholdsByTemperaId(temperaId);

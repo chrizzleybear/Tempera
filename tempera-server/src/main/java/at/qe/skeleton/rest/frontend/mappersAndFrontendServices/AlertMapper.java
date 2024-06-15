@@ -29,16 +29,18 @@ public class AlertMapper {
     if (alerts.isEmpty()) {
       return new ArrayList<>();
     }
-    for (Alert alert : alerts) {
+    var iter = alerts.listIterator();
+    while (iter.hasNext()) {
+      var alert = iter.next();
       Alert lastAcknowledgedAlert =
-          alertService.findLastAcknowledgedAlertBySensorAndThreshold(
-              alert.getSensor(), alert.getThreshold());
+              alertService.findLastAcknowledgedAlertBySensorAndThreshold(
+                      alert.getSensor(), alert.getThreshold());
       if (lastAcknowledgedAlert == null) {
         continue;
       }
-      LocalDateTime acknowledgedAt = alert.getAcknowledgedAt();
+      LocalDateTime acknowledgedAt = lastAcknowledgedAlert.getAcknowledgedAt();
       if (LocalDateTime.now().isBefore(acknowledgedAt.plusHours(1))) {
-        alerts.remove(alert);
+        iter.remove();
       }
     }
     return alerts.stream().map(this::mapAlertToAlertDto).toList();

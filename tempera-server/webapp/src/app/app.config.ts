@@ -5,7 +5,7 @@ import { routes } from './app.routes';
 import { HttpClientModule } from '@angular/common/http';
 import { httpInterceptorProviders } from './_helpers/http.interceptor';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { MessageService } from 'primeng/api';
+import { FilterService, MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,6 +14,7 @@ export const appConfig: ApplicationConfig = {
       anchorScrolling: 'enabled',
     }), HttpClientModule),
     MessageService,
+    FilterService,
     provideAnimations(),
     httpInterceptorProviders],
 };

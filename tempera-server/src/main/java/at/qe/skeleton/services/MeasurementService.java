@@ -7,6 +7,7 @@ import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.ClimateQuality;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.ThresholdType;
+import at.qe.skeleton.model.enums.*;
 import at.qe.skeleton.repositories.MeasurementRepository;
 import at.qe.skeleton.rest.frontend.dtos.FrontendMeasurementDto;
 import org.springframework.context.annotation.Scope;
@@ -22,16 +23,19 @@ public class MeasurementService {
   private final MeasurementRepository measurementRepository;
   private final ThresholdService thresholdService;
   private final AlertService alertService;
+  private final AuditLogService auditLogService;
 
   private static final String INVALID_MEASUREMENT = "Invalid Measurement ID: ";
 
   public MeasurementService(
       AlertService alertService,
       ThresholdService thresholdService,
-      MeasurementRepository measurementRepository) {
+      MeasurementRepository measurementRepository,
+      AuditLogService auditLogService) {
     this.alertService = alertService;
     this.thresholdService = thresholdService;
     this.measurementRepository = measurementRepository;
+    this.auditLogService = auditLogService;
   }
 
   public Measurement loadMeasurementByIdComponents(
@@ -46,9 +50,12 @@ public class MeasurementService {
   }
 
   public Measurement loadMeasurement(MeasurementId id) throws CouldNotFindEntityException {
-    return measurementRepository
+      Measurement m = measurementRepository
         .findById(id)
         .orElseThrow(() -> new CouldNotFindEntityException(INVALID_MEASUREMENT + id));
+      auditLogService.logEvent(LogEvent.LOAD, LogAffectedType.MEASUREMENT,
+              "Measurement from station " + id.getSensorId().getTemperaId() + " at " + id.getTimestamp() + " was loaded.");
+      return m;
   }
 
   public Measurement saveMeasurement(Measurement measurement) {
@@ -114,6 +121,18 @@ public class MeasurementService {
       // Info-Alert oder einen Warn-Alert auslösen kann
       Alert alert = checkAlertConditions(measurement, thresholds);
       if (alert != null) {
+        var threshold = alert.getThreshold();
+        var sensorType = threshold.getSensorType();
+        var thresholdType = threshold.getThresholdType();
+
+        if (alert.getThreshold().isOfLowerBoundType()) {
+          auditLogService.logEvent(LogEvent.WARN, LogAffectedType.THRESHOLD,
+                  "Value for %s of station %s is below threshold value %s. Threshold type: %s".formatted(sensorType, temperaId, threshold.getValue(), thresholdType));
+        } else {
+          auditLogService.logEvent(LogEvent.WARN, LogAffectedType.THRESHOLD,
+                  "Value for %s of station %s is above threshold value %s. Threshold type: %s".formatted(sensorType, temperaId, threshold.getValue(), thresholdType));
+        }
+
         alertService.saveAlert(alert);
       }
     }
@@ -174,12 +193,12 @@ public class MeasurementService {
             .findFirst()
             .orElseThrow(() -> new ThresholdNotAvailableException(sensorType, ThresholdType.UPPERBOUND_WARNING));
     if (value <= lowerWarnThreshold.getValue()) {
-      return Optional.of(lowerWarnThreshold);
+        return Optional.of(lowerWarnThreshold);
     } else if (value <= lowerInfoThreshold.getValue() ) {
       return Optional.of(lowerInfoThreshold);
       // airquality does not have upper limit. it is measured via ohm and high values are good (look at wiki).
     } else if (value >= upperWarnThreshold.getValue() && sensorType!=SensorType.NMVOC) {
-      return Optional.of(upperWarnThreshold);
+        return Optional.of(upperWarnThreshold);
     } else if (value >= upperInfoThreshold.getValue() &&sensorType!=SensorType.NMVOC) {
       return Optional.of(upperInfoThreshold);
     } else {
@@ -205,7 +224,6 @@ public class MeasurementService {
       openAlert.setFirstIncident(measurement.getId().getTimestamp());
       openAlert.setLastIncident(measurement.getId().getTimestamp());
       openAlert.setPeakDeviationValue(measurement.getValue());
-
       return openAlert;
     }
     openAlert.setLastIncident(measurement.getId().getTimestamp());
@@ -223,6 +241,8 @@ public class MeasurementService {
 
   public Optional<Measurement> findLatestMeasurementBySensor(Sensor sensor) {
     SensorId id = sensor.getSensorId();
+    auditLogService.logEvent(LogEvent.LOAD, LogAffectedType.MEASUREMENT,
+              "Lastest measurement of station " + sensor.getTemperaStation().getId() + " was loaded.");
     return measurementRepository.findFirstBySensorIdOrderById_TimestampDesc(id);
   }
 
