@@ -307,10 +307,10 @@ INSERT INTO public.threshold (default_threshold, threshold_value, id, modificati
 INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 200, -26, -1, -20, 'IRRADIANCE', 'LOWERBOUND_WARNING');
 INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 540, -27, -1, -21, 'IRRADIANCE', 'UPPERBOUND_INFO');
 INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 600, -28, -1, -21, 'IRRADIANCE', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 11,  -29, -1, -30, 'NMVOC', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 10,  -30, -1, -30, 'NMVOC', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 10,  -31, -1, -30, 'NMVOC', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 10,  -32, -1, -30, 'NMVOC', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 10000,  -29, -1, -30, 'NMVOC', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 5000,  -30, -1, -30, 'NMVOC', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 1000000,  -31, -1, -30, 'NMVOC', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 1000000,  -32, -1, -30, 'NMVOC', 'UPPERBOUND_WARNING');
 
 INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 20,  -33, -1, -1, 'TEMPERATURE', 'LOWERBOUND_INFO');
 INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 19,  -34, -1, -1, 'TEMPERATURE', 'LOWERBOUND_WARNING');
