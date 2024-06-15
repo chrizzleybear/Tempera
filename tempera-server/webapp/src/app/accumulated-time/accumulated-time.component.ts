@@ -93,9 +93,11 @@ export class AccumulatedTimeComponent implements OnInit {
           this.availableProjects = this.allProjects;
           this.availableGroups = this.allGroups;
           this.activeProjects = this.allProjects.filter(project => project.isActive);
+          this.activeGroups = this.allGroups.filter(group => group.isActive);
+
           this.activeProjectIds = this.activeProjects.map(project => project.projectId);
           this.activeGroupIds = this.activeGroups.map(group => group.id);
-          this.activeGroups = this.allGroups.filter(group => group.isActive);
+
         },
         error: error => {
           console.error('Error while fetching accumulated time data', error);
@@ -138,7 +140,6 @@ export class AccumulatedTimeComponent implements OnInit {
 * Filters the table-data so only active are flowing into the calculation
  */
   filterActiveProjects() {
-    console.log('Table Data', this.table?.value);
     this.table?.filter(this.activeProjectIds, 'projectId', FilterMatchMode.IN);
     this.table?.filter(this.activeGroupIds, 'groupId', FilterMatchMode.IN);
     this.availableProjects = this.activeProjects;
@@ -147,8 +148,8 @@ export class AccumulatedTimeComponent implements OnInit {
   }
 
   removeOnlyActiveProjectsFilter() {
-    this.table?.filter(this.allProjects, 'project', FilterMatchMode.IN);
-    this.table?.filter(this.allGroups, 'group', FilterMatchMode.IN);
+    this.table?.filter(this.allProjects, 'projectId', FilterMatchMode.IN);
+    this.table?.filter(this.allGroups, 'groupId', FilterMatchMode.IN);
     this.table?.reset();
     this.availableProjects = this.allProjects;
     this.availableGroups = this.allGroups;
