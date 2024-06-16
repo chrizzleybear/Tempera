@@ -103,12 +103,6 @@ public class RoomController {
         return ResponseEntity.ok(updatedThreshold);
     }
 
-    @PutMapping("/threshold/tip/update")
-    public ResponseEntity<ThresholdTip> updateThresholdTip(@RequestBody ThresholdTip dto) {
-        ThresholdTip updatedThreshold = roomService.updateThresholdTip(dto);
-            return ResponseEntity.ok(updatedThreshold);
-    }
-
     @GetMapping("/floor")
     public ResponseEntity<List<FloorComponent>> getFloorComponents() {
         List<FloorComponent> floorComponents = flo.getAllFloorComponents();

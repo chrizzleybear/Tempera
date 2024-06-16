@@ -11,6 +11,9 @@ import {UserCreateComponent} from "../../userManagement/user-create/user-create.
 import {FormsModule} from "@angular/forms";
 import {FloorPlanComponent} from "../floor-plan/floor-plan.component";
 import {RippleModule} from "primeng/ripple";
+import {ToastModule} from "primeng/toast";
+import {MessageService} from "primeng/api";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-rooms',
@@ -26,7 +29,8 @@ import {RippleModule} from "primeng/ripple";
     FormsModule,
     FloorPlanComponent,
     NgForOf,
-    RippleModule
+    RippleModule,
+    ToastModule
   ],
   templateUrl: './rooms.component.html',
   styleUrls: ['./rooms.component.css']
@@ -40,11 +44,10 @@ export class RoomsComponent implements OnInit {
   rooms: Room[] = [];
   newRoomId: string = '';
   displayCreateDialog: boolean = false;
-  messages: any;
-  messagesCreate: any;
   expandedRows: { [key: string]: boolean } = {};
+  protected filteredRooms: Room[] = [];
 
-  constructor(private roomService: RoomService) {
+  constructor(private roomService: RoomService, private router: Router, private messageService: MessageService) {
   }
 
   ngOnInit(): void {
@@ -55,6 +58,7 @@ export class RoomsComponent implements OnInit {
     this.roomService.getAllRooms().subscribe({
       next: (rooms) => {
         console.log('Loaded rooms:', rooms);
+        this.filteredRooms = rooms;
         this.rooms = rooms;
       },
       error: (error) => console.error('Error fetching rooms:', error)
@@ -68,11 +72,11 @@ export class RoomsComponent implements OnInit {
         console.log('Room deleted successfully:', response);
         this.loadRooms();
         this.roomService.roomChanged();
-        this.messages = [{severity: 'success', summary: 'Success', detail: 'Room deleted successfully'}];
+        this.messageService.add({severity: 'success', summary: 'Success', detail: 'Room deleted successfully'});
       },
       error: (error) => {
         console.error('Error deleting room:', error)
-        this.messages = [{severity: 'error', summary: 'Error', detail: 'Error deleting room'}];
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error deleting room'});
       }
     });
     this.loadRooms();
@@ -87,31 +91,26 @@ export class RoomsComponent implements OnInit {
     this.roomService.createRoom(this.newRoomId).subscribe({
       next: (response) => {
         console.log('Room created successfully:', response);
+        this.messageService.add({severity: 'success', summary: 'Success', detail: 'Room created successfully'});
         this.loadRooms();
         this.newRoomId = '';
         this.displayCreateDialog = false;
         this.roomService.roomChanged();
-        this.messages = [{severity: 'success', summary: 'Success', detail: 'Room created successfully'}];
       },
       error: (error) => {
-        this.messagesCreate = [{severity: 'error', summary: 'Error', detail: 'Name already exists'}];
-        console.error('Error creating room:', error)
+        console.error('Error creating room:', error);
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error creating room'});
       }
     });
   }
 
   applyFilter($event: Event) {
     const filterValue = ($event.target as HTMLInputElement).value;
-    console.log('Filtering rooms by:', filterValue);
-    this.rooms = this.rooms.filter(room => room.id.includes(filterValue));
+    console.log('Filtering rooms:', filterValue);
+    this.filteredRooms = this.rooms.filter(room => room.id.includes(filterValue));
   }
 
-  onRowToggle(room: Room): void {
-    if (this.expandedRows[room.id]) {
-      delete this.expandedRows[room.id];
-    } else {
-      this.expandedRows = {[room.id]: true};
-    }
-    console.log('Expanded rows:', this.expandedRows);
+  detailedView(id: string) {
+    this.router.navigate(['/room', id]);
   }
 }

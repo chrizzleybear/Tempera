@@ -114,14 +114,4 @@ public class RoomService {
                 "Threshold " + updateThreshold.getThresholdType() + " was updated. Reason: " +  reason);
         return thresholdRepository.save(updateThreshold);
     }
-    @Transactional
-    public ThresholdTip updateThresholdTip(ThresholdTip tip) {
-        Threshold threshold = thresholdRepository.findById(tip.getId()).orElseThrow(() -> new IllegalArgumentException("Threshold not found"));
-        ThresholdTip updateTip = threshold.getTip();
-        updateTip.setTip(tip.getTip());
-        // TO-DO: add info for which station/room the tip has been edited
-        auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.THRESHOLD,
-                "Tip of threshold " + threshold.getThresholdType() + " was updated to " + updateTip.getTip() + ".");
-        return thresholdTipRepository.save(updateTip);
-    }
 }
