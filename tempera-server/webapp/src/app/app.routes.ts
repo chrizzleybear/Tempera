@@ -28,6 +28,7 @@ import {
   AccessPointDetailsComponent,
 } from './accessPointManagement/access-point-details/access-point-details.component';
 import { AccumulatedTimeComponent } from './accumulated-time/accumulated-time.component';
+import {TipsComponent} from "./tips/tips.component";
 import { AuditLogsComponent } from './audit-logs/audit-logs.component';
 
 export const routes: Routes = [
@@ -57,6 +58,7 @@ export const routes: Routes = [
           { path: 'temperaStation/:id', component: TemperaStationDetailsComponent },
           { path: 'accumulated-time', component: AccumulatedTimeComponent },
           { path: 'audit-logs', component: AuditLogsComponent },
+          { path: 'tips', component: TipsComponent}
         ],
       },
     ],
