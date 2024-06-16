@@ -89,7 +89,7 @@
         <td>{{ timeEntry.endTime | date: 'ccc, MMM dd, y, HH:mm' }}</td>
         <td>
 <!--          This is the "dropdown" (actually not really a dropdown) that gets shown if the assignedGroupxProject is deactivated or the user is no longer part of it.-->
-          <p-dropdown *ngIf="!timeEntry.isEditable" [options]="deactivatedProjects"
+          <p-dropdown *ngIf="!timeEntry.isEditable && timeEntry.state !== StateEnum.OutOfOffice" [options]="deactivatedProjects"
                       [(ngModel)]="timeEntry.assignedGroupxProject"
                       (onChange)="updateProject($event.value, timeEntry.id)"
                       [disabled]="true"
@@ -100,7 +100,7 @@
                       [showDelay]="700"
                       appendTo="body"></p-dropdown>
 
-          <p-dropdown *ngIf="timeEntry.isEditable" [options]="availableProjects"
+          <p-dropdown *ngIf="timeEntry.isEditable && timeEntry.state !== StateEnum.OutOfOffice" [options]="availableProjects"
                       [(ngModel)]="timeEntry.assignedGroupxProject"
                       (onChange)="updateProject($event.value, timeEntry.id)"
                       optionLabel="projectName"
