@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { LayoutService } from './service/app.layout.service';
 import { AsyncPipe, DatePipe, NgClass, NgIf } from '@angular/common';
@@ -23,7 +23,7 @@ import { ToastModule } from 'primeng/toast';
   standalone: true,
   imports: [RouterLink, NgClass, TooltipModule, BadgeModule, OverlayPanelModule, TableModule, ButtonModule, AsyncPipe, NgIf, DatePipe, TagModule, WrapFnPipe, ToastModule],
 })
-export class AppTopBarComponent {
+export class AppTopBarComponent implements OnInit {
 
   items!: MenuItem[];
 
@@ -36,9 +36,10 @@ export class AppTopBarComponent {
   @ViewChild('alertsPanel') alertsPanel!: OverlayPanel;
 
   constructor(public layoutService: LayoutService, private authService: AuthService, private storageService: StorageService, public alertStoreService: AlertStoreService) {
-    setInterval(() => {
-      this.alertStoreService.refreshAlerts();
-    }, 20 * 1000);
+  }
+
+  ngOnInit(): void {
+    this.alertStoreService.startAlertTimer();
   }
 
   logout() {

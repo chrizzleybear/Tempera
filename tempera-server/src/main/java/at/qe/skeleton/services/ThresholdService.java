@@ -46,24 +46,42 @@ public class ThresholdService {
         return thresholdRepository.save(t);
     }
 
-    public Set<Threshold> getThresholdsByTemperaId(String temperaId) {
-        return temperaStationRepository.getThresholdsByTemperaId(temperaId);
-    }
-    @Transactional
-    public Threshold updateThreshold(Threshold oldThreshold, SensorType newSensorType, ThresholdType newThresholdType, double newValue, String newReason, String newTip) {
-        oldThreshold.setSensorType(newSensorType);
-        oldThreshold.setThresholdType(newThresholdType);
-        oldThreshold.setValue(newValue);
-        oldThreshold.setModificationReason(new Modification(newReason));
-        oldThreshold.setTip(new ThresholdTip(newTip));
-        return thresholdRepository.save(oldThreshold);
-    }
+  public Set<Threshold> getThresholdsByTemperaId(String temperaId) {
+    return temperaStationRepository.getThresholdsByTemperaId(temperaId);
+  }
 
-    @Transactional
-    public void deleteThreshold(Long id) {
-        Threshold t = thresholdRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Threshold not found: " + id));
-        thresholdRepository.delete(t);
-    }
+  public Set<Threshold> getThresholdsByUsername(String username) {
+    return thresholdRepository.getThresholdsByUsername(username);
+  }
+
+  public Threshold saveThreshold(Threshold threshold) {
+    return thresholdRepository.save(threshold);
+  }
+
+  @Transactional
+  public Threshold updateThreshold(
+      Threshold oldThreshold,
+      SensorType newSensorType,
+      ThresholdType newThresholdType,
+      double newValue,
+      String newReason,
+      String newTip) {
+    oldThreshold.setSensorType(newSensorType);
+    oldThreshold.setThresholdType(newThresholdType);
+    oldThreshold.setValue(newValue);
+    oldThreshold.setModificationReason(new Modification(newReason));
+    oldThreshold.setTip(new ThresholdTip(newTip));
+    return thresholdRepository.save(oldThreshold);
+  }
+
+  @Transactional
+  public void deleteThreshold(Long id) {
+    Threshold t =
+        thresholdRepository
+            .findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Threshold not found: " + id));
+    thresholdRepository.delete(t);
+  }
 
     public Threshold getThresholdById(Long id) {
         return thresholdRepository.findById(id).orElse(null);
