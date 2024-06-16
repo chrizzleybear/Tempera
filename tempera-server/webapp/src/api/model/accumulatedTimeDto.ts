@@ -14,7 +14,8 @@
 export interface AccumulatedTimeDto { 
     projectId?: string;
     groupId?: string;
-    isActive: boolean;
+    groupIsActive: boolean;
+    projectIsActive: boolean;
     state: AccumulatedTimeDto.StateEnum;
     startTimestamp: string;
     endTimestamp: string;

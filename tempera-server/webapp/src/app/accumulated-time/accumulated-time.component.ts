@@ -143,25 +143,12 @@ export class AccumulatedTimeComponent implements OnInit {
 * problems, thats why the if-clauses are there.
  */
   filterActiveProjects() {
-    // if (this.activeProjects.length === 0) {
-    //   this.table?.filter([''], 'projectId', FilterMatchMode.IN);
-    // } else {
-    //   this.table?.filter(this.activeProjects.map(p => p.projectId), 'projectId', FilterMatchMode.IN);
-    // }
-    // if (this.activeGroups.length === 0) {
-    //   this.table?.filter([''], 'groupId', FilterMatchMode.IN);
-    // } else {
-    //   this.table?.filter(this.activeGroups.map(g => g.id), 'groupId', FilterMatchMode.IN);
-    // }
 
-    // this.availableProjects = this.activeProjects;
-    // this.availableGroups = this.activeGroups;
+    this.availableProjects = this.activeProjects;
+    this.availableGroups = this.activeGroups;
 
-    this.table.value = this.table.value.filter((entry: InternalAccumulatedTimeDto) =>
-      this.activeProjects.some(project => project.projectId === entry.projectId) &&
-      this.activeGroups.some(group => group.id === entry.groupId));
-
-
+    this.table?.filter(true, 'projectIsActive', FilterMatchMode.EQUALS)
+    this.table?.filter(true, 'groupIsActive', FilterMatchMode.EQUALS)
     this.onlyActiveProjectsAndGroupsShown = true;
   }
 
@@ -171,19 +158,12 @@ export class AccumulatedTimeComponent implements OnInit {
 * problems, thats why the if-clause is there.
 */
   removeOnlyActiveProjectsFilter() {
-    if (this.allProjects.length === 0) {
-      this.table?.filter([''], 'projectId', FilterMatchMode.IN);
-    } else {
-      this.table?.filter(this.allProjects.map(p => p.projectId), 'projectId', FilterMatchMode.IN);
-    }
-    if (this.allGroups.length === 0) {
-      this.table?.filter([''], 'groupId', FilterMatchMode.IN);
-    } else {
-      this.table?.filter(this.allGroups.map(g => g.id), 'groupId', FilterMatchMode.IN);
-    }
-    this.table?.reset();
+
     this.availableProjects = this.allProjects;
     this.availableGroups = this.allGroups;
+    this.table?.filter([false, true], 'projectIsActive', FilterMatchMode.IN)
+    this.table?.filter([false, true], 'groupIsActive', FilterMatchMode.IN)
+
     this.onlyActiveProjectsAndGroupsShown = false;
   }
 

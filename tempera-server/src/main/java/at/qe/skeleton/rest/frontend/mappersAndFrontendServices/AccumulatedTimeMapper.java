@@ -79,7 +79,8 @@ public class AccumulatedTimeMapper {
     return new AccumulatedTimeDto(
         groupxProjectStateTimeDbDto.projectId().toString(),
         groupxProjectStateTimeDbDto.groupId().toString(),
-        groupxProjectStateTimeDbDto.isActive(),
+        groupxProjectStateTimeDbDto.groupIsActive(),
+        groupxProjectStateTimeDbDto.projectIsActive(),
         groupxProjectStateTimeDbDto.state(),
         groupxProjectStateTimeDbDto.start().format(DateTimeFormatter.ISO_DATE_TIME),
         groupxProjectStateTimeDbDto.end().format(DateTimeFormatter.ISO_DATE_TIME));
