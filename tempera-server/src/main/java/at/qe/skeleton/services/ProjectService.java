@@ -46,8 +46,6 @@ public class ProjectService {
   private static final String PROJECT_NOT_FOUND = "Project not found";
   private static final String GROUP_NOT_FOUND = "Group not found";
 
-  private Logger logger = Logger.getLogger("groupxProjectServiceLogger");
-
   // todo: write tests for project Service to test the functionality of GroupxProject in particular
 
   @Transactional
@@ -122,7 +120,7 @@ if(groupxProjectOptional.isPresent()){
       else {
         groupxProject.setActive(true);
           auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.PROJECT,
-                  "Project " + project.getName() + " was linked to group " + group.getName() + ".");
+                  "Project " + groupxProject.getProject().getName() + " was linked to group " + groupxProject.getGroup().getName() + ".");
         return groupxProjectRepository.save(groupxProject);
 
     }

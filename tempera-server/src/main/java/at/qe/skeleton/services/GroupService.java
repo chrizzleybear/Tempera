@@ -5,8 +5,6 @@ import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.LogAffectedType;
 import at.qe.skeleton.model.enums.LogEvent;
-import at.qe.skeleton.model.enums.LogAffectedType;
-import at.qe.skeleton.model.enums.LogEvent;
 import at.qe.skeleton.model.enums.UserxRole;
 import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.GroupxProjectRepository;
@@ -28,26 +26,25 @@ public class GroupService {
   private static final String INVALID_MEMBER_ID = "Invalid member ID";
   private static final String INVALID_MANAGER_ID = "Invalid manager ID";
   private final ProjectService projectService;
+  private final AuditLogService auditLogService;
+  private final UserxRepository userxRepository;
 
-  private UserxRepository userxRepository;
+  private final GroupRepository groupRepository;
 
-  private GroupRepository groupRepository;
-
-  private GroupxProjectRepository groupxProjectRepository;
+  private final GroupxProjectRepository groupxProjectRepository;
 
   public GroupService(
       ProjectService projectService,
       UserxRepository userxRepository,
       GroupRepository groupRepository,
+      AuditLogService auditLogService,
       GroupxProjectRepository groupxProjectRepository) {
+    this.auditLogService = auditLogService;
     this.projectService = projectService;
     this.userxRepository = userxRepository;
     this.groupRepository = groupRepository;
     this.groupxProjectRepository = groupxProjectRepository;
   }
-    @Autowired
-    private AuditLogService auditLogService;
-
 
   /**
    * will mostly be used to get all active groups as options for adding to a project
@@ -68,32 +65,46 @@ public class GroupService {
         .toList();
   }
 
-    @Transactional
-    public Groupx createGroup(String name, String description, String groupLeadId) {
-        Userx groupLead = userxRepository.findById(groupLeadId)
-                .orElseThrow(() -> new IllegalArgumentException(INVALID_GROUPLEAD_ID));
-        groupLead.addRole(UserxRole.GROUPLEAD);
-        Groupx group = new Groupx(name, description, groupLead);
-        auditLogService.logEvent(LogEvent.CREATE, LogAffectedType.GROUP,
-                "New Group with name " + group.getName() + " and group leader " + groupLead.getUsername() + " was created.");
-        return groupRepository.save(group);
-    }
+  @Transactional
+  public Groupx createGroup(String name, String description, String groupLeadId) {
+    Userx groupLead =
+        userxRepository
+            .findById(groupLeadId)
+            .orElseThrow(() -> new IllegalArgumentException(INVALID_GROUPLEAD_ID));
+    groupLead.addRole(UserxRole.GROUPLEAD);
+    Groupx group = new Groupx(name, description, groupLead);
+    auditLogService.logEvent(
+        LogEvent.CREATE,
+        LogAffectedType.GROUP,
+        "New Group with name "
+            + group.getName()
+            + " and group leader "
+            + groupLead.getUsername()
+            + " was created.");
+    return groupRepository.save(group);
+  }
 
-    @PreAuthorize("hasAuthority('MANAGER') or hasAnyAuthority('ADMIN')")
-    @Transactional
-    public Groupx updateGroup(Long groupId, String name, String description, String groupLeadId) {
-        Groupx group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
-        Userx groupLead = userxRepository.findById(groupLeadId)
-                .orElseThrow(() -> new IllegalArgumentException(INVALID_GROUPLEAD_ID));
-        groupLead.addRole(UserxRole.GROUPLEAD);
-        group.setName(name);
-        group.setDescription(description);
-        group.setGroupLead(groupLead);
-        auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.GROUP,
-                "Group with name " + group.getName() + " was edited.");
-        return groupRepository.save(group);
-    }
+  @PreAuthorize("hasAuthority('MANAGER') or hasAnyAuthority('ADMIN')")
+  @Transactional
+  public Groupx updateGroup(Long groupId, String name, String description, String groupLeadId) {
+    Groupx group =
+        groupRepository
+            .findById(groupId)
+            .orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
+    Userx groupLead =
+        userxRepository
+            .findById(groupLeadId)
+            .orElseThrow(() -> new IllegalArgumentException(INVALID_GROUPLEAD_ID));
+    groupLead.addRole(UserxRole.GROUPLEAD);
+    group.setName(name);
+    group.setDescription(description);
+    group.setGroupLead(groupLead);
+    auditLogService.logEvent(
+        LogEvent.EDIT,
+        LogAffectedType.GROUP,
+        "Group with name " + group.getName() + " was edited.");
+    return groupRepository.save(group);
+  }
 
   @PreAuthorize("hasAuthority('MANAGER') or hasAnyAuthority('ADMIN')")
   @Transactional
@@ -107,24 +118,34 @@ public class GroupService {
     group.deactivate();
     group.removeAllMembers();
     groupRepository.save(group);
-      auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.GROUP,
-              "New Group with name " + group.getName() + " was deleted.");
+    auditLogService.logEvent(
+        LogEvent.DELETE,
+        LogAffectedType.GROUP,
+        "New Group with name " + group.getName() + " was deleted.");
   }
 
-    @PreAuthorize("hasAuthority('GROUPLEAD') or hasAnyAuthority('ADMIN')")
-    @Transactional
-    public Userx addMember(Long groupId, String memberId) {
-        Groupx group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
-        Userx member = userxRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException(INVALID_MEMBER_ID));
-        if(group.getMembers().contains(member)){
-            throw new IllegalArgumentException("Member already exists");
-        }
-        group.addMember(member);
-        groupRepository.save(group);
-        auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.GROUP,
-                "Member " + member.getUsername() + " was added to group " + group.getName());
-        return member;
+  @PreAuthorize("hasAuthority('GROUPLEAD') or hasAnyAuthority('ADMIN')")
+  @Transactional
+  public Userx addMember(Long groupId, String memberId) {
+    Groupx group =
+        groupRepository
+            .findById(groupId)
+            .orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
+    Userx member =
+        userxRepository
+            .findById(memberId)
+            .orElseThrow(() -> new IllegalArgumentException(INVALID_MEMBER_ID));
+    if (group.getMembers().contains(member)) {
+      throw new IllegalArgumentException("Member already exists");
     }
+    group.addMember(member);
+    groupRepository.save(group);
+    auditLogService.logEvent(
+        LogEvent.EDIT,
+        LogAffectedType.GROUP,
+        "Member " + member.getUsername() + " was added to group " + group.getName());
+    return member;
+  }
 
   public Groupx getGroup(Long groupId) {
     return groupRepository
@@ -133,7 +154,9 @@ public class GroupService {
   }
 
   public Groupx getGroupDetailedGroupLead(Long groupId) {
-    return groupRepository.findByIdDetailedGroupLead(groupId).orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
+    return groupRepository
+        .findByIdDetailedGroupLead(groupId)
+        .orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
   }
 
   @PreAuthorize("hasAuthority('GROUPLEAD') or hasAuthority('MANAGER')or hasAnyAuthority('ADMIN')")
@@ -146,15 +169,18 @@ public class GroupService {
         userxRepository
             .findFirstByUsernameDetailed(username)
             .orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
-    List<GroupxProject> gxps = groupxProjectRepository.findAllByGroup_IdAndContributorsContain(groupId, username);
+    List<GroupxProject> gxps =
+        groupxProjectRepository.findAllByGroup_IdAndContributorsContain(groupId, username);
     for (var gxp : gxps) {
       gxp.removeContributor(member);
       projectService.saveGroupxProject(gxp);
     }
     group.removeMember(member);
     groupRepository.save(group);
-    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.GROUP,
-              "Member " + member.getUsername() + " was removed from group " + group.getName());
+    auditLogService.logEvent(
+        LogEvent.EDIT,
+        LogAffectedType.GROUP,
+        "Member " + member.getUsername() + " was removed from group " + group.getName());
   }
 
   @PreAuthorize("hasAuthority('GROUPLEAD') or hasAnyAuthority('ADMIN')")

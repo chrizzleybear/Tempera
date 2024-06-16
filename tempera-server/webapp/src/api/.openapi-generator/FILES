@@ -16,6 +16,7 @@ api/roomController.service.ts
 api/temperaStationController.service.ts
 api/timeRecordController.service.ts
 api/timetableController.service.ts
+api/tipController.service.ts
 api/userManagementController.service.ts
 configuration.ts
 encoder.ts
