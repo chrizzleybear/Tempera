@@ -34,7 +34,7 @@
   </p-table>
 
 <p-dialog header="Create Project" [(visible)]="displayCreateDialog" [modal]="true" [style]="{width: '50vw'}" [closable]="true">
-  <app-project-create (createComplete)="onCreateCompleted($event)"></app-project-create>
+  <app-project-create (createComplete)="onCreateCompleted($event)" [projectCreationEvent]="projectCreationEvent"></app-project-create>
 </p-dialog>
 <p-dialog header="Edit Project" [(visible)]="displayEditDialog" [modal]="true" [style]="{width: '50vw'}" [closable]="true">
   <div *ngIf="selectedProject">

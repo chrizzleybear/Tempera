@@ -74,7 +74,6 @@ public class ProjectService {
   }
 
 
-
   @Transactional
   public Project updateProject(Long id, String name, String description, String manager) {
     Project project =
@@ -145,8 +144,14 @@ if(groupxProjectOptional.isPresent()){
     }
     Project project = projectRepository.findFirstById(projectId);
     project.deactivate();
-    //todo: logic for searching Projects anpassen an isActive
     projectRepository.save(project);
+  }
+
+
+  public Project reactivateProject(Long projectId) {
+    Project project = projectRepository.findFirstById(projectId);
+    project.activate();
+    return projectRepository.save(project);
   }
 
   /**

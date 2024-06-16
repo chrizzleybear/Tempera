@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {Project} from "../../models/project.model";
 import {MessagesModule} from "primeng/messages";
 import {TableModule} from "primeng/table";
@@ -72,8 +72,14 @@ export class ProjectsComponent implements OnInit{
         this.filteredProjects = this.projects;
       }
   }
+
+  // Event emitter for creating a project - loading latest deactivatedProjects
+  @Output() projectCreationEvent: EventEmitter<void> = new EventEmitter<void>();
+
+
   createProject() {
     this.displayCreateDialog = true;
+    this.projectCreationEvent.emit();
   }
     deleteProject(projectId: string) {
       this.projectService.deleteProject(projectId).subscribe({

@@ -8,6 +8,7 @@ import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
 import at.qe.skeleton.services.ProjectService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,6 +40,12 @@ public class ProjectController {
     return ResponseEntity.ok(projects);
   }
 
+@PutMapping("/reactivate/{projectId}")
+@PreAuthorize("hasAuthority('MANAGER')")
+public ResponseEntity<SimpleProjectDto> reactivateProject(@PathVariable String projectId) {
+      SimpleProjectDto reactivatedProject = projectMapperService.reactivateProject(projectId);
+  return ResponseEntity.ok(reactivatedProject);
+}
 
 
 

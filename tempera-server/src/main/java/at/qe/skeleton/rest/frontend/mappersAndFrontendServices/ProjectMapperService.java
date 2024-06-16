@@ -66,6 +66,11 @@ public class ProjectMapperService {
         return projectService.getSimpleProjectDtoById(Long.parseLong(projectId));
     }
 
+    public SimpleProjectDto reactivateProject(String projectId) {
+        Project reactivatedProject = projectService.reactivateProject(Long.parseLong(projectId));
+        return mapToSimpleProjectDto(reactivatedProject);
+    }
+
 
 
     public List<SimpleGroupDto> getAllActiveSimpleGroups(String projectId){
