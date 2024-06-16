@@ -177,7 +177,7 @@ export class AccumulatedTimeComponent implements OnInit {
     } else {
       this.table?.filter(this.allGroups.map(g => g.id), 'groupId', FilterMatchMode.IN);
     }
-    this.table?.reset();
+    // this.table?.reset();
     this.availableProjects = this.allProjects;
     this.availableGroups = this.allGroups;
     this.onlyActiveProjectsAndGroupsShown = false;

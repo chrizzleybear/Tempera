@@ -15,14 +15,11 @@
       <th id="groupFilter">
         <p-columnFilter field="groupId" [showMenu]="true" [showClearButton]="false">
           <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-            <p-dropdown [options]="activeGroups" [showClear]="true" (onChange)="filter($event.value?.id)"
+            <p-dropdown [options]="availableGroups" [showClear]="true" (onChange)="filter($event.value?.id)"
                         optionLabel="name" appendTo="body" placeholder="Select one"></p-dropdown>
           </ng-template>
         </p-columnFilter>
       </th>
-      <!---------------------------------------------------------------------------------------->
-
-      <!---------------------------------------------------------------------------------------->
 
       <th id="projectFilter">
         <p-columnFilter field="projectId" [showMenu]="true" [showClearButton]="false">
@@ -43,7 +40,7 @@
     </button>
   </div>
   <div id="remove-filter-button"  *ngIf="onlyActiveProjectsAndGroupsShown" class="absolute top-6 right-8 ml-8">
-      <button type="button" pButton label="Show All Projedcts & Groups" (click)="removeOnlyActiveProjectsFilter()" class="flex-col mr-2">
+      <button type="button" pButton label="Show All Projects & Groups" (click)="removeOnlyActiveProjectsFilter()" class="flex-col mr-2">
       </button>
   </div>
   <canvas id="MyChart" class="mt-20 lg:mt-0">{{ chart }}</canvas>
