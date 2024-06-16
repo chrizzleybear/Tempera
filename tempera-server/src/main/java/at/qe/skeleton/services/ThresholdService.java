@@ -3,6 +3,8 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.model.Modification;
 import at.qe.skeleton.model.Threshold;
 import at.qe.skeleton.model.ThresholdTip;
+import at.qe.skeleton.model.enums.LogAffectedType;
+import at.qe.skeleton.model.enums.LogEvent;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.ThresholdType;
 import at.qe.skeleton.repositories.TemperaStationRepository;
@@ -23,14 +25,16 @@ public class ThresholdService {
     private final ThresholdRepository thresholdRepository;
     private final TemperaStationRepository temperaStationRepository;
     private final ThresholdTipRepository thresholdTipRepository;
+    private final AuditLogService auditLogService;
 
     @Autowired
     public ThresholdService(ThresholdRepository thresholdRepository,
                             TemperaStationRepository temperaStationRepository,
-                            ThresholdTipRepository thresholdTipRepository) {
+                            ThresholdTipRepository thresholdTipRepository, AuditLogService auditLogService) {
         this.thresholdRepository = thresholdRepository;
         this.temperaStationRepository = temperaStationRepository;
         this.thresholdTipRepository = thresholdTipRepository;
+        this.auditLogService = auditLogService;
     }
 
     @Transactional
@@ -75,7 +79,11 @@ public class ThresholdService {
 
     @Transactional
     public ThresholdTip updateThresholdTip(ThresholdTip tip) {
-        ThresholdTip oldTip = thresholdTipRepository.findById(tip.getId()).orElseThrow(() -> new IllegalArgumentException("Threshold not found"));
+        if (thresholdTipRepository.findById(tip.getId()).isEmpty()) {
+            throw new IllegalArgumentException("Threshold not found");
+        }
+        auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.THRESHOLD,
+                "Tip of threshold with id: " + tip.getId() + " was updated to " + tip.getTip() + ".");
         return thresholdTipRepository.save(tip);
     }
 
