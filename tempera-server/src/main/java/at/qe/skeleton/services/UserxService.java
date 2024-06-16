@@ -40,7 +40,7 @@ public class UserxService implements UserDetailsService {
 
   private final UserxRepository userRepository;
   private final PasswordEncoder passwordEncoder;
-´  private final ExternalRecordRepository externalRecordRepository;
+  private final ExternalRecordRepository externalRecordRepository;
   private final GroupRepository groupRepository;
   private final ProjectService projectService;
   private final AuditLogService auditLogService;
@@ -84,9 +84,9 @@ public class UserxService implements UserDetailsService {
 
 
   /**
-   * Saves the user. This method will also set {@link Userx#createDate} for new entities or {@link
-   * Userx#updateDate} for updated entities. The user requesting this operation will also be stored
-   * as {@link Userx#createDate} or {@link Userx#updateUser} respectively.
+   * Saves the user. This method will also set createDate for new entities or
+   * updateDate for updated entities. The user requesting this operation will also be stored
+   * as createDate or updateUser respectively.
    *
    * @param user the user to save
    * @return the updated user
