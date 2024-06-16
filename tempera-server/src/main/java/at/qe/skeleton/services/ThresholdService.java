@@ -23,6 +23,7 @@ public class ThresholdService {
     private final ThresholdRepository thresholdRepository;
     private final TemperaStationRepository temperaStationRepository;
     private final ThresholdTipRepository thresholdTipRepository;
+
     @Autowired
     public ThresholdService(ThresholdRepository thresholdRepository,
                             TemperaStationRepository temperaStationRepository,
@@ -30,16 +31,6 @@ public class ThresholdService {
         this.thresholdRepository = thresholdRepository;
         this.temperaStationRepository = temperaStationRepository;
         this.thresholdTipRepository = thresholdTipRepository;
-    }
-
-    @Transactional
-    public List<Threshold> getAllThresholds() {
-        return thresholdRepository.findAll();
-    }
-
-    @Transactional
-    public List<Threshold> getDefaultThresholds() {
-        return thresholdRepository.findDefaultThresholds();
     }
 
     @Transactional

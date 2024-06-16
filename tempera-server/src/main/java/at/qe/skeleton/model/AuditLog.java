@@ -17,13 +17,15 @@ public class AuditLog {
   @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime timeStamp;
 
-  private String message;
+  @ManyToOne private Userx triggeringUser;
+
+  private LogEvent actionType;
 
   private LogAffectedType affectedType;
 
-  @ManyToOne private Userx triggeringUser;
+  private String message;
 
-  private LogEvent event;
+  public AuditLog() {}
 
   /**
    * For creating AuditLogs only this Constructor should be used.
@@ -32,22 +34,18 @@ public class AuditLog {
    *     exactly happened.
    * @param affectedType The Class that was affected by the action which is being logged.
    * @param triggeringUser The Userx that initiated the Action that is being logged.
-   * @param event A categorization of the Action that is being logged.
+   * @param actionType A categorization of the Action that is being logged.
    */
   public AuditLog(
-      String message, LogAffectedType affectedType, Userx triggeringUser, LogEvent event) {
-    this.message = message;
-    this.affectedType = affectedType;
+      Userx triggeringUser, LogEvent actionType, LogAffectedType affectedType, String message) {
     this.triggeringUser = triggeringUser;
-    this.event = event;
     this.timeStamp = LocalDateTime.now();
+    this.actionType = actionType;
+    this.affectedType = affectedType;
+    this.message = message;
   }
 
-  protected AuditLog() {}
-
-
-
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
@@ -63,14 +61,13 @@ public class AuditLog {
     return affectedType;
   }
 
+  public LogEvent getActionType() {
+    return actionType;
+  }
+
   public Userx getTriggeringUser() {
     return triggeringUser;
   }
-
-  public LogEvent getEvent() {
-    return event;
-  }
-
 
   @Override
   public boolean equals(Object obj) {
@@ -83,8 +80,8 @@ public class AuditLog {
     return Objects.equals(other.getId(), this.getId());
   }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
 }

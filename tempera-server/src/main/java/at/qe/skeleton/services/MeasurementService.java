@@ -2,9 +2,7 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.*;
-import at.qe.skeleton.model.enums.AlertType;
-import at.qe.skeleton.model.enums.SensorType;
-import at.qe.skeleton.model.enums.ThresholdType;
+import at.qe.skeleton.model.enums.*;
 import at.qe.skeleton.repositories.MeasurementRepository;
 import at.qe.skeleton.repositories.SensorRepository;
 import at.qe.skeleton.repositories.TemperaStationRepository;
@@ -21,16 +19,19 @@ public class MeasurementService {
   private final MeasurementRepository measurementRepository;
   private final ThresholdService thresholdService;
   private final AlertService alertService;
+  private final AuditLogService auditLogService;
 
   public MeasurementService(
       AlertService alertService,
       ThresholdService thresholdService,
       TemperaStationRepository temperaStationRepository,
       MeasurementRepository measurementRepository,
-      SensorRepository sensorRepository) {
+      SensorRepository sensorRepository,
+      AuditLogService auditLogService) {
     this.alertService = alertService;
     this.thresholdService = thresholdService;
     this.measurementRepository = measurementRepository;
+    this.auditLogService = auditLogService;
   }
 
 
@@ -47,9 +48,12 @@ public class MeasurementService {
   }
 
   public Measurement loadMeasurement(MeasurementId id) throws CouldNotFindEntityException {
-    return measurementRepository
+      Measurement m = measurementRepository
         .findById(id)
         .orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id));
+      auditLogService.logEvent(LogEvent.LOAD, LogAffectedType.MEASUREMENT,
+              "Measurement from station " + id.getSensorId().getTemperaId() + " at " + id.getTimestamp() + " was loaded.");
+      return m;
   }
 
   public Measurement saveMeasurement(Measurement measurement) {
@@ -131,17 +135,18 @@ public class MeasurementService {
 
     double value = measurement.getValue();
 
-    if (value <= lowerWarnThreshold.getValue()) {
-      return alertBuilder(lowerWarnThreshold, measurement);
-    } else if (value <= lowerInfoThreshold.getValue()) {
-      return alertBuilder(lowerInfoThreshold, measurement);
-    } else if (value >= upperWarnThreshold.getValue()) {
-      return alertBuilder(upperWarnThreshold, measurement);
+    if (value <= lowerInfoThreshold.getValue()) {
+      auditLogService.logEvent(LogEvent.WARN, LogAffectedType.THRESHOLD,
+              "Value for " + measurement.getSensor().getSensorType() + " of station " + measurement.getSensor().getTemperaStation().getId() + " is below " + ((value <= lowerWarnThreshold.getValue()) ? "WARNING-" : "INFO-") + "Threshold."
+      );
+      return alertBuilder( (value <= lowerWarnThreshold.getValue()) ? lowerWarnThreshold : lowerInfoThreshold  , measurement);
     } else if (value >= upperInfoThreshold.getValue()) {
-      return alertBuilder(upperInfoThreshold, measurement);
-    } else {
-      return null;
+      auditLogService.logEvent(LogEvent.WARN, LogAffectedType.THRESHOLD,
+              "Value for " + measurement.getSensor().getSensorType() + " of station " + measurement.getSensor().getTemperaStation().getId() + " is above " + ((value <= lowerWarnThreshold.getValue()) ? "WARNING-" : "INFO-") + "Threshold."
+      );
+      return alertBuilder( (value >= upperWarnThreshold.getValue()) ? upperWarnThreshold : upperInfoThreshold  , measurement);
     }
+    return null;
   }
 
   /**
@@ -160,7 +165,6 @@ public class MeasurementService {
       openAlert.setFirstIncident(measurement.getId().getTimestamp());
       openAlert.setLastIncident(measurement.getId().getTimestamp());
       openAlert.setPeakDeviationValue(measurement.getValue());
-
       return openAlert;
     }
     openAlert.setLastIncident(measurement.getId().getTimestamp());
@@ -176,6 +180,8 @@ public class MeasurementService {
 
   public Optional<Measurement> findLatestMeasurementBySensor(Sensor sensor) {
     SensorId id = sensor.getSensorId();
+    auditLogService.logEvent(LogEvent.LOAD, LogAffectedType.MEASUREMENT,
+              "Lastest measurement of station " + sensor.getTemperaStation().getId() + " was loaded.");
     return measurementRepository.findFirstBySensorIdOrderById_TimestampDesc(id);
   }
 

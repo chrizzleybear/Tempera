@@ -63,9 +63,14 @@ public class TemperaStationController {
 
     @PutMapping("/create")
     public ResponseEntity<MessageResponse> createTemperaStation(@RequestBody TemperaStationDto temperaStationDto) {
-        temperaStationService.createTemperaStation(temperaStationDto.id(), temperaStationDto.enabled(), temperaStationDto.user(), temperaStationDto.accessPointId());
-        return ResponseEntity.ok(new MessageResponse("TemperaStation was created."));
+        try {
+            TemperaStation t = temperaStationService.createTemperaStation(temperaStationDto);
+            return ResponseEntity.ok(new MessageResponse("TemperaStation was created with id " + t.getId() + "."));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
+
 
     @GetMapping("sensors/{temperaStationId}")
     public ResponseEntity<List<SensorDto>> getTemperaStationSensors(@PathVariable String temperaStationId) {

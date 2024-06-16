@@ -47,6 +47,7 @@ class TimeRecordServiceTest {
   @Mock private ExternalRecordRepository externalRecordRepositoryMock;
   @Mock private InternalRecordRepository internalRecordRepositoryMock;
     @Mock private UserxService mockedUserxService;
+    @Mock private AuditLogService auditLogService;
     private TimeRecordService timeRecordService;
 
 
@@ -57,7 +58,7 @@ class TimeRecordServiceTest {
                 externalRecordRepositoryMock, internalRecordRepositoryMock, mockedUserxService);
     sensorService = new SensorService(sensorRepository);
     timeRecordServiceReal = new TimeRecordService(externalRecordRepository, internalRecordRepository, mockedUserxService);
-    temperaStationService = new TemperaStationService(temperaStationRepository, sensorService, userxRepository, accessPointRepository);
+    temperaStationService = new TemperaStationService(temperaStationRepository, sensorService, userxRepository, accessPointRepository, auditLogService);
 
   }
 

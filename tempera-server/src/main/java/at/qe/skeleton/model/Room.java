@@ -40,6 +40,10 @@ public class Room implements Persistable<String>, Serializable {
   @OneToOne private AccessPoint accessPoint;
 
   /**
+   * @deprecated
+   * Do not use for creation, use the service method instead, otherwise default thresholds
+   * will not be added.
+   * {@link at.qe.skeleton.services.RoomService#createRoom(String)}
    * User can choose roomid but RoomService must ensure, that this id is not yet taken.
    *
    * @param roomId the id, the user assigns to this room. it should be unique.
@@ -47,6 +51,7 @@ public class Room implements Persistable<String>, Serializable {
   public Room(String roomId) {
     this.roomId = roomId;
     this.thresholds = new HashSet<>();
+    this.accessPoint = null;
   }
 
   protected Room() {}

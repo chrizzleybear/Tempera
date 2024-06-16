@@ -36,6 +36,17 @@ public class AccessPoint implements Persistable<UUID>, Serializable {
   private boolean enabled;
   private boolean isHealthy;
 
+  /**
+   * Do not use the constructor directly, since the uuid for an access point is generated
+   * by the service. Use the service method instead:
+   * {@link at.qe.skeleton.services.AccessPointService#createAccessPoint(String, boolean, boolean)} or
+   * {@link at.qe.skeleton.services.AccessPointService#createAccessPoint(AccessPointDto)}
+   *
+   * @param id
+   * @param room
+   * @param enabled
+   * @param isHealthy
+   */
   public AccessPoint(@NotNull UUID id, @NotNull Room room, boolean enabled, boolean isHealthy) {
     this.id = Objects.requireNonNull(id, "id must not be null");
     this.room = Objects.requireNonNull(room, "room must not be null");

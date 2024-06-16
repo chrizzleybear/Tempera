@@ -5,6 +5,7 @@ api/accessPointController.service.ts
 api/accumulatedTimeController.service.ts
 api/alertController.service.ts
 api/api.ts
+api/auditLogController.service.ts
 api/authController.service.ts
 api/dashboardController.service.ts
 api/groupManagementController.service.ts
@@ -26,6 +27,7 @@ model/accessPointDto.ts
 model/accumulatedTimeDto.ts
 model/accumulatedTimeResponse.ts
 model/alertDto.ts
+model/auditLogDto.ts
 model/colleagueStateDto.ts
 model/contributorAssignmentDto.ts
 model/credentialsDto.ts
