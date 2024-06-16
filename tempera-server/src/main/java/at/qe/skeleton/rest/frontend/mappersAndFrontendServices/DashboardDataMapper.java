@@ -26,19 +26,22 @@ public class DashboardDataMapper {
   private final MeasurementService measurementService;
   private final TimeRecordService timeRecordService;
   private final ProjectService projectService;
+  private final GroupxProjectMapper groupxProjectMapper;
 
   public DashboardDataMapper(
-      UserxService userService,
-      TemperaStationService temperaService,
-      MeasurementService measurementService,
-      TimeRecordService timeRecordService,
-      UserxService userxService,
-      ProjectService projectService) {
+          UserxService userService,
+          TemperaStationService temperaService,
+          MeasurementService measurementService,
+          TimeRecordService timeRecordService,
+          UserxService userxService,
+          ProjectService projectService,
+          GroupxProjectMapper groupxProjectMapper) {
     this.temperaService = temperaService;
     this.measurementService = measurementService;
     this.timeRecordService = timeRecordService;
     this.userService = userxService;
     this.projectService = projectService;
+    this.groupxProjectMapper = groupxProjectMapper;
   }
 
   private List<ColleagueStateDto> mapUserToColleagueStateDto(Userx user) {
@@ -149,18 +152,14 @@ public class DashboardDataMapper {
             .map(externalRecord -> externalRecord.getStart().toString())
             .orElse(null);
 
+    Optional<InternalRecord> internalRecordOptional =
+            timeRecordService
+                    .findLatestInternalRecordByUser(user);
+    GroupxProject project = internalRecordOptional.map(InternalRecord::getGroupxProject).orElse(null);
+    SimpleGroupxProjectDto projectDto = groupxProjectMapper.mapToDto(project);
+
     GroupxProject defaultGroupxProject = user.getDefaultGroupxProject();
-    SimpleGroupxProjectDto defaultGxpDto;
-    if (defaultGroupxProject == null) {
-      defaultGxpDto = null;
-    } else {
-      defaultGxpDto =
-          new SimpleGroupxProjectDto(
-                defaultGroupxProject.getGroup().getId().toString(),
-                defaultGroupxProject.getGroup().getName(),
-                defaultGroupxProject.getProject().getId().toString(),
-                defaultGroupxProject.getProject().getName());
-    }
+    SimpleGroupxProjectDto defaultGxpDto = groupxProjectMapper.mapToDto(defaultGroupxProject);
 
     List<SimpleGroupxProjectDto> availableGxps =
         projectService.getSimpleGroupxProjectDtoByUser(user.getUsername()).stream().toList();
@@ -173,6 +172,7 @@ public class DashboardDataMapper {
         user.getStateVisibility(),
         user.getState(),
         stateTimeStamp,
+        projectDto,
         defaultGxpDto,
 availableGxps,
             colleagueStateDtos);
@@ -188,7 +188,7 @@ availableGxps,
             timeRecordService
                     .findLatestInternalRecordByUser(user)
                     .orElseThrow(
-                            () -> new CouldNotFindEntityException("No external record found for user"));
+                            () -> new CouldNotFindEntityException("No internal record found for user"));
 
     if (gxpDto != null) {
     GroupxProject groupxProject = projectService.findByGroupAndProject(Long.valueOf(gxpDto.groupId()), Long.valueOf(gxpDto.projectId()));

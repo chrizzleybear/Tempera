@@ -1,14 +1,27 @@
+<p-toast></p-toast>
 <p-dropdown [options]="floors" (onChange)="selectFloor($event)" optionLabel="label"></p-dropdown>
 <svg width="400" height="600">
   <g *ngFor="let room of rooms[currentFloor]?? []; let i = index">
     <rect [attr.x]="room.x + 100" [attr.y]="room.y + 50" width="100" height="100"
-          [attr.fill]="room.fillColor" (click)="viewDetails(i)" stroke="#000" stroke-width="2" />
-    <text [attr.x]="room.x + 130" [attr.y]="room.y + 100">{{room.roomId}} </text>
-    <circle [attr.cx]="room.x + 120" [attr.cy]="room.y + 70" r="10" [attr.fill]="room.accessPoint" (click)="viewDetailsAccesspoint(i)"></circle>
+          [attr.fill]="room.fillColor" stroke="#000" stroke-width="2" />
+    <text [attr.x]="room.x + 130" [attr.y]="room.y + 100" (click)="viewDetails(i)" style="cursor: pointer;">{{room.roomId}} </text>
+    <circle [attr.cx]="room.x + 120" [attr.cy]="room.y + 70" r="10" [attr.fill]="room.accessPoint" (click)="viewDetailsAccesspoint(i)" style="cursor: pointer;"></circle>
   </g>
   <g *ngFor="let door of doors">
     <rect [attr.x]="door.x + 100" [attr.y]="door.y + 50" width="10" height="20"
           fill="#667EEA " stroke="#000" stroke-width="2" />
+  </g>
+  <rect height="70" width="200" y="490" x="5" fill="white" stroke="black" stroke-width="2"></rect>
+  <g>
+    <text x="10" y="30">Tip: Click on points & text on the plan for details</text>
+  <g>
+    <circle cx="20" cy="510" r="10" fill="green"></circle>
+    <text x="40" y="515">Healthy Access Point</text>
+  </g>
+  <g>
+    <circle cx="20" cy="540" r="10" fill="red"></circle>
+    <text x="40" y="545">Unhealthy Access Point</text>
+  </g>
   </g>
 </svg>
 

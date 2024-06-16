@@ -1,0 +1,117 @@
+<p-toast></p-toast>
+<p-tabView>
+  <p-tabPanel header="Temperature" *ngIf="tempTip">
+    <div class="flex flex-wrap justify-center mt-4">
+      <div class="w-full md:w-1/2 p-2">
+        <div class="card bg-white shadow-lg rounded-lg">
+          <div class="p-4">
+            <div class="text-xl font-bold">{{ type[0] }}</div>
+            <p class="mt-1">{{ tempTip[0].tip }}</p>
+          </div>
+          <div class="flex justify-around p-4 border-t">
+            <button pButton type="button" icon="pi pi-pencil" (click)="showEditThresholdDialog(tempTip[0])"></button>
+          </div>
+        </div>
+      </div>
+      <div class="w-full md:w-1/2 p-2">
+        <div class="card bg-white shadow-lg rounded-lg">
+          <div class="p-4">
+            <div class="text-xl font-bold">{{ type[1] }}</div>
+            <p class="mt-1">{{ tempTip[1].tip }}</p>
+          </div>
+          <div class="flex justify-around p-4 border-t">
+            <button pButton type="button" icon="pi pi-pencil" (click)="showEditThresholdDialog(tempTip[1])"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-tabPanel>
+  <p-tabPanel header="Humidity" *ngIf="humTip">
+    <div class="flex flex-wrap justify-center mt-4">
+    <div class="w-full md:w-1/2 p-2">
+      <div class="card bg-white shadow-lg rounded-lg">
+        <div class="p-4">
+          <div class="text-xl font-bold">{{ type[0] }}</div>
+          <br>
+          <p class="mt-1">{{ humTip[0].tip }}</p>
+          <br>
+        </div>
+        <div class="flex justify-around p-4 border-t">
+          <button pButton type="button" icon="pi pi-pencil" (click)="showEditThresholdDialog(humTip[0])"></button>
+        </div>
+      </div>
+    </div>
+    <div class="w-full md:w-1/2 p-2">
+      <div class="card bg-white shadow-lg rounded-lg">
+      <div class="p-4">
+        <div class="text-xl font-bold">{{ type[1] }}</div>
+        <br>
+        <p class="mt-1">{{ humTip[1].tip }}</p>
+        <br>
+      </div>
+      <div class="flex justify-around p-4 border-t">
+        <button pButton type="button" icon="pi pi-pencil" (click)="showEditThresholdDialog(humTip[1])"></button>
+      </div>
+    </div>
+  </div>
+  </div>
+  </p-tabPanel>
+  <p-tabPanel header="Irradiance" *ngIf="irrTip">
+    <div class="flex flex-wrap justify-center mt-4">
+      <div class="w-full md:w-1/2 p-2">
+        <div class="card bg-white shadow-lg rounded-lg">
+          <div class="p-4">
+            <div class="text-xl font-bold">{{ type[0] }}</div>
+            <br>
+            <p class="mt-1">{{ irrTip[0].tip }}</p>
+            <br>
+          </div>
+          <div class="flex justify-around p-4 border-t">
+            <button pButton type="button" icon="pi pi-pencil" (click)="showEditThresholdDialog(irrTip[0])"></button>
+          </div>
+        </div>
+      </div>
+      <div class="w-full md:w-1/2 p-2">
+        <div class="card bg-white shadow-lg rounded-lg">
+          <div class="p-4">
+            <div class="text-xl font-bold">{{ type[1] }}</div>
+            <br>
+            <p class="mt-1">{{ irrTip[1].tip }}</p>
+            <br>
+          </div>
+          <div class="flex justify-around p-4 border-t">
+            <button pButton type="button" icon="pi pi-pencil" (click)="showEditThresholdDialog(irrTip[1])"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-tabPanel>
+  <p-tabPanel header="NMVOC" *ngIf="nmTip">
+    <div class="flex flex-wrap justify-center mt-4">
+      <div class="w-full md:w-1/2 p-2">
+        <div class="card bg-white shadow-lg rounded-lg">
+          <div class="p-4">
+            <div class="text-xl font-bold">{{ type[1] }}</div>
+            <br>
+            <p class="mt-1">{{ nmTip[0].tip }}</p>
+            <br>
+          </div>
+          <div class="flex justify-around p-4 border-t">
+            <button pButton type="button" icon="pi pi-pencil" (click)="showEditThresholdDialog(nmTip[0])"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-tabPanel>
+</p-tabView>
+
+<p-dialog header="Edit Tip" [(visible)]="viewEditDialog" [modal]="true" (onHide)="reset()">
+  <div *ngIf="selectedTip">
+    <div class="flex flex-col">
+      <textarea class="w-[50vw] h-[12vw]" id="tip" type="text" pInputTextarea [(ngModel)]="selectedTip.tip"></textarea>
+    </div>
+    <br>
+    <button pButton type="button" label="Save" icon="pi pi-check" (click)="updateThresholdTip()"></button>
+  </div>
+</p-dialog>
+

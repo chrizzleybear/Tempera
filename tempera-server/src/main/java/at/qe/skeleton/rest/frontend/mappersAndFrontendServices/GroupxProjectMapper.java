@@ -3,10 +3,7 @@ package at.qe.skeleton.rest.frontend.mappersAndFrontendServices;
 import at.qe.skeleton.model.Groupx;
 import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.Project;
-import at.qe.skeleton.rest.frontend.dtos.GroupxProjectDto;
-import at.qe.skeleton.rest.frontend.dtos.SimpleGroupDto;
-import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
-import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
+import at.qe.skeleton.rest.frontend.dtos.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,13 +32,23 @@ public class GroupxProjectMapper {
         );
     }
 
-    public SimpleProjectDto mapToSimpleProjectDto(GroupxProject groupxProject) {
-        return new SimpleProjectDto(
-                groupxProject.getProject().getId().toString(),
-                groupxProject.getProject().isActive(),
-                groupxProject.getProject().getName(),
-                groupxProject.getProject().getDescription(),
-                groupxProject.getProject().getManager().getUsername()
-        );
+  public SimpleProjectDto mapToSimpleProjectDto(GroupxProject groupxProject) {
+    return new SimpleProjectDto(
+        groupxProject.getProject().getId().toString(),
+        groupxProject.getProject().isActive(),
+        groupxProject.getProject().getName(),
+        groupxProject.getProject().getDescription(),
+        groupxProject.getProject().getManager().getUsername());
+  }
+
+  public SimpleGroupxProjectDto mapToDto(GroupxProject entity) {
+        if (entity == null) {
+            return null;
+        }
+        return new SimpleGroupxProjectDto(
+                entity.getGroup().getId().toString(),
+                entity.getGroup().getName(),
+                entity.getProject().getId().toString(),
+                entity.getProject().getName());
     }
 }

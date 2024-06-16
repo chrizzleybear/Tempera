@@ -73,6 +73,7 @@ class DashboardControllerTest {
             Visibility.HIDDEN,
             State.DEEPWORK,
             "10.05.2024T12:20:10",
+            null,
             projects.get(0),
             projects,
             colleagueStates);

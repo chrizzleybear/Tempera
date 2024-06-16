@@ -185,11 +185,6 @@ export class GroupProjectsComponent implements OnInit {
   private deleteContributorFromProject(projectId: string, memberId: string) {
     return this.projectService.removeContributor(projectId, this.groupId, memberId);
   }
-
-  backToGroups() {
-    this.router.navigate(['/myGroups']);
-  }
-
   resetMembers() {
     this.selectedMembers = [];
     this.availableProjectContributors = [];

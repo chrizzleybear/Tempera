@@ -1,10 +1,10 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable, Subject} from "rxjs";
-import {Room} from "../models/room.model";
-import {Threshold, ThresholdTipUpdateDto, ThresholdUpdateDto} from "../models/threshold.model";
+import {FloorComponent, Room} from "../models/room.model";
+import {Threshold, ThresholdTip, ThresholdUpdateDto} from "../models/threshold.model";
 import {AccessPoint} from "../models/accessPoint.model";
-import {FloorPlanComponent} from "../roomManagement/floor-plan/floor-plan.component";
+
 
 
 @Injectable({
@@ -32,26 +32,25 @@ export class RoomService {
   createRoom(roomId: string): Observable<string> {
     return this.http.post<string>(`${this.API_URL}create`, roomId, { responseType: 'text' as 'json' });
   }
-
-  getAvailableRooms(): Observable<Room[]>{
-    return this.http.get<Room[]>(this.API_URL + 'available');
-  }
 //two way binding ->delete
-  getAccessPoints(roomId: string): Observable<AccessPoint> {
+  getAccessPoint(roomId: string): Observable<AccessPoint> {
     return this.http.get<AccessPoint>(`${this.API_URL}accesspoint/${roomId}`);
   }
-
   updateThreshold(dto: ThresholdUpdateDto): Observable<Threshold>{
     console.log('Update Threshold: ', dto);
     return this.http.put<Threshold>(`${this.API_URL}threshold/update`, dto);
   }
-
-  updateThresholdTip(dto: ThresholdTipUpdateDto) {
-    return this.http.put<Threshold>(`${this.API_URL}threshold/tip/update`, dto);
+  getFloorPlan(): Observable<FloorComponent[]> {
+    return this.http.get<FloorComponent[]>(this.API_URL + 'floor');
   }
 
-  getFloorPlan(): Observable<FloorPlanComponent[]> {
-    return this.http.get<FloorPlanComponent[]>(this.API_URL + 'floor');
+  getAllThresholdTips(): Observable<ThresholdTip[]> {
+    return this.http.get<ThresholdTip[]>('http://localhost:8080/api/tip/all');
+  }
+
+  updateThresholdTip(dto: ThresholdTip) {
+    console.log('Update Threshold Tip: ', dto);
+    return this.http.post<ThresholdTip>('http://localhost:8080/api/tip/update', dto);
   }
 
   private roomChangedSource = new Subject<void>();

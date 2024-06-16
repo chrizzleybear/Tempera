@@ -32,7 +32,6 @@ export class AppMenuComponent implements OnInit {
       {
         label: 'UI Components',
         items: [
-          { label: 'Logout', icon: 'pi pi-fw pi-id-card', command: () => this.logout() },
           {
             label: 'Timetable',
             icon: 'pi pi-calendar-clock',
@@ -43,7 +42,7 @@ export class AppMenuComponent implements OnInit {
             label: 'Accumulated Time',
             icon: 'pi pi-fw pi-clock',
             routerLink: ['/accumulated-time'],
-            visible: this.storageService.getUser()?.roles.some(role=> role === RolesEnum.Manager || role === RolesEnum.Grouplead)
+            visible: this.storageService.getUser()?.roles.some(role => role === RolesEnum.Manager || role === RolesEnum.Grouplead),
           },
           {
             label: 'My Groups',
@@ -73,16 +72,29 @@ export class AppMenuComponent implements OnInit {
             label: 'Room Management',
             icon: 'pi pi-fw pi-home',
             routerLink: ['/rooms'],
-            visible: this.storageService.getUser()?.roles.includes('ADMIN')
+            visible: this.storageService.getUser()?.roles.includes('ADMIN'),
           },
-          { label: 'Access Points',
+          {
+            label: 'Access Points',
             icon: 'pi pi-fw pi-wifi',
             routerLink: ['/accessPoints'],
-            visible: this.storageService.getUser()?.roles.includes('ADMIN')
+            visible: this.storageService.getUser()?.roles.includes('ADMIN'),
           },
-          { label: 'Tempera Stations',
+          {
+            label: 'Tempera Stations',
             icon: 'pi pi-fw pi-gauge',
             routerLink: ['/temperaStations'],
+            visible: this.storageService.getUser()?.roles.includes('ADMIN'),
+          },
+          {
+            label: 'Audit Logs',
+            icon: 'pi pi-fw pi-list',
+            routerLink: ['/audit-logs'],
+            visible: this.storageService.getUser()?.roles.includes('ADMIN'),
+          },
+          { label: 'Tips',
+            icon: 'pi pi-fw pi-info-circle',
+            routerLink: ['/tips'],
             visible: this.storageService.getUser()?.roles.includes('ADMIN')
           },
         ],

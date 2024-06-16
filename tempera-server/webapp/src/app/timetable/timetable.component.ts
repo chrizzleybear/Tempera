@@ -5,7 +5,7 @@ import {
 } from '../../api';
 import { Table, TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
-import { DatePipe, NgForOf, NgIf, NgStyle } from '@angular/common';
+import { DatePipe, NgClass, NgForOf, NgIf, NgStyle } from '@angular/common';
 import { TagModule } from 'primeng/tag';
 import { DisplayHelper } from '../_helpers/display-helper';
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
@@ -19,7 +19,7 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { MultiSelectModule } from 'primeng/multiselect';
+import { MultiSelect, MultiSelectModule } from 'primeng/multiselect';
 import StateEnum = ColleagueStateDto.StateEnum;
 import { ButtonModule } from 'primeng/button';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
@@ -28,7 +28,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { TooltipModule } from 'primeng/tooltip';
 import { MessageModule } from 'primeng/message';
 import { MessagesModule } from 'primeng/messages';
-import { MessageService } from 'primeng/api';
+import { FilterMatchMode, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { CardModule } from 'primeng/card';
@@ -77,6 +77,7 @@ interface InternalTimetableEntryDto extends TimetableEntryDto {
     ProgressSpinnerModule,
     NgStyle,
     NgForOf,
+    NgClass,
   ],
   templateUrl: './timetable.component.html',
   styleUrl: './timetable.component.css',
@@ -96,14 +97,19 @@ export class TimetableComponent implements OnInit {
 
   public selectedEntry?: InternalTimetableEntryDto;
 
-  protected readonly DisplayHelper = DisplayHelper;
+  public selectedProjects: SimpleGroupxProjectDto[] = [];
+
+  public selectedStates: StateEnum[] = [];
 
   public totalTime: { hours: number, minutes: number } = { hours: 0, minutes: 0 };
 
   public editDescriptionVisible: boolean = false;
 
   public splitVisible: boolean = false;
+
   public calendarVisible: boolean = false;
+
+  public onlyUnassignedProjectsShown: boolean = false;
 
   /*
   Used for handling when a user is assigned to a project from multiple groups
@@ -118,8 +124,10 @@ export class TimetableComponent implements OnInit {
   }>();
 
   protected readonly Date = Date;
+
   protected readonly StateEnum = StateEnum;
 
+  protected readonly DisplayHelper = DisplayHelper;
 
   /*
   * This reference to the PrimeNG table is used because its entries also reflect the correct order if the table is sorted and the available entries when filtered.
@@ -133,6 +141,8 @@ export class TimetableComponent implements OnInit {
       this.calculateTotalTime();
     }
   }
+
+  @ViewChild('projectFilter') projectFilterOverlay!: MultiSelect;
 
   /*
     * Validates that the time is between the start and end time of the time entry.
@@ -297,5 +307,29 @@ export class TimetableComponent implements OnInit {
     this.totalTime = TotalTimeHelper.calculate(filteredEntries);
 
     this.cd.detectChanges();
+  }
+
+  /*
+  * Filters the table so only entries with unassigned projects are shown.
+  * Also filters out entries with the state OutOfOffice.
+   */
+  filterAssignedProjects() {
+    // this.table?.reset();
+    this.table?.filter({}, 'assignedGroupxProject', FilterMatchMode.IS_NOT);
+    this.table?.filter(StateEnum.OutOfOffice, 'state', FilterMatchMode.IS_NOT);
+    this.selectedProjects = [];
+    this.selectedStates = [];
+    this.onlyUnassignedProjectsShown = true;
+    this.projectFilterOverlay.hide();
+  }
+
+  /*
+  * Reset the filters from the filterAssignedProjects method.
+   */
+  removeAssignedProjectsFilter() {
+    this.table?.filter({}, 'assignedGroupxProject', FilterMatchMode.IN);
+    this.table?.filter({}, 'state', FilterMatchMode.IN);
+    this.table?.reset();
+    this.onlyUnassignedProjectsShown = false;
   }
 }

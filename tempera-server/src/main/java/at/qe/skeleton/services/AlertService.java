@@ -16,7 +16,7 @@ public class AlertService {
         this.alertRepository = alertRepository;
     }
 
-    public void deletAlert(Alert alert) {
+    public void deleteAlert(Alert alert) {
         alertRepository.delete(alert);
     }
 

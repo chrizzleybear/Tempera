@@ -6,6 +6,8 @@ import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.dtos.GroupxProjectStateTimeDbDto;
+import at.qe.skeleton.model.enums.LogAffectedType;
+import at.qe.skeleton.model.enums.LogEvent;
 import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.GroupxProjectRepository;
 import at.qe.skeleton.repositories.ProjectRepository;
@@ -30,12 +32,14 @@ public class ProjectService {
  private final UserxRepository userxRepository;
  private final  GroupRepository groupRepository;
  private final GroupxProjectRepository groupxProjectRepository;
+ private final AuditLogService auditLogService;;
 
-  public ProjectService(ProjectRepository projectRepository, UserxRepository userxRepository, GroupRepository groupRepository, GroupxProjectRepository groupxProjectRepository) {
+  public ProjectService(ProjectRepository projectRepository, AuditLogService auditLogService, UserxRepository userxRepository, GroupRepository groupRepository, GroupxProjectRepository groupxProjectRepository) {
     this.projectRepository = projectRepository;
     this.userxRepository = userxRepository;
     this.groupRepository = groupRepository;
     this.groupxProjectRepository = groupxProjectRepository;
+    this.auditLogService = auditLogService;
   }
 
   private static final String USER_NOT_FOUND = "User not found";
@@ -56,6 +60,9 @@ public class ProjectService {
     project.setName(name);
     project.setDescription(description);
     project.setManager(managerUser);
+    auditLogService.logEvent(LogEvent.CREATE, LogAffectedType.PROJECT,
+            "Created project " + project.getName() + " with manager " + project.getManager().getUsername() + "."
+    );
     return projectRepository.save(project);
   }
 
@@ -87,6 +94,8 @@ public class ProjectService {
         userxRepository
             .findById(manager)
             .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND)));
+    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.PROJECT,
+          "Project " + project.getName() + " was updated.");
     return projectRepository.save(project);
   }
 
@@ -112,7 +121,10 @@ if(groupxProjectOptional.isPresent()){
     }
       else {
         groupxProject.setActive(true);
+          auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.PROJECT,
+                  "Project " + project.getName() + " was linked to group " + group.getName() + ".");
         return groupxProjectRepository.save(groupxProject);
+
     }
 }
     Project project =
@@ -129,6 +141,8 @@ if(groupxProjectOptional.isPresent()){
     GroupxProject groupxProject = new GroupxProject();
     groupxProject.addProject(project);
     groupxProject.addGroup(group);
+    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.PROJECT,
+          "Project " + project.getName() + " was linked to group " + group.getName() + ".");
     return groupxProjectRepository.save(groupxProject);
   }
 
@@ -145,6 +159,8 @@ if(groupxProjectOptional.isPresent()){
     Project project = projectRepository.findFirstById(projectId);
     project.deactivate();
     projectRepository.save(project);
+      auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.PROJECT,
+              "Project " + project.getName() + "was deleted.");
   }
 
 
@@ -175,7 +191,8 @@ if(groupxProjectOptional.isPresent()){
     } else {
       GroupxProject groupxProject = groupxProjectOptional.get();
       deactivateGroupxProject(groupxProject);
-      logger.info("removed Group %s from Project %s".formatted(groupId, projectId));
+        auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.PROJECT,
+                "Group " + groupxProject.getGroup().getName() + " was removed from project " + groupxProject.getProject().getName() + ".");
     }
   }
 
@@ -216,6 +233,10 @@ if(groupxProjectOptional.isPresent()){
           "User is not part of the group %s".formatted(groupxProject.getGroup()));
     }
     groupxProject.addContributor(contributor);
+    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.PROJECT,
+          "User " + contributor.getUsername() +
+                  " was added to project " + groupxProject.getProject().getName() +
+                  " of group " + groupxProject.getGroup().getName() + ".");
     groupxProjectRepository.save(groupxProject);
   }
 
@@ -257,6 +278,10 @@ if(groupxProjectOptional.isPresent()){
         userxRepository
             .findByUsername(username)
             .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND));
+    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.PROJECT,
+          "User " + contributor.getUsername() +
+                  " was removed from project " + groupxProject.getProject().getName() +
+                  " of group " + groupxProject.getGroup().getName() + ".");
     groupxProject.removeContributor(contributor);
     groupxProjectRepository.save(groupxProject);
   }

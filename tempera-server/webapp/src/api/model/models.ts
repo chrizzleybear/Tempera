@@ -4,6 +4,7 @@ export * from './accessPointDto';
 export * from './accumulatedTimeDto';
 export * from './accumulatedTimeResponse';
 export * from './alertDto';
+export * from './auditLogDto';
 export * from './colleagueStateDto';
 export * from './contributorAssignmentDto';
 export * from './credentialsDto';

@@ -10,6 +10,8 @@ import { UserEditComponent } from '../user-edit/user-edit.component';
 import { DialogModule } from 'primeng/dialog';
 import { UserCreateComponent } from '../user-create/user-create.component';
 import { MessagesModule } from 'primeng/messages';
+import { ToastModule } from "primeng/toast";
+import { MessageService } from "primeng/api";
 
 @Component({
   selector: 'app-users',
@@ -24,6 +26,7 @@ import { MessagesModule } from 'primeng/messages';
     DialogModule,
     UserCreateComponent,
     MessagesModule,
+    ToastModule,
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
@@ -39,9 +42,8 @@ export class UsersComponent implements OnInit {
   displayEditDialog: boolean = false;
   selectedUser: any;
   displayCreateDialog: boolean = false;
-  messages: any;
 
-  constructor(private usersService: UsersService, private router: Router) {
+  constructor(private usersService: UsersService, private router: Router, private messageService: MessageService) {
   }
 
   ngOnInit(): void {
@@ -73,12 +75,13 @@ export class UsersComponent implements OnInit {
     console.log('Delete user with ID: ', userId);
     this.usersService.deleteUser(userId).subscribe({
       next: (response) => {
-        this.messages = [{ severity: 'success', summary: 'Success', detail: 'User deleted successfully' }];
+        console.log('User deleted:', response);
+        this.messageService.add({severity:'success', summary:'Success', detail:'User deleted successfully'});
         this.loadUsers();
       },
       error: (error) => {
         console.error('Error deleting user:', error);
-        this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error deleting user' }];
+        this.messageService.add({severity:'error', summary:'Error', detail:'Error deleting user'});
       },
     });
   }
@@ -121,16 +124,15 @@ export class UsersComponent implements OnInit {
 
   onEditCompleted(success: boolean) {
     if (success) {
-      this.messages = [{ severity: 'success', summary: 'Success', detail: 'User updated successfully' }];
       this.returnToUsers();
     }
   }
 
   onCreateCompleted(success: boolean) {
     if (success) {
-      this.messages = [{ severity: 'success', summary: 'Success', detail: 'User created successfully' }];
       this.returnToUsers();
     }
+
   }
 
   /**

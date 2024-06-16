@@ -23,5 +23,6 @@ export interface TemperaStation {
     sensors?: Array<Sensor>;
     healthy?: boolean;
     _new?: boolean;
+    healthy?: boolean;
 }
 

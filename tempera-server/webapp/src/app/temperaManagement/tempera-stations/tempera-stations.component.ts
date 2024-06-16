@@ -10,6 +10,8 @@ import {TemperaStationEditComponent} from "../tempera-station-edit/tempera-stati
 import {ButtonModule} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
 import {MessagesModule} from "primeng/messages";
+import {MessageService} from "primeng/api";
+import {ToastModule} from "primeng/toast";
 
 @Component({
   selector: 'app-tempera-stations',
@@ -23,7 +25,8 @@ import {MessagesModule} from "primeng/messages";
     TemperaStationEditComponent,
     ButtonModule,
     InputTextModule,
-    MessagesModule
+    MessagesModule,
+    ToastModule
   ],
   styleUrls: ['./tempera-stations.component.css']
 })
@@ -38,11 +41,11 @@ export class TemperaStationsComponent implements OnInit {
   selectedTemperaStation: TemperaStation | undefined;
   displayEditDialog: boolean = false;
   displayCreateDialog: boolean = false;
-  messages: any[] = [];
 
   constructor(
     private router: Router,
     private temperaStationService: TemperaStationService,
+    private messageService: MessageService
   ) { }
 
   ngOnInit() {
@@ -52,12 +55,12 @@ export class TemperaStationsComponent implements OnInit {
   private fetchTemperaStations() {
     this.temperaStationService.getAllTemperaStations().subscribe({
       next: (data) => {
-        console.log('TemperaStations: ', data);
         this.temperaStations = data;
         this.filteredTemperaStations = data;
       },
       error: (error) => {
         console.error('Failed to load temperaStations:', error);
+        this.messageService.add({severity:'error', summary:'Error', detail:'Failed to load tempera stations'});
       },
     });
   }
@@ -74,11 +77,11 @@ export class TemperaStationsComponent implements OnInit {
   deleteTemperaStation(tempStation: TemperaStation) {
     this.temperaStationService.deleteTemperaStation(tempStation.id).subscribe({
       next: () => {
-        console.log('TemperaStation deleted successfully');
+        this.messageService.add({severity:'success', summary:'Success', detail:'Tempera station deleted successfully'});
         this.fetchTemperaStations();
       },
       error: (error) => {
-        console.error('Failed to delete temperaStation:', error);
+        this.messageService.add({severity:'error', summary:'Error', detail:'Failed to delete tempera station'});
       },
     });
   }
