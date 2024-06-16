@@ -16,6 +16,7 @@ api/roomController.service.ts
 api/temperaStationController.service.ts
 api/timeRecordController.service.ts
 api/timetableController.service.ts
+api/tipController.service.ts
 api/userManagementController.service.ts
 configuration.ts
 encoder.ts
@@ -32,6 +33,7 @@ model/colleagueStateDto.ts
 model/contributorAssignmentDto.ts
 model/credentialsDto.ts
 model/dashboardDataResponse.ts
+model/deletionResponseDto.ts
 model/extendedGroupDto.ts
 model/extendedProjectDto.ts
 model/externalRecordDto.ts

@@ -9,6 +9,7 @@ export * from './colleagueStateDto';
 export * from './contributorAssignmentDto';
 export * from './credentialsDto';
 export * from './dashboardDataResponse';
+export * from './deletionResponseDto';
 export * from './extendedGroupDto';
 export * from './extendedProjectDto';
 export * from './externalRecordDto';

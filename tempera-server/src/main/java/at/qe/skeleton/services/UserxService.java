@@ -4,6 +4,7 @@ import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.*;
 import at.qe.skeleton.repositories.ExternalRecordRepository;
 import at.qe.skeleton.repositories.GroupRepository;
+import at.qe.skeleton.rest.frontend.dtos.DeletionResponseDto;
 import at.qe.skeleton.rest.frontend.dtos.UserStateDto;
 import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.model.Userx;
@@ -37,21 +38,28 @@ import org.springframework.transaction.annotation.Transactional;
 @Scope("application")
 public class UserxService implements UserDetailsService {
 
-  @Autowired private UserxRepository userRepository;
-  @Autowired private PasswordEncoder passwordEncoder;
-  @Autowired private TemperaStationService temperaStationService;
-  @Autowired private ExternalRecordRepository externalRecordRepository;
-  @Autowired private GroupRepository groupRepository;
-  @Autowired private ProjectService projectService;
-  @Autowired private AuditLogService auditLogService;
+  private final UserxRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
+´  private final ExternalRecordRepository externalRecordRepository;
+  private final GroupRepository groupRepository;
+  private final ProjectService projectService;
+  private final AuditLogService auditLogService;
+
+  public UserxService(UserxRepository userRepository, PasswordEncoder passwordEncoder, ExternalRecordRepository externalRecordRepository, GroupRepository groupRepository, ProjectService projectService, AuditLogService auditLogService) {
+    this.userRepository = userRepository;
+    this.passwordEncoder = passwordEncoder;
+    this.externalRecordRepository = externalRecordRepository;
+    this.groupRepository = groupRepository;
+    this.projectService = projectService;
+    this.auditLogService = auditLogService;
+  }
 
   /**
    * Returns a collection of all users.
+   * We cant preauthorize this method only for admins. We need to allow all users to see all users.
    *
    * @return
    */
-  // todo: we cant preAuthorize this method because we need to get all users to display them in the
-  // dashboard... or is there another way?
   @PreAuthorize(
       "hasAuthority('ADMIN') or hasAuthority('EMPLOYEE') or hasAuthority('MANAGER') or hasAuthority('GROUPLEAD')")
   public Collection<Userx> getAllUsers() {
@@ -140,34 +148,30 @@ public class UserxService implements UserDetailsService {
    * Warning: This will delete all external and Internal Records of that user. Also you cant delete
    * an admin.
    *
-   * @param id
+   * @param username the username of the user to delete
    */
   @Transactional
   @PreAuthorize("hasAuthority('ADMIN')")
-  public void deleteUser(String id) {
+  public DeletionResponseDto deleteUser(String username) {
 
-    Optional<Userx> userx = userRepository.findById(id);
+    Optional<Userx> userx = userRepository.findByUsername(username);
     if (userx.isPresent()) {
       Userx user = userx.get();
       if (user.getRoles().contains(UserxRole.ADMIN)) {
         auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.USER,
                 "Deletion of user " + user.getUsername() + " failed. User is ADMIN.");
-        return;
+        return new DeletionResponseDto(DeletionResponseType.ADMIN, formulateDeletionResponse(DeletionResponseType.ADMIN));
       }
-      if (user.getRoles().contains(UserxRole.MANAGER)
-          || user.getRoles().contains(UserxRole.GROUPLEAD)) {
-        List<Project> projects = projectService.getProjectsByManager(user.getUsername());
-        for (var project : projects) {
-          project.setManager(null);
-          projectService.saveProject(project);
-        }
-        List<Groupx> groups = groupRepository.findByGroupLead(user);
-        for (var group : groups) {
-          group.setGroupLead(null);
-          groupRepository.save(group);
-        }
+      if (user.getRoles().contains(UserxRole.MANAGER)){
+        auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.USER,
+                "Deletion of user " + user.getUsername() + " failed. User is MANAGER.");
+        return new DeletionResponseDto(DeletionResponseType.MANAGER, formulateDeletionResponse(DeletionResponseType.MANAGER));
       }
-
+      if (user.getRoles().contains(UserxRole.GROUPLEAD)) {
+        auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.USER,
+                "Deletion of user " + user.getUsername() + " failed. User is GROUPLEAD.");
+        return new DeletionResponseDto(DeletionResponseType.GROUPLEAD, formulateDeletionResponse(DeletionResponseType.GROUPLEAD));
+        }
       List<GroupxProject> groupxProjects = projectService.findAllGroupxProjectsOfAUser(user);
       for (var groupxProject : groupxProjects) {
         groupxProject.removeContributor(user);
@@ -177,7 +181,6 @@ public class UserxService implements UserDetailsService {
       for (var group : groupsAsMember) {
         user.removeGroup(group);
       }
-
       externalRecordRepository.deleteAllByUser(user);
       auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.TIME_RECORD,
               "External time records of user " + user.getUsername() + " were deleted.");
@@ -189,11 +192,26 @@ public class UserxService implements UserDetailsService {
       // we are saving the user so that all the other objects, where we set the user reference to null are being
       // saved via cascading
       saveUser(user);
-
+      userRepository.delete(user);
       auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.USER,
               "User " + user.getUsername()  + " was deleted.");
-      userRepository.delete(user);
+      return new DeletionResponseDto(DeletionResponseType.SUCCESS, formulateDeletionResponse(DeletionResponseType.SUCCESS));
       }
+    return new DeletionResponseDto(DeletionResponseType.ERROR, formulateDeletionResponse(DeletionResponseType.ERROR));
+  }
+
+  private String formulateDeletionResponse(DeletionResponseType deletionResponseType) {
+    if(deletionResponseType == DeletionResponseType.SUCCESS) {
+      return "User deleted successfully";
+    } else if(deletionResponseType == DeletionResponseType.MANAGER) {
+      return "User is a manager and cannot be deleted. Please reassign all Projects and Groups first.";
+    } else if(deletionResponseType == DeletionResponseType.GROUPLEAD) {
+      return "User is a group lead and cannot be deleted. Please reassign all Groups first.";
+    } else if(deletionResponseType == DeletionResponseType.ADMIN) {
+      return "User is an admin and cannot be deleted. Please contact another admin to delete this user.";
+    } else {
+      return "User could not be deleted. Seems like an important Employee ;)";
+    }
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
@@ -273,8 +291,8 @@ public class UserxService implements UserDetailsService {
     return externalRecordRepository.findUserStatesByUserList(users);
   }
 
-  public State switchState(ExternalRecord record) {
-    Userx user = record.getUser();
+  public State switchState(ExternalRecord externalRecord) {
+    Userx user = externalRecord.getUser();
     State state = user.getState();
     user.setState(state);
     return state;

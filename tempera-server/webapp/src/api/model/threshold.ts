@@ -20,8 +20,8 @@ export interface Threshold {
     thresholdType?: Threshold.ThresholdTypeEnum;
     value?: number;
     tip?: ThresholdTip;
-    modificationReason?: Modification;
     ofLowerBoundType?: boolean;
+    modificationReason?: Modification;
 }
 export namespace Threshold {
     export type SensorTypeEnum = 'TEMPERATURE' | 'IRRADIANCE' | 'HUMIDITY' | 'NMVOC';
