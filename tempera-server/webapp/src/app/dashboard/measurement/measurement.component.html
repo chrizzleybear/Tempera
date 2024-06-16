@@ -10,7 +10,7 @@
     <div *ngSwitchCase="SensorType.NMVOC">Air quality:</div>
   </ng-container>
   <div *ngIf="sensorType === SensorType.NMVOC; else withUnit">
-    {{ measurement.value | airQuality }}
+    {{ measurement.quality | airQuality }}
   </div>
   <ng-template #withUnit>
     <div>{{ measurement.value }} {{ getUnit | wrapFn: sensorType }}</div>
