@@ -39,7 +39,7 @@ class AccumulatedTimeControllerTest {
     accumulatedTimeDtos =
         List.of(
             new AccumulatedTimeDto(
-                "project1", "group1",true, State.DEEPWORK, "15.05.2024T15:00", "15.05.2024T15:00"));
+                "project1", "group1",true, true, State.DEEPWORK, "15.05.2024T15:00", "15.05.2024T15:00"));
     simpleProjectDtos =
         List.of(new SimpleProjectDto("1", false, "project1", "this is project 1", "someGuy"));
     simpleGroupDtos = List.of(new SimpleGroupDto("1", false, "group1", "this is group 1", "someGirl"));
