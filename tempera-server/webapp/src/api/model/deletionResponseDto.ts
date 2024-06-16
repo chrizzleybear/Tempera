@@ -9,11 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { SimpleProjectDto } from './simpleProjectDto';
+import { SimpleGroupDto } from './simpleGroupDto';
 
 
 export interface DeletionResponseDto { 
-    responseType?: DeletionResponseDto.ResponseTypeEnum;
-    message?: string;
+    responseType: DeletionResponseDto.ResponseTypeEnum;
+    affectedProjects?: Array<SimpleProjectDto>;
+    affectedGroups?: Array<SimpleGroupDto>;
 }
 export namespace DeletionResponseDto {
     export type ResponseTypeEnum = 'SUCCESS' | 'MANAGER' | 'GROUPLEAD' | 'ADMIN' | 'ERROR';

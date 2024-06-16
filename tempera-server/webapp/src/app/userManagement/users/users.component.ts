@@ -12,6 +12,7 @@ import { UserCreateComponent } from '../user-create/user-create.component';
 import { MessagesModule } from 'primeng/messages';
 import { ToastModule } from "primeng/toast";
 import { MessageService } from "primeng/api";
+import { DeletionResponseDto, UserManagementControllerService, UserxDto } from '../../../api';
 
 @Component({
   selector: 'app-users',
@@ -37,13 +38,17 @@ import { MessageService } from "primeng/api";
  */
 export class UsersComponent implements OnInit {
 
-  users: User[] = [];
-  filteredUsers: User[] = [];
+  users: UserxDto[] = [];
+  filteredUsers: UserxDto[] = [];
   displayEditDialog: boolean = false;
   selectedUser: any;
   displayCreateDialog: boolean = false;
+  displayDeletionPopup: boolean = false;
+  deletionResponse: DeletionResponseDto | null;
+  deletionResponseMessage: string = '';
 
-  constructor(private usersService: UsersService, private router: Router, private messageService: MessageService) {
+  constructor(private usersService: UserManagementControllerService, private router: Router, private messageService: MessageService) {
+    this.deletionResponse = null;
   }
 
   ngOnInit(): void {
@@ -68,7 +73,8 @@ export class UsersComponent implements OnInit {
   }
 
   /**
-   * Deletes a user based on the user ID.
+   * Deletes a user based on the user ID. If deletion is successful, a success message is displayed.
+   * If deletion fails, an error message with a hint, why it failed is displayed.
    * @param userId The ID of the user to delete.
    */
   deleteSelectedUser(userId: string): void {
@@ -76,7 +82,7 @@ export class UsersComponent implements OnInit {
     this.usersService.deleteUser(userId).subscribe({
       next: (response) => {
         console.log('User deleted:', response);
-        this.messageService.add({severity:'success', summary:'Success', detail:'User deleted successfully'});
+        this.evaluateResponse(response);
         this.loadUsers();
       },
       error: (error) => {
@@ -85,6 +91,28 @@ export class UsersComponent implements OnInit {
       },
     });
   }
+
+  /**
+   * Evaluates the response of an API call and displays a success or error message.
+   * @param response The response of the API call.
+   */
+  evaluateResponse(response: DeletionResponseDto): void {
+    if (response.responseType === 'SUCCESS') {
+      this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User deleted' });
+    } else if (response.responseType === 'ERROR') {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'User could not be deleted' });
+    } else if (response.responseType === 'MANAGER') {
+      this.deletionResponse = response;
+      // Now we can build our own deletion Response (define it in the component, so that it can store
+      // the affected Projects and Groups and the message) -> and then display it in the dialog
+      this.deletionResponseMessage = "The user could not be deleted, because he is a manager of the following projects:"
+    } else if (response.responseType === 'GROUPLEAD') {
+      this.deletionResponseMessage = "The user could not be deleted, because he is a group lead of the following groups:"
+    }else if (response.responseType === 'ADMIN') {
+      this.deletionResponseMessage = "The user could not be deleted, because he is an admin."
+    }
+      this.displayDeletionPopup = true;
+    }
 
   loadUsers() {
     this.usersService.getAllUsers().subscribe(users => {
@@ -143,4 +171,5 @@ export class UsersComponent implements OnInit {
     this.router.navigate(['/user', userId]);
   }
 
+  protected readonly DeletionResponseDto = DeletionResponseDto;
 }

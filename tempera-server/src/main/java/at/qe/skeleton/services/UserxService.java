@@ -4,9 +4,8 @@ import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.*;
 import at.qe.skeleton.repositories.ExternalRecordRepository;
 import at.qe.skeleton.repositories.GroupRepository;
-import at.qe.skeleton.rest.frontend.dtos.DeletionResponseDto;
-import at.qe.skeleton.rest.frontend.dtos.UserStateDto;
-import at.qe.skeleton.rest.frontend.dtos.UserxDto;
+import at.qe.skeleton.repositories.ProjectRepository;
+import at.qe.skeleton.rest.frontend.dtos.*;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.UserxRepository;
 
@@ -15,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.UserMapper;
 import org.springframework.context.annotation.Scope;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,14 +43,17 @@ public class UserxService implements UserDetailsService {
   private final GroupRepository groupRepository;
   private final ProjectService projectService;
   private final AuditLogService auditLogService;
+  private final ProjectRepository projectRepository;
 
-  public UserxService(UserxRepository userRepository, PasswordEncoder passwordEncoder, ExternalRecordRepository externalRecordRepository, GroupRepository groupRepository, ProjectService projectService, AuditLogService auditLogService) {
+  public UserxService(UserxRepository userRepository, PasswordEncoder passwordEncoder, ExternalRecordRepository externalRecordRepository, GroupRepository groupRepository, ProjectService projectService, AuditLogService auditLogService,
+                      ProjectRepository projectRepository) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
     this.externalRecordRepository = externalRecordRepository;
     this.groupRepository = groupRepository;
     this.projectService = projectService;
     this.auditLogService = auditLogService;
+    this.projectRepository = projectRepository;
   }
 
   /**
@@ -160,17 +162,20 @@ public class UserxService implements UserDetailsService {
       if (user.getRoles().contains(UserxRole.ADMIN)) {
         auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.USER,
                 "Deletion of user " + user.getUsername() + " failed. User is ADMIN.");
-        return new DeletionResponseDto(DeletionResponseType.ADMIN, formulateDeletionResponse(DeletionResponseType.ADMIN));
+        return  new DeletionResponseDto(DeletionResponseType.ADMIN, null, null);
       }
       if (user.getRoles().contains(UserxRole.MANAGER)){
         auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.USER,
                 "Deletion of user " + user.getUsername() + " failed. User is MANAGER.");
-        return new DeletionResponseDto(DeletionResponseType.MANAGER, formulateDeletionResponse(DeletionResponseType.MANAGER));
+        List<SimpleProjectDto> affectedProjects = projectRepository.findAllSimpleProjectDtosByManager(username);
+        return new DeletionResponseDto(DeletionResponseType.MANAGER, affectedProjects, null);
       }
       if (user.getRoles().contains(UserxRole.GROUPLEAD)) {
+
         auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.USER,
                 "Deletion of user " + user.getUsername() + " failed. User is GROUPLEAD.");
-        return new DeletionResponseDto(DeletionResponseType.GROUPLEAD, formulateDeletionResponse(DeletionResponseType.GROUPLEAD));
+        List<SimpleGroupDto> affectedGroups = groupRepository.findAllSimpleGroupDtosByGroupLead(username);
+        return new DeletionResponseDto(DeletionResponseType.GROUPLEAD, null, affectedGroups);
         }
       List<GroupxProject> groupxProjects = projectService.findAllGroupxProjectsOfAUser(user);
       for (var groupxProject : groupxProjects) {
@@ -195,24 +200,12 @@ public class UserxService implements UserDetailsService {
       userRepository.delete(user);
       auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.USER,
               "User " + user.getUsername()  + " was deleted.");
-      return new DeletionResponseDto(DeletionResponseType.SUCCESS, formulateDeletionResponse(DeletionResponseType.SUCCESS));
+      return new DeletionResponseDto(DeletionResponseType.SUCCESS, null, null);
       }
-    return new DeletionResponseDto(DeletionResponseType.ERROR, formulateDeletionResponse(DeletionResponseType.ERROR));
+    return new DeletionResponseDto(DeletionResponseType.ERROR, null, null);
   }
 
-  private String formulateDeletionResponse(DeletionResponseType deletionResponseType) {
-    if(deletionResponseType == DeletionResponseType.SUCCESS) {
-      return "User deleted successfully";
-    } else if(deletionResponseType == DeletionResponseType.MANAGER) {
-      return "User is a manager and cannot be deleted. Please reassign all Projects and Groups first.";
-    } else if(deletionResponseType == DeletionResponseType.GROUPLEAD) {
-      return "User is a group lead and cannot be deleted. Please reassign all Groups first.";
-    } else if(deletionResponseType == DeletionResponseType.ADMIN) {
-      return "User is an admin and cannot be deleted. Please contact another admin to delete this user.";
-    } else {
-      return "User could not be deleted. Seems like an important Employee ;)";
-    }
-  }
+
 
   @PreAuthorize("hasAuthority('ADMIN')")
   public Userx updateUser(UserxDto userxDTO) {
