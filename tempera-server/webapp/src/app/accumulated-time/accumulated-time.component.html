@@ -37,16 +37,16 @@
 
 </p-table>
 <div class="card my-4 relative">
-  <div id="filter-button" *ngIf="!onlyActiveProjectsAndGroupsShown" class="absolute top-6 right-8">
+  <div id="filter-button" *ngIf="!onlyActiveProjectsAndGroupsShown" class="absolute top-6 right-8 ml-8">
     <button type="button" pButton label=" Show Only Active Projects & Groups"
             (click)="filterActiveProjects()" >
     </button>
   </div>
-  <div id="remove-filter-button"  *ngIf="onlyActiveProjectsAndGroupsShown" class="absolute top-6 right-8">
+  <div id="remove-filter-button"  *ngIf="onlyActiveProjectsAndGroupsShown" class="absolute top-6 right-8 ml-8">
       <button type="button" pButton label="Show All Projedcts & Groups" (click)="removeOnlyActiveProjectsFilter()" class="flex-col mr-2">
       </button>
   </div>
-  <canvas id="MyChart">{{ chart }}</canvas>
+  <canvas id="MyChart" class="mt-20 lg:mt-0">{{ chart }}</canvas>
 </div>
 <div class="w-full flex justify-center">
   <div class="lg:w-1/2 card text-lg grid grid-cols-2">
