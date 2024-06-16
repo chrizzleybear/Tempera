@@ -49,7 +49,7 @@
   <canvas id="MyChart" class="mt-20 lg:mt-0">{{ chart }}</canvas>
 </div>
 <div class="w-full flex justify-center">
-  <div class="lg:w-1/2 card text-lg grid grid-cols-2">
+  <div class="card text-lg grid grid-cols-2">
     <div class="text-left pl-4">The total worked time with the current filters is</div>
     <div class="text-right pr-4">{{ this.totalTime + " hours" }}</div>
     <p-tag class="text-left pl-4" [value]="DisplayHelper.showState | wrapFn: StateEnum.Available"
