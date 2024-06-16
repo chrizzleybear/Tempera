@@ -84,6 +84,7 @@ export class AccumulatedTimeComponent implements OnInit {
               ...entry,
               startTime: new Date(entry.startTimestamp),
               endTime: new Date(entry.endTimestamp),
+
             }),
           ) ?? [];
           // need to seperate between active and all projects and groups
@@ -142,18 +143,25 @@ export class AccumulatedTimeComponent implements OnInit {
 * problems, thats why the if-clauses are there.
  */
   filterActiveProjects() {
-    if (this.activeProjects.length === 0) {
-      this.table?.filter([''], 'projectId', FilterMatchMode.IN);
-    } else {
-      this.table?.filter(this.activeProjects.map(p => p.projectId), 'projectId', FilterMatchMode.IN);
-    }
-    if (this.activeGroups.length === 0) {
-      this.table?.filter([''], 'groupId', FilterMatchMode.IN);
-    } else {
-      this.table?.filter(this.activeGroups.map(g => g.id), 'groupId', FilterMatchMode.IN);
-    }
-    this.availableProjects = this.activeProjects;
-    this.availableGroups = this.activeGroups;
+    // if (this.activeProjects.length === 0) {
+    //   this.table?.filter([''], 'projectId', FilterMatchMode.IN);
+    // } else {
+    //   this.table?.filter(this.activeProjects.map(p => p.projectId), 'projectId', FilterMatchMode.IN);
+    // }
+    // if (this.activeGroups.length === 0) {
+    //   this.table?.filter([''], 'groupId', FilterMatchMode.IN);
+    // } else {
+    //   this.table?.filter(this.activeGroups.map(g => g.id), 'groupId', FilterMatchMode.IN);
+    // }
+
+    // this.availableProjects = this.activeProjects;
+    // this.availableGroups = this.activeGroups;
+
+    this.table.value = this.table.value.filter((entry: InternalAccumulatedTimeDto) =>
+      this.activeProjects.some(project => project.projectId === entry.projectId) &&
+      this.activeGroups.some(group => group.id === entry.groupId));
+
+
     this.onlyActiveProjectsAndGroupsShown = true;
   }
 
