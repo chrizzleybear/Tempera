@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { DestroyRef, Injectable } from '@angular/core';
 import { BehaviorSubject, distinctUntilChanged, exhaustMap, timer } from 'rxjs';
 import { AlertControllerService, AlertDto } from '../../api';
 import { MessageService } from 'primeng/api';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ export class AlertStoreService {
   private alerts$ = new BehaviorSubject<AlertDto[]>([]);
 
 
-  constructor(private alertControllerService: AlertControllerService, private messageService: MessageService) {
+  constructor(private alertControllerService: AlertControllerService, private messageService: MessageService, private destroyRef: DestroyRef) {
   }
 
   getAlerts() {
@@ -45,14 +46,16 @@ export class AlertStoreService {
   startAlertTimer() {
     timer(0, 1000 * 20).pipe(
       exhaustMap(() => this.alertControllerService.getAlerts()),
-    ).subscribe({
-      next: res => {
-        this.alerts$.next(res);
-      },
-      error: err => {
-        console.log(err);
-      },
-    });
+    )
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: res => {
+          this.alerts$.next(res);
+        },
+        error: err => {
+          console.log(err);
+        },
+      });
   }
 
   refreshAlerts() {

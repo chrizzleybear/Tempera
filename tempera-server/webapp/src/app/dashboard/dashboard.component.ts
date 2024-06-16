@@ -28,7 +28,6 @@ import { DisplayHelper } from '../_helpers/display-helper';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { OverlappingProjectHelper } from '../_helpers/overlapping-project-helper';
-import { AlertStoreService } from '../_stores/alert-store.service';
 import { TooltipModule } from 'primeng/tooltip';
 import { MeasurementComponent } from './measurement/measurement.component';
 import { SensorType } from '../models/threshold.model';
@@ -154,8 +153,7 @@ export class DashboardComponent implements OnInit {
     private dashboardControllerService: DashboardControllerService,
     private storageService: StorageService,
     private destroyRef: DestroyRef,
-    private messageService: MessageService,
-    private alertStoreService: AlertStoreService) {
+    private messageService: MessageService) {
   }
 
   ngOnInit(): void {
@@ -164,8 +162,6 @@ export class DashboardComponent implements OnInit {
     if (this.user) {
       this.getData$(this.user.username).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: data => {
-          this.alertStoreService.refreshAlerts();
-
           this.dashboardData = data;
           this.colleagueTableFilterFields = Object.keys(this.dashboardData?.colleagueStates?.[0] ?? []);
 
