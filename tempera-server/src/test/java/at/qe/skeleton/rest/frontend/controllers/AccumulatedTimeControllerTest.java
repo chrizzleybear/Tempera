@@ -13,15 +13,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithSecurityContext;
-import org.springframework.security.test.context.support.WithUserDetails;
 
-import java.util.Collection;
+
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,10 +39,10 @@ class AccumulatedTimeControllerTest {
     accumulatedTimeDtos =
         List.of(
             new AccumulatedTimeDto(
-                "project1", "group1", State.DEEPWORK, "15.05.2024T15:00", "15.05.2024T15:00"));
+                "project1", "group1",true, State.DEEPWORK, "15.05.2024T15:00", "15.05.2024T15:00"));
     simpleProjectDtos =
-        List.of(new SimpleProjectDto("1", "project1", "this is project 1", "someGuy"));
-    simpleGroupDtos = List.of(new SimpleGroupDto("1", "group1", "this is group 1", "someGirl"));
+        List.of(new SimpleProjectDto("1", false, "project1", "this is project 1", "someGuy"));
+    simpleGroupDtos = List.of(new SimpleGroupDto("1", false, "group1", "this is group 1", "someGirl"));
 testResponse =
         new AccumulatedTimeResponse(accumulatedTimeDtos, simpleProjectDtos, simpleGroupDtos);
 Mockito.reset(accumulatedTimeMapper);
@@ -69,7 +64,7 @@ Mockito.reset(accumulatedTimeMapper);
     //actual call and assertions
     AccumulatedTimeResponse response = accumulatedTimeController.getAccumulatedTimeData().getBody();
     verify(accumulatedTimeMapper).getManagerTimeData(testUsername);
-    assertEquals(accumulatedTimeController.getAccumulatedTimeData().getStatusCodeValue(), 200);
+    assertEquals(200, accumulatedTimeController.getAccumulatedTimeData().getStatusCode().value());
     assertEquals(accumulatedTimeDtos.size(), response.accumulatedTimes().size() );
     assertEquals(simpleProjectDtos.size(), response.availableProjects().size());
     assertEquals(simpleGroupDtos.size(), response.availableGroups().size());
@@ -93,7 +88,7 @@ Mockito.reset(accumulatedTimeMapper);
     //actual call and assertions
     AccumulatedTimeResponse response = accumulatedTimeController.getAccumulatedTimeData().getBody();
     verify(accumulatedTimeMapper).getGroupLeadTimeData(testUsername);
-    assertEquals(accumulatedTimeController.getAccumulatedTimeData().getStatusCodeValue(), 200);
+    assertEquals(200, accumulatedTimeController.getAccumulatedTimeData().getStatusCode().value());
     assertEquals(accumulatedTimeDtos.size(), response.accumulatedTimes().size() );
     assertEquals(simpleProjectDtos.size(), response.availableProjects().size());
     assertEquals(simpleGroupDtos.size(), response.availableGroups().size());

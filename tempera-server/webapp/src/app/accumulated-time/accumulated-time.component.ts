@@ -16,7 +16,7 @@ import StateEnum = ColleagueStateDto.StateEnum;
 import { DisplayHelper } from '../_helpers/display-helper';
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
 import { FilterMatchMode } from 'primeng/api';
-import { MultiSelect, MultiSelectModule } from 'primeng/multiselect';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { ButtonModule } from 'primeng/button';
 import { NgIf } from '@angular/common';
 
@@ -48,10 +48,6 @@ export class AccumulatedTimeComponent implements OnInit {
   public allGroups: SimpleGroupDto[] = [];
   public activeProjects: SimpleProjectDto[] = [];
   public activeGroups: SimpleGroupDto[] = [];
-  public activeProjectIds: string[] = [];
-  public activeGroupIds: string[] = [];
-  public allProjectIds: string[] = [];
-  public allGroupIds: string[] = [];
   public availableProjects: SimpleProjectDto[] = [];
   public availableGroups: SimpleGroupDto[] = [];
   public onlyActiveProjectsAndGroupsShown: boolean = false;
@@ -177,7 +173,7 @@ export class AccumulatedTimeComponent implements OnInit {
     } else {
       this.table?.filter(this.allGroups.map(g => g.id), 'groupId', FilterMatchMode.IN);
     }
-    // this.table?.reset();
+    this.table?.reset();
     this.availableProjects = this.allProjects;
     this.availableGroups = this.allGroups;
     this.onlyActiveProjectsAndGroupsShown = false;
