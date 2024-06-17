@@ -16,6 +16,7 @@ import { AlertDto } from '../../api';
 import SeverityEnum = AlertDto.SeverityEnum;
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
 import { ToastModule } from 'primeng/toast';
+import { ColorSchemeService } from '../_services/color-scheme.service';
 
 @Component({
   selector: 'app-topbar',
@@ -35,7 +36,7 @@ export class AppTopBarComponent implements OnInit {
 
   @ViewChild('alertsPanel') alertsPanel!: OverlayPanel;
 
-  constructor(public layoutService: LayoutService, private authService: AuthService, private storageService: StorageService, public alertStoreService: AlertStoreService) {
+  constructor(public layoutService: LayoutService, private authService: AuthService, private storageService: StorageService, public alertStoreService: AlertStoreService, private colorSchemeService: ColorSchemeService) {
   }
 
   ngOnInit(): void {
@@ -89,5 +90,9 @@ export class AppTopBarComponent implements OnInit {
       default:
         return 'primary';
     }
+  }
+
+  toggleColorScheme() {
+    this.colorSchemeService.toggleScheme();
   }
 }
