@@ -2,7 +2,7 @@
 <form *ngIf="this.dashboardData" name="form" [formGroup]="this.form" (ngSubmit)="this.onSubmit()"
       class="h-full">
   <div class="w-full lg:px-4 flex justify-between mb-4 lg:mb-0">
-    <p-dropdown formControlName="visibility" [options]="this.visibilityOptions" appendTo="body"></p-dropdown>
+    <p-dropdown [disabled]="visibilityDisabled" pTooltip="Administrators are not allowed to change their visibility." [tooltipDisabled]="!visibilityDisabled" formControlName="visibility" [options]="this.visibilityOptions" appendTo="body"></p-dropdown>
     <p-button [disabled]="!this.form.valid || !this.form.dirty" type="submit" label="Save changes"></p-button>
   </div>
   <div class="w-full lg:px-4 pb-4 flex justify-center">
