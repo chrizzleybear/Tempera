@@ -16,6 +16,7 @@ api/roomController.service.ts
 api/temperaStationController.service.ts
 api/timeRecordController.service.ts
 api/timetableController.service.ts
+api/tipController.service.ts
 api/userManagementController.service.ts
 configuration.ts
 encoder.ts
@@ -38,11 +39,9 @@ model/externalRecordDto.ts
 model/floorComponent.ts
 model/frontendMeasurementDto.ts
 model/getTimetableDataResponse.ts
-model/groupAssignmentDto.ts
 model/groupDetailsDto.ts
 model/groupx.ts
 model/groupxProject.ts
-model/groupxProjectDto.ts
 model/groupxProjectId.ts
 model/loginRequest.ts
 model/measurement.ts
@@ -50,6 +49,7 @@ model/measurementDto.ts
 model/measurementId.ts
 model/memberAssigmentDto.ts
 model/messageResponse.ts
+model/minimalGxpDto.ts
 model/models.ts
 model/modification.ts
 model/project.ts

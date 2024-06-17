@@ -1,5 +1,16 @@
 package at.qe.skeleton.rest.frontend.dtos;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
-public record ExtendedProjectDto(SimpleUserDto manager, SimpleProjectDto simpleProjectDto, List<SimpleGroupDto> connectedGroups, List<SimpleUserDto> contributors) {}
+/**
+ * Data transfer object for a project with extended information.
+ *
+ * @param manager
+ * @param simpleProjectDto
+ * @param activeGroups Groups that are currently active in the project
+ * @param deactivatedGroups Groups that have formerly been active in the project
+ * @param contributors active Contributors (users that might have been active through deactivated Groups are not included)
+ */
+public record ExtendedProjectDto(@NotNull SimpleUserDto manager, @NotNull SimpleProjectDto simpleProjectDto, List<SimpleGroupDto> activeGroups, List<SimpleGroupDto> deactivatedGroups, List<SimpleUserDto> contributors) {}

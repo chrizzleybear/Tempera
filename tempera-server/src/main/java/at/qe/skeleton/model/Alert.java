@@ -1,7 +1,5 @@
 package at.qe.skeleton.model;
 
-import at.qe.skeleton.model.enums.AlertType;
-import at.qe.skeleton.model.enums.ThresholdType;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

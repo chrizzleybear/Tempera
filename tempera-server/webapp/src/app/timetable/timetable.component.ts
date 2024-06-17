@@ -38,9 +38,15 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TotalTimeHelper } from '../_helpers/total-time-helper';
 import { OverlappingProjectHelper } from '../_helpers/overlapping-project-helper';
 
+/**
+ * InternalTimetableEntryDto extends TimetableEntryDto with additional properties startTime, endTime and showProjectDropdown.
+ * ShowProjectDropdown is used to determine if the project dropdown should be shown in the table, or not.
+ * If the assigned Project for that entry is no longer available to the user, the dropdown should not be shown.
+ */
 interface InternalTimetableEntryDto extends TimetableEntryDto {
   startTime: Date;
   endTime: Date;
+  isEditable: boolean;
 }
 
 @Component({
@@ -80,6 +86,10 @@ export class TimetableComponent implements OnInit {
   public tableEntries?: InternalTimetableEntryDto[];
 
   public availableProjects: SimpleGroupxProjectDto[] = [];
+
+  public deactivatedProjects: SimpleGroupxProjectDto[] = [];
+
+  public filterProjects: SimpleGroupxProjectDto[] = [];
 
   public filterFields: string[] = [];
 
@@ -167,25 +177,41 @@ export class TimetableComponent implements OnInit {
     }),
   });
 
+
   constructor(public timetableControllerService: TimetableControllerService, private messageService: MessageService, private cd: ChangeDetectorRef) {
   }
 
+
+
   ngOnInit(): void {
+    this.fillTable();
+  }
+
+  fillTable(): void {
     this.timetableControllerService.getTimetableData().subscribe({
         next: data => {
           this.tableEntries = data.tableEntries?.map(entry => ({
             ...entry,
             startTime: new Date(entry.startTimestamp),
             endTime: new Date(entry.endTimestamp),
+            isEditable: !(entry.assignedGroupxProject) ||
+              (data.availableProjects?.some(project =>
+                project.projectId === entry.assignedGroupxProject?.projectId && project.groupId === entry.assignedGroupxProject?.groupId) ?? true),
           })) ?? [];
 
           this.availableProjects = data.availableProjects ?? [];
+          this.deactivatedProjects = this.tableEntries?.filter(entry => !entry.isEditable)?.map(entry => entry.assignedGroupxProject!) ?? [];
+          this.deactivatedProjects = OverlappingProjectHelper.removeDuplicatProjects(this.deactivatedProjects);
+          this.filterProjects = this.availableProjects.concat(this.deactivatedProjects);
+
 
           // Rename projects that have the same projectId
-          this.duplicatedProjects = OverlappingProjectHelper.getDuplicatedProjects(this.availableProjects);
-          OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, this.availableProjects);
-          const assignedProjects = this.tableEntries.filter(x => x?.assignedGroupxProject).map(entry => entry.assignedGroupxProject!);
+          this.duplicatedProjects = OverlappingProjectHelper.getDuplicatedProjects(this.filterProjects);
+          OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, this.filterProjects);
+          // here we need to exclude the deactivated projects, so they are not renamed twice
+          const assignedProjects = this.tableEntries.filter(x => x?.assignedGroupxProject && !this.deactivatedProjects.includes(x.assignedGroupxProject)).map(entry => entry.assignedGroupxProject!);
           OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, assignedProjects);
+
 
           this.filterFields = Object.keys(this.tableEntries?.[0] ?? []);
         },
@@ -202,7 +228,7 @@ export class TimetableComponent implements OnInit {
     // give the project back the original name if it is a duplicate
     let submitProject = structuredClone(newProject);
     if (this.duplicatedProjects.has(submitProject.projectId ?? '')) {
-      submitProject.projectName = this.duplicatedProjects.get(submitProject.projectId!)?.originalName;
+      submitProject.projectName = this.duplicatedProjects.get(submitProject.projectId)?.originalName ?? '';
     }
 
     this.timetableControllerService.updateProject1({
@@ -232,16 +258,10 @@ export class TimetableComponent implements OnInit {
     const time = DateTime.fromJSDate(this.splitForm.controls.time.value!).toString();
     this.timetableControllerService.splitTimeRecord({ entryId: timeEntryId, splitTimestamp: time }).subscribe(
       {
-        next: data => {
+        next: () => {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Time entry split successfully' });
           this.splitVisible = false;
-          this.tableEntries = data.tableEntries?.map(entry => ({
-            ...entry,
-            startTime: new Date(entry.startTimestamp),
-            endTime: new Date(entry.endTimestamp),
-          })) ?? [];
-
-          this.availableProjects = data.availableProjects ?? [];
+          this.fillTable();
         },
         error: () => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to split time entry' });
@@ -282,6 +302,7 @@ export class TimetableComponent implements OnInit {
   /*
   Calculates the total work time with the current active filters
    */
+
   calculateTotalTime() {
     const filteredEntries = TotalTimeHelper.getFilteredEntries<InternalTimetableEntryDto>(this.table);
     this.totalTime = TotalTimeHelper.calculate(filteredEntries);

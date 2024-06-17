@@ -10,6 +10,7 @@ import { DialogModule } from "primeng/dialog";
 import { Router } from "@angular/router";
 import {GroupCreateComponent} from "../group-create/group-create.component";
 import {GroupEditComponent} from "../group-edit/group-edit.component";
+import { GroupManagementControllerService, SimpleGroupDto } from '../../../api';
 @Component({
   selector: 'app-groups',
   standalone: true,
@@ -32,14 +33,14 @@ import {GroupEditComponent} from "../group-edit/group-edit.component";
  * This component is responsible for managing and displaying all groups.
  */
 export class GroupsComponent implements OnInit {
-  groups: Group[] = [];
-  filteredGroups: Group[] = [];
+  groups: SimpleGroupDto[] = [];
+  filteredGroups: SimpleGroupDto[] = [];
   displayCreateDialog: boolean = false;
   displayEditDialog: boolean = false;
-  selectedGroup: Group | undefined;
+  selectedGroup: SimpleGroupDto | undefined;
   messages: any;
 
-  constructor(private groupService: GroupService, private router: Router) {}
+  constructor(private groupService: GroupManagementControllerService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadGroups();
@@ -49,15 +50,14 @@ export class GroupsComponent implements OnInit {
     this.groupService.getAllGroups().subscribe({
       next: (groups) => {
         console.log("Loaded groups:", groups);
-        this.groups = groups;
-        this.filteredGroups = groups;
+        this.groups = groups.filter(g => g.isActive);
+        this.filteredGroups = this.groups;
       },
       error: (error) => {
         console.error("Error loading groups:", error);
       }
     });
   }
-
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.filteredGroups = filterValue ? this.groups.filter(group =>
@@ -68,7 +68,7 @@ export class GroupsComponent implements OnInit {
     this.displayCreateDialog = true;
   }
 
-  deleteGroup(groupId: number) {
+  deleteGroup(groupId: string) {
     this.groupService.deleteGroup(groupId).subscribe({
       next: (response) => {
         this.loadGroups();
@@ -85,7 +85,7 @@ export class GroupsComponent implements OnInit {
     this.router.navigate(['/group', group.id]);
   }
 
-  editGroup(group: Group) {
+  editGroup(group: SimpleGroupDto) {
     console.log("Edit group:", group);
     this.selectedGroup = group;
     this.displayEditDialog = true;

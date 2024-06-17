@@ -12,19 +12,19 @@ INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('elvis', 'ADMIN');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('elvis', 'EMPLOYEE');
 
 -- some Projects
-INSERT INTO project (id, name, description, manager_username) VALUES
-                                                                  (-1, 'Serious Business', 'This project beuts you aus', 'MariaTheresa'),
-                                                                  (-2, 'Expansion', 'This project aims to expand our operations globally.', 'MariaTheresa'),
-                                                                  (-3, 'Innovation', 'This project focuses on fostering innovation within the company.', 'MariaTheresa'),
-                                                                  (-4, 'Efficiency', 'This project aims to improve efficiency across all departments.', 'MariaTheresa'),
-                                                                  (-5, 'Sustainability Initiative', 'This project aims to make our operations more environmentally friendly.', 'MariaTheresa'),
-                                                                  (-6, 'Customer Satisfaction Improvement', 'This project focuses on enhancing customer experience and satisfaction.', 'MariaTheresa'),
-                                                                  (-7, 'Product Development', 'This project involves developing new products to meet market demands.', 'MariaTheresa'),
-                                                                  (-8, 'Cost Reduction Initiative', 'This project aims to identify and implement cost-saving measures across the organization.', 'MariaTheresa'),
-                                                                  (-9, 'Quality Assurance Enhancement', 'This project focuses on improving the quality control processes to ensure product quality and reliability.', 'MariaTheresa'),
-                                                                  (-10, 'Marketing Campaign Launch', 'This project involves planning and executing a new marketing campaign to attract customers.', 'MariaTheresa'),
-                                                                  (-11, 'Training and Development Program', 'This project focuses on providing training and development opportunities for employees to enhance their skills and performance.', 'MariaTheresa'),
-                                                                  (-12, 'Infrastructure Upgrade', 'This project involves upgrading the company''s IT infrastructure to improve efficiency and security.', 'MariaTheresa');
+INSERT INTO project (id, is_active, name, description, manager_username) VALUES
+                                                                  (-1, true, 'Serious Business', 'This project beuts you aus', 'MariaTheresa'),
+                                                                  (-2, true, 'Expansion', 'This project aims to expand our operations globally.', 'MariaTheresa'),
+                                                                  (-3,true, 'Innovation', 'This project focuses on fostering innovation within the company.', 'MariaTheresa'),
+                                                                  (-4,true, 'Efficiency', 'This project aims to improve efficiency across all departments.', 'MariaTheresa'),
+                                                                  (-5,true, 'Sustainability Initiative', 'This project aims to make our operations more environmentally friendly.', 'MariaTheresa'),
+                                                                  (-6,true, 'Customer Satisfaction Improvement', 'This project focuses on enhancing customer experience and satisfaction.', 'MariaTheresa'),
+                                                                  (-7,true, 'Product Development', 'This project involves developing new products to meet market demands.', 'MariaTheresa'),
+                                                                  (-8,true, 'Cost Reduction Initiative', 'This project aims to identify and implement cost-saving measures across the organization.', 'MariaTheresa'),
+                                                                  (-9, true,'Quality Assurance Enhancement', 'This project focuses on improving the quality control processes to ensure product quality and reliability.', 'MariaTheresa'),
+                                                                  (-10,true, 'Marketing Campaign Launch', 'This project involves planning and executing a new marketing campaign to attract customers.', 'MariaTheresa'),
+                                                                  (-11,true, 'Training and Development Program', 'This project focuses on providing training and development opportunities for employees to enhance their skills and performance.', 'MariaTheresa'),
+                                                                  (-12,true, 'Infrastructure Upgrade', 'This project involves upgrading the company''s IT infrastructure to improve efficiency and security.', 'MariaTheresa');
 
 -- these users can be used to display as colleagues for john doe
 INSERT INTO userx (enabled, default_group_id, default_project_id, state, state_visibility, create_date, update_date, create_user_username, update_user_username, username, email, first_name, last_name, password) VALUES
@@ -43,27 +43,24 @@ INSERT INTO userx_userx_role (userx_username, roles) VALUES ('brucewayne', 'MANA
 
 
 -- add some Groups to test db
-INSERT INTO groupx (id, group_lead_username, description, name) VALUES (-1,'peterparker', 'this is just for testing', 'Research Team');
-INSERT INTO groupx (id, group_lead_username, description, name) VALUES (-2,'peterparker', 'this is also just for testing', 'Security Team');
-INSERT INTO groupx (id, group_lead_username, description, name) VALUES (-3,'tonystark', 'this is also just for testing', 'Marketing Team');
-INSERT INTO groupx (id, group_lead_username, description, name) VALUES (-4,'tonystark', 'this is also just for testing', 'Expert Team');
+INSERT INTO groupx (id, active, group_lead_username, description, name) VALUES (-1, true, 'peterparker', 'this is just for testing', 'Research Team');
+INSERT INTO groupx (id, active, group_lead_username, description, name) VALUES (-2, true, 'peterparker', 'this is also just for testing', 'Security Team');
+INSERT INTO groupx (id, active, group_lead_username, description, name) VALUES (-3, true, 'tonystark', 'this is also just for testing', 'Marketing Team');
+INSERT INTO groupx (id, active, group_lead_username, description, name) VALUES (-4, true, 'tonystark', 'this is also just for testing', 'Expert Team');
 
 -- add some of the created projects to some GroupxProject Objects:
 -- add Serious Business, Expansion, Innovation, Efficiency,Sustainability and Customer Satisfaction to testGroup1
-INSERT INTO groupx_project_object (group_id, project_id)
-VALUES (-1, -1), (-1, -2), (-1, -3), (-1, -4), (-1,-5), (-1, -6);
+INSERT INTO groupx_project_object (is_active, group_id, project_id)
+VALUES (true, -1, -1), (true, -1, -2), (true, -1, -3), (true, -1, -4), (true, -1,-5), (true, -1, -6);
 
 -- add Product Development, Cost Reduction, Quality Assurance, Marketing Campaign Launch, Training and Development and Infrastructure Upgrade to testGroup2
-INSERT INTO groupx_project_object (group_id, project_id)
-Values (-2, -7), (-2, -1), (-2, -8), (-2, -9), (-2, -10), (-2, -11), (-2, -12);
-Values (-1, -7), (-2, -7), (-2, -8), (-2, -9), (-2, -10), (-2, -11), (-2, -12);
+INSERT INTO groupx_project_object (is_active, group_id, project_id)
+Values (true, -2, -7), (true, -2, -1), (true, -2, -8), (true, -2, -9), (true, -2, -10), (true, -2, -11), (true, -2, -12), (true, -1, -7);
 
 INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username)
 VALUES (-1, -1, 'admin'), (-2, -1, 'admin'), (-1, -2, 'admin'), (-1, -3, 'admin'), (-1, -4, 'admin'), (-1, -5, 'admin'), (-1, -6, 'admin'), (-1, -6, 'bobjones'), (-1, -6, 'chriswilliams'), (-1, -6, 'peterparker'), (-1, -6, 'tonystark'), (-1, -6, 'brucewayne'), (-1, -6, 'clarkkent');
 INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username)
-VALUES (-2, -7, 'johndoe'), (-2, -8, 'johndoe'), (-2, -9, 'johndoe'), (-2, -10, 'johndoe'), (-2, -11, 'johndoe'), (-2, -12, 'johndoe');
-VALUES (-1, -7, 'johndoe'),(-2, -7, 'johndoe'), (-2, -8, 'johndoe'), (-2, -9, 'johndoe'), (-2, -10, 'johndoe'), (-2, -11, 'johndoe'), (-2, -12, 'johndoe');
-
+VALUES (-2, -7, 'johndoe'), (-2, -8, 'johndoe'), (-2, -9, 'johndoe'), (-2, -10, 'johndoe'), (-2, -11, 'johndoe'), (-2, -12, 'johndoe'), (-1, -7, 'johndoe');
 
 INSERT INTO groupx_members (groups_id, members_username) VALUES (-1, 'johndoe'), (-2, 'johndoe');
 INSERT INTO groupx_members (groups_id, members_username) VALUES (-1, 'alicebrown'), (-3, 'alicebrown'), (-4, 'alicebrown');

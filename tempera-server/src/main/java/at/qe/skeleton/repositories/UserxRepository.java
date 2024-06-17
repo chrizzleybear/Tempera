@@ -3,14 +3,13 @@ package at.qe.skeleton.repositories;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.UserxRole;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.parameters.P;
+
 
 /**
  * Repository for managing {@link Userx} entities.
@@ -42,7 +41,6 @@ public interface UserxRepository extends AbstractRepository<Userx, String> {
 
   Boolean existsByEmail(String email);
 
-  List<Userx> findByUsernameContaining(String username);
 
   @Query("SELECT u FROM Userx u WHERE CONCAT(u.firstName, ' ', u.lastName) = :wholeName")
   List<Userx> findByWholeNameConcat(@Param("wholeName") String wholeName);
