@@ -17,6 +17,7 @@ import SeverityEnum = AlertDto.SeverityEnum;
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
 import { ToastModule } from 'primeng/toast';
 import { ColorSchemeService } from '../_services/color-scheme.service';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-topbar',
@@ -35,6 +36,14 @@ export class AppTopBarComponent implements OnInit {
   @ViewChild('topbarmenu') menu!: ElementRef;
 
   @ViewChild('alertsPanel') alertsPanel!: OverlayPanel;
+
+  colorSchemeClass$ = this.layoutService.configUpdate$.pipe(map(x => {
+    if (x.colorScheme === 'light') {
+      return 'pi pi-sun';
+    } else {
+      return 'pi pi-moon';
+    }
+  }))
 
   constructor(public layoutService: LayoutService, private authService: AuthService, private storageService: StorageService, public alertStoreService: AlertStoreService, private colorSchemeService: ColorSchemeService) {
   }

@@ -62,7 +62,7 @@
         </ng-template>
       </p-overlayPanel>
       <button class="p-link layout-topbar-button" pTooltip="Toggle color scheme" tooltipPosition="bottom" (click)="this.toggleColorScheme()">
-        <i class="pi pi-moon"></i>
+        <i [class]="colorSchemeClass$ | async"></i>
         <span class="hidden-span">Toggle color scheme</span>
       </button>
       <button class="p-link layout-topbar-button" pTooltip="Sign out" tooltipPosition="bottom"
