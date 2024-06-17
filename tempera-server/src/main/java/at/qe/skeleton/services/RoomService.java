@@ -100,6 +100,10 @@ public class RoomService {
         return accessPointRepository.findByRoom(room).orElseThrow(() -> new IllegalArgumentException("AccessPoint not found"));
     }
 
+    public Room saveRoom(Room room) {
+        return roomRepository.save(room);
+    }
+
     @Transactional
     public Threshold updateThreshold(ThresholdUpdateDto dto) {
         Threshold updateThreshold = thresholdRepository.findById(dto.threshold().id()).orElseThrow(() -> new IllegalArgumentException("Threshold not found"));

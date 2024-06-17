@@ -315,7 +315,6 @@ export class TimetableComponent implements OnInit {
   * Also filters out entries with the state OutOfOffice.
    */
   filterAssignedProjects() {
-    // this.table?.reset();
     this.table?.filter({}, 'assignedGroupxProject', FilterMatchMode.IS_NOT);
     this.table?.filter(StateEnum.OutOfOffice, 'state', FilterMatchMode.IS_NOT);
     this.selectedProjects = [];

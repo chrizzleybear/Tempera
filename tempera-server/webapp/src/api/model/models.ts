@@ -13,6 +13,7 @@ export * from './extendedGroupDto';
 export * from './extendedProjectDto';
 export * from './externalRecordDto';
 export * from './floorComponent';
+export * from './frontendMeasurementDto';
 export * from './getTimetableDataResponse';
 export * from './groupDetailsDto';
 export * from './groupx';
