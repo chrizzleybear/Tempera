@@ -42,7 +42,7 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
       startDateTime,
       endDateTime,
     ), (endDateTime.getTime() - startDateTime.getTime()) / 10 + 1_000);
-    // divide the selected datetime range by 10 (the number of measurements to be
+    // divide the selected datetime range by 10 (the number of measurements) to be
     // displayed and add 1 second to make sure the latest measurement is always
     // displayed at every reload.
   }
@@ -74,7 +74,7 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
           } else if (sensorType == 'HUMIDITY') {
             this.data2 = climateDataDto.measurementDtos;
           }
-          this.updateChart(sensorTypes);
+          this.updateChart();
         },
         error: err => {
           console.error('Failed to fetch data from back end:', err);
@@ -88,7 +88,7 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
     }
   }
 
-  public updateChart(sensorTypes: Sensor.SensorTypeEnum[]): void {
+  public updateChart(): void {
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
