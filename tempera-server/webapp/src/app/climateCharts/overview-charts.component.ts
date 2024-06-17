@@ -49,7 +49,6 @@ export class OverviewChartsComponent implements OnInit {
   }
 
   onDateChange(newDates: Date[]): void {
-    console.log('rangeDates changed:', newDates);
     if (newDates[0] === null || newDates[1] === null) {
       this.messageService.add({
         severity: 'info',
@@ -128,7 +127,6 @@ export class OverviewChartsComponent implements OnInit {
     this.climateDataControllerService.getEnabledAccessPoints()
       .subscribe({
         next: accessPoints => {
-          console.log('Found the following enabled access points: ' + accessPoints.map(ap => ap.id));
           for (let accessPoint of accessPoints) {
             this.accessPoints.push(accessPoint.id as string);
           }
@@ -140,7 +138,6 @@ export class OverviewChartsComponent implements OnInit {
     this.climateDataControllerService.getTemperaStations()
       .subscribe({
         next: temperaStations => {
-          console.log('Found the following enabled tempera stations: ' + temperaStations.map(ts => ts.id));
           for (let temperaStation of temperaStations) {
             this.temperaStations.push(temperaStation.id as string);
           }

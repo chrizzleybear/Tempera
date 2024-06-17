@@ -4,7 +4,6 @@ import { Sensor } from '../../api/api/sensor';
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
 
 
-// TODO: check that auto reload is working in the desired time/way
 @Injectable()
 export abstract class ClimateChart implements OnInit, OnDestroy {
   public accessPointUuid: string = '';
@@ -42,7 +41,10 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
       this.sensorTypes,
       startDateTime,
       endDateTime,
-    ), (endDateTime.getTime() - startDateTime.getTime()) / 10);
+    ), (endDateTime.getTime() - startDateTime.getTime()) / 10 + 1_000);
+    // divide the selected datetime range by 10 (the number of measurements to be
+    // displayed and add 1 second to make sure the latest measurement is always
+    // displayed at every reload.
   }
 
   ngOnDestroy(): void {
@@ -72,7 +74,6 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
           } else if (sensorType == 'HUMIDITY') {
             this.data2 = climateDataDto.measurementDtos;
           }
-          console.log('Climate data\'s measurement DTOs: ' + climateDataDto.measurementDtos?.map(item => `${item.timestamp}, ${item.value}`));
           this.updateChart(sensorTypes);
         },
         error: err => {
@@ -92,8 +93,6 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
     const textColor = documentStyle.getPropertyValue('--text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-
-    console.log('Chart data: ' + this.data1, this.data2);
 
     this.chartData = {
       labels: this.data1?.map(measurement => measurement.timestamp?.replace('T', '  ')),
