@@ -1,0 +1,189 @@
+import { ClimateDataControllerService, ClimateMeasurementDto } from '../../api';
+import { MessageService } from 'primeng/api';
+import { Sensor } from '../../api/api/sensor';
+import { Injectable, OnDestroy, OnInit } from '@angular/core';
+
+
+// TODO: adjust colors with variables to override in child classes
+// TODO: check proper plot update cycle (e.g., on date range change etc.)
+@Injectable()
+export abstract class ClimateChart implements OnInit, OnDestroy {
+  public accessPointUuid: string = '';
+  public temperaStationId: string = '';
+  public rangeDates: Date[] = [];
+
+  public sensorTypes: Sensor.SensorTypeEnum[] = [];
+  public data1: ClimateMeasurementDto[] | undefined = [];
+  public data2: ClimateMeasurementDto[] | undefined = [];
+
+  private intervalId: any;
+  public chartData: any;
+  public chartOptions: any;
+
+  constructor(public climateDataControllerService: ClimateDataControllerService, private messageService: MessageService) {
+  }
+
+  ngOnInit(): void {
+    let startDateTime: Date = this.rangeDates[0];
+    let endDateTime: Date = this.rangeDates[1];
+    this.getMeasurements(
+      this.accessPointUuid,
+      this.temperaStationId,
+      this.sensorTypes,
+      startDateTime,
+      endDateTime,
+    );
+    this.intervalId = setInterval(() => this.getMeasurements(
+      this.accessPointUuid,
+      this.temperaStationId,
+      this.sensorTypes,
+      startDateTime,
+      endDateTime,
+    ), (endDateTime.getTime() - startDateTime.getTime()) / 10);
+  }
+
+  ngOnDestroy(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
+
+  public getMeasurements(
+    accessPointUuid: string,
+    temperaStationId: string,
+    sensorTypes: Sensor.SensorTypeEnum[],
+    startDateTime: Date,
+    endDateTime: Date,
+  ): void {
+    for (let sensorType of sensorTypes) {
+      this.climateDataControllerService.getMeasurementsBySensorType(
+        accessPointUuid, temperaStationId, sensorType, startDateTime.toISOString(), endDateTime.toISOString(),
+      ).subscribe({
+        next: climateDataDto => {
+          if (sensorType == 'TEMPERATURE') {
+            this.data1 = climateDataDto.measurementDtos;
+          } else if (sensorType == 'NMVOC') {
+            this.data2 = climateDataDto.measurementDtos;
+          } else if (sensorType == 'IRRADIANCE') {
+            this.data1 = climateDataDto.measurementDtos;
+          } else if (sensorType == 'HUMIDITY') {
+            this.data2 = climateDataDto.measurementDtos;
+          }
+          console.log('Climate data\'s measurement DTOs: ' + climateDataDto.measurementDtos?.map(item => `${item.timestamp}, ${item.value}`));
+        },
+        error: err => {
+          console.error('Failed to fetch data from back end:', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to fetch data from back end:' + err,
+          });
+        },
+      });
+      this.updateChart(sensorTypes);
+    }
+  }
+
+  private updateChart(sensorTypes: Sensor.SensorTypeEnum[]): void {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--text-color');
+    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+
+    this.chartData = {
+      labels: this.data1?.map(measurement => measurement.timestamp),
+      datasets: [
+        {
+          label: 'Temperature (°C)',
+          data: this.data1?.map(measurement => measurement.value),
+          fill: false,
+          yAxisID: 'y',
+          borderColor: '#42A5F5',
+          tension: 0.4,
+        },
+        {
+          label: 'CO2 (ppm)',
+          data: this.data2?.map(measurement => measurement.value),
+          fill: false,
+          yAxisID: 'y1',
+          borderColor: '#66BB6A',
+          tension: 0.4,
+        },
+      ],
+    };
+
+    this.chartOptions = {
+      stacked: false,
+      maintainAspectRatio: false,
+      aspectRatio: 0.6,
+      plugins: {
+        legend: {
+          labels: {
+            color: textColor,
+          },
+        },
+      },
+      annotation: {
+        annotations: {
+          line1: {
+            type: 'line',
+            yMin: 20,
+            yMax: 20,
+            borderColor: 'rgb(255, 99, 132)',
+            borderWidth: 2,
+            borderDash: [10, 10],
+          },
+        },
+      },
+      responsive: true,
+      scales: {
+        x: {
+          ticks: {
+            color: textColorSecondary,
+          },
+          grid: {
+            color: surfaceBorder,
+          },
+        },
+        xAxes: [{
+          type: 'linear',
+          time: {
+            unit: 'day',
+            tooltipFormat: 'll HH:mm',
+          },
+          scaleLabel: {
+            display: true,
+            labelString: 'Date',
+          },
+        }],
+        y: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          suggestedMin: 20,
+          suggestedMax: 40,
+          ticks: {
+            color: textColorSecondary,
+          },
+          grid: {
+            color: surfaceBorder,
+          },
+        },
+        y1: {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          suggestedMin: 60,
+          suggestedMax: 100,
+          ticks: {
+            color: textColorSecondary,
+          },
+          grid: {
+            drawOnChartArea: false,
+            color: surfaceBorder,
+          },
+        },
+      },
+    };
+  }
+}
