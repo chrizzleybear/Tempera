@@ -1,8 +1,10 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
+import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.AccessPoint;
 import at.qe.skeleton.model.Measurement;
 import at.qe.skeleton.model.Sensor;
+import at.qe.skeleton.model.TemperaStation;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.rest.frontend.dtos.AccessPointDto;
 import at.qe.skeleton.rest.frontend.dtos.ClimateDataDto;
@@ -14,6 +16,8 @@ import at.qe.skeleton.services.SensorService;
 import at.qe.skeleton.services.TemperaStationService;
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +56,33 @@ public class ClimateDataController {
       @PathVariable SensorType sensorType,
       Instant startDateTime,
       Instant endDateTime) {
+    try {
+      AccessPoint accessPoint = accessPointService.getAccessPointById(accessPointUuid);
+      logger.info("tempera: " + temperaId);
+      logger.info(
+          "ap stations: "
+              + accessPoint.getTemperaStations().stream().map(TemperaStation::getId).toList());
+      boolean found = false;
+      Set<TemperaStation> validStations = accessPoint.getTemperaStations();
+      for (TemperaStation station : validStations) {
+        if (Objects.equals(station.getId(), temperaId)) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        final String msg =
+            "No tempera station (%s) found for the selected access point (%s)"
+                .formatted(temperaId, accessPointUuid);
+        logger.warning(msg);
+        return ResponseEntity.internalServerError().build();
+      }
+    } catch (CouldNotFindEntityException e) {
+      final String msg =
+          "No access point found under the provided UUID: %s".formatted(accessPointUuid);
+      logger.warning(msg);
+      return ResponseEntity.internalServerError().build();
+    }
     Sensor sensor =
         sensorService.findAllSensorsByTemperaStationId(temperaId).stream()
             .filter(s -> s.getSensorType() == sensorType)

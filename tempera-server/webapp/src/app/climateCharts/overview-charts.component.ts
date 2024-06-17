@@ -68,25 +68,49 @@ export class OverviewChartsComponent implements OnInit {
       });
       return;
     }
+    // ugly fix, but without this, the chart component's values are set after completing this method,
+    // and therefore updatePlots() is called still with the old values => app lags behind user input
+    if (this.temperatureCo2ChartComponent === undefined || this.humidityIrradianceChartComponent === undefined) {
+      console.log('Chart child components are undefined.');
+      return;
+    }
+    this.temperatureCo2ChartComponent.rangeDates = newDates;
+    this.humidityIrradianceChartComponent.rangeDates = newDates;
     this.updatePlots();
   }
 
-  onAccessPointSelectionChange(): void {
+  onAccessPointSelectionChange(accessPointUuid: string): void {
+    // ugly fix, but without this, the chart component's values are set after completing this method,
+    // and therefore updatePlots() is called still with the old values => app lags behind user input
+    if (this.temperatureCo2ChartComponent === undefined || this.humidityIrradianceChartComponent === undefined) {
+      console.log('Chart child components are undefined.');
+      return;
+    }
+    this.temperatureCo2ChartComponent.accessPointUuid = accessPointUuid;
+    this.humidityIrradianceChartComponent.accessPointUuid = accessPointUuid;
     this.updatePlots();
   }
 
-  onTemperaStationSelectionChange(): void {
+  onTemperaStationSelectionChange(temperaStationId: string): void {
+    // ugly fix, but without this, the chart component's values are set after completing this method,
+    // and therefore updatePlots() is called still with the old values => app lags behind user input
+    if (this.temperatureCo2ChartComponent === undefined || this.humidityIrradianceChartComponent === undefined) {
+      console.log('Chart child components are undefined.');
+      return;
+    }
+    this.temperatureCo2ChartComponent.temperaStationId = temperaStationId;
+    this.humidityIrradianceChartComponent.temperaStationId = temperaStationId;
     this.updatePlots();
   }
 
   updatePlots(): void {
     if (this.temperatureCo2ChartComponent !== undefined) {
-      this.temperatureCo2ChartComponent.updateChart(['TEMPERATURE', 'NMVOC']);
+      this.temperatureCo2ChartComponent.ngOnInit();
     } else {
       console.log('TemperatureCo2ChartComponent is undefined');
     }
     if (this.humidityIrradianceChartComponent !== undefined) {
-      this.humidityIrradianceChartComponent.updateChart(['HUMIDITY', 'IRRADIANCE']);
+      this.humidityIrradianceChartComponent.ngOnInit();
     } else {
       console.log('HumidityIrradianceChartComponent is undefined');
     }
