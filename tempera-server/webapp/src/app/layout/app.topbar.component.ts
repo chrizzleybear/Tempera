@@ -16,6 +16,8 @@ import { AlertDto } from '../../api';
 import SeverityEnum = AlertDto.SeverityEnum;
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
 import { ToastModule } from 'primeng/toast';
+import { ColorSchemeService } from '../_services/color-scheme.service';
+import { map, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-topbar',
@@ -35,7 +37,20 @@ export class AppTopBarComponent implements OnInit {
 
   @ViewChild('alertsPanel') alertsPanel!: OverlayPanel;
 
-  constructor(public layoutService: LayoutService, private authService: AuthService, private storageService: StorageService, public alertStoreService: AlertStoreService) {
+  // For some reason, the initial value is not emitted after login
+  initialColorSchemeClass = this.layoutService.config.colorScheme === 'light' ? 'pi pi-sun' : 'pi pi-moon';
+
+  colorSchemeClass$ = this.layoutService.configUpdate$.pipe(
+    map(x => {
+      if (x.colorScheme === 'light') {
+        return 'pi pi-sun';
+      } else {
+        return 'pi pi-moon';
+      }
+    }),
+    startWith(this.initialColorSchemeClass));
+
+  constructor(public layoutService: LayoutService, private authService: AuthService, private storageService: StorageService, public alertStoreService: AlertStoreService, private colorSchemeService: ColorSchemeService) {
   }
 
   ngOnInit(): void {
@@ -89,5 +104,9 @@ export class AppTopBarComponent implements OnInit {
       default:
         return 'primary';
     }
+  }
+
+  toggleColorScheme() {
+    this.colorSchemeService.toggleScheme();
   }
 }
