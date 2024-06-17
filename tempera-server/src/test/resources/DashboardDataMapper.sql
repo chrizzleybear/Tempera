@@ -25,19 +25,19 @@ VALUES
 
 
 
-INSERT INTO project (is_active, id, name, description, manager_username) VALUES
-                                                                  (true, -1, 'Serious Business', 'This project beuts you aus', 'admin'),
-                                                                  (true, -2, 'Expansion', 'This project aims to expand our operations globally.', 'admin'),
-                                                                  (true, -3, 'Innovation', 'This project focuses on fostering innovation within the company.', 'admin'),
-                                                                  (true, -4, 'Efficiency', 'This project aims to improve efficiency across all departments.', 'admin'),
-                                                                  (true, -5, 'Sustainability Initiative', 'This project aims to make our operations more environmentally friendly.', 'admin'),
-                                                                  (true, -6, 'Customer Satisfaction Improvement', 'This project focuses on enhancing customer experience and satisfaction.', 'admin'),
-                                                                  (true, -7, 'Product Development', 'This project involves developing new products to meet market demands.', 'admin'),
-                                                                  (true, -8, 'Cost Reduction Initiative', 'This project aims to identify and implement cost-saving measures across the organization.', 'admin'),
-                                                                  (true, -9, 'Quality Assurance Enhancement', 'This project focuses on improving the quality control processes to ensure product quality and reliability.', 'admin'),
-                                                                  (true, -10, 'Marketing Campaign Launch', 'This project involves planning and executing a new marketing campaign to attract customers.', 'admin'),
-                                                                  (true, -11, 'Training and Development Program', 'This project focuses on providing training and development opportunities for employees to enhance their skills and performance.', 'admin'),
-                                                                  (true, -12, 'Infrastructure Upgrade', 'This project involves upgrading the company''s IT infrastructure to improve efficiency and security.', 'admin');
+INSERT INTO project (id, is_active, name, description, manager_username) VALUES
+                                                                  (-1, true, 'Serious Business', 'This project beuts you aus', 'admin'),
+                                                                  (-2, true, 'Expansion', 'This project aims to expand our operations globally.', 'admin'),
+                                                                  (-3, true, 'Innovation', 'This project focuses on fostering innovation within the company.', 'admin'),
+                                                                  (-4, true, 'Efficiency', 'This project aims to improve efficiency across all departments.', 'admin'),
+                                                                  (-5, true, 'Sustainability Initiative', 'This project aims to make our operations more environmentally friendly.', 'admin'),
+                                                                  (-6, true, 'Customer Satisfaction Improvement', 'This project focuses on enhancing customer experience and satisfaction.', 'admin'),
+                                                                  (-7, true, 'Product Development', 'This project involves developing new products to meet market demands.', 'admin'),
+                                                                  (-8, true, 'Cost Reduction Initiative', 'This project aims to identify and implement cost-saving measures across the organization.', 'admin'),
+                                                                  (-9, true, 'Quality Assurance Enhancement', 'This project focuses on improving the quality control processes to ensure product quality and reliability.', 'admin'),
+                                                                  (-10, true, 'Marketing Campaign Launch', 'This project involves planning and executing a new marketing campaign to attract customers.', 'admin'),
+                                                                  (-11, true, 'Training and Development Program', 'This project focuses on providing training and development opportunities for employees to enhance their skills and performance.', 'admin'),
+                                                                  (-12, true, 'Infrastructure Upgrade', 'This project involves upgrading the company''s IT infrastructure to improve efficiency and security.', 'admin');
 
 
 -- these are in the same groups as the user (6 people)
