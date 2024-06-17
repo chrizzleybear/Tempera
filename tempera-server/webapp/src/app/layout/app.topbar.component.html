@@ -14,6 +14,7 @@
     <i class="pi pi-ellipsis-v"></i>
   </button>
 
+  <!--  ngIf is always true here, it's just a workaround to get alerts as a variable  -->
   <ng-container *ngIf="{data: alertStoreService.getAlerts() | async} as alerts">
     <div #topbarmenu class="layout-topbar-menu"
          [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
