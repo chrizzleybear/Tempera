@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 @Component
 @Scope("application")
@@ -19,6 +21,7 @@ public class MeasurementService {
   private final MeasurementRepository measurementRepository;
   private final ThresholdService thresholdService;
   private final AlertService alertService;
+  private static final String INVALID_MEASUREMENT_ID = "Invalid Measurement ID: ";
   private final AuditLogService auditLogService;
 
   public MeasurementService(
@@ -50,7 +53,7 @@ public class MeasurementService {
   public Measurement loadMeasurement(MeasurementId id) throws CouldNotFindEntityException {
       Measurement m = measurementRepository
         .findById(id)
-        .orElseThrow(() -> new CouldNotFindEntityException("Invalid Measurement ID: " + id));
+        .orElseThrow(() -> new CouldNotFindEntityException(INVALID_MEASUREMENT_ID + id));
       auditLogService.logEvent(LogEvent.LOAD, LogAffectedType.MEASUREMENT,
               "Measurement from station " + id.getSensorId().getTemperaId() + " at " + id.getTimestamp() + " was loaded.");
       return m;
@@ -165,6 +168,7 @@ public class MeasurementService {
       openAlert.setFirstIncident(measurement.getId().getTimestamp());
       openAlert.setLastIncident(measurement.getId().getTimestamp());
       openAlert.setPeakDeviationValue(measurement.getValue());
+
       return openAlert;
     }
     openAlert.setLastIncident(measurement.getId().getTimestamp());
@@ -185,7 +189,13 @@ public class MeasurementService {
     return measurementRepository.findFirstBySensorIdOrderById_TimestampDesc(id);
   }
 
+  public Optional<List<Measurement>> find100LatestMeasurementsBySensor(Sensor sensor) {
+    SensorId id = sensor.getSensorId();
+    return measurementRepository.findTop100BySensorIdOrderById_TimestampAsc(id);
+  }
+
+
   public List<Measurement> loadAllMeasurementsFromTempera() {
-    return null;
+    return measurementRepository.findAll();
   }
 }

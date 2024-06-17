@@ -7,6 +7,7 @@ api/alertController.service.ts
 api/api.ts
 api/auditLogController.service.ts
 api/authController.service.ts
+api/climateDataController.service.ts
 api/dashboardController.service.ts
 api/groupManagementController.service.ts
 api/measurementController.service.ts
@@ -27,6 +28,8 @@ model/accessPointDto.ts
 model/accumulatedTimeDto.ts
 model/accumulatedTimeResponse.ts
 model/alertDto.ts
+model/climateDataDto.ts
+model/climateMeasurementDto.ts
 model/auditLogDto.ts
 model/colleagueStateDto.ts
 model/contributorAssignmentDto.ts

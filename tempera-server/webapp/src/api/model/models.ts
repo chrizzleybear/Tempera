@@ -5,6 +5,8 @@ export * from './accumulatedTimeDto';
 export * from './accumulatedTimeResponse';
 export * from './alertDto';
 export * from './auditLogDto';
+export * from './climateDataDto';
+export * from './climateMeasurementDto';
 export * from './colleagueStateDto';
 export * from './contributorAssignmentDto';
 export * from './credentialsDto';
