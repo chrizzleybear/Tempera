@@ -1,0 +1,29 @@
+<p-panel>
+  <div>
+    <label for="date-selector">Select a time interval to display</label>
+    <br>
+    <p-calendar
+      id="date-selector"
+      [(ngModel)]="this.rangeDates"
+      (ngModelChange)="onDateChange($event)"
+      [showTime]="true"
+      [hourFormat]="String(24)"
+      selectionMode="range"
+      [readonlyInput]="true"
+    />
+  </div>
+  <div class="flex space-x-4">
+    <app-humidity-irradiance-chart
+      class="w-1/2"
+      [accessPointUuid]="accessPointUuid"
+      [temperaStationId]="temperaStationId"
+      [rangeDates]="rangeDates"
+    ></app-humidity-irradiance-chart>
+    <app-temperature-co2-chart
+      class="w-1/2"
+      [accessPointUuid]="accessPointUuid"
+      [temperaStationId]="temperaStationId"
+      [rangeDates]="rangeDates"
+    ></app-temperature-co2-chart>
+  </div>
+</p-panel>

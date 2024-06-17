@@ -12,11 +12,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ClimateChart } from '../climate-chart';
 
 
-type TimeUnit = 'SECONDS' | 'MINUTES' | 'HOURS' | 'DAYS' | 'WEEKS' | 'MONTHS' | 'YEARS'
-const sensorTypes: Sensor.SensorTypeEnum[] = ['TEMPERATURE', 'NMVOC'];
-
 @Component({
-  selector: 'app-temperature-co2-chart',
+  selector: 'app-humidity-irradiance-chart',
   standalone: true,
   imports: [
     ChartModule,
@@ -29,19 +26,19 @@ const sensorTypes: Sensor.SensorTypeEnum[] = ['TEMPERATURE', 'NMVOC'];
     PanelModule,
     DropdownModule,
   ],
-  templateUrl: './temperature-co2-chart.component.html',
-  styleUrl: './temperature-co2-chart.component.css',
+  templateUrl: './humidity-irradiance-chart.component.html',
+  styleUrl: './humidity-irradiance-chart.component.css',
 })
-export class TemperatureCo2ChartComponent extends ClimateChart {
+export class HumidityIrradianceChartComponent extends ClimateChart {
   @Input() public override accessPointUuid: string = '';
   @Input() public override temperaStationId: string = '';
   @Input() public override rangeDates: Date[] = [];
 
   protected override sensorTypes: Sensor.SensorTypeEnum[] = ['TEMPERATURE', 'NMVOC'];
-  protected override color1: string = '#DC143C';
-  protected override color2: string = '#228B22';
-  protected override label1: string = 'Temperature (°C)';
-  protected override label2: string = 'CO2 (ppm)';
+  protected override color1: string = '#0047AB';
+  protected override color2: string = '#F08000';
+  protected override label1: string = 'Humidity (%)';
+  protected override label2: string = 'Irradiance (lux)';
 
   override ngOnInit(): void {
     super.ngOnInit();
