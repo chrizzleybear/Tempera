@@ -4,7 +4,6 @@ import { Sensor } from '../../api/api/sensor';
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
 
 
-// TODO: adjust colors with variables to override in child classes
 // TODO: check proper plot update cycle (e.g., on date range change etc.)
 @Injectable()
 export abstract class ClimateChart implements OnInit, OnDestroy {
@@ -12,9 +11,13 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
   public temperaStationId: string = '';
   public rangeDates: Date[] = [];
 
-  public sensorTypes: Sensor.SensorTypeEnum[] = [];
-  public data1: ClimateMeasurementDto[] | undefined = [];
-  public data2: ClimateMeasurementDto[] | undefined = [];
+  protected sensorTypes: Sensor.SensorTypeEnum[] = [];
+  protected color1: string = '';
+  protected color2: string = '';
+  protected label1: string = '';
+  protected label2: string = '';
+  protected data1: ClimateMeasurementDto[] | undefined = [];
+  protected data2: ClimateMeasurementDto[] | undefined = [];
 
   private intervalId: any;
   public chartData: any;
@@ -70,6 +73,7 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
             this.data2 = climateDataDto.measurementDtos;
           }
           console.log('Climate data\'s measurement DTOs: ' + climateDataDto.measurementDtos?.map(item => `${item.timestamp}, ${item.value}`));
+          this.updateChart(sensorTypes);
         },
         error: err => {
           console.error('Failed to fetch data from back end:', err);
@@ -80,7 +84,6 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
           });
         },
       });
-      this.updateChart(sensorTypes);
     }
   }
 
@@ -90,23 +93,25 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
+    console.log('Chart data: ' + this.data1, this.data2);
+
     this.chartData = {
-      labels: this.data1?.map(measurement => measurement.timestamp),
+      labels: this.data1?.map(measurement => measurement.timestamp?.replace('T', '  ')),
       datasets: [
         {
-          label: 'Temperature (°C)',
+          label: this.label1,
           data: this.data1?.map(measurement => measurement.value),
           fill: false,
           yAxisID: 'y',
-          borderColor: '#42A5F5',
+          borderColor: this.color1,
           tension: 0.4,
         },
         {
-          label: 'CO2 (ppm)',
+          label: this.label2,
           data: this.data2?.map(measurement => measurement.value),
           fill: false,
           yAxisID: 'y1',
-          borderColor: '#66BB6A',
+          borderColor: this.color2,
           tension: 0.4,
         },
       ],

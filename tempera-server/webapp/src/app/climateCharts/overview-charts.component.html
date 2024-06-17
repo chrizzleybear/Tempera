@@ -1,29 +1,50 @@
 <p-panel>
-  <div>
-    <label for="date-selector">Select a time interval to display</label>
-    <br>
-    <p-calendar
-      id="date-selector"
-      [(ngModel)]="this.rangeDates"
-      (ngModelChange)="onDateChange($event)"
-      [showTime]="true"
-      [hourFormat]="String(24)"
-      selectionMode="range"
-      [readonlyInput]="true"
-    />
+  <div class="mb-4 flex">
+    <div class="flex flex-col mr-2">
+      <label for="date-selector">Select a time interval to display</label>
+      <p-calendar
+        id="date-selector"
+        [(ngModel)]="this.rangeDates"
+        (ngModelChange)="onDateChange($event)"
+        [showTime]="true"
+        [hourFormat]="String(24)"
+        selectionMode="range"
+        [readonlyInput]="true"
+      />
+    </div>
+    <div class="flex flex-col mr-2">
+      <label for="access-point-selector">Select an access point</label>
+      <p-dropdown
+        id="access-point-selector"
+        [options]="this.accessPoints"
+        [(ngModel)]="this.accessPointUuid"
+        placeholder="Select an access point"
+        [editable]="true"
+      />
+    </div>
+    <div class="flex flex-col">
+      <label for="tempera-station-selector">Select a tempera station</label>
+      <p-dropdown
+        id="tempera-station-selector"
+        [options]="this.temperaStations"
+        [(ngModel)]="this.temperaStationId"
+        placeholder="Select a tempera station"
+        [editable]="true"
+      />
+    </div>
   </div>
   <div class="flex space-x-4">
     <app-humidity-irradiance-chart
       class="w-1/2"
-      [accessPointUuid]="accessPointUuid"
-      [temperaStationId]="temperaStationId"
-      [rangeDates]="rangeDates"
+      [accessPointUuid]="this.accessPointUuid"
+      [temperaStationId]="this.temperaStationId"
+      [rangeDates]="this.rangeDates"
     ></app-humidity-irradiance-chart>
     <app-temperature-co2-chart
       class="w-1/2"
-      [accessPointUuid]="accessPointUuid"
-      [temperaStationId]="temperaStationId"
-      [rangeDates]="rangeDates"
+      [accessPointUuid]="this.accessPointUuid"
+      [temperaStationId]="this.temperaStationId"
+      [rangeDates]="this.rangeDates"
     ></app-temperature-co2-chart>
   </div>
 </p-panel>

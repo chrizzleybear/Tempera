@@ -1,15 +1,18 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
-
+import at.qe.skeleton.model.AccessPoint;
 import at.qe.skeleton.model.Measurement;
 import at.qe.skeleton.model.Sensor;
 import at.qe.skeleton.model.enums.SensorType;
+import at.qe.skeleton.rest.frontend.dtos.AccessPointDto;
 import at.qe.skeleton.rest.frontend.dtos.ClimateDataDto;
+import at.qe.skeleton.rest.frontend.dtos.TemperaStationDto;
 import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.ClimateDataMapper;
+import at.qe.skeleton.services.AccessPointService;
 import at.qe.skeleton.services.MeasurementService;
 import at.qe.skeleton.services.SensorService;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
+import at.qe.skeleton.services.TemperaStationService;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -21,60 +24,104 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api/climate_data", produces = "application/json")
 public class ClimateDataController {
 
-    private final
-    MeasurementService measurementService;
-    private final SensorService sensorService;
-    private final
-    ClimateDataMapper climateDataMapper;
+  private final MeasurementService measurementService;
+  private final SensorService sensorService;
+  private final AccessPointService accessPointService;
+  private final TemperaStationService temperaStationService;
+  private final ClimateDataMapper climateDataMapper;
 
-    private static final Logger logger = Logger.getLogger("ClimateDataController");
+  private static final Logger logger = Logger.getLogger("ClimateDataController");
 
-    public ClimateDataController(ClimateDataMapper climateDataMapper, MeasurementService measurementService, SensorService sensorService) {
-        this.climateDataMapper = climateDataMapper;
-        this.measurementService = measurementService;
-        this.sensorService = sensorService;
-    }
+  public ClimateDataController(
+      ClimateDataMapper climateDataMapper,
+      MeasurementService measurementService,
+      SensorService sensorService,
+      AccessPointService accessPointService,
+      TemperaStationService temperaStationService) {
+    this.climateDataMapper = climateDataMapper;
+    this.measurementService = measurementService;
+    this.sensorService = sensorService;
+    this.accessPointService = accessPointService;
+    this.temperaStationService = temperaStationService;
+  }
 
-    @GetMapping("/measurements/{accessPointUuid}/{temperaId}/{sensorType}")
+  @GetMapping("/measurements/{accessPointUuid}/{temperaId}/{sensorType}")
   public ResponseEntity<ClimateDataDto> getMeasurementsBySensorType(
       @PathVariable UUID accessPointUuid,
       @PathVariable String temperaId,
       @PathVariable SensorType sensorType,
-      ChronoUnit unit,
-      int amount) {
+      Instant startDateTime,
+      Instant endDateTime) {
     Sensor sensor =
         sensorService.findAllSensorsByTemperaStationId(temperaId).stream()
             .filter(s -> s.getSensorType() == sensorType)
             .findFirst()
             .orElse(null);
-    if (sensor == null){
-        String message = "Sensor of type '%s' not found.".formatted(sensorType);
-        logger.warning(message);
-        return ResponseEntity.ok().build();
+    if (sensor == null) {
+      String message = "Sensor of type '%s' not found.".formatted(sensorType);
+      logger.warning(message);
+      return ResponseEntity.ok().build();
     }
-    List<Measurement> measurements = measurementService.find100LatestMeasurementsBySensor(sensor).orElse(null);
-    if (measurements == null || measurements.isEmpty()){
-        String message = "No measurements found for sensor %s".formatted(sensor);
-        logger.warning(message);
-        return ResponseEntity.ok().build();
+    List<Measurement> measurements =
+        measurementService.find100LatestMeasurementsBySensor(sensor).orElse(null);
+    if (measurements == null || measurements.isEmpty()) {
+      String message = "No measurements found for sensor %s".formatted(sensor);
+      logger.warning(message);
+      return ResponseEntity.ok().build();
     }
 
-    List<Measurement> filteredMeasurements = new ArrayList<>();
-    Measurement measurement = measurements.get(0);
-    for (Measurement currentMeasurement : measurements) {
-        if (measurement
-                .getId()
-                .getTimestamp()
-                .until(currentMeasurement.getId().getTimestamp(), unit)
-                >= amount) {
-            filteredMeasurements.add(currentMeasurement);
-            measurement = currentMeasurement;
-        }
-      }
+    if (startDateTime.isAfter(endDateTime)) {
+      String message =
+          "Start date time (%s) is after end date time (%s), when it is supposed to be before."
+              .formatted(startDateTime, endDateTime);
+      logger.warning(message);
+      return ResponseEntity.ok().build();
+    }
 
-    ClimateDataDto climateDataDtos = climateDataMapper.mapToDto(sensor, accessPointUuid, filteredMeasurements);
+    // TODO: reduce the returned list to 10 evenly spaced measurements
+    //    int takeN;
+    //    if (measurements.size() > 10) {
+    //      takeN = measurements.size() / 10;
+    //    } else {
+    //      takeN = 10;
+    //    }
+    //    List<Measurement> filteredMeasurements =
+    //        IntStream.range(0, measurements.size())
+    //            .filter(n -> n % takeN == 0)
+    //            .mapToObj(measurements::get)
+    //            .toList();
+
+    ClimateDataDto climateDataDtos =
+        climateDataMapper.mapToDto(sensor, accessPointUuid, measurements);
     String message = "Sending" + climateDataDtos.toString();
     logger.info(message);
     return ResponseEntity.ok(climateDataDtos);
+  }
+
+  @GetMapping("/measurements/access-points")
+  public ResponseEntity<List<AccessPointDto>> getEnabledAccessPoints() {
+    return ResponseEntity.ok(
+        this.accessPointService.getAllAccesspoints().stream()
+            .filter(AccessPoint::isEnabled)
+            .map(
+                accessPoint -> {
+                  if (accessPoint.getId() != null) {
+                    return new AccessPointDto(
+                        accessPoint.getId().toString(),
+                        accessPoint.getRoom().toString(),
+                        accessPoint.isEnabled(),
+                        accessPoint.isHealthy());
+                  }
+                  return null;
+                })
+            .toList());
+  }
+
+  @GetMapping("/measurements/tempera-stations")
+  public ResponseEntity<List<TemperaStationDto>> getTemperaStations() {
+    return ResponseEntity.ok(
+        this.temperaStationService.getAllTemperaStations().stream()
+            .filter(TemperaStationDto::enabled)
+            .toList());
   }
 }
