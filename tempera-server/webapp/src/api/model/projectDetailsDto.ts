@@ -13,9 +13,9 @@ import { SimpleUserDto } from './simpleUserDto';
 
 
 export interface ProjectDetailsDto { 
-    projectId?: string;
-    name?: string;
-    description?: string;
-    manager?: SimpleUserDto;
+    projectId: string;
+    name: string;
+    description: string;
+    manager: SimpleUserDto;
 }
 

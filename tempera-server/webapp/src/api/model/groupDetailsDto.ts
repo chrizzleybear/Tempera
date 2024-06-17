@@ -13,9 +13,9 @@ import { SimpleUserDto } from './simpleUserDto';
 
 
 export interface GroupDetailsDto { 
-    id?: string;
-    name?: string;
-    description?: string;
-    groupLead?: SimpleUserDto;
+    id: string;
+    name: string;
+    description: string;
+    groupLead: SimpleUserDto;
 }
 

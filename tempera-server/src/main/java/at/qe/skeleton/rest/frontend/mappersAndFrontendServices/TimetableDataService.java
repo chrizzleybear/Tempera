@@ -56,7 +56,7 @@ public class TimetableDataService {
       TimetableEntryDto entry = timeTableEntryDtoBuilder(record);
       tableEntries.add(entry);
     }
-    // todo: include GroupxProject once frontend is ready
+
     List<SimpleGroupxProjectDto> availableProjects = simpleGroupxProjectDtoSet.stream().toList();
     return new GetTimetableDataResponse(tableEntries, availableProjects);
   }
@@ -88,7 +88,6 @@ public class TimetableDataService {
         record.description());
   }
 
-  //todo: testing and running the system
 
   public MessageResponse updateProject(String username, UpdateProjectRequest request)
       throws CouldNotFindEntityException {
@@ -97,7 +96,6 @@ public class TimetableDataService {
     Userx user = userxService.loadUser(username);
     Long projectId = Long.valueOf(request.projectId());
     Long groupId = Long.valueOf(request.groupId());
-    // todo: add the group as parameter later on
     // then we need the findbyGroupIdAndProjectId...
     GroupxProject groupxProject= projectService.findByGroupAndProjectDetailedC(groupId, projectId);
     if (!groupxProject.getContributors().contains(user)) {

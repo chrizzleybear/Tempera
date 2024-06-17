@@ -24,7 +24,6 @@ public class AlertMapper {
   }
 
   public List<AlertDto> getAlerts(String username) {
-
     List<Alert> alerts = alertService.getRelevantAlertsDetailed(username);
     if (alerts.isEmpty()) {
       return new ArrayList<>();

@@ -18,19 +18,19 @@ DELETE FROM userx;
 
 
 
-INSERT INTO project (id, name, description) VALUES
-                                                (-1, 'Serious Business', 'This project beuts you aus'),
-                                                (-2, 'Expansion', 'This project aims to expand our operations globally.'),
-                                                (-3, 'Innovation', 'This project focuses on fostering innovation within the company.'),
-                                                (-4, 'Efficiency', 'This project aims to improve efficiency across all departments.'),
-                                                (-5, 'Sustainability Initiative', 'This project aims to make our operations more environmentally friendly.'),
-                                                (-6, 'Customer Satisfaction Improvement', 'This project focuses on enhancing customer experience and satisfaction.'),
-                                                (-7, 'Product Development', 'This project involves developing new products to meet market demands.'),
-                                                (-8, 'Cost Reduction Initiative', 'This project aims to identify and implement cost-saving measures across the organization.'),
-                                                (-9, 'Quality Assurance Enhancement', 'This project focuses on improving the quality control processes to ensure product quality and reliability.'),
-                                                (-10, 'Marketing Campaign Launch', 'This project involves planning and executing a new marketing campaign to attract customers.'),
-                                                (-11, 'Training and Development Program', 'This project focuses on providing training and development opportunities for employees to enhance their skills and performance.'),
-                                                (-12, 'Infrastructure Upgrade', 'This project involves upgrading the company''s IT infrastructure to improve efficiency and security.');
+INSERT INTO project (id, is_active, name, description) VALUES
+                                                (-1, true,  'Serious Business', 'This project beuts you aus'),
+                                                (-2, true, 'Expansion', 'This project aims to expand our operations globally.'),
+                                                (-3, true, 'Innovation', 'This project focuses on fostering innovation within the company.'),
+                                                (-4, true, 'Efficiency', 'This project aims to improve efficiency across all departments.'),
+                                                (-5,true,  'Sustainability Initiative', 'This project aims to make our operations more environmentally friendly.'),
+                                                (-6,true, 'Customer Satisfaction Improvement', 'This project focuses on enhancing customer experience and satisfaction.'),
+                                                (-7,true, 'Product Development', 'This project involves developing new products to meet market demands.'),
+                                                (-8,true, 'Cost Reduction Initiative', 'This project aims to identify and implement cost-saving measures across the organization.'),
+                                                (-9,true, 'Quality Assurance Enhancement', 'This project focuses on improving the quality control processes to ensure product quality and reliability.'),
+                                                (-10,true, 'Marketing Campaign Launch', 'This project involves planning and executing a new marketing campaign to attract customers.'),
+                                                (-11,true, 'Training and Development Program', 'This project focuses on providing training and development opportunities for employees to enhance their skills and performance.'),
+                                                (-12,true, 'Infrastructure Upgrade', 'This project involves upgrading the company''s IT infrastructure to improve efficiency and security.');
 
 INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE) VALUES(TRUE, 'Admin', 'Istrator', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'admin', 'admin', '2016-01-01 00:00:00');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('admin', 'ADMIN');
@@ -60,10 +60,10 @@ INSERT INTO userx_userx_role (userx_username, roles) VALUES ('brucewayne', 'MANA
 
 
 -- add some Groups to test db
-INSERT INTO groupx (id, group_lead_username, description, name) VALUES (1,'brucewayne', 'this is just for testing', 'testGroup1');
-INSERT INTO groupx (id, group_lead_username, description, name) VALUES (2,'brucewayne', 'this is also just for testing', 'testGroup2');
-INSERT INTO groupx (id, group_lead_username, description, name) VALUES (3,'brucewayne', 'this is also just for testing', 'outsiderGroup');
-INSERT INTO groupx (id, group_lead_username, description, name) VALUES (4,'brucewayne', 'this is also just for testing', 'outsiderGroup2');
+INSERT INTO groupx (id, active, group_lead_username, description, name) VALUES (1, true, 'brucewayne', 'this is just for testing', 'testGroup1');
+INSERT INTO groupx (id, active, group_lead_username, description, name) VALUES (2, true, 'brucewayne', 'this is also just for testing', 'testGroup2');
+INSERT INTO groupx (id, active, group_lead_username, description, name) VALUES (3, true, 'brucewayne', 'this is also just for testing', 'outsiderGroup');
+INSERT INTO groupx (id, active, group_lead_username, description, name) VALUES (4, true, 'brucewayne', 'this is also just for testing', 'outsiderGroup2');
 
 INSERT INTO groupx_members (groups_id, members_username) VALUES (1, 'johndoe'), (2, 'johndoe');
 INSERT INTO groupx_members (groups_id, members_username) VALUES (1, 'alicebrown'), (3, 'alicebrown'), (4, 'alicebrown');
@@ -77,12 +77,12 @@ INSERT INTO groupx_members (groups_id, members_username) VALUES (3, 'clarkkent')
 
 -- add some of the created projects to some GroupxProject Objects:
 -- add Serious Business, Expansion, Innovation, Efficiency,Sustainability and Customer Satisfaction to testGroup1
-INSERT INTO groupx_project_object (group_id, project_id)
-VALUES (1, -1), (1, -2), (1, -3), (1, -4), (1,-5), (1, -6);
+INSERT INTO groupx_project_object (group_id, project_id, is_active)
+VALUES (1, -1, true), (1, -2, true), (1, -3, true), (1, -4, true), (1,-5, true), (1, -6, true);
 
 -- add Product Development, Cost Reduction, Quality Assurance, Marketing Campaign Launch, Training and Development and Infrastructure Upgrade to testGroup2
-INSERT INTO groupx_project_object (group_id, project_id)
-Values (2, -7), (2, -8), (2, -9), (2, -10), (2, -11), (2, -12);
+INSERT INTO groupx_project_object (group_id, project_id, is_active)
+Values (2, -7, true), (2, -8, true), (2, -9, true), (2, -10, true), (2, -11, true), (2, -12, true);
 
 
 INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username)

@@ -1,10 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {Project} from "../../models/project.model";
-import {ProjectService} from "../../_services/project.service";
 import {ActivatedRoute} from "@angular/router";
 import {NgForOf, NgIf} from "@angular/common";
 import {TableModule} from "primeng/table";
 import {CardModule} from "primeng/card";
+import { ProjectControllerService } from '../../../api';
 
 @Component({
   selector: 'app-project-details',
@@ -22,19 +21,19 @@ export class ProjectDetailsComponent implements OnInit{
 
   project: any | undefined;
 
-  constructor(private projectService: ProjectService, private route: ActivatedRoute) {
+  constructor(private projectService: ProjectControllerService, private route: ActivatedRoute) {
 
   }
 
   ngOnInit(): void {
     const projectId = this.route.snapshot.paramMap.get('id');
     if (projectId) {
-      this.fetchProjectDetails(parseInt(projectId));
+      this.fetchProjectDetails(projectId);
     }
   }
 
-  private fetchProjectDetails(projectId: number) {
-    this.projectService.getProjectById(projectId).subscribe({
+  private fetchProjectDetails(projectId: string) {
+    this.projectService.getProjectDetailedById(projectId).subscribe({
       next: (data) => {
         this.project = data;
         console.log("Project details: ", this.project);

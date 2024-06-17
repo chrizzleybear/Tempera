@@ -7,8 +7,8 @@
       <th scope="col" pSortableColumn="name">Project Name <p-sortIcon field="name"></p-sortIcon></th>
       <th scope="col" pSortableColumn="description">Description <p-sortIcon field="description"></p-sortIcon></th>
       <th scope="col" pSortableColumn="managerId">Manager ID <p-sortIcon field="managerId"></p-sortIcon></th>
-      <th></th>
-      <th></th>
+      <th scope="col"></th>
+      <th scope="col"></th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-project>
@@ -17,7 +17,7 @@
       <td>{{ project.description }}</td>
       <td>{{ project.manager }}</td>
       <td>
-        <p-button label="Add Member" (onClick)="addContributorsToProjectDialog(project); $event.stopPropagation()" icon="pi pi-users"></p-button>
+        <p-button label="Add Member" (onClick)="addContributorsToProjectDialog(project) ; $event.stopPropagation()"   icon="pi pi-users"></p-button>
       </td>
       <td>
         <p-button label="Delete Member" (onClick)="deleteContributorDialog(project); $event.stopPropagation()" icon="pi pi-trash"></p-button>
@@ -64,7 +64,7 @@
   </p-table>
 </p-dialog>
 <p-dialog
-  header="Delete Member to Project"
+  header="Remove Contributor of Project"
   [(visible)]="displayDeleteMemberDialog"
   [responsive]="true"
   [style]="{width: '50vw'}">

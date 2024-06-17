@@ -1,5 +1,7 @@
 package at.qe.skeleton.rest.frontend.dtos;
 
-public record SimpleUserDto(String username, String firstName, String lastName, String email) {
+import jakarta.validation.constraints.NotNull;
+
+public record SimpleUserDto(@NotNull String username,@NotNull String firstName,@NotNull String lastName,@NotNull String email) {
 
 }
