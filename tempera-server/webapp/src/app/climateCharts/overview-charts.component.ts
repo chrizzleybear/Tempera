@@ -42,6 +42,7 @@ export class OverviewChartsComponent implements OnInit {
   constructor(private climateDataControllerService: ClimateDataControllerService, private messageService: MessageService) {
   }
 
+  // TODO: fix repeated error message output
   ngOnInit(): void {
     this.getAccessPoints();
     this.getTemperaStations();
@@ -65,6 +66,13 @@ export class OverviewChartsComponent implements OnInit {
         severity: 'error',
         summary: 'Error',
         detail: 'The end date can\'t be before the start date.',
+      });
+      return;
+    } else if (startDate == endDate) {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Info',
+        detail: 'Please select an end date & time that is different from the start date & time',
       });
       return;
     }

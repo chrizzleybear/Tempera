@@ -4,7 +4,7 @@ import { Sensor } from '../../api/api/sensor';
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
 
 
-// TODO: reload chart upon change in overview-set params
+// TODO: check that auto reload is working in the desired time/way
 @Injectable()
 export abstract class ClimateChart implements OnInit, OnDestroy {
   public accessPointUuid: string = '';
