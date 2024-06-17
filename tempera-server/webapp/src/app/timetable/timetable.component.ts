@@ -208,7 +208,8 @@ export class TimetableComponent implements OnInit {
           // Rename projects that have the same projectId
           this.duplicatedProjects = OverlappingProjectHelper.getDuplicatedProjects(this.filterProjects);
           OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, this.filterProjects);
-          const assignedProjects = this.tableEntries.filter(x => x?.assignedGroupxProject).map(entry => entry.assignedGroupxProject!);
+          // here we need to exclude the deactivated projects, so they are not renamed twice
+          const assignedProjects = this.tableEntries.filter(x => x?.assignedGroupxProject && !this.deactivatedProjects.includes(x.assignedGroupxProject)).map(entry => entry.assignedGroupxProject!);
           OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, assignedProjects);
 
 
@@ -257,7 +258,7 @@ export class TimetableComponent implements OnInit {
     const time = DateTime.fromJSDate(this.splitForm.controls.time.value!).toString();
     this.timetableControllerService.splitTimeRecord({ entryId: timeEntryId, splitTimestamp: time }).subscribe(
       {
-        next: data => {
+        next: () => {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Time entry split successfully' });
           this.splitVisible = false;
           this.fillTable();
