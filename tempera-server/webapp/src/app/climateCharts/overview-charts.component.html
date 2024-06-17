@@ -18,6 +18,7 @@
         id="access-point-selector"
         [options]="this.accessPoints"
         [(ngModel)]="this.accessPointUuid"
+        (ngModelChange)="onAccessPointSelectionChange()"
         placeholder="Select an access point"
         [editable]="true"
       />
@@ -28,6 +29,7 @@
         id="tempera-station-selector"
         [options]="this.temperaStations"
         [(ngModel)]="this.temperaStationId"
+        (ngModelChange)="onTemperaStationSelectionChange()"
         placeholder="Select a tempera station"
         [editable]="true"
       />

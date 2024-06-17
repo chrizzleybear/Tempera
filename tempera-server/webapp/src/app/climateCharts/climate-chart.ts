@@ -4,7 +4,7 @@ import { Sensor } from '../../api/api/sensor';
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
 
 
-// TODO: check proper plot update cycle (e.g., on date range change etc.)
+// TODO: reload chart upon change in overview-set params
 @Injectable()
 export abstract class ClimateChart implements OnInit, OnDestroy {
   public accessPointUuid: string = '';
@@ -87,7 +87,7 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
     }
   }
 
-  private updateChart(sensorTypes: Sensor.SensorTypeEnum[]): void {
+  public updateChart(sensorTypes: Sensor.SensorTypeEnum[]): void {
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');

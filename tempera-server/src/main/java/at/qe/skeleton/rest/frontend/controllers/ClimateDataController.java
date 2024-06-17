@@ -79,17 +79,6 @@ public class ClimateDataController {
     }
 
     // TODO: reduce the returned list to 10 evenly spaced measurements
-    //    int takeN;
-    //    if (measurements.size() > 10) {
-    //      takeN = measurements.size() / 10;
-    //    } else {
-    //      takeN = 10;
-    //    }
-    //    List<Measurement> filteredMeasurements =
-    //        IntStream.range(0, measurements.size())
-    //            .filter(n -> n % takeN == 0)
-    //            .mapToObj(measurements::get)
-    //            .toList();
 
     ClimateDataDto climateDataDtos =
         climateDataMapper.mapToDto(sensor, accessPointUuid, measurements);

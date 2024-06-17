@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
 import { CalendarModule } from 'primeng/calendar';
 import { FormsModule } from '@angular/forms';
@@ -33,6 +33,12 @@ export class OverviewChartsComponent implements OnInit {
   public accessPoints: string[] = [];
   public temperaStations: string[] = [];
 
+  @ViewChild(TemperatureCo2ChartComponent)
+  private temperatureCo2ChartComponent: TemperatureCo2ChartComponent | undefined;
+
+  @ViewChild(HumidityIrradianceChartComponent)
+  private humidityIrradianceChartComponent: HumidityIrradianceChartComponent | undefined;
+
   constructor(private climateDataControllerService: ClimateDataControllerService, private messageService: MessageService) {
   }
 
@@ -60,6 +66,29 @@ export class OverviewChartsComponent implements OnInit {
         summary: 'Error',
         detail: 'The end date can\'t be before the start date.',
       });
+      return;
+    }
+    this.updatePlots();
+  }
+
+  onAccessPointSelectionChange(): void {
+    this.updatePlots();
+  }
+
+  onTemperaStationSelectionChange(): void {
+    this.updatePlots();
+  }
+
+  updatePlots(): void {
+    if (this.temperatureCo2ChartComponent !== undefined) {
+      this.temperatureCo2ChartComponent.updateChart(['TEMPERATURE', 'NMVOC']);
+    } else {
+      console.log('TemperatureCo2ChartComponent is undefined');
+    }
+    if (this.humidityIrradianceChartComponent !== undefined) {
+      this.humidityIrradianceChartComponent.updateChart(['HUMIDITY', 'IRRADIANCE']);
+    } else {
+      console.log('HumidityIrradianceChartComponent is undefined');
     }
   }
 
