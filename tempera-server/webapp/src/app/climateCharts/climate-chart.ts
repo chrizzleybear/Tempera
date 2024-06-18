@@ -85,7 +85,7 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: 'Failed to fetch data from back end:' + err,
+            detail: 'Failed to fetch data from back end',
           });
         },
       });
