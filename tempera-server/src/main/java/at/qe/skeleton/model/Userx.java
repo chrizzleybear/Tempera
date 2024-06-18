@@ -162,6 +162,10 @@ public class Userx implements Persistable<String>, Serializable, Comparable<User
     return roles;
   }
 
+  public void setGroupxProjects(Set<GroupxProject> groupxProjects) {
+    this.groupxProjects = groupxProjects;
+  }
+
   public void setRoles(Set<UserxRole> roles) {
     this.roles = roles;
   }
