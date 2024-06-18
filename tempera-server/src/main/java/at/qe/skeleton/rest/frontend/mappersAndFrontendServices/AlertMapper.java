@@ -62,10 +62,15 @@ public class AlertMapper {
           case LOWERBOUND_INFO, UPPERBOUND_INFO -> AlertSeverity.INFO;
           case LOWERBOUND_WARNING, UPPERBOUND_WARNING -> AlertSeverity.WARNING;
         };
+    Boolean isUpperBound =
+        switch (alert.getThreshold().getThresholdType()) {
+          case LOWERBOUND_INFO, LOWERBOUND_WARNING -> false;
+          case UPPERBOUND_INFO, UPPERBOUND_WARNING -> true;
+        };
     String start = alert.getFirstIncident().format(DateTimeFormatter.ISO_DATE_TIME);
     String end = alert.getLastIncident().format(DateTimeFormatter.ISO_DATE_TIME);
     return new AlertDto(
-        alert.getId().toString(), message, start, end, severity, alert.getSensor().getSensorType());
+        alert.getId().toString(), message, start, end, severity, alert.getSensor().getSensorType(), isUpperBound);
   }
 
   private String messageBuilder(Alert alert) {
