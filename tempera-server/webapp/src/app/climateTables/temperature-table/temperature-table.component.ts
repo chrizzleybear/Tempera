@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ClimateDataControllerService, ClimateMeasurementDto, Sensor} from "../../../api";
 import {MessageService} from "primeng/api";
 
@@ -10,7 +10,7 @@ type TimeUnit = "SECONDS" | "MINUTES" | "HOURS" | "DAYS" | "WEEKS" | "MONTHS" | 
   templateUrl: './temperature-table.component.html',
   styleUrl: './temperature-table.component.css'
 })
-export class TemperatureTableComponent {
+export class TemperatureTableComponent implements OnInit{
 
   public temperatureData: ClimateMeasurementDto[] | undefined = [];
   public timeout: number = 0.5;  // chart refresh rate in minutes
@@ -31,7 +31,6 @@ export class TemperatureTableComponent {
   }
 
   private fetchTemperatureData(): void {
-    // Example API call
     this.climateDataControllerService.getMeasurementsBySensorType(this.accessPointUuid, this.temperaStationId, this.sensorType, this.timeUnit, this.timeAmount).subscribe({
       next: (data) => {
         this.temperatureData = data.measurementDtos;
