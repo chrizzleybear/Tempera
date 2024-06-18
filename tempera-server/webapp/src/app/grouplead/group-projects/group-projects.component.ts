@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Project } from '../../models/project.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { SharedModule } from 'primeng/api';
+import {MessageService, SharedModule} from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
@@ -18,6 +18,7 @@ import {
   SimpleProjectDto,
   SimpleUserDto, UserxDto,
 } from '../../../api';
+import {ToastModule} from "primeng/toast";
 
 @Component({
   selector: 'app-group-projects',
@@ -30,7 +31,8 @@ import {
     InputTextModule,
     MessageModule,
     NgIf,
-    MessagesModule
+    MessagesModule,
+    ToastModule
   ],
   templateUrl: './group-projects.component.html',
   styleUrls: ['./group-projects.component.css']
@@ -41,7 +43,6 @@ import {
  */
 export class GroupProjectsComponent implements OnInit {
   projects: SimpleProjectDto[] = [];
-  messages: any;
   displayAddMemberDialog: boolean = false;
   displayDeleteMemberDialog: boolean = false;
   selectedProject: SimpleProjectDto | undefined;
@@ -52,7 +53,12 @@ export class GroupProjectsComponent implements OnInit {
   selectedMembers: SimpleUserDto[] = [];
   groupId!: string ;
   groupName: string | null | undefined;
-  constructor(private projectService: ProjectControllerService, private groupService: GroupManagementControllerService, private route: ActivatedRoute, private router: Router) { }
+  constructor(
+    private projectService: ProjectControllerService,
+    private groupService: GroupManagementControllerService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -138,9 +144,12 @@ export class GroupProjectsComponent implements OnInit {
         next: responses => {
           console.log('All members added successfully:', responses);
           this.loadProjects(this.groupId!);
-          this.messages = [{ severity: 'success', summary: 'Success', detail: 'Contributors added successfully' }];
+         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Contributors added successfully' });
         },
-        error: err => console.error('Error adding member:', err)
+        error: err => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to add contributors' });
+          console.error('Error adding member:', err)
+        }
       });
     this.displayAddMemberDialog = false;
   }
@@ -175,9 +184,12 @@ export class GroupProjectsComponent implements OnInit {
           console.log('All members removed successfully:', responses);
           this.loadProjects(this.groupId!);
           this.resetMembers();
-          this.messages = [{ severity: 'success', summary: 'Success', detail: 'Contributors removed successfully' }];
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Contributors removed successfully' });
         },
-        error: err => console.error('Error removing member:', err)
+        error: err => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to remove contributors' });
+          console.error('Error removing member:', err)
+        }
       });
     this.displayDeleteMemberDialog = false;
   }
