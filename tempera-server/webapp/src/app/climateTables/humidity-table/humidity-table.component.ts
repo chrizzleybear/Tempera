@@ -47,6 +47,7 @@ export class HumidityTableComponent implements OnInit{
   private fetchHumidityData(): void {
     this.climateDataControllerService.getMeasurementsBySensorType(this.accessPointUuid, this.temperaStationId, this.sensorType, this.timeUnit, this.timeAmount).subscribe({
       next: (data) => {
+        console.log("hpafebi",data);
         this.humidityData = data.measurementDtos;
         this.filteredData = this.humidityData!;
       },
