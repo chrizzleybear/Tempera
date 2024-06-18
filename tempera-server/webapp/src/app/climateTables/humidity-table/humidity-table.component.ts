@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {MessageService, SelectItem} from "primeng/api";
+import {MessageService} from "primeng/api";
 import {ClimateDataControllerService, ClimateMeasurementDto, Sensor} from "../../../api";
 import {DatePipe, NgIf} from "@angular/common";
 import {TableModule} from "primeng/table";

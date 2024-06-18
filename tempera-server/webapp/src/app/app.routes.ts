@@ -27,7 +27,6 @@ import {
 import {AccessPointDetailsComponent} from "./accessPointManagement/access-point-details/access-point-details.component";
 import { AccumulatedTimeComponent } from './accumulated-time/accumulated-time.component';
 import {OverviewChartsComponent} from "./climateCharts/overview-charts/overview-charts.component";
-import {TemperatureTableComponent} from "./climateTables/temperature-table/temperature-table.component";
 import {OverviewTablesComponent} from "./climateTables/overview-tables/overview-tables.component";
 
 export const routes: Routes = [
