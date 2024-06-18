@@ -1,7 +1,7 @@
-import { ClimateDataControllerService, ClimateMeasurementDto } from '../../api';
-import { MessageService } from 'primeng/api';
-import { Sensor } from '../../api/api/sensor';
-import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import {ClimateDataControllerService, ClimateMeasurementDto} from '../../api';
+import {MessageService} from 'primeng/api';
+import {Sensor} from '../../api/api/sensor';
+import {Injectable, OnDestroy, OnInit} from '@angular/core';
 
 
 @Injectable()
@@ -69,9 +69,9 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
             this.data1 = climateDataDto.measurementDtos;
           } else if (sensorType == 'NMVOC') {
             this.data2 = climateDataDto.measurementDtos;
-          } else if (sensorType == 'IRRADIANCE') {
-            this.data1 = climateDataDto.measurementDtos;
           } else if (sensorType == 'HUMIDITY') {
+            this.data1 = climateDataDto.measurementDtos;
+          } else if (sensorType == 'IRRADIANCE') {
             this.data2 = climateDataDto.measurementDtos;
           }
           this.updateChart();
