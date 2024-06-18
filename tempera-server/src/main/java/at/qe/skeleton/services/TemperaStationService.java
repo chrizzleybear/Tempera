@@ -86,7 +86,7 @@ public class TemperaStationService {
     auditLogService.logEvent(LogEvent.CREATE, LogAffectedType.TEMPERA_STATION,
           "Station " + id + " for user " + user.getUsername() + " was created.");
 
-      return temperaStation;
+    return temperaStation;
   }
 
   /**
