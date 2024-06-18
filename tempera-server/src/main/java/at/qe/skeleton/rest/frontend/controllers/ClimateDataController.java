@@ -1,10 +1,7 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
-import at.qe.skeleton.model.AccessPoint;
-import at.qe.skeleton.model.Measurement;
-import at.qe.skeleton.model.Sensor;
-import at.qe.skeleton.model.TemperaStation;
+import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.rest.frontend.dtos.AccessPointDto;
 import at.qe.skeleton.rest.frontend.dtos.ClimateDataDto;
@@ -15,10 +12,9 @@ import at.qe.skeleton.services.MeasurementService;
 import at.qe.skeleton.services.SensorService;
 import at.qe.skeleton.services.TemperaStationService;
 import java.time.Instant;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
 import java.util.logging.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,13 +51,11 @@ public class ClimateDataController {
       @PathVariable String temperaId,
       @PathVariable SensorType sensorType,
       Instant startDateTime,
-      Instant endDateTime) {
+      Instant endDateTime,
+      Integer nElements
+  ) {
     try {
       AccessPoint accessPoint = accessPointService.getAccessPointById(accessPointUuid);
-      logger.info("tempera: " + temperaId);
-      logger.info(
-          "ap stations: "
-              + accessPoint.getTemperaStations().stream().map(TemperaStation::getId).toList());
       boolean found = false;
       Set<TemperaStation> validStations = accessPoint.getTemperaStations();
       for (TemperaStation station : validStations) {
@@ -93,8 +87,14 @@ public class ClimateDataController {
       logger.warning(message);
       return ResponseEntity.ok().build();
     }
+    MeasurementId start = new MeasurementId();
+    start.setSensorId(sensor.getSensorId());
+    start.setTimestamp(LocalDateTime.ofInstant(startDateTime, ZoneId.systemDefault()));
+    MeasurementId end = new MeasurementId();
+    end.setSensorId(sensor.getSensorId());
+    end.setTimestamp(LocalDateTime.ofInstant(endDateTime, ZoneId.systemDefault()));
     List<Measurement> measurements =
-        measurementService.find100LatestMeasurementsBySensor(sensor).orElse(null);
+        measurementService.getMeasurementsBetween(start, end).orElse(null);
     if (measurements == null || measurements.isEmpty()) {
       String message = "No measurements found for sensor %s".formatted(sensor);
       logger.warning(message);
@@ -109,7 +109,10 @@ public class ClimateDataController {
       return ResponseEntity.ok().build();
     }
 
-    // TODO: reduce the returned list to 10 evenly spaced measurements
+    if (measurements.size() > nElements) {
+      int diff = measurements.size() - nElements;
+      measurements = measurements.subList(diff - 1, measurements.size() - 1);
+    }
 
     ClimateDataDto climateDataDtos =
         climateDataMapper.mapToDto(sensor, accessPointUuid, measurements);

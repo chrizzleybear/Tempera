@@ -1,15 +1,15 @@
-import { Component, Input } from '@angular/core';
-import { ChartModule } from 'primeng/chart';
-import { Sensor } from '../../../api';
-import { MessagesModule } from 'primeng/messages';
-import { MessageModule } from 'primeng/message';
-import { FormsModule } from '@angular/forms';
-import { InputTextModule } from 'primeng/inputtext';
-import { ToastModule } from 'primeng/toast';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { PanelModule } from 'primeng/panel';
-import { DropdownModule } from 'primeng/dropdown';
-import { ClimateChart } from '../climate-chart';
+import {Component, Input} from '@angular/core';
+import {ChartModule} from 'primeng/chart';
+import {Sensor} from '../../../api';
+import {MessagesModule} from 'primeng/messages';
+import {MessageModule} from 'primeng/message';
+import {FormsModule} from '@angular/forms';
+import {InputTextModule} from 'primeng/inputtext';
+import {ToastModule} from 'primeng/toast';
+import {InputNumberModule} from 'primeng/inputnumber';
+import {PanelModule} from 'primeng/panel';
+import {DropdownModule} from 'primeng/dropdown';
+import {ClimateChart} from '../climate-chart';
 
 
 type TimeUnit = 'SECONDS' | 'MINUTES' | 'HOURS' | 'DAYS' | 'WEEKS' | 'MONTHS' | 'YEARS'
@@ -36,6 +36,7 @@ export class TemperatureCo2ChartComponent extends ClimateChart {
   @Input() public override accessPointUuid: string = '';
   @Input() public override temperaStationId: string = '';
   @Input() public override rangeDates: Date[] = [];
+  @Input() public override numberOfDisplayedEntries: number = 10;
 
   protected override sensorTypes: Sensor.SensorTypeEnum[] = ['TEMPERATURE', 'NMVOC'];
   protected override color1: string = '#DC143C';

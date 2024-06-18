@@ -18,4 +18,6 @@ public interface MeasurementRepository extends AbstractRepository<Measurement, M
   Optional<Measurement> findFirstBySensorIdOrderById_TimestampDesc(SensorId sensorId);
 
   Optional<List<Measurement>> findTop100BySensorIdOrderById_TimestampAsc(SensorId sensorId);
+
+  Optional<List<Measurement>> findByIdBetweenOrderByIdAsc(MeasurementId start, MeasurementId end);
 }

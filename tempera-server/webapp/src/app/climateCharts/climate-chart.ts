@@ -9,6 +9,7 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
   public accessPointUuid: string = '';
   public temperaStationId: string = '';
   public rangeDates: Date[] = [];
+  public numberOfDisplayedEntries: number = 10;
 
   protected sensorTypes: Sensor.SensorTypeEnum[] = [];
   protected color1: string = '';
@@ -34,6 +35,7 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
       this.sensorTypes,
       startDateTime,
       endDateTime,
+      this.numberOfDisplayedEntries
     );
     this.intervalId = setInterval(() => this.getMeasurements(
       this.accessPointUuid,
@@ -41,8 +43,9 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
       this.sensorTypes,
       startDateTime,
       endDateTime,
-    ), (endDateTime.getTime() - startDateTime.getTime()) / 10 + 1_000);
-    // divide the selected datetime range by 10 (the number of measurements) to be
+      this.numberOfDisplayedEntries
+    ), (endDateTime.getTime() - startDateTime.getTime()) / this.numberOfDisplayedEntries + 1_000);
+    // divide the selected datetime range by the number of measurements to be
     // displayed and add 1 second to make sure the latest measurement is always
     // displayed at every reload.
   }
@@ -59,10 +62,11 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
     sensorTypes: Sensor.SensorTypeEnum[],
     startDateTime: Date,
     endDateTime: Date,
+    numberOfDisplayedEntries: number
   ): void {
     for (let sensorType of sensorTypes) {
       this.climateDataControllerService.getMeasurementsBySensorType(
-        accessPointUuid, temperaStationId, sensorType, startDateTime.toISOString(), endDateTime.toISOString(),
+        accessPointUuid, temperaStationId, sensorType, startDateTime.toISOString(), endDateTime.toISOString(), numberOfDisplayedEntries
       ).subscribe({
         next: climateDataDto => {
           if (sensorType == 'TEMPERATURE') {

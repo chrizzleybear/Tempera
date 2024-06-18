@@ -178,6 +178,9 @@ public class MeasurementService {
     return measurementRepository.findTop100BySensorIdOrderById_TimestampAsc(id);
   }
 
+  public Optional<List<Measurement>> getMeasurementsBetween(MeasurementId start, MeasurementId end) {
+    return measurementRepository.findByIdBetweenOrderByIdAsc(start, end);
+  }
 
   public List<Measurement> loadAllMeasurementsFromTempera() {
     return measurementRepository.findAll();

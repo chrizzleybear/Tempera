@@ -33,6 +33,7 @@ export class HumidityIrradianceChartComponent extends ClimateChart {
   @Input() public override accessPointUuid: string = '';
   @Input() public override temperaStationId: string = '';
   @Input() public override rangeDates: Date[] = [];
+  @Input() public override numberOfDisplayedEntries: number = 10;
 
   protected override sensorTypes: Sensor.SensorTypeEnum[] = ['HUMIDITY', 'IRRADIANCE'];
   protected override color1: string = '#0047AB';

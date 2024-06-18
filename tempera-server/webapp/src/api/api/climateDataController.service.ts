@@ -19,7 +19,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { AccessPoint } from '../model/accessPoint';
+import { AccessPointDto } from '../model/accessPointDto';
 // @ts-ignore
 import { ClimateDataDto } from '../model/climateDataDto';
 // @ts-ignore
@@ -99,9 +99,9 @@ export class ClimateDataControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getEnabledAccessPoints(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<AccessPoint>>;
-    public getEnabledAccessPoints(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<AccessPoint>>>;
-    public getEnabledAccessPoints(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<AccessPoint>>>;
+    public getEnabledAccessPoints(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<AccessPointDto>>;
+    public getEnabledAccessPoints(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<AccessPointDto>>>;
+    public getEnabledAccessPoints(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<AccessPointDto>>>;
     public getEnabledAccessPoints(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
@@ -141,7 +141,7 @@ export class ClimateDataControllerService {
         }
 
         let localVarPath = `/api/climate_data/measurements/access-points`;
-        return this.httpClient.request<Array<AccessPoint>>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<Array<AccessPointDto>>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -160,13 +160,14 @@ export class ClimateDataControllerService {
      * @param sensorType 
      * @param startDateTime 
      * @param endDateTime 
+     * @param nElements 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getMeasurementsBySensorType(accessPointUuid: string, temperaId: string, sensorType: 'TEMPERATURE' | 'IRRADIANCE' | 'HUMIDITY' | 'NMVOC', startDateTime: string, endDateTime: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ClimateDataDto>;
-    public getMeasurementsBySensorType(accessPointUuid: string, temperaId: string, sensorType: 'TEMPERATURE' | 'IRRADIANCE' | 'HUMIDITY' | 'NMVOC', startDateTime: string, endDateTime: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ClimateDataDto>>;
-    public getMeasurementsBySensorType(accessPointUuid: string, temperaId: string, sensorType: 'TEMPERATURE' | 'IRRADIANCE' | 'HUMIDITY' | 'NMVOC', startDateTime: string, endDateTime: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ClimateDataDto>>;
-    public getMeasurementsBySensorType(accessPointUuid: string, temperaId: string, sensorType: 'TEMPERATURE' | 'IRRADIANCE' | 'HUMIDITY' | 'NMVOC', startDateTime: string, endDateTime: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getMeasurementsBySensorType(accessPointUuid: string, temperaId: string, sensorType: 'TEMPERATURE' | 'IRRADIANCE' | 'HUMIDITY' | 'NMVOC', startDateTime: string, endDateTime: string, nElements: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ClimateDataDto>;
+    public getMeasurementsBySensorType(accessPointUuid: string, temperaId: string, sensorType: 'TEMPERATURE' | 'IRRADIANCE' | 'HUMIDITY' | 'NMVOC', startDateTime: string, endDateTime: string, nElements: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ClimateDataDto>>;
+    public getMeasurementsBySensorType(accessPointUuid: string, temperaId: string, sensorType: 'TEMPERATURE' | 'IRRADIANCE' | 'HUMIDITY' | 'NMVOC', startDateTime: string, endDateTime: string, nElements: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ClimateDataDto>>;
+    public getMeasurementsBySensorType(accessPointUuid: string, temperaId: string, sensorType: 'TEMPERATURE' | 'IRRADIANCE' | 'HUMIDITY' | 'NMVOC', startDateTime: string, endDateTime: string, nElements: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (accessPointUuid === null || accessPointUuid === undefined) {
             throw new Error('Required parameter accessPointUuid was null or undefined when calling getMeasurementsBySensorType.');
         }
@@ -182,6 +183,9 @@ export class ClimateDataControllerService {
         if (endDateTime === null || endDateTime === undefined) {
             throw new Error('Required parameter endDateTime was null or undefined when calling getMeasurementsBySensorType.');
         }
+        if (nElements === null || nElements === undefined) {
+            throw new Error('Required parameter nElements was null or undefined when calling getMeasurementsBySensorType.');
+        }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (startDateTime !== undefined && startDateTime !== null) {
@@ -191,6 +195,10 @@ export class ClimateDataControllerService {
         if (endDateTime !== undefined && endDateTime !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>endDateTime, 'endDateTime');
+        }
+        if (nElements !== undefined && nElements !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>nElements, 'nElements');
         }
 
         let localVarHeaders = this.defaultHeaders;

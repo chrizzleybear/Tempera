@@ -34,6 +34,20 @@
         [editable]="true"
       />
     </div>
+    <div class="flex flex-col">
+      <label for="n-datapoints-selector">Select the maximum number of datapoints to display</label>
+      <p-inputNumber
+        id="n-datapoints-selector"
+        [(ngModel)]="this.numberOfDisplayedEntries"
+        (ngModelChange)="onDataPointsChange($event)"
+        placeholder="Select a tempera station"
+        mode='decimal'
+        [min]="0"
+        [max]="50"
+        [showButtons]="true"
+        buttonLayout="horizontal"
+      />
+    </div>
   </div>
   <div class="flex space-x-4">
     <app-humidity-irradiance-chart
@@ -41,12 +55,14 @@
       [accessPointUuid]="this.accessPointUuid"
       [temperaStationId]="this.temperaStationId"
       [rangeDates]="this.rangeDates"
+      [numberOfDisplayedEntries]="this.numberOfDisplayedEntries"
     ></app-humidity-irradiance-chart>
     <app-temperature-co2-chart
       class="w-1/2"
       [accessPointUuid]="this.accessPointUuid"
       [temperaStationId]="this.temperaStationId"
       [rangeDates]="this.rangeDates"
+      [numberOfDisplayedEntries]="this.numberOfDisplayedEntries"
     ></app-temperature-co2-chart>
   </div>
 </p-panel>

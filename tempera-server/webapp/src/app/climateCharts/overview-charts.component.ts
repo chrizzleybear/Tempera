@@ -1,12 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { PanelModule } from 'primeng/panel';
-import { CalendarModule } from 'primeng/calendar';
-import { FormsModule } from '@angular/forms';
-import { MessageService } from 'primeng/api';
-import { DropdownModule } from 'primeng/dropdown';
-import { ClimateDataControllerService } from '../../api';
-import { TemperatureCo2ChartComponent } from './temperature-co2-chart/temperature-co2-chart.component';
-import { HumidityIrradianceChartComponent } from './humidity-irradiance-chart/humidity-irradiance-chart.component';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {PanelModule} from 'primeng/panel';
+import {CalendarModule} from 'primeng/calendar';
+import {FormsModule} from '@angular/forms';
+import {MessageService} from 'primeng/api';
+import {DropdownModule} from 'primeng/dropdown';
+import {ClimateDataControllerService} from '../../api';
+import {TemperatureCo2ChartComponent} from './temperature-co2-chart/temperature-co2-chart.component';
+import {HumidityIrradianceChartComponent} from './humidity-irradiance-chart/humidity-irradiance-chart.component';
+import {InputNumberModule} from "primeng/inputnumber";
 
 
 @Component({
@@ -19,6 +20,7 @@ import { HumidityIrradianceChartComponent } from './humidity-irradiance-chart/hu
     CalendarModule,
     FormsModule,
     DropdownModule,
+    InputNumberModule,
   ],
   templateUrl: './overview-charts.component.html',
   styleUrl: './overview-charts.component.css',
@@ -32,6 +34,7 @@ export class OverviewChartsComponent implements OnInit {
   public temperaStationId: string = 'tempera_station_1';
   public accessPoints: string[] = [];
   public temperaStations: string[] = [];
+  public numberOfDisplayedEntries: number = 10;
 
   @ViewChild(TemperatureCo2ChartComponent)
   private temperatureCo2ChartComponent: TemperatureCo2ChartComponent | undefined;
@@ -107,6 +110,16 @@ export class OverviewChartsComponent implements OnInit {
     }
     this.temperatureCo2ChartComponent.temperaStationId = temperaStationId;
     this.humidityIrradianceChartComponent.temperaStationId = temperaStationId;
+    this.updatePlots();
+  }
+
+  onDataPointsChange(numberOfPointsToDisplay: any) {
+    if (this.temperatureCo2ChartComponent === undefined || this.humidityIrradianceChartComponent === undefined) {
+      console.log('Chart child components are undefined.');
+      return;
+    }
+    this.temperatureCo2ChartComponent.numberOfDisplayedEntries = numberOfPointsToDisplay;
+    this.humidityIrradianceChartComponent.numberOfDisplayedEntries = numberOfPointsToDisplay;
     this.updatePlots();
   }
 
