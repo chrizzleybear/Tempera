@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {User} from "../../models/user.model";
 import {ActivatedRoute} from "@angular/router";
 import {GroupService} from "../../_services/group.service";
-import {SharedModule} from "primeng/api";
+import {MessageService, SharedModule} from "primeng/api";
 import {TableModule} from "primeng/table";
 import {ButtonModule} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
@@ -13,6 +13,7 @@ import {GroupMemberDTO} from "../../models/groupDtos";
 import { from } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 import { GroupManagementControllerService, MemberAssigmentDto, SimpleUserDto } from '../../../api';
+import {ToastModule} from "primeng/toast";
 
 @Component({
   selector: 'app-group-members',
@@ -23,7 +24,8 @@ import { GroupManagementControllerService, MemberAssigmentDto, SimpleUserDto } f
     ButtonModule,
     InputTextModule,
     DialogModule,
-    MessagesModule
+    MessagesModule,
+    ToastModule
   ],
   templateUrl: './group-members.component.html',
   styleUrl: './group-members.component.css'
@@ -42,9 +44,12 @@ export class GroupMembersComponent implements OnInit{
   filteredMembers: SimpleUserDto[] = [];
   filteredUsers: SimpleUserDto[] = [];
   selectedUsers: SimpleUserDto[] = [];
-  messages: any;
 
-  constructor(private groupService: GroupManagementControllerService, private userService: UsersService ,private route: ActivatedRoute) {
+  constructor(
+    private groupService: GroupManagementControllerService,
+    private userService: UsersService ,
+    private route: ActivatedRoute,
+    private messageService: MessageService) {
 
   }
   ngOnInit(): void {
@@ -114,9 +119,12 @@ export class GroupMembersComponent implements OnInit{
         next: response => {
           console.log("Member added successfully:", response);
           this.loadMembersAndUsers(this.groupId!);
-          this.messages = [{severity:'success', summary:'Success', detail:'Members added successfully'}];
+          this.messageService.add({severity:'success', summary:'Success', detail:'Member added successfully'});
         },
-        error: err => console.error("Error adding member:", err)
+        error: err => {
+          this.messageService.add({severity:'error', summary:'Error', detail:'Error adding member'});
+          console.error("Error adding member:", err)
+        }
       });
     this.displayAddDialog = false;
     this.selectedUsers = [];
@@ -134,9 +142,12 @@ export class GroupMembersComponent implements OnInit{
       next: response => {
         console.log("Member deleted successfully:", response);
         this.loadMembersAndUsers(this.groupId!);
-        this.messages = [{severity:'success', summary:'Success', detail:'Member deleted successfully'}];
+        this.messageService.add({severity:'success', summary:'Success', detail:'Member deleted successfully'});
       },
-      error: err => console.error("Error deleting member:", err)
+      error: err => {
+        this.messageService.add({severity:'error', summary:'Error', detail:'Error deleting member'});
+        console.error("Error deleting member:", err)
+      }
     });
     }
 }
