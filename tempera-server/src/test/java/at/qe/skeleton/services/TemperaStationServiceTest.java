@@ -1,8 +1,10 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.*;
 import at.qe.skeleton.repositories.*;
+import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
 import at.qe.skeleton.rest.frontend.dtos.TemperaStationDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -71,8 +75,6 @@ public class TemperaStationServiceTest {
         assertTrue(station.isEnabled());
         assertEquals(mockUser, station.getUser());
         assertEquals(mockAccessPoint.getId(), station.getAccessPoint().getId());
-
-        verify(auditLogService, atLeastOnce());
     }
 
     @Test
@@ -92,5 +94,86 @@ public class TemperaStationServiceTest {
         temperaStationService.createTemperaStation(dto);
 
         verify(temperaStationService, times(1)).createTemperaStation(false, dto.user(), dto.accessPointId());
+    }
+
+    @Test
+    @WithMockUser(username = "johndoe", authorities = "ADMIN")
+    void getAllTemperaStationsTest() {
+        List<TemperaStation> mockTemperaStations = Arrays.asList(
+                createMockTemperaStation("1", "user1", true, true, UUID.randomUUID().toString()),
+                createMockTemperaStation("2", "user2", true, true, UUID.randomUUID().toString())
+        );
+        when(temperaStationRepository.findAll()).thenReturn(mockTemperaStations);
+        List<TemperaStationDto> result = temperaStationService.getAllTemperaStations();
+
+        assertEquals(2, result.size());
+        assertEquals("1", result.get(0).id());
+        assertEquals("user1", result.get(0).user());
+        assertTrue(result.get(0).enabled());
+        assertTrue(result.get(0).isHealthy());
+        assertEquals(36, result.get(0).accessPointId().length());
+
+        assertEquals("2", result.get(1).id());
+        assertEquals("user2", result.get(1).user());
+        assertTrue(result.get(1).enabled());
+        assertTrue(result.get(1).isHealthy());
+        assertEquals(36, result.get(1).accessPointId().length());
+
+        verify(temperaStationRepository, times(1)).findAll();
+    }
+
+    // Helper method
+    private TemperaStation createMockTemperaStation(String id, String username, boolean enabled, boolean healthy, String accessPointId) {
+        Userx user = new Userx();
+        user.setUsername(username);
+        user.setId(username);
+
+        AccessPoint accessPoint = new AccessPoint();
+        accessPoint.setId(UUID.fromString(accessPointId));
+
+        TemperaStation station = new TemperaStation();
+        station.setId(id);
+        station.setUser(user);
+        station.setEnabled(enabled);
+        station.setIsHealthy(healthy);
+        station.setAccessPoint(accessPoint);
+
+        return station;
+    }
+
+    @Test
+    void getAvailableUsersTest() {
+        int resultBefore = temperaStationService.getAvailableUsers().size();
+        Userx user1 = createUser("user1", "John", "Doe", "john.doe@example.com");
+        Userx user2 = createUser("user2", "Jane", "Smith", "jane.smith@example.com");
+        TemperaStation station1 = createMockTemperaStation("1", "user1", true, true, UUID.randomUUID().toString());
+        TemperaStation station2 = createMockTemperaStation("2", "user2", true, true, UUID.randomUUID().toString());
+        when(temperaStationRepository.findAll()).thenReturn(Arrays.asList(station1, station2));
+        int resultAfter = temperaStationService.getAvailableUsers().size();
+
+        assertEquals(resultBefore, resultAfter+1);
+    }
+
+    // Helper method to create a mock Userx object
+    private Userx createUser(String username, String firstName, String lastName, String email) {
+        Userx user = new Userx();
+        user.setUsername(username);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        return user;
+    }
+
+    @Test
+    void updateTemperaStationTest() {
+        String id = "1";
+        TemperaStation mockStation = createMockTemperaStation(id, "user1", true, true, UUID.randomUUID().toString());
+        when(temperaStationRepository.findById(id)).thenReturn(Optional.of(mockStation));
+        String updatedUsername = "user2";
+        temperaStationService.updateTemperaStation(id, false, updatedUsername);
+
+        verify(temperaStationRepository, times(1)).findById(id);
+        verify(temperaStationRepository, times(1)).save(any(TemperaStation.class));
+        verify(auditLogService, times(1)).logEvent(eq(LogEvent.EDIT), eq(LogAffectedType.TEMPERA_STATION), anyString());
     }
 }
