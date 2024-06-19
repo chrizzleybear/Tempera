@@ -2,9 +2,6 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.Sensor;
 import at.qe.skeleton.model.SensorId;
-import at.qe.skeleton.model.enums.LogAffectedType;
-import at.qe.skeleton.model.enums.LogEvent;
-import at.qe.skeleton.services.AuditLogService;
 import at.qe.skeleton.repositories.SensorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +10,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -26,8 +22,7 @@ import static org.mockito.Mockito.*;
 @WebAppConfiguration
 public class SensorServiceTest {
 
-    @Mock
-    private SensorRepository sensorRepository;
+    @Mock private SensorRepository sensorRepository;
 
     private SensorService sensorService;
 
@@ -88,6 +83,21 @@ public class SensorServiceTest {
         sensorService.deleteSensor(sensor);
 
         verify(sensorRepository, times(1)).delete(sensor);
+    }
+
+    @Test
+    void findAllSensorsByTemperaStationIdTest() {
+        String temperaStationId = "temperaStationId";
+        Sensor sensor1 = new Sensor();
+        Sensor sensor2 = new Sensor();
+        List<Sensor> sensors = Arrays.asList(sensor1, sensor2);
+        when(sensorRepository.findAllByTemperaStationId(temperaStationId)).thenReturn(sensors);
+
+        List<Sensor> foundSensors = sensorService.findAllSensorsByTemperaStationId(temperaStationId);
+
+        assertNotNull(foundSensors);
+        assertEquals(2, foundSensors.size());
+        verify(sensorRepository, times(1)).findAllByTemperaStationId(temperaStationId);
     }
 
 }
