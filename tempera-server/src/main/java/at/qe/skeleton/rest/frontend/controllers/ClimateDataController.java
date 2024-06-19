@@ -52,8 +52,7 @@ public class ClimateDataController {
       @PathVariable SensorType sensorType,
       Instant startDateTime,
       Instant endDateTime,
-      Integer nElements
-  ) {
+      Integer nElements) {
     try {
       AccessPoint accessPoint = accessPointService.getAccessPointById(accessPointUuid);
       boolean found = false;
@@ -111,7 +110,7 @@ public class ClimateDataController {
 
     if (measurements.size() > nElements) {
       int diff = measurements.size() - nElements;
-      measurements = measurements.subList(diff - 1, measurements.size() - 1);
+      measurements = measurements.subList(diff, measurements.size());
     }
 
     ClimateDataDto climateDataDtos =
