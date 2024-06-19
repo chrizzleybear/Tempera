@@ -12,9 +12,10 @@
 
 
 export interface SimpleGroupDto { 
-    id?: string;
-    name?: string;
-    description?: string;
+    id: string;
+    isActive: boolean;
+    name: string;
+    description: string;
     groupLead?: string;
 }
 

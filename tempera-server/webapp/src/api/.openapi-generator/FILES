@@ -5,6 +5,7 @@ api/accessPointController.service.ts
 api/accumulatedTimeController.service.ts
 api/alertController.service.ts
 api/api.ts
+api/auditLogController.service.ts
 api/authController.service.ts
 api/climateDataController.service.ts
 api/dashboardController.service.ts
@@ -16,6 +17,7 @@ api/roomController.service.ts
 api/temperaStationController.service.ts
 api/timeRecordController.service.ts
 api/timetableController.service.ts
+api/tipController.service.ts
 api/userManagementController.service.ts
 configuration.ts
 encoder.ts
@@ -29,6 +31,7 @@ model/accumulatedTimeResponse.ts
 model/alertDto.ts
 model/climateDataDto.ts
 model/climateMeasurementDto.ts
+model/auditLogDto.ts
 model/colleagueStateDto.ts
 model/contributorAssignmentDto.ts
 model/credentialsDto.ts
@@ -37,6 +40,7 @@ model/extendedGroupDto.ts
 model/extendedProjectDto.ts
 model/externalRecordDto.ts
 model/floorComponent.ts
+model/frontendMeasurementDto.ts
 model/getTimetableDataResponse.ts
 model/groupAssignmentDto.ts
 model/groupDetailsDto.ts
@@ -50,6 +54,7 @@ model/measurementDto.ts
 model/measurementId.ts
 model/memberAssigmentDto.ts
 model/messageResponse.ts
+model/minimalGxpDto.ts
 model/models.ts
 model/modification.ts
 model/project.ts

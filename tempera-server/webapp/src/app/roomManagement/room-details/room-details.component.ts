@@ -7,10 +7,13 @@ import {CardModule} from "primeng/card";
 import {NgForOf, NgIf} from "@angular/common";
 import {ButtonModule} from "primeng/button";
 import {RippleModule} from "primeng/ripple";
-import {Threshold, ThresholdTipUpdateDto, ThresholdUpdateDto} from "../../models/threshold.model";
+import {Threshold, ThresholdUpdateDto} from "../../models/threshold.model";
 import {DialogModule} from "primeng/dialog";
-import {FormsModule} from "@angular/forms";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {InputTextModule} from "primeng/inputtext";
+import {AccessPoint} from "../../models/accessPoint.model";
+import {ToastModule} from "primeng/toast";
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-room-details',
@@ -24,7 +27,9 @@ import {InputTextModule} from "primeng/inputtext";
     RippleModule,
     DialogModule,
     FormsModule,
-    InputTextModule
+    InputTextModule,
+    ToastModule,
+    ReactiveFormsModule
   ],
   templateUrl: './room-details.component.html',
   styleUrl: './room-details.component.css'
@@ -36,14 +41,21 @@ import {InputTextModule} from "primeng/inputtext";
 export class RoomDetailsComponent implements OnInit{
   private roomId!: string;
   room: Room | undefined;
+  accessPoint: AccessPoint | undefined;
   displayEditThresholdDialog = false;
-  expandedRows: { [key: string]: boolean } = {};
   selectedThreshold: Threshold | undefined;
-  reason: string = ''; // Reason for editing threshold
   filteredThresholds: Threshold[] = [];
-  constructor( private route: ActivatedRoute, private roomService: RoomService) {
-  }
+  thresholdForm: FormGroup;
 
+  constructor( private route: ActivatedRoute,
+               private roomService: RoomService,
+               private messageService: MessageService,
+               fb: FormBuilder) {
+    this.thresholdForm = fb.group({
+      value: ['', Validators.required],
+      reason: ['', Validators.minLength(6)],
+    });
+  }
   ngOnInit() {
     this.roomId = this.route.snapshot.paramMap.get('id')!;
     if (this.roomId) {
@@ -53,94 +65,68 @@ export class RoomDetailsComponent implements OnInit{
   private fetchRoomDetails(roomId: string) {
     this.roomService.getRoomById(roomId).subscribe({
       next: (data) => {
-        console.log('Room details: ', data);
         this.room = data;
         this.filteredThresholds = this.room.thresholds;
-        console.log('Room Threat: ', this.room.thresholds);
+        this.fetchAccesspoint();
       },
       error: (error) => {
         console.error('Failed to load room details:', error);
       },
     });
   }
-
-  /**
-   * This method is called when a row is toggled.
-   * It expands or collapses the row.
-   * @param threshold
-   */
-  onRowToggle(threshold: Threshold): void {
-    console.log('Row toggled:', threshold);
-    if (this.expandedRows[threshold.id]) {
-      delete this.expandedRows[threshold.id];
-    } else {
-      this.expandedRows = {[threshold.id]: true};
+  private fetchAccesspoint() {
+    if (this.room) {
+      this.roomService.getAccessPoint(this.room.id).subscribe({
+        next: (data) => {
+          this.accessPoint = data;
+        },
+        error: (error) => {
+          console.error('Failed to load access point:', error);
+        },
+      });
     }
-    console.log('Expanded rows:', this.expandedRows);
   }
   /**
    * This method is called when a threshold is edited.
    * It sets the selected threshold and displays the edit threshold dialog.
    * @param threshold
    */
-  onCellEditSave(threshold: Threshold) {
-    this.displayEditThresholdDialog = true;
+  editThreshold(threshold: Threshold) {
+    this.thresholdForm.patchValue({
+      value: threshold.value});
     this.selectedThreshold = threshold;
+    this.displayEditThresholdDialog = true;
   }
   /**
    * This method is called when the edit threshold dialog is closed.
    * It resets the selected threshold and reason.
    */
-  editThreasholdSave() {
-    if (this.selectedThreshold && this.reason !== '') {
-      const dto : ThresholdUpdateDto = {
-        threshold: this.selectedThreshold,
-        reason: this.reason,
-      };
-      this.roomService.updateThreshold(dto).subscribe({
-        next: (data) => {
-          console.log('Threshold updated: ', data);
-          this.selectedThreshold = undefined;
-          this.reason = '';
-          this.displayEditThresholdDialog = false;
-        },
-        error: (error) => {
-          console.error('Failed to update threshold:', error);
-        },
-      });
-    }
+  onSubmit() {
+      if (this.thresholdForm.valid && this.selectedThreshold) {
+        this.selectedThreshold.value = this.thresholdForm.value.value;
+        const dto: ThresholdUpdateDto = {
+          threshold: this.selectedThreshold,
+          reason: this.thresholdForm.value.reason,
+        };
+        this.roomService.updateThreshold(dto).subscribe({
+          next: (data) => {
+            console.log('Threshold updated: ', data);
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Threshold updated successfully' });
+            this.selectedThreshold = undefined;
+            this.thresholdForm.reset();
+            this.displayEditThresholdDialog = false;
+          },
+          error: (error) => {
+            console.error('Failed to update threshold:', error);
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update threshold' });
+          },
+        });
+      }
   }
-  /**
-   * This method is used to edit a threshold tip.
-   * It sets the selected threshold and displays the edit threshold tip dialog.
-   * @param threshold
-   */
-  onCellEditSaveTip(threshold: Threshold) {
-    this.selectedThreshold = threshold;
-    this.editThresholdTipSave();
-  }
-  /**
-   * This method is called when the edit threshold tip dialog is closed.
-   * It resets the selected threshold and reason.
-   */
-  editThresholdTipSave() {
-    if (this.selectedThreshold) {
-    const dto : ThresholdTipUpdateDto = {
-      id: this.selectedThreshold.id,
-      tip: this.selectedThreshold.tip.tip,
-    };
-    this.roomService.updateThresholdTip(dto).subscribe({
-      next: (data) => {
-        console.log('Threshold updated: ', data);
-      },
-      error: (error) => {
-        console.error('Failed to update threshold:', error);
-      },
-    });
-      this.selectedThreshold = undefined;
-      this.reason = '';
-      this.displayEditThresholdDialog = false;
-    }
+  closeEditThresholdDialog() {
+    this.selectedThreshold = undefined;
+    this.thresholdForm.reset();
+    this.displayEditThresholdDialog = false;
   }
   globalFilter(event: any) {
     const filterValue = event.target.value.toLowerCase();

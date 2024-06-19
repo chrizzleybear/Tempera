@@ -3,6 +3,7 @@ package at.qe.skeleton.rest.frontend.payload.response;
 import at.qe.skeleton.rest.frontend.dtos.AccumulatedTimeDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleGroupDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
@@ -14,6 +15,6 @@ import java.util.List;
  * @param availableGroups The groups that a manager/group leader is assigned to
  */
 public record AccumulatedTimeResponse(
-        List<AccumulatedTimeDto> accumulatedTimes,
-        List<SimpleProjectDto> availableProjects,
-        List<SimpleGroupDto> availableGroups) {}
+        @NotNull List<AccumulatedTimeDto> accumulatedTimes,
+        @NotNull List<SimpleProjectDto> availableProjects,
+        @NotNull List<SimpleGroupDto> availableGroups) {}

@@ -1,6 +1,8 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
+import at.qe.skeleton.model.enums.LogAffectedType;
+import at.qe.skeleton.model.enums.LogEvent;
 import at.qe.skeleton.model.AccessPoint;
 import at.qe.skeleton.model.Sensor;
 import at.qe.skeleton.model.TemperaStation;
@@ -32,14 +34,16 @@ public class TemperaStationService {
   private final SensorService sensorService;
   private final UserxRepository userxRepository;
   private final AccessPointRepository accessPointRepository;
+  private final AuditLogService auditLogService;
 
   public TemperaStationService(
       TemperaStationRepository temperaStationRepository, SensorService sensorService,
-      UserxRepository userxRepository, AccessPointRepository accessPointRepository) {
+      UserxRepository userxRepository, AccessPointRepository accessPointRepository, AuditLogService auditLogService) {
     this.temperaStationRepository = temperaStationRepository;
     this.sensorService = sensorService;
     this.userxRepository = userxRepository;
     this.accessPointRepository = accessPointRepository;
+    this.auditLogService = auditLogService;
   }
 
   /**
@@ -79,7 +83,10 @@ public class TemperaStationService {
     Sensor nmvocSensor = new Sensor(SensorType.NMVOC, Unit.OHM, temperaStation);
     sensorService.saveSensor(nmvocSensor);
 
-    return temperaStation;
+    auditLogService.logEvent(LogEvent.CREATE, LogAffectedType.TEMPERA_STATION,
+          "Station " + id + " for user " + user.getUsername() + " was created.");
+
+      return temperaStation;
   }
 
   /**
@@ -117,7 +124,6 @@ public class TemperaStationService {
 
   public TemperaStation save(TemperaStation temperaStation) {
     return temperaStationRepository.save(temperaStation);
-
   }
 
 /**
@@ -128,8 +134,11 @@ public class TemperaStationService {
   public void delete(TemperaStation temperaStation) {
     AccessPoint accessPoint = temperaStation.getAccessPoint();
     accessPoint.getTemperaStations().remove(temperaStation);
+    auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.TEMPERA_STATION,
+          "Station " + temperaStation.getId() + " was deleted.");
     temperaStationRepository.delete(temperaStation);
   }
+
   /**
    * Checks whether the tempera Station with the passed on ID is enabled or not.
    *
@@ -154,9 +163,12 @@ public class TemperaStationService {
   }
 
     public void updateTemperaStation(String id, boolean enabled, String user) {
-        TemperaStation temperaStation = temperaStationRepository.findById(id).orElseThrow();
-        temperaStation.setEnabled(enabled);
-        temperaStation.setUser(userxRepository.findByUsername(user).orElse(null));
-        temperaStationRepository.save(temperaStation);
+      TemperaStation temperaStation = temperaStationRepository.findById(id).orElseThrow();
+      temperaStation.setEnabled(enabled);
+      temperaStation.setUser(userxRepository.findByUsername(user).orElse(null));
+      temperaStationRepository.save(temperaStation);
+      auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.TEMPERA_STATION,
+              "Updated Tempera station " + temperaStation.getId() + ", Enabled: " + temperaStation.isEnabled() + "."
+      );
     }
 }

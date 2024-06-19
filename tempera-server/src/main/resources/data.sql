@@ -31,58 +31,30 @@ INSERT INTO userx_userx_role (userx_username, roles)
 VALUES ('elvis', 'EMPLOYEE');
 
 -- some Projects
-INSERT INTO project (id, name, description, manager_username)
-VALUES (-1, 'Serious Business', 'This project beuts you aus', 'MariaTheresa'),
-       (-2, 'Expansion', 'This project aims to expand our operations globally.', 'MariaTheresa'),
-       (-3, 'Innovation', 'This project focuses on fostering innovation within the company.', 'MariaTheresa'),
-       (-4, 'Efficiency', 'This project aims to improve efficiency across all departments.', 'MariaTheresa'),
-       (-5, 'Sustainability Initiative', 'This project aims to make our operations more environmentally friendly.',
-        'MariaTheresa'),
-       (-6, 'Customer Satisfaction Improvement',
-        'This project focuses on enhancing customer experience and satisfaction.', 'MariaTheresa'),
-       (-7, 'Product Development', 'This project involves developing new products to meet market demands.',
-        'MariaTheresa'),
-       (-8, 'Cost Reduction Initiative',
-        'This project aims to identify and implement cost-saving measures across the organization.', 'MariaTheresa'),
-       (-9, 'Quality Assurance Enhancement',
-        'This project focuses on improving the quality control processes to ensure product quality and reliability.',
-        'MariaTheresa'),
-       (-10, 'Marketing Campaign Launch',
-        'This project involves planning and executing a new marketing campaign to attract customers.', 'MariaTheresa'),
-       (-11, 'Training and Development Program',
-        'This project focuses on providing training and development opportunities for employees to enhance their skills and performance.',
-        'MariaTheresa'),
-       (-12, 'Infrastructure Upgrade',
-        'This project involves upgrading the company''s IT infrastructure to improve efficiency and security.',
-        'MariaTheresa');
+INSERT INTO project (id, is_active, name, description, manager_username) VALUES
+                                                                  (-1, true, 'Serious Business', 'This project beuts you aus', 'MariaTheresa'),
+                                                                  (-2, true, 'Expansion', 'This project aims to expand our operations globally.', 'MariaTheresa'),
+                                                                  (-3,true, 'Innovation', 'This project focuses on fostering innovation within the company.', 'MariaTheresa'),
+                                                                  (-4,true, 'Efficiency', 'This project aims to improve efficiency across all departments.', 'MariaTheresa'),
+                                                                  (-5,true, 'Sustainability Initiative', 'This project aims to make our operations more environmentally friendly.', 'MariaTheresa'),
+                                                                  (-6,true, 'Customer Satisfaction Improvement', 'This project focuses on enhancing customer experience and satisfaction.', 'MariaTheresa'),
+                                                                  (-7,true, 'Product Development', 'This project involves developing new products to meet market demands.', 'MariaTheresa'),
+                                                                  (-8,true, 'Cost Reduction Initiative', 'This project aims to identify and implement cost-saving measures across the organization.', 'MariaTheresa'),
+                                                                  (-9, true,'Quality Assurance Enhancement', 'This project focuses on improving the quality control processes to ensure product quality and reliability.', 'MariaTheresa'),
+                                                                  (-10,true, 'Marketing Campaign Launch', 'This project involves planning and executing a new marketing campaign to attract customers.', 'MariaTheresa'),
+                                                                  (-11,true, 'Training and Development Program', 'This project focuses on providing training and development opportunities for employees to enhance their skills and performance.', 'MariaTheresa'),
+                                                                  (-12,true, 'Infrastructure Upgrade', 'This project involves upgrading the company''s IT infrastructure to improve efficiency and security.', 'MariaTheresa');
 
 -- these users can be used to display as colleagues for john doe
-INSERT INTO userx (enabled, default_group_id, default_project_id, state, state_visibility, create_date, update_date,
-                   create_user_username, update_user_username, username, email, first_name, last_name, password)
-VALUES (TRUE, NULL, NULL, 'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin',
-        'johndoe', 'johndoe@example.com', 'John', 'Doe',
-        '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
-       (TRUE, NULL, NULL, 'MEETING', 'PUBLIC', '2024-05-10T10:00:00', '2024-05-10T11:45:00', 'bobjones', 'admin',
-        'bobjones', 'bobjones@example.com', 'Bob', 'Jones',
-        '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
-       (TRUE, NULL, NULL, 'OUT_OF_OFFICE', 'HIDDEN', '2024-05-08T15:30:00', '2024-05-08T17:00:00', 'admin', 'admin',
-        'alicebrown', 'alicebrown@example.com', 'Alice', 'Brown',
-        '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
-       (TRUE, NULL, NULL, 'DEEPWORK', 'PRIVATE', '2024-05-07T14:00:00', '2024-05-07T16:30:00', 'chriswilliams', 'admin',
-        'chriswilliams', 'chriswilliams@example.com', 'Chris', 'Williams',
-        '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
-       (TRUE, NULL, NULL, 'MEETING', 'PUBLIC', '2024-05-11T10:30:00', '2024-05-11T11:45:00', 'admin', 'admin',
-        'peterparker', 'peterparker@example.com', 'Peter', 'Parker',
-        '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
-       (TRUE, NULL, NULL, 'OUT_OF_OFFICE', 'PRIVATE', '2024-05-11T13:00:00', '2024-05-11T14:15:00', 'admin', 'admin',
-        'tonystark', 'tonystark@example.com', 'Tony', 'Stark',
-        '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
-       (TRUE, NULL, NULL, 'DEEPWORK', 'HIDDEN', '2024-05-10T15:30:00', '2024-05-10T17:00:00', 'admin', 'admin',
-        'brucewayne', 'brucewayne@example.com', 'Bruce', 'Wayne',
-        '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
-       (TRUE, NULL, NULL, 'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin',
-        'clarkkent', 'clarkkent@webmail.com', 'Clark', 'Kent',
-        '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u');
+INSERT INTO userx (enabled, default_group_id, default_project_id, state, state_visibility, create_date, update_date, create_user_username, update_user_username, username, email, first_name, last_name, password) VALUES
+                                                                                                                                                                                                                       (TRUE, null, null,'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin', 'johndoe', 'johndoe@example.com', 'John', 'Doe', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
+                                                                                                                                                                                                                       (TRUE, null,null,  'MEETING', 'PUBLIC', '2024-05-10T10:00:00', '2024-05-10T11:45:00', 'bobjones', 'admin', 'bobjones', 'bobjones@example.com', 'Bob', 'Jones', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
+                                                                                                                                                                                                                       (TRUE, null, null,  'OUT_OF_OFFICE', 'HIDDEN', '2024-05-08T15:30:00', '2024-05-08T17:00:00', 'admin', 'admin', 'alicebrown', 'alicebrown@example.com', 'Alice', 'Brown', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
+                                                                                                                                                                                                                       (true, null, null, 'DEEPWORK', 'PRIVATE', '2024-05-07T14:00:00', '2024-05-07T16:30:00', 'chriswilliams', 'admin', 'chriswilliams', 'chriswilliams@example.com', 'Chris', 'Williams', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
+                                                                                                                                                                                                                       (TRUE, null, null, 'MEETING', 'PUBLIC', '2024-05-11T10:30:00', '2024-05-11T11:45:00', 'admin', 'admin', 'peterparker', 'peterparker@example.com', 'Peter', 'Parker', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
+                                                                                                                                                                                                                       (true, null, null, 'OUT_OF_OFFICE', 'PRIVATE', '2024-05-11T13:00:00', '2024-05-11T14:15:00', 'admin', 'admin', 'tonystark', 'tonystark@example.com', 'Tony', 'Stark', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
+                                                                                                                                                                                                                       (TRUE, null, null, 'DEEPWORK', 'HIDDEN', '2024-05-10T15:30:00', '2024-05-10T17:00:00', 'admin', 'admin', 'brucewayne', 'brucewayne@example.com', 'Bruce', 'Wayne', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u'),
+                                                                                                                                                                                                                       (TRUE, null, null, 'DEEPWORK', 'PUBLIC', '2024-05-10T12:00:00', '2024-05-10T14:30:00', 'admin', 'admin', 'clarkkent', 'clarkkent@webmail.com', 'Clark', 'Kent', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u');
 
 INSERT INTO userx_userx_role (userx_username, roles)
 VALUES ('johndoe', 'EMPLOYEE'),
@@ -100,73 +72,24 @@ VALUES ('brucewayne', 'MANAGER'),
 
 
 -- add some Groups to test db
-INSERT INTO groupx (id, group_lead_username, description, name)
-VALUES (-1, 'peterparker', 'this is just for testing', 'Research Team');
-INSERT INTO groupx (id, group_lead_username, description, name)
-VALUES (-2, 'peterparker', 'this is also just for testing', 'Security Team');
-INSERT INTO groupx (id, group_lead_username, description, name)
-VALUES (-3, 'tonystark', 'this is also just for testing', 'Marketing Team');
-INSERT INTO groupx (id, group_lead_username, description, name)
-VALUES (-4, 'tonystark', 'this is also just for testing', 'Expert Team');
+INSERT INTO groupx (id, active, group_lead_username, description, name) VALUES (-1, true, 'peterparker', 'this is just for testing', 'Research Team');
+INSERT INTO groupx (id, active, group_lead_username, description, name) VALUES (-2, true, 'peterparker', 'this is also just for testing', 'Security Team');
+INSERT INTO groupx (id, active, group_lead_username, description, name) VALUES (-3, true, 'tonystark', 'this is also just for testing', 'Marketing Team');
+INSERT INTO groupx (id, active, group_lead_username, description, name) VALUES (-4, true, 'tonystark', 'this is also just for testing', 'Expert Team');
 
 -- add some of the created projects to some GroupxProject Objects:
 -- add Serious Business, Expansion, Innovation, Efficiency,Sustainability and Customer Satisfaction to testGroup1
-INSERT INTO groupx_project_object (group_id, project_id)
-VALUES (-1, -1),
-       (-1, -2),
-       (-1, -3),
-       (-1, -4),
-       (-1, -5),
-       (-1, -6);
+INSERT INTO groupx_project_object (is_active, group_id, project_id)
+VALUES (true, -1, -1), (true, -1, -2), (true, -1, -3), (true, -1, -4), (true, -1,-5), (true, -1, -6);
 
 -- add Product Development, Cost Reduction, Quality Assurance, Marketing Campaign Launch, Training and Development and Infrastructure Upgrade to testGroup2
-INSERT INTO groupx_project_object (group_id, project_id)
-VALUES (-2, -7),
-       (-2, -1),
-       (-2, -8),
-       (-2, -9),
-       (-2, -10),
-       (-2, -11),
-       (-2, -12);
-VALUES (-1, -7),
-       (-2, -7),
-       (-2, -8),
-       (-2, -9),
-       (-2, -10),
-       (-2, -11),
-       (-2, -12);
+INSERT INTO groupx_project_object (is_active, group_id, project_id)
+Values (true, -2, -7), (true, -2, -1), (true, -2, -8), (true, -2, -9), (true, -2, -10), (true, -2, -11), (true, -2, -12), (true, -1, -7);
 
-INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id,
-                                                contributors_username)
-VALUES (-1, -1, 'admin'),
-       (-2, -1, 'admin'),
-       (-1, -2, 'admin'),
-       (-1, -3, 'admin'),
-       (-1, -4, 'admin'),
-       (-1, -5, 'admin'),
-       (-1, -6, 'admin'),
-       (-1, -6, 'bobjones'),
-       (-1, -6, 'chriswilliams'),
-       (-1, -6, 'peterparker'),
-       (-1, -6, 'tonystark'),
-       (-1, -6, 'brucewayne'),
-       (-1, -6, 'clarkkent');
-INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id,
-                                                contributors_username)
-VALUES (-2, -7, 'johndoe'),
-       (-2, -8, 'johndoe'),
-       (-2, -9, 'johndoe'),
-       (-2, -10, 'johndoe'),
-       (-2, -11, 'johndoe'),
-       (-2, -12, 'johndoe');
-VALUES (-1, -7, 'johndoe'),
-       (-2, -7, 'johndoe'),
-       (-2, -8, 'johndoe'),
-       (-2, -9, 'johndoe'),
-       (-2, -10, 'johndoe'),
-       (-2, -11, 'johndoe'),
-       (-2, -12, 'johndoe');
-
+INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username)
+VALUES (-1, -1, 'admin'), (-2, -1, 'admin'), (-1, -2, 'admin'), (-1, -3, 'admin'), (-1, -4, 'admin'), (-1, -5, 'admin'), (-1, -6, 'admin'), (-1, -6, 'bobjones'), (-1, -6, 'chriswilliams'), (-1, -6, 'peterparker'), (-1, -6, 'tonystark'), (-1, -6, 'brucewayne'), (-1, -6, 'clarkkent');
+INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username)
+VALUES (-2, -7, 'johndoe'), (-2, -8, 'johndoe'), (-2, -9, 'johndoe'), (-2, -10, 'johndoe'), (-2, -11, 'johndoe'), (-2, -12, 'johndoe'), (-1, -7, 'johndoe');
 
 INSERT INTO groupx_members (groups_id, members_username)
 VALUES (-1, 'johndoe'),
@@ -265,18 +188,12 @@ VALUES (-2, -1, -1, '2024-05-11 09:30:00', '2024-05-11 10:00:00', '2024-05-11 09
 
 
 -------------------------------------------MEASUREMENT CHAIN----------------------------------------
-INSERT INTO room (access_point_id, room_id)
-VALUES (NULL, 'room_1');
-INSERT INTO room (access_point_id, room_id)
-VALUES (NULL, 'Room 14');
-INSERT INTO room (access_point_id, room_id)
-VALUES (NULL, 'Room 7');
-INSERT INTO room (access_point_id, room_id)
-VALUES (NULL, 'Room 2');
-INSERT INTO room (access_point_id, room_id)
-VALUES (NULL, 'Room 4');
-INSERT INTO room (access_point_id, room_id)
-VALUES (NULL, 'Room 9');
+INSERT INTO public.room (access_point_id, room_id) VALUES (null, 'room_1');
+INSERT INTO public.room (access_point_id, room_id) VALUES (null, 'room_2');
+INSERT INTO public.room (access_point_id, room_id) VALUES (null, 'room_3');
+INSERT INTO public.room (access_point_id, room_id) VALUES (null, 'room_4');
+INSERT INTO public.room (access_point_id, room_id) VALUES (null, 'room_5');
+INSERT INTO public.room (access_point_id, room_id) VALUES (null, 'room_6');
 
 
 
@@ -293,30 +210,12 @@ VALUES ('222e4567-e89b-12d3-a456-426614174001', TRUE, TRUE, 'Room 4');
 INSERT INTO access_point (id, is_healthy, enabled, room_room_id)
 VALUES ('333e4567-e89b-12d3-a456-426614174001', TRUE, TRUE, 'Room 9');
 
-INSERT INTO tempera_station (is_healthy, enabled, access_point_id, user_username, id)
-VALUES (TRUE, TRUE, '123e4567-e89b-12d3-a456-426614174001', 'admin', 'tempera_station_1');
-INSERT INTO tempera_station (is_healthy, enabled, access_point_id, user_username, id)
-VALUES (FALSE, FALSE, '123e4567-e89b-12d3-a456-426614174001', 'MariaTheresa', 'tempera_station_disabled_2');
-INSERT INTO tempera_station (is_healthy, enabled, access_point_id, user_username, id)
-VALUES (FALSE, FALSE, '123e4567-e89b-12d3-a456-426614174001', 'user1', 'tempera_station_disabled');
-INSERT INTO tempera_station (is_healthy, enabled, access_point_id, user_username, id)
-VALUES (FALSE, FALSE, '123e4567-e89b-12d3-a456-426614174001', 'elvis', 'tempera_station_disabled_elvis');
-INSERT INTO tempera_station (is_healthy, enabled, access_point_id, user_username, id)
-VALUES (TRUE, TRUE, '111e4567-e89b-12d3-a456-426614174001', 'johndoe', 'TEMP123');
-INSERT INTO tempera_station (is_healthy, enabled, access_point_id, user_username, id)
-VALUES (TRUE, TRUE, '111e4567-e89b-12d3-a456-426614174001', 'bobjones', 'TEMP125');
-INSERT INTO tempera_station (is_healthy, enabled, access_point_id, user_username, id)
-VALUES (TRUE, TRUE, '222e4567-e89b-12d3-a456-426614174001', 'alicebrown', 'TEMP126');
-INSERT INTO tempera_station (is_healthy, enabled, access_point_id, user_username, id)
-VALUES (TRUE, TRUE, '222e4567-e89b-12d3-a456-426614174001', 'chriswilliams', 'TEMP127');
-INSERT INTO tempera_station (is_healthy, enabled, access_point_id, user_username, id)
-VALUES (TRUE, TRUE, '222e4567-e89b-12d3-a456-426614174001', 'peterparker', 'TEMP128');
-INSERT INTO tempera_station (is_healthy, enabled, access_point_id, user_username, id)
-VALUES (TRUE, TRUE, '333e4567-e89b-12d3-a456-426614174001', 'tonystark', 'TEMP129');
-INSERT INTO tempera_station (is_healthy, enabled, access_point_id, user_username, id)
-VALUES (TRUE, TRUE, '333e4567-e89b-12d3-a456-426614174001', 'brucewayne', 'TEMP130');
-INSERT INTO tempera_station (is_healthy, enabled, access_point_id, user_username, id)
-VALUES (FALSE, FALSE, '333e4567-e89b-12d3-a456-426614174001', 'clarkkent', 'TEMP131');
+INSERT INTO access_point (id, is_healthy, enabled, room_room_id) VALUES ('123e4567-e89b-12d3-a456-426614174001', TRUE, TRUE, 'room_1');
+INSERT INTO access_point (id, is_healthy, enabled, room_room_id) VALUES ('456e4567-e89b-12d3-a456-426614174001', FALSE, TRUE, 'room_2');
+INSERT INTO access_point (id, is_healthy, enabled, room_room_id) VALUES ('789e4567-e89b-12d3-a456-426614174001', TRUE, TRUE, 'room_3');
+INSERT INTO access_point (id, is_healthy, enabled, room_room_id) VALUES ('111e4567-e89b-12d3-a456-426614174001', TRUE, TRUE, 'room_4');
+INSERT INTO access_point (id, is_healthy, enabled, room_room_id) VALUES ('222e4567-e89b-12d3-a456-426614174001', TRUE, TRUE, 'room_5');
+INSERT INTO access_point (id, is_healthy, enabled, room_room_id) VALUES ('333e4567-e89b-12d3-a456-426614174001', TRUE, TRUE, 'room_6');
 
 INSERT INTO sensor (sensor_type, sensor_id, tempera_id, unit)
 VALUES ('TEMPERATURE', -1, 'tempera_station_1', 'CELSIUS'),
@@ -506,585 +405,222 @@ VALUES (-1,
 INSERT INTO modification (id, reason, time_stamp)
 VALUES (-1, 'Default threshold.', NULL);
 
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (TRUE, 20, -11, -1, -1, 'TEMPERATURE', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (TRUE, 19, -12, -1, -1, 'TEMPERATURE', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (TRUE, 24, -13, -1, -2, 'TEMPERATURE', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (TRUE, 25, -14, -1, -2, 'TEMPERATURE', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (TRUE, 50, -21, -1, -10, 'HUMIDITY', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (TRUE, 40, -22, -1, -10, 'HUMIDITY', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (TRUE, 60, -23, -1, -11, 'HUMIDITY', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (TRUE, 70, -24, -1, -11, 'HUMIDITY', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (TRUE, 220, -31, -1, -20, 'IRRADIANCE', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (TRUE, 200, -32, -1, -20, 'IRRADIANCE', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (TRUE, 540, -33, -1, -21, 'IRRADIANCE', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (TRUE, 600, -34, -1, -21, 'IRRADIANCE', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (TRUE, 11, -41, -1, -30, 'NMVOC', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (TRUE, 10, -42, -1, -30, 'NMVOC', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (TRUE, 10, -43, -1, -30, 'NMVOC', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (TRUE, 10, -44, -1, -30, 'NMVOC', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 20, -1, -1, -1, 'TEMPERATURE', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 19, -2, -1, -1, 'TEMPERATURE', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 24, -3, -1, -2, 'TEMPERATURE', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 25, -4, -1, -2, 'TEMPERATURE', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 50, -5, -1, -10, 'HUMIDITY', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 40, -6, -1, -10, 'HUMIDITY', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 60, -7, -1, -11, 'HUMIDITY', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 70, -8, -1, -11, 'HUMIDITY', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 220, -9, -1, -20, 'IRRADIANCE', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 200, -10, -1, -20, 'IRRADIANCE', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 540, -1100, -1, -21, 'IRRADIANCE', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 600, -1200, -1, -21, 'IRRADIANCE', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 11, -1300, -1, -30, 'NMVOC', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 10, -1400, -1, -30, 'NMVOC', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 10, -15, -1, -30, 'NMVOC', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 10, -16, -1, -30, 'NMVOC', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 20, 17, -1, -1, 'TEMPERATURE', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 19, 18, -1, -1, 'TEMPERATURE', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 24, 19, -1, -2, 'TEMPERATURE', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 25, 20, -1, -2, 'TEMPERATURE', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 50, 21, -1, -10, 'HUMIDITY', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 40, 22, -1, -10, 'HUMIDITY', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 60, 23, -1, -11, 'HUMIDITY', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 70, 24, -1, -11, 'HUMIDITY', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 220, 25, -1, -20, 'IRRADIANCE', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 200, 26, -1, -20, 'IRRADIANCE', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 540, 27, -1, -21, 'IRRADIANCE', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 600, 28, -1, -21, 'IRRADIANCE', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 11, 29, -1, -30, 'NMVOC', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 10, 30, -1, -30, 'NMVOC', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 10, 31, -1, -30, 'NMVOC', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 10, 32, -1, -30, 'NMVOC', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 20, 33, -1, -1, 'TEMPERATURE', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 19, 34, -1, -1, 'TEMPERATURE', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 24, 35, -1, -2, 'TEMPERATURE', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 25, 36, -1, -2, 'TEMPERATURE', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 50, 37, -1, -10, 'HUMIDITY', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 40, 38, -1, -10, 'HUMIDITY', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 60, 39, -1, -11, 'HUMIDITY', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 70, 40, -1, -11, 'HUMIDITY', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 220, 41, -1, -20, 'IRRADIANCE', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 200, 42, -1, -20, 'IRRADIANCE', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 540, 43, -1, -21, 'IRRADIANCE', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 600, 44, -1, -21, 'IRRADIANCE', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 11, 45, -1, -30, 'NMVOC', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 10, 46, -1, -30, 'NMVOC', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 10, 47, -1, -30, 'NMVOC', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 10, 48, -1, -30, 'NMVOC', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 20, 49, -1, -1, 'TEMPERATURE', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 19, 50, -1, -1, 'TEMPERATURE', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 24, 51, -1, -2, 'TEMPERATURE', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 25, 52, -1, -2, 'TEMPERATURE', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 50, 53, -1, -10, 'HUMIDITY', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 40, 54, -1, -10, 'HUMIDITY', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 60, 55, -1, -11, 'HUMIDITY', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 70, 56, -1, -11, 'HUMIDITY', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 220, 57, -1, -20, 'IRRADIANCE', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 200, 58, -1, -20, 'IRRADIANCE', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 540, 59, -1, -21, 'IRRADIANCE', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 600, 60, -1, -21, 'IRRADIANCE', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 11, 61, -1, -30, 'NMVOC', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 10, 62, -1, -30, 'NMVOC', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 10, 63, -1, -30, 'NMVOC', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 10, 64, -1, -30, 'NMVOC', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 20, 65, -1, -1, 'TEMPERATURE', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 19, 66, -1, -1, 'TEMPERATURE', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 24, 67, -1, -2, 'TEMPERATURE', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 25, 68, -1, -2, 'TEMPERATURE', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 50, 69, -1, -10, 'HUMIDITY', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 40, 70, -1, -10, 'HUMIDITY', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 60, 71, -1, -11, 'HUMIDITY', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 70, 72, -1, -11, 'HUMIDITY', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 220, 73, -1, -20, 'IRRADIANCE', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 200, 74, -1, -20, 'IRRADIANCE', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 540, 75, -1, -21, 'IRRADIANCE', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 600, 76, -1, -21, 'IRRADIANCE', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 11, 77, -1, -30, 'NMVOC', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 10, 78, -1, -30, 'NMVOC', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 10, 79, -1, -30, 'NMVOC', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 10, 80, -1, -30, 'NMVOC', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 20, 81, -1, -1, 'TEMPERATURE', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 19, 82, -1, -1, 'TEMPERATURE', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 24, 83, -1, -2, 'TEMPERATURE', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 25, 84, -1, -2, 'TEMPERATURE', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 50, 85, -1, -10, 'HUMIDITY', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 40, 86, -1, -10, 'HUMIDITY', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 60, 87, -1, -11, 'HUMIDITY', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 70, 88, -1, -11, 'HUMIDITY', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 220, 89, -1, -20, 'IRRADIANCE', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 200, 90, -1, -20, 'IRRADIANCE', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 540, 91, -1, -21, 'IRRADIANCE', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 600, 92, -1, -21, 'IRRADIANCE', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 11, 93, -1, -30, 'NMVOC', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 10, 94, -1, -30, 'NMVOC', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 10, 95, -1, -30, 'NMVOC', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 10, 96, -1, -30, 'NMVOC', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 20, 97, -1, -1, 'TEMPERATURE', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 19, 98, -1, -1, 'TEMPERATURE', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 24, 99, -1, -2, 'TEMPERATURE', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 25, 100, -1, -2, 'TEMPERATURE', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 50, 101, -1, -10, 'HUMIDITY', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 40, 102, -1, -10, 'HUMIDITY', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 60, 103, -1, -11, 'HUMIDITY', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 70, 104, -1, -11, 'HUMIDITY', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 220, 105, -1, -20, 'IRRADIANCE', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 200, 106, -1, -20, 'IRRADIANCE', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 540, 107, -1, -21, 'IRRADIANCE', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 600, 108, -1, -21, 'IRRADIANCE', 'UPPERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 11, 109, -1, -30, 'NMVOC', 'LOWERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 10, 110, -1, -30, 'NMVOC', 'LOWERBOUND_WARNING');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 10, 111, -1, -30, 'NMVOC', 'UPPERBOUND_INFO');
-INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type,
-                              threshold_type)
-VALUES (FALSE, 10, 112, -1, -30, 'NMVOC', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (true, 20,            -1, -1, -1, 'TEMPERATURE', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (true, 18,            -2, -1, -1, 'TEMPERATURE', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (true, 26,            -3, -1, -2, 'TEMPERATURE', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (true, 28,            -4, -1, -2, 'TEMPERATURE', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (true, 40,            -5, -1, -10, 'HUMIDITY', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (true, 30,            -6, -1, -10, 'HUMIDITY', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (true, 65,            -7, -1, -11, 'HUMIDITY', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (true, 75,            -8, -1, -11, 'HUMIDITY', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (true, 220,          -9, -1, -20, 'IRRADIANCE', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (true, 200,          -10, -1, -20, 'IRRADIANCE', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (true, 540,          -11, -1, -21, 'IRRADIANCE', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (true, 600,          -12, -1, -21, 'IRRADIANCE', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (true, 10000,      -13, -1, -30, 'NMVOC', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (true, 5000,        -14, -1, -30, 'NMVOC', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (true, 1000000,  -15, -1, -30, 'NMVOC', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (true, 1000000,  -16, -1, -30, 'NMVOC', 'UPPERBOUND_WARNING');
+
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 20,      -17, -1, -1, 'TEMPERATURE', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 18,      -18, -1, -1, 'TEMPERATURE', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 26,      -19, -1, -2, 'TEMPERATURE', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 28,      -20, -1, -2, 'TEMPERATURE', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 40,      -21, -1, -10, 'HUMIDITY', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 30,      -22, -1, -10, 'HUMIDITY', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 65,      -23, -1, -11, 'HUMIDITY', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 75,      -24, -1, -11, 'HUMIDITY', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 220,     -25, -1, -20, 'IRRADIANCE', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 200,     -26, -1, -20, 'IRRADIANCE', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 540,     -27, -1, -21, 'IRRADIANCE', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 600,     -28, -1, -21, 'IRRADIANCE', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 10000,   -29, -1, -30, 'NMVOC', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 5000,    -30, -1, -30, 'NMVOC', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 1000000, -31, -1, -30, 'NMVOC', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 1000000, -32, -1, -30, 'NMVOC', 'UPPERBOUND_WARNING');
+
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 20,      -33, -1, -1, 'TEMPERATURE', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 18,      -34, -1, -1, 'TEMPERATURE', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 26,      -35, -1, -2, 'TEMPERATURE', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 28,      -36, -1, -2, 'TEMPERATURE', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 40,      -37, -1, -10, 'HUMIDITY', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 30,      -38, -1, -10, 'HUMIDITY', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 65,      -39, -1, -11, 'HUMIDITY', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 75,      -40, -1, -11, 'HUMIDITY', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 220,     -41, -1, -20, 'IRRADIANCE', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 200,     -42, -1, -20, 'IRRADIANCE', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 540,     -43, -1, -21, 'IRRADIANCE', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 600,     -44, -1, -21, 'IRRADIANCE', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 10000,   -45, -1, -30, 'NMVOC', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 5000,    -46, -1, -30, 'NMVOC', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 1000000, -47, -1, -30, 'NMVOC', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 1000000, -48, -1, -30, 'NMVOC', 'UPPERBOUND_WARNING');
+
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 20,     -49, -1, -1, 'TEMPERATURE', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 18,     -50, -1, -1, 'TEMPERATURE', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 26,     -51, -1, -2, 'TEMPERATURE', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 28,     -52, -1, -2, 'TEMPERATURE', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 40,     -53, -1, -10, 'HUMIDITY', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 30,     -54, -1, -10, 'HUMIDITY', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 65,     -55, -1, -11, 'HUMIDITY', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 75,     -56, -1, -11, 'HUMIDITY', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 220,    -57, -1, -20, 'IRRADIANCE', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 200,    -58, -1, -20, 'IRRADIANCE', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 540,    -59, -1, -21, 'IRRADIANCE', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 600,    -60, -1, -21, 'IRRADIANCE', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 10000,  -61, -1, -30, 'NMVOC', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 5000,   -62, -1, -30, 'NMVOC', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 1000000,-63, -1, -30, 'NMVOC', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 1000000,-64, -1, -30, 'NMVOC', 'UPPERBOUND_WARNING');
+
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 20,      -65, -1, -1, 'TEMPERATURE', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 18,      -66, -1, -1, 'TEMPERATURE', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 26,      -67, -1, -2, 'TEMPERATURE', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 28,      -68, -1, -2, 'TEMPERATURE', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 40,      -69, -1, -10, 'HUMIDITY', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 30,      -70, -1, -10, 'HUMIDITY', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 65,      -71, -1, -11, 'HUMIDITY', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 75,      -72, -1, -11, 'HUMIDITY', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 220,     -73, -1, -20, 'IRRADIANCE', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 200,     -74, -1, -20, 'IRRADIANCE', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 540,     -75, -1, -21, 'IRRADIANCE', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 600,     -76, -1, -21, 'IRRADIANCE', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 10000,   -77, -1, -30, 'NMVOC', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 5000,    -78, -1, -30, 'NMVOC', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 1000000, -79, -1, -30, 'NMVOC', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 1000000, -80, -1, -30, 'NMVOC', 'UPPERBOUND_WARNING');
+
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 20,      -81, -1, -1, 'TEMPERATURE', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 18,      -82, -1, -1, 'TEMPERATURE', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 26,      -83, -1, -2, 'TEMPERATURE', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 28,      -84, -1, -2, 'TEMPERATURE', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 40,      -85, -1, -10, 'HUMIDITY', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 30,      -86, -1, -10, 'HUMIDITY', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 65,      -87, -1, -11, 'HUMIDITY', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 75,      -88, -1, -11, 'HUMIDITY', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 220,     -89, -1, -20, 'IRRADIANCE', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 200,     -90, -1, -20, 'IRRADIANCE', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 540,     -91, -1, -21, 'IRRADIANCE', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 600,     -92, -1, -21, 'IRRADIANCE', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 10000,   -93, -1, -30, 'NMVOC', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 5000,    -94, -1, -30, 'NMVOC', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 1000000, -95, -1, -30, 'NMVOC', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 1000000, -96, -1, -30, 'NMVOC', 'UPPERBOUND_WARNING');
+
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 20,      -97, -1, -1, 'TEMPERATURE', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 18,      -98, -1, -1, 'TEMPERATURE', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 26,      -99, -1, -2, 'TEMPERATURE', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 28,      -100, -1, -2, 'TEMPERATURE', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 40,      -101, -1, -10, 'HUMIDITY', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 30,      -102, -1, -10, 'HUMIDITY', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 65,      -103, -1, -11, 'HUMIDITY', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 75,      -104, -1, -11, 'HUMIDITY', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 220,     -105, -1, -20, 'IRRADIANCE', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 200,     -106, -1, -20, 'IRRADIANCE', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 540,     -107, -1, -21, 'IRRADIANCE', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 600,     -108, -1, -21, 'IRRADIANCE', 'UPPERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 10000,   -109, -1, -30, 'NMVOC', 'LOWERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 5000,    -110, -1, -30, 'NMVOC', 'LOWERBOUND_WARNING');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 1000000, -111, -1, -30, 'NMVOC', 'UPPERBOUND_INFO');
+INSERT INTO public.threshold (default_threshold, threshold_value, id, modification_id, tip_id, sensor_type, threshold_type) VALUES (false, 1000000, -112, -1, -30, 'NMVOC', 'UPPERBOUND_WARNING');
 
 
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (-1100, 'room_1');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (-1200, 'room_1');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (-1300, 'room_1');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (-1400, 'room_1');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (-21, 'room_1');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (-22, 'room_1');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (-23, 'room_1');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (-24, 'room_1');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (-31, 'room_1');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (-32, 'room_1');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (-33, 'room_1');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (-34, 'room_1');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (-41, 'room_1');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (-42, 'room_1');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (-43, 'room_1');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (-44, 'room_1');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (42, 'Room 14');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (45, 'Room 14');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (36, 'Room 14');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (35, 'Room 14');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (41, 'Room 14');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (46, 'Room 14');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (48, 'Room 14');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (37, 'Room 14');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (40, 'Room 14');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (47, 'Room 14');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (39, 'Room 14');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (33, 'Room 14');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (34, 'Room 14');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (38, 'Room 14');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (43, 'Room 14');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (44, 'Room 14');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (58, 'Room 7');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (61, 'Room 7');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (52, 'Room 7');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (51, 'Room 7');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (57, 'Room 7');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (62, 'Room 7');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (64, 'Room 7');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (53, 'Room 7');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (56, 'Room 7');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (63, 'Room 7');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (55, 'Room 7');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (49, 'Room 7');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (50, 'Room 7');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (54, 'Room 7');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (59, 'Room 7');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (60, 'Room 7');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (74, 'Room 2');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (77, 'Room 2');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (68, 'Room 2');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (67, 'Room 2');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (73, 'Room 2');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (78, 'Room 2');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (80, 'Room 2');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (69, 'Room 2');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (72, 'Room 2');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (79, 'Room 2');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (71, 'Room 2');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (65, 'Room 2');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (66, 'Room 2');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (70, 'Room 2');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (75, 'Room 2');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (76, 'Room 2');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (90, 'Room 4');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (93, 'Room 4');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (84, 'Room 4');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (83, 'Room 4');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (89, 'Room 4');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (94, 'Room 4');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (96, 'Room 4');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (85, 'Room 4');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (88, 'Room 4');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (95, 'Room 4');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (87, 'Room 4');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (81, 'Room 4');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (82, 'Room 4');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (86, 'Room 4');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (91, 'Room 4');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (92, 'Room 4');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (106, 'Room 9');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (109, 'Room 9');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (100, 'Room 9');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (99, 'Room 9');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (105, 'Room 9');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (110, 'Room 9');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (112, 'Room 9');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (101, 'Room 9');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (104, 'Room 9');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (111, 'Room 9');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (103, 'Room 9');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (97, 'Room 9');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (98, 'Room 9');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (102, 'Room 9');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (107, 'Room 9');
-INSERT INTO public.room_thresholds (thresholds_id, room_room_id)
-VALUES (108, 'Room 9');
-
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-17, 'room_1');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-18, 'room_1');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-19, 'room_1');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-20, 'room_1');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-21, 'room_1');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-22, 'room_1');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-23, 'room_1');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-24, 'room_1');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-25, 'room_1');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-26, 'room_1');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-27, 'room_1');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-28, 'room_1');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-29, 'room_1');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-30, 'room_1');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-31, 'room_1');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-32, 'room_1');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-33, 'room_2');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-34, 'room_2');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-35, 'room_2');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-36, 'room_2');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-37, 'room_2');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-38, 'room_2');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-39, 'room_2');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-40, 'room_2');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-41, 'room_2');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-42, 'room_2');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-43, 'room_2');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-44, 'room_2');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-45, 'room_2');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-46, 'room_2');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-47, 'room_2');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-48, 'room_2');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-49, 'room_3');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-50, 'room_3');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-51, 'room_3');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-52, 'room_3');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-53, 'room_3');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-54, 'room_3');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-55, 'room_3');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-56, 'room_3');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-57, 'room_3');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-58, 'room_3');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-59, 'room_3');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-60, 'room_3');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-61, 'room_3');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-62, 'room_3');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-63, 'room_3');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-64, 'room_3');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-65, 'room_4');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-66, 'room_4');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-67, 'room_4');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-68, 'room_4');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-69, 'room_4');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-70, 'room_4');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-71, 'room_4');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-72, 'room_4');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-73, 'room_4');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-74, 'room_4');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-75, 'room_4');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-76, 'room_4');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-77, 'room_4');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-78, 'room_4');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-79, 'room_4');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-80, 'room_4');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-81, 'room_5');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-82, 'room_5');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-83, 'room_5');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-84, 'room_5');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-85, 'room_5');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-86, 'room_5');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-87, 'room_5');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-88, 'room_5');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-89, 'room_5');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-90, 'room_5');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-91, 'room_5');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-92, 'room_5');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-93, 'room_5');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-94, 'room_5');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-95, 'room_5');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-96, 'room_5');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-97, 'room_6');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-98, 'room_6');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-99, 'room_6');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-100, 'room_6');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-101, 'room_6');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-102, 'room_6');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-103, 'room_6');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-104, 'room_6');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-105, 'room_6');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-106, 'room_6');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-107, 'room_6');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-108, 'room_6');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-109, 'room_6');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-110, 'room_6');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-111, 'room_6');
+INSERT INTO public.room_thresholds (thresholds_id, room_room_id) VALUES (-112, 'room_6');
 
 
 INSERT INTO alert (acknowledged, peak_deviation_value, first_incident, id, last_incident, sensor_sensor_id,

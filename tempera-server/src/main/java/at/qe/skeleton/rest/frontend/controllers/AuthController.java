@@ -7,6 +7,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import at.qe.skeleton.jwt.JwtUtils;
+import at.qe.skeleton.model.enums.LogAffectedType;
+import at.qe.skeleton.model.enums.LogEvent;
 import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.UserxRole;
@@ -15,6 +17,7 @@ import at.qe.skeleton.rest.frontend.payload.request.SignupRequest;
 import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
 import at.qe.skeleton.rest.frontend.payload.response.UserInfoResponse;
 import at.qe.skeleton.repositories.UserxRepository;
+import at.qe.skeleton.services.AuditLogService;
 import at.qe.skeleton.services.UserDetailsImpl;
 import at.qe.skeleton.services.UserxService;
 import jakarta.validation.Valid;
@@ -50,6 +53,8 @@ public class AuthController {
 
   @Autowired UserxService userxService;
 
+  @Autowired AuditLogService auditLogService;
+
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
@@ -68,7 +73,9 @@ public class AuthController {
         userDetails.getAuthorities().stream()
             .map(item -> item.getAuthority())
             .collect(Collectors.toList());
-
+    auditLogService.logEvent(LogEvent.LOGIN, LogAffectedType.USER,
+            "User " + userDetails.getId() + " logged in."
+    );
     return ResponseEntity.ok()
         .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
         .body(
@@ -102,12 +109,17 @@ public class AuthController {
     user.setCreateUser(user);
     user.setEnabled(true);
     userRepository.save(user);
-
+    auditLogService.logEvent(LogEvent.CREATE, LogAffectedType.USER,
+            "Successfully created user for " + user.getFirstName() + " " + user.getLastName() + " with username " + user.getId() + " and roles " + user.getRoles() + "."
+    );
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
 
   @PostMapping("/signout")
   public ResponseEntity<?> logoutUser() {
+    auditLogService.logEvent(LogEvent.LOGOUT, LogAffectedType.USER,
+            "Current user logged out."
+    );
     ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
     return ResponseEntity.ok()
         .header(HttpHeaders.SET_COOKIE, cookie.toString())
@@ -119,6 +131,9 @@ public class AuthController {
     String username = credentials.get("username");
     String password = credentials.get("password");
     UserxDto isValidUser = userxService.validateUser(username, password);
+    auditLogService.logEvent(LogEvent.LOGIN, LogAffectedType.USER,
+            ((isValidUser == null ? "Failed to validate " : "Validated ")) + "user with credentials " + username + ", " + password + " ."
+    );
     return ResponseEntity.ok(isValidUser);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { LayoutService } from './service/app.layout.service';
 import { AsyncPipe, DatePipe, NgClass, NgIf } from '@angular/common';
@@ -16,6 +16,8 @@ import { AlertDto } from '../../api';
 import SeverityEnum = AlertDto.SeverityEnum;
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
 import { ToastModule } from 'primeng/toast';
+import { ColorSchemeService } from '../_services/color-scheme.service';
+import { map, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-topbar',
@@ -23,7 +25,7 @@ import { ToastModule } from 'primeng/toast';
   standalone: true,
   imports: [RouterLink, NgClass, TooltipModule, BadgeModule, OverlayPanelModule, TableModule, ButtonModule, AsyncPipe, NgIf, DatePipe, TagModule, WrapFnPipe, ToastModule],
 })
-export class AppTopBarComponent {
+export class AppTopBarComponent implements OnInit {
 
   items!: MenuItem[];
 
@@ -35,10 +37,24 @@ export class AppTopBarComponent {
 
   @ViewChild('alertsPanel') alertsPanel!: OverlayPanel;
 
-  constructor(public layoutService: LayoutService, private authService: AuthService, private storageService: StorageService, public alertStoreService: AlertStoreService) {
-    setInterval(() => {
-      this.alertStoreService.refreshAlerts();
-    }, 20 * 1000);
+  // For some reason, the initial value is not emitted after login
+  initialColorSchemeClass = this.layoutService.config.colorScheme === 'light' ? 'pi pi-sun' : 'pi pi-moon';
+
+  colorSchemeClass$ = this.layoutService.configUpdate$.pipe(
+    map(x => {
+      if (x.colorScheme === 'light') {
+        return 'pi pi-sun';
+      } else {
+        return 'pi pi-moon';
+      }
+    }),
+    startWith(this.initialColorSchemeClass));
+
+  constructor(public layoutService: LayoutService, private authService: AuthService, private storageService: StorageService, public alertStoreService: AlertStoreService, private colorSchemeService: ColorSchemeService) {
+  }
+
+  ngOnInit(): void {
+    this.alertStoreService.startAlertTimer();
   }
 
   logout() {
@@ -88,5 +104,9 @@ export class AppTopBarComponent {
       default:
         return 'primary';
     }
+  }
+
+  toggleColorScheme() {
+    this.colorSchemeService.toggleScheme();
   }
 }

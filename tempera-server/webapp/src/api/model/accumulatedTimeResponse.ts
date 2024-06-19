@@ -15,8 +15,8 @@ import { SimpleGroupDto } from './simpleGroupDto';
 
 
 export interface AccumulatedTimeResponse { 
-    accumulatedTimes?: Array<AccumulatedTimeDto>;
-    availableProjects?: Array<SimpleProjectDto>;
-    availableGroups?: Array<SimpleGroupDto>;
+    accumulatedTimes: Array<AccumulatedTimeDto>;
+    availableProjects: Array<SimpleProjectDto>;
+    availableGroups: Array<SimpleGroupDto>;
 }
 

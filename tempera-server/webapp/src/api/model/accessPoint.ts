@@ -18,7 +18,7 @@ export interface AccessPoint {
     temperaStations?: Set<TemperaStation>;
     room?: Room;
     enabled?: boolean;
-    _new?: boolean;
     healthy?: boolean;
+    _new?: boolean;
 }
 

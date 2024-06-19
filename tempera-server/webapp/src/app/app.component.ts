@@ -4,6 +4,7 @@ import { StorageService } from './_services/storage.service';
 import { AuthService } from './_services/auth.service';
 import { NgIf } from '@angular/common';
 import { PrimeNGConfig } from 'primeng/api';
+import { ColorSchemeService } from './_services/color-scheme.service';
 
 @Component({
   selector: 'app-root',
@@ -30,11 +31,17 @@ export class AppComponent implements OnInit {
     this.showModeratorMenu = !this.showModeratorMenu;
   }
 
-  constructor(private storageService: StorageService, private authService: AuthService, private primengConfig: PrimeNGConfig) {
+  constructor(private storageService: StorageService, private authService: AuthService, private primengConfig: PrimeNGConfig, private colorSchemeService: ColorSchemeService) {
   }
 
   ngOnInit(): void {
     this.primengConfig.ripple = true;
+    const colorScheme = localStorage.getItem('colorScheme');
+    if (colorScheme === null) {
+      this.colorSchemeService.changeScheme('light');
+    } else {
+      this.colorSchemeService.changeScheme(colorScheme);
+    }
 
     this.isLoggedIn = this.storageService.isLoggedIn();
 

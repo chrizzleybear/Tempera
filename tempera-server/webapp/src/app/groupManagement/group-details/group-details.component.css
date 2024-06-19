@@ -1,13 +1,21 @@
+
+
+
 .group-info p, .manager-details p {
-  margin-bottom: 10px;
-  line-height: 1.6;
+}
+
+.group-info p {
 }
 
 .manager-details {
-  border-top: 1px solid #ccc;
-  padding-top: 20px;
+  /*padding-top: 20px;*/
 }
 
+.edit-button {
+  /*display: inline-block;*/
+  /*width: 30%;*/
+  /*box-sizing: border-box;*/
+}
 .members-section {
   border-top: 1px solid #ccc;
   padding-top: 20px;
@@ -15,12 +23,15 @@
 }
 
 .members-table th {
-  background-color: #f4f4f4;
   text-align: left;
 }
 
 .members-table td {
   padding: 8px;
+}
+
+.right-align-button {
+  margin-left: auto;
 }
 
 @media (max-width: 768px) {

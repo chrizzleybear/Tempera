@@ -20,6 +20,7 @@ export interface GroupxProject {
     project?: Project;
     contributors?: Set<Userx>;
     id?: GroupxProjectId;
+    active?: boolean;
     _new?: boolean;
 }
 

@@ -34,11 +34,6 @@ export class AccessPointService {
   deleteAccesspoint(accesspointId: string) {
     return this.http.delete<MessageResponse>(this.API_URL + 'delete/' + accesspointId);
   }
-
-  getAccesspointsByRoomId(roomId: string): Observable<AccessPoint> {
-    return this.http.get<AccessPoint>('http://localhost:8080/api/rooms/accesspoint/' + roomId);
-  }
-
   getAvailableRooms(): Observable<Room[]> {
     return this.http.get<Room[]>(this.API_URL + 'availableRooms');
   }
@@ -46,15 +41,4 @@ export class AccessPointService {
     return this.http.get<TemperaStation[]>(this.API_URL + 'tempera/' + accessPointId);
   }
 
-  getAvailableTemperaStations(): Observable<TemperaStation[]> {
-    return this.http.get<TemperaStation[]>(this.API_URL + 'tempera/available');
-  }
-
-  addTemperaStation(accessPointId: string, temperaId: string): Observable<MessageResponse> {
-    return this.http.put(this.API_URL + 'tempera/add/' + accessPointId + '/' + temperaId, {});
-  }
-
-  removeTemperaStation(accessPointId: string, temperaId: string): Observable<MessageResponse> {
-    return this.http.delete(this.API_URL + 'tempera/remove/' + accessPointId + '/' + temperaId);
-  }
 }

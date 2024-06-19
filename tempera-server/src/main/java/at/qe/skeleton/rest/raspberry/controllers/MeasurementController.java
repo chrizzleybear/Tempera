@@ -35,7 +35,6 @@ public class MeasurementController {
     this.temperaStationService = temperaStationService;
   }
 
-  // todo: return StatusCodes according to Exceptions
   @PostMapping("")
   public ResponseEntity<MeasurementDto> createMeasurement(
       @RequestBody MeasurementDto measurementDto) {
@@ -60,7 +59,4 @@ public class MeasurementController {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
   }
-
-  // todo: seems like we dont need put, get or delete methods for this controller - is that a
-  // problem?
 }
