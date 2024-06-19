@@ -2,13 +2,13 @@ package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.model.enums.ClimateQuality;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.Visibility;
 import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
-import at.qe.skeleton.rest.frontend.dtos.ExtendedProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.FrontendMeasurementDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto;
-import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
-import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.DashboardDataMapper;
+import at.qe.skeleton.services.DashboardDataService;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateDashboardDataRequest;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
 import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
@@ -22,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,14 +34,14 @@ import static org.mockito.Mockito.*;
 class DashboardControllerTest {
 
   private DashboardController dashboardController;
-  @Mock private DashboardDataMapper dashboardDataMapper;
+  @Mock private DashboardDataService dashboardDataService;
   @Mock private UserxService userXService;
 
   @BeforeEach
   void setUp() {
     TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken("johndoe", null);
     SecurityContextHolder.getContext().setAuthentication(testingAuthenticationToken);
-    dashboardController = new DashboardController(dashboardDataMapper, userXService);
+    dashboardController = new DashboardController(dashboardDataService, userXService);
   }
 
 
@@ -66,10 +65,10 @@ class DashboardControllerTest {
             new SimpleGroupxProjectDto("3", "group3", "3", "project3"));
     DashboardDataResponse dashboardDataResponse =
         new DashboardDataResponse(
-            1.0,
-            20.0,
-            300.0,
-            400.2189,
+            new FrontendMeasurementDto(20.0, ClimateQuality.GOOD),
+            new FrontendMeasurementDto(50.0, ClimateQuality.GOOD),
+            new FrontendMeasurementDto(1000.0, ClimateQuality.MEDIOCRE),
+            new FrontendMeasurementDto(100.0, ClimateQuality.POOR),
             Visibility.HIDDEN,
             State.DEEPWORK,
             "10.05.2024T12:20:10",
@@ -78,12 +77,12 @@ class DashboardControllerTest {
             projects,
             colleagueStates);
 
-    when(dashboardDataMapper.mapUserToHomeDataResponse(johnny)).thenReturn(dashboardDataResponse);
+    when(dashboardDataService.mapUserToHomeDataResponse(johnny)).thenReturn(dashboardDataResponse);
 
     ResponseEntity<DashboardDataResponse> returnValue = dashboardController.getDashboardData(johnny);
     DashboardDataResponse response = returnValue.getBody();
 
-    verify(dashboardDataMapper, times(1)).mapUserToHomeDataResponse(johnny);
+    verify(dashboardDataService, times(1)).mapUserToHomeDataResponse(johnny);
     assertEquals(dashboardDataResponse, response);
   }
 
@@ -93,7 +92,7 @@ class DashboardControllerTest {
     Userx userx = new Userx();
     MessageResponse messageResponse = new MessageResponse("Dashboard data updated successfully!");
     when(userXService.loadUser("johndoe")).thenReturn(userx);
-    when(dashboardDataMapper.updateUserVisibilityAndTimeStampProject(any(), any())).thenReturn(messageResponse);
+    when(dashboardDataService.updateUserVisibilityAndTimeStampProject(any(), any())).thenReturn(messageResponse);
 
     ResponseEntity<MessageResponse> response =
         dashboardController.updateDashboardData(
@@ -103,7 +102,7 @@ class DashboardControllerTest {
                     "-1", "Group1", "1", "Projekt1")));
     assertEquals(messageResponse, response.getBody());
     verify(userXService, times(1)).loadUser("johndoe");
-    verify(dashboardDataMapper, times(1)).updateUserVisibilityAndTimeStampProject(any(), any());
+    verify(dashboardDataService, times(1)).updateUserVisibilityAndTimeStampProject(any(), any());
   }
 
 }

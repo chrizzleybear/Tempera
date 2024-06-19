@@ -28,6 +28,9 @@ import {AccessPointDetailsComponent} from "./accessPointManagement/access-point-
 import { AccumulatedTimeComponent } from './accumulated-time/accumulated-time.component';
 import {OverviewChartsComponent} from "./climateCharts/overview-charts/overview-charts.component";
 import {OverviewTablesComponent} from "./climateTables/overview-tables/overview-tables.component";
+import {TipsComponent} from "./tips/tips.component";
+import { AuditLogsComponent } from './audit-logs/audit-logs.component';
+
 
 export const routes: Routes = [
   {
@@ -57,6 +60,8 @@ export const routes: Routes = [
           { path: 'accumulated-time', component: AccumulatedTimeComponent},
           {path: 'climateChart', component: OverviewChartsComponent},
           { path: 'climateTable', component: OverviewTablesComponent},
+          { path: 'audit-logs', component: AuditLogsComponent },
+          { path: 'tips', component: TipsComponent },
         ],
       },
     ],

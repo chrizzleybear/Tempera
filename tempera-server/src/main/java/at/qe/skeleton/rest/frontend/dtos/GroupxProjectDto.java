@@ -1,7 +1,16 @@
 package at.qe.skeleton.rest.frontend.dtos;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
-public record GroupxProjectDto(SimpleGroupDto group, SimpleProjectDto project, SimpleUserDto managerDetails, List<SimpleUserDto> contributors) {}
+/**
+ * A DTO for a group and a project.
+ * @param group SimpleGroupDto
+ * @param project SimpleProjectDto
+ * @param managerDetails SimpleUserDto
+ * @param contributors List<SimpleUserDto> (might be null)
+ * @param isActive boolean
+ */
 
-//todo: braucht io hier alle extended?
+public record GroupxProjectDto(@NotNull SimpleGroupDto group, @NotNull SimpleProjectDto project, @NotNull SimpleUserDto managerDetails, List<SimpleUserDto> contributors, @NotNull boolean isActive) {}

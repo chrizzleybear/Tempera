@@ -484,12 +484,12 @@ export class AccessPointControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getTemperaStations(accesspointId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<TemperaStationDto>>;
-    public getTemperaStations(accesspointId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<TemperaStationDto>>>;
-    public getTemperaStations(accesspointId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<TemperaStationDto>>>;
-    public getTemperaStations(accesspointId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getTemperaStations1(accesspointId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<TemperaStationDto>>;
+    public getTemperaStations1(accesspointId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<TemperaStationDto>>>;
+    public getTemperaStations1(accesspointId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<TemperaStationDto>>>;
+    public getTemperaStations1(accesspointId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (accesspointId === null || accesspointId === undefined) {
-            throw new Error('Required parameter accesspointId was null or undefined when calling getTemperaStations.');
+            throw new Error('Required parameter accesspointId was null or undefined when calling getTemperaStations1.');
         }
 
         let localVarHeaders = this.defaultHeaders;

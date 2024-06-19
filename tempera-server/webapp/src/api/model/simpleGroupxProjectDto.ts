@@ -12,9 +12,9 @@
 
 
 export interface SimpleGroupxProjectDto { 
-    groupId?: string;
-    groupName?: string;
-    projectId?: string;
-    projectName?: string;
+    groupId: string;
+    groupName: string;
+    projectId: string;
+    projectName: string;
 }
 

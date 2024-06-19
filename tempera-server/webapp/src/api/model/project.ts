@@ -19,5 +19,6 @@ export interface Project {
     description?: string;
     manager?: Userx;
     groupxProjects?: Set<GroupxProject>;
+    active?: boolean;
 }
 

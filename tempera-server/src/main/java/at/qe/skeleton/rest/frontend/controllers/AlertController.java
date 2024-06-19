@@ -30,6 +30,7 @@ public class AlertController {
     logger.info("getAlerts called");
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
     List<AlertDto> alerts = alertMapper.getAlerts(username);
+
     return  ResponseEntity.ok(alerts);
   }
 

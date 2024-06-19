@@ -1,4 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { FrontendMeasurementDto } from '../../api';
+import QualityEnum = FrontendMeasurementDto.QualityEnum;
 
 @Pipe({
   name: 'airQuality',
@@ -6,17 +8,16 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class AirQualityPipe implements PipeTransform {
 
-  transform(value: number | undefined): string {
-    if (value === undefined) {
-      return 'Unknown';
-    } else if (value > 70) {
-      return 'Good';
-    } else if (value > 40) {
-      return 'Moderate';
-    } else if (value <= 40 && value >= 0) {
-      return 'Poor';
-    } else {
-      return 'Unknown';
+  transform(value: QualityEnum | undefined): string {
+    switch (value) {
+      case QualityEnum.Good:
+        return 'Good';
+      case QualityEnum.Mediocre:
+        return 'Medium';
+      case QualityEnum.Poor:
+        return 'Poor';
+      default:
+        return 'Unknown';
     }
   }
 

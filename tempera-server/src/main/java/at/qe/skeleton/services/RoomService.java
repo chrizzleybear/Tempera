@@ -100,6 +100,10 @@ public class RoomService {
         return accessPointRepository.findByRoom(room).orElseThrow(() -> new IllegalArgumentException("AccessPoint not found"));
     }
 
+    public Room saveRoom(Room room) {
+        return roomRepository.save(room);
+    }
+
     @Transactional
     public Threshold updateThreshold(ThresholdUpdateDto dto) {
         Threshold updateThreshold = thresholdRepository.findById(dto.threshold().id()).orElseThrow(() -> new IllegalArgumentException("Threshold not found"));
@@ -109,15 +113,5 @@ public class RoomService {
         auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.THRESHOLD,
                 "Threshold " + updateThreshold.getThresholdType() + " was updated. Reason: " +  reason);
         return thresholdRepository.save(updateThreshold);
-    }
-    @Transactional
-    public ThresholdTip updateThresholdTip(ThresholdTip tip) {
-        Threshold threshold = thresholdRepository.findById(tip.getId()).orElseThrow(() -> new IllegalArgumentException("Threshold not found"));
-        ThresholdTip updateTip = threshold.getTip();
-        updateTip.setTip(tip.getTip());
-        // TO-DO: add info for which station/room the tip has been edited
-        auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.THRESHOLD,
-                "Tip of threshold " + threshold.getThresholdType() + " was updated to " + updateTip.getTip() + ".");
-        return thresholdTipRepository.save(updateTip);
     }
 }
