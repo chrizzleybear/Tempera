@@ -64,7 +64,6 @@ export class Co2TableComponent implements OnInit{
   onDatesSelected() {
     // check if both dates are selected
     if (this.rangeDates.length === 2) {
-      console.log(this.rangeDates);
       this.fetchCo2Data(this.rangeDates[0], this.rangeDates[1]);
     }
   }
