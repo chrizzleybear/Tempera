@@ -6,7 +6,6 @@ import {DatePipe, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {CalendarModule} from "primeng/calendar";
 
-type TimeUnit = "SECONDS" | "MINUTES" | "HOURS" | "DAYS" | "WEEKS" | "MONTHS" | "YEARS";
 @Component({
   selector: 'app-irr-table',
   standalone: true,

@@ -6,7 +6,6 @@ import {TableModule} from "primeng/table";
 import {CalendarModule} from "primeng/calendar";
 import {FormsModule} from "@angular/forms";
 
-type TimeUnit = "SECONDS" | "MINUTES" | "HOURS" | "DAYS" | "WEEKS" | "MONTHS" | "YEARS";
 @Component({
   selector: 'app-co2-table',
   standalone: true,

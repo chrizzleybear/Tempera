@@ -7,7 +7,6 @@ import {CalendarModule} from "primeng/calendar";
 import {DropdownModule} from "primeng/dropdown";
 import {FormsModule} from "@angular/forms";
 
-type TimeUnit = "SECONDS" | "MINUTES" | "HOURS" | "DAYS" | "WEEKS" | "MONTHS" | "YEARS";
 @Component({
   selector: 'app-humidity-table',
   standalone: true,

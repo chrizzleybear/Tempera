@@ -1,13 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {ClimateDataControllerService, ClimateMeasurementDto, Sensor} from "../../../api";
-import {MessageService, SelectItem} from "primeng/api";
+import {MessageService} from "primeng/api";
 import {DatePipe, NgForOf, NgIf} from "@angular/common";
 import {TableModule} from "primeng/table";
 import {CalendarModule} from "primeng/calendar";
 import {DropdownModule} from "primeng/dropdown";
 import {FormsModule} from "@angular/forms";
 
-type TimeUnit = "SECONDS" | "MINUTES" | "HOURS" | "DAYS" | "WEEKS" | "MONTHS" | "YEARS"
 @Component({
   selector: 'app-temperature-table',
   standalone: true,
