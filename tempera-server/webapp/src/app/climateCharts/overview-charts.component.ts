@@ -1,15 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { PanelModule } from 'primeng/panel';
-import { CalendarModule } from 'primeng/calendar';
-import { FormsModule } from '@angular/forms';
-import { MessageService } from 'primeng/api';
-import { DropdownModule } from 'primeng/dropdown';
-import { ClimateDataControllerService } from '../../api';
-import { TemperatureCo2ChartComponent } from './temperature-co2-chart/temperature-co2-chart.component';
-import { HumidityIrradianceChartComponent } from './humidity-irradiance-chart/humidity-irradiance-chart.component';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { ChartModule } from 'primeng/chart';
-import { NgIf } from '@angular/common';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {PanelModule} from 'primeng/panel';
+import {CalendarModule} from 'primeng/calendar';
+import {FormsModule} from '@angular/forms';
+import {MessageService} from 'primeng/api';
+import {DropdownModule} from 'primeng/dropdown';
+import {ClimateDataControllerService} from '../../api';
+import {TemperatureCo2ChartComponent} from './temperature-co2-chart/temperature-co2-chart.component';
+import {HumidityIrradianceChartComponent} from './humidity-irradiance-chart/humidity-irradiance-chart.component';
+import {InputNumberModule} from 'primeng/inputnumber';
+import {ChartModule} from 'primeng/chart';
+import {NgIf} from '@angular/common';
 
 
 @Component({
@@ -126,6 +126,9 @@ export class OverviewChartsComponent implements OnInit {
   onDataPointsChange(numberOfPointsToDisplay: any) {
     if (this.temperatureCo2ChartComponent === undefined || this.humidityIrradianceChartComponent === undefined) {
       console.log('Chart child components are undefined.');
+      return;
+    }
+    if (numberOfPointsToDisplay === 0) {
       return;
     }
     this.temperatureCo2ChartComponent.numberOfDisplayedEntries = numberOfPointsToDisplay;
