@@ -172,7 +172,6 @@ async def measurements_handler(
                     int.from_bytes(
                         await client.read_gatt_char(characteristic), byteorder="little"
                     )
-                    / 10
                 )
             elif "2a6f" in characteristic.uuid:
                 humidity = (
