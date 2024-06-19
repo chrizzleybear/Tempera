@@ -79,41 +79,41 @@ python-format-job:
 ##############
 # Deployment #
 ##############
-java-build-job:
-  extends: .java-setup
-  stage: build
-  script:
-    - !reference [.java-setup, script]
-    - cd tempera-server
-    - mvn -Dmaven.test.skip package
-  artifacts:
-    paths:
-      # the application is built as a .war and not as a .jar file
-      # (was configured like this in the skeleton pom.xml)
-      - tempera-server/target/skeleton-1.0.7.war
-    expire_in: 2 days
-
-python-build-job:
-  extends: .python-setup
-  stage: build
-  script:
-    - pip install build
-    - python -m build tempera-accesspoint/
-  artifacts:
-    paths:
-      - tempera-accesspoint/dist/*
-    expire_in: 2 days
-
-# deploys the python docs
-pages:
-  stage: build
-  image: sphinxdoc/sphinx
-  script:
-    - pip install ./tempera-accesspoint[docs]
-    - cd ./tempera-accesspoint/docs
-    - make html
-    - mv ./build/html ./build/public
-  artifacts:
-    paths:
-      - tempera-accesspoint/docs/build/public
-  publish: "tempera-accesspoint/docs/build/public"
+#java-build-job:
+#  extends: .java-setup
+#  stage: build
+#  script:
+#    - !reference [.java-setup, script]
+#    - cd tempera-server
+#    - mvn -Dmaven.test.skip package
+#  artifacts:
+#    paths:
+#      # the application is built as a .war and not as a .jar file
+#      # (was configured like this in the skeleton pom.xml)
+#      - tempera-server/target/skeleton-1.0.7.war
+#    expire_in: 2 days
+#
+#python-build-job:
+#  extends: .python-setup
+#  stage: build
+#  script:
+#    - pip install build
+#    - python -m build tempera-accesspoint/
+#  artifacts:
+#    paths:
+#      - tempera-accesspoint/dist/*
+#    expire_in: 2 days
+#
+## deploys the python docs
+#pages:
+#  stage: build
+#  image: sphinxdoc/sphinx
+#  script:
+#    - pip install ./tempera-accesspoint[docs]
+#    - cd ./tempera-accesspoint/docs
+#    - make html
+#    - mv ./build/html ./build/public
+#  artifacts:
+#    paths:
+#      - tempera-accesspoint/docs/build/public
+#  publish: "tempera-accesspoint/docs/build/public"

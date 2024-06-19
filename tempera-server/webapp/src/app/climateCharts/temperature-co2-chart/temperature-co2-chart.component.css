@@ -1,0 +1,6 @@
+h3 {
+  color: var(--primary-color-text);
+  background: var(--primary-color);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+}

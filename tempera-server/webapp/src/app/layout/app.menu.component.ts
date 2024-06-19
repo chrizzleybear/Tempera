@@ -75,7 +75,12 @@ export class AppMenuComponent implements OnInit {
             visible: this.storageService.getUser()?.roles.includes('ADMIN'),
           },
           {
-            label: 'Access Points',
+            label: 'Climate Chart',
+            icon: 'pi pi-fw pi-cloud',
+            routerLink: ['/climateChart'],
+            visible: this.storageService.getUser()?.roles.includes('ADMIN')
+          },
+          { label: 'Access Points',
             icon: 'pi pi-fw pi-wifi',
             routerLink: ['/accessPoints'],
             visible: this.storageService.getUser()?.roles.includes('ADMIN'),
