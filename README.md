@@ -31,6 +31,21 @@ create a *secrets* directory and in it create these files with your password/key
 
 ---
 
+### Environment variables
+
+To run the docker containers for the components, you first have to set environment variables as you would do
+running the components directly on your machine. The variables to be set are:
+
+* SWE_DB_KEY
+* EMAIL_KEY
+
+You can do this by either adding `export SWE_DB_KEY=...` to your .bashrc or analogue and re-sourcing the shell 
+(`source ~/.bashrc`), or by creating a docker run configuration in your IDE (by clicking the green arrow next to the 
+services in the *compose.yaml* file) and setting the environment variables as you would for a maven or spring boot
+configuration.
+
+---
+
 The compose.yaml file is designed to have the web-app (with its database) and the BLE app to be independent from each
 other,
 because you'll likely want to run them on separate machines. Here, independent means that you can create the container
