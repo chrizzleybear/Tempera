@@ -19,18 +19,6 @@ you can always write an email to Leonardo.Pedri@uibk.ac.at :slight_smile:.
 
 ---
 
-### Secrets
-
-In order to run the web server docker, an email key and database password must be provided.
-To avoid saving them in plain text inside the compose.yaml, they are read from text files you
-have to create and write the password/key in. So, in the same directory as the compose.yaml file
-create a *secrets* directory and in it create these files with your password/key in them
-
-* database_password.txt
-* email_key.txt
-
----
-
 The compose.yaml file is designed to have the web-app (with its database) and the BLE app to be independent from each
 other,
 because you'll likely want to run them on separate machines. Here, independent means that you can create the container
