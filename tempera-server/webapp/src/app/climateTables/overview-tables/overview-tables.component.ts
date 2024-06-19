@@ -4,6 +4,7 @@ import {TemperatureTableComponent} from "../temperature-table/temperature-table.
 import {HumidityTableComponent} from "../humidity-table/humidity-table.component";
 import {Co2TableComponent} from "../co2-table/co2-table.component";
 import {IrrTableComponent} from "../irr-table/irr-table.component";
+import {ToastModule} from "primeng/toast";
 
 @Component({
   selector: 'app-overview-tables',
@@ -13,7 +14,8 @@ import {IrrTableComponent} from "../irr-table/irr-table.component";
     TemperatureTableComponent,
     HumidityTableComponent,
     Co2TableComponent,
-    IrrTableComponent
+    IrrTableComponent,
+    ToastModule
   ],
   templateUrl: './overview-tables.component.html',
   styleUrl: './overview-tables.component.css'

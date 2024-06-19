@@ -49,10 +49,14 @@ export class Co2TableComponent implements OnInit{
       this.numberOfDisplayedEntries
     ).subscribe({
       next: (data) => {
+        if(data === null) {
+          this.co2Data = [];
+          return;
+        }
         this.co2Data = data.measurementDtos;
       },
       error: (error) => {
-        this.messageService.add({severity: 'error', summary: 'Data Fetch Failed', detail: 'Unable to fetch CO2 data'});
+        this.messageService.add({severity: 'error', summary: 'Data Fetch Failed', detail: 'Unable to fetch CO2 data: : ' + error});
       }
     });
   }

@@ -56,10 +56,14 @@ export class HumidityTableComponent implements OnInit{
       this.numberOfDisplayedEntries
     ).subscribe({
       next: (data) => {
+        if(data === null) {
+          this.humidityData = [];
+          return;
+        }
         this.humidityData = data.measurementDtos;
       },
       error: (error) => {
-        this.messageService.add({severity: 'error', summary: 'Data Fetch Failed', detail: 'Unable to fetch humidity data'});
+        this.messageService.add({severity: 'error', summary: 'Data Fetch Failed', detail: 'Unable to fetch humidity data: ' + error});
       }
     });
   }

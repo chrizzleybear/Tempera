@@ -53,10 +53,14 @@ export class TemperatureTableComponent implements OnInit{
       this.numberOfDisplayedEntries
     ).subscribe({
       next: (data) => {
+        if(data === null) {
+          this.temperatureData = [];
+          return;
+        }
         this.temperatureData = data.measurementDtos;
       },
       error: (error) => {
-        this.messageService.add({severity: 'error', summary: 'Data Fetch Failed', detail: 'Unable to fetch temperature data'});
+        this.messageService.add({severity: 'error', summary: 'Data Fetch Failed', detail: 'Unable to fetch temperature data: ' + error});
       }
     });
   }
