@@ -15,7 +15,7 @@
     </div>
   </div>
   <br>
-<p-table *ngIf="co2Data && co2Data.length > 0; else noDataTemplate" [value]="co2Data">
+<p-table *ngIf="co2Data && co2Data.length > 0; else noDataTemplate" [value]="co2Data" [paginator]="true" [rows]="10">
     <ng-template pTemplate="header">
       <tr>
         <th scope="col" pSortableColumn="timestamp">Timestamp <p-sortIcon field="timestamp"></p-sortIcon></th>

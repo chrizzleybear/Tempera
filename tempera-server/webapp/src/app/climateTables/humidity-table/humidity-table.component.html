@@ -15,7 +15,7 @@
     </div>
   </div>
   <br>
-<p-table *ngIf="humidityData && humidityData.length > 0; else noDataTemplate" [value]="humidityData">
+<p-table *ngIf="humidityData && humidityData.length > 0; else noDataTemplate" [value]="humidityData" [paginator]="true" [rows]="10">
   <ng-template pTemplate="header">
     <tr>
       <th scope="col" pSortableColumn="timestamp">Timestamp <p-sortIcon field="timestamp"></p-sortIcon></th>

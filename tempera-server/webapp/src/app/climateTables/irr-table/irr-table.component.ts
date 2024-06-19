@@ -27,7 +27,7 @@ export class IrrTableComponent implements OnInit{
   sensorType: Sensor.SensorTypeEnum = "IRRADIANCE";
   accessPointUuid: string = "123e4567-e89b-12d3-a456-426614174001";
   temperaStationId: string = "tempera_station_1";
-  numberOfDisplayedEntries: number = 10;
+  numberOfDisplayedEntries: number = 20;
   rangeDates: Date[] = [];
 
   constructor(
