@@ -10,17 +10,17 @@ import { UserEditComponent } from '../user-edit/user-edit.component';
 import { DialogModule } from 'primeng/dialog';
 import { UserCreateComponent } from '../user-create/user-create.component';
 import { MessagesModule } from 'primeng/messages';
-import { ToastModule } from "primeng/toast";
-import { MessageService } from "primeng/api";
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import {
-  DeletionResponseDto,
+  DeletionResponseDto, ProjectControllerService,
   SimpleGroupDto,
   SimpleProjectDto, SimpleUserDto,
   UserManagementControllerService, Userx,
   UserxDto,
 } from '../../../api';
 import { DropdownModule } from 'primeng/dropdown';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import RolesEnum = Userx.RolesEnum;
 
 @Component({
@@ -60,11 +60,17 @@ export class UsersComponent implements OnInit {
   deletionResponseMessage: string = '';
   affectedProjects: SimpleProjectDto[] = [];
   affectedGroups: SimpleGroupDto[] = [];
-  availableManagers: { label: string, value: UserxDto} [] | undefined;
+  availableManagers: { label: string, value: UserxDto } [] | undefined;
   availableUsers: SimpleUserDto[] = [];
+  projectForm: FormGroup;
 
-  constructor(private usersService: UserManagementControllerService, private router: Router, private messageService: MessageService) {
+
+  constructor(private fb: FormBuilder, private projectService: ProjectControllerService, private usersService: UserManagementControllerService, private router: Router, private messageService: MessageService) {
     this.deletionResponse = null;
+    this.projectForm = this.fb.group({
+      project: ['', [Validators.required]],
+      manager: [null, [Validators.required]],
+    });
   }
 
   ngOnInit(): void {
@@ -103,7 +109,7 @@ export class UsersComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error deleting user:', error);
-        this.messageService.add({severity:'error', summary:'Error', detail:'Error deleting user'});
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error deleting user' });
       },
     });
   }
@@ -123,27 +129,57 @@ export class UsersComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'User could not be deleted' });
     } else if (response.responseType === 'MANAGER') {
 
+
       this.availableManagers = this.users.filter(user => {
         const rolesSet = new Set(user.roles);
         return rolesSet.has(RolesEnum.Manager) && user.username !== username;
       }).map(
         manager => ({ label: `${manager.firstName} ${manager.lastName}`, value: manager }),
-      )
-      this.deletionResponseMessage = "The user could not be deleted, because they are still managing some Projects."
-      console.log('response', response.affectedProjects)
+      );
+      this.deletionResponseMessage = 'The user could not be deleted, because they are still managing some Projects.';
+      console.log('response', response.affectedProjects);
       this.affectedProjects = response.affectedProjects ?? [];
       this.displayDeletionPopup = true;
     } else if (response.responseType === 'GROUPLEAD') {
       this.availableUsers = this.users.filter(user => user.username !== username);
-      this.deletionResponseMessage = "The user could not be deleted, because he is a group lead of the following groups:"
+      this.deletionResponseMessage = 'The user could not be deleted, because he is a group lead of the following groups:';
       this.affectedGroups = response.affectedGroups ?? [];
       this.displayDeletionPopup = true;
-    }else if (response.responseType === 'ADMIN') {
+    } else if (response.responseType === 'ADMIN') {
 
-      this.deletionResponseMessage = "The user could not be deleted, because he is an admin."
+      this.deletionResponseMessage = 'The user could not be deleted, because he is an admin.';
       this.displayDeletionPopup = true;
     }
+  }
+
+
+  transferProject() {
+    if (this.projectForm.valid) {
+      const project = this.projectForm.value.project;
+      const manager = this.projectForm.value.manager;
+
+      console.log('Transfer project:', project, manager);
+      const updatedProject: SimpleProjectDto = {
+        projectId: project.projectId,
+        isActive: project.isActive,
+        name: project.name,
+        description: project.description,
+        manager: manager.username,
+      };
+      this.projectService.updateProject(updatedProject).subscribe({
+        next: (response) => {
+          console.log('Project transferred:', response);
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project transferred' });
+          this.loadUsers();
+        },
+        error: (error) => {
+          console.error('Error transferring project:', error);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error transferring project' });
+        },
+      });
     }
+  }
+
 
   loadUsers() {
     this.usersService.getAllUsers().subscribe(users => {
