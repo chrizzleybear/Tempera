@@ -50,13 +50,13 @@ public class RoomServiceTest {
         //doNothing().when(log.info(any(String.class)));
         when(auditLogService.logEvent(any(LogEvent.class), any(LogAffectedType.class), any(String.class))).thenReturn(true);
         this.roomService =
-                spy(new RoomService(
+                new RoomService(
                         roomRepository,
                         thresholdRepository,
                         thresholdTipRepository,
                         accessPointRepository,
                         auditLogService
-                ));
+                );
     }
 
     @Test

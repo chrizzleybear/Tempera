@@ -43,7 +43,7 @@ public class Project {
     this.isActive = false;
   }
 
-    public boolean isActive() {
+  public boolean isActive() {
         return isActive;
     }
   public Set<GroupxProject> getGroupxProjects() {

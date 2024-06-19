@@ -46,8 +46,6 @@ public class ProjectService {
   private static final String PROJECT_NOT_FOUND = "Project not found";
   private static final String GROUP_NOT_FOUND = "Group not found";
 
-  // todo: write tests for project Service to test the functionality of GroupxProject in particular
-
   @Transactional
   public Project createProject(String name, String description, String manager) {
     Userx managerUser =
