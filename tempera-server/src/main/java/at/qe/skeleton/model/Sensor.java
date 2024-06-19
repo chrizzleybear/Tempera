@@ -49,7 +49,10 @@ public class Sensor {
     this.temperaStation = Objects.requireNonNull(temperaStation, "temperaStation must not be null");
   }
 
-  protected Sensor() {}
+  /**
+   * Used for testing purposes
+   */
+  public Sensor() {}
 
   public void setId(SensorId sensorId) {
     this.sensorId = sensorId;
