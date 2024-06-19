@@ -26,10 +26,10 @@ import {
 } from "./temperaManagement/tempera-station-details/tempera-station-details.component";
 import {AccessPointDetailsComponent} from "./accessPointManagement/access-point-details/access-point-details.component";
 import { AccumulatedTimeComponent } from './accumulated-time/accumulated-time.component';
-import {OverviewChartsComponent} from "./climateCharts/overview-charts/overview-charts.component";
 import {OverviewTablesComponent} from "./climateTables/overview-tables/overview-tables.component";
 import {TipsComponent} from "./tips/tips.component";
 import { AuditLogsComponent } from './audit-logs/audit-logs.component';
+import {OverviewChartsComponent} from "./climateCharts/overview-charts.component";
 
 
 export const routes: Routes = [
