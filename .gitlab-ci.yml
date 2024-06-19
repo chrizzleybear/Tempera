@@ -104,16 +104,16 @@ python-format-job:
 #      - tempera-accesspoint/dist/*
 #    expire_in: 2 days
 #
-## deploys the python docs
-#pages:
-#  stage: build
-#  image: sphinxdoc/sphinx
-#  script:
-#    - pip install ./tempera-accesspoint[docs]
-#    - cd ./tempera-accesspoint/docs
-#    - make html
-#    - mv ./build/html ./build/public
-#  artifacts:
-#    paths:
-#      - tempera-accesspoint/docs/build/public
-#  publish: "tempera-accesspoint/docs/build/public"
+# deploys the python docs
+pages:
+  stage: build
+  image: sphinxdoc/sphinx
+  script:
+    - pip install ./tempera-accesspoint[docs]
+    - cd ./tempera-accesspoint/docs
+    - make html
+    - mv ./build/html ./build/public
+  artifacts:
+    paths:
+      - tempera-accesspoint/docs/build/public
+  publish: "tempera-accesspoint/docs/build/public"
