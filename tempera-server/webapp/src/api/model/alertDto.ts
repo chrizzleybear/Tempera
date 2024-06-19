@@ -18,6 +18,7 @@ export interface AlertDto {
     end?: string;
     severity?: AlertDto.SeverityEnum;
     sensorType?: AlertDto.SensorTypeEnum;
+    isUpperBound?: boolean;
 }
 export namespace AlertDto {
     export type SeverityEnum = 'INFO' | 'WARNING';
