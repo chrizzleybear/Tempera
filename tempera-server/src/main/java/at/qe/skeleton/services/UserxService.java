@@ -164,14 +164,15 @@ public class UserxService implements UserDetailsService {
                 "Deletion of user " + user.getUsername() + " failed. User is ADMIN.");
         return  new DeletionResponseDto(DeletionResponseType.ADMIN, null, null);
       }
-      if (user.getRoles().contains(UserxRole.MANAGER)){
+      if (user.getRoles().contains(UserxRole.MANAGER) && !projectRepository.findAllByManager_Username(username).isEmpty())
+        {
         auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.USER,
                 "Deletion of user " + user.getUsername() + " failed. User is MANAGER.");
         List<SimpleProjectDto> affectedProjects = projectRepository.findAllSimpleProjectDtosByManager(username);
         return new DeletionResponseDto(DeletionResponseType.MANAGER, affectedProjects, null);
       }
-      if (user.getRoles().contains(UserxRole.GROUPLEAD)) {
-
+      if (user.getRoles().contains(UserxRole.GROUPLEAD) && !groupRepository.findAllByGroupLead_Username(username).isEmpty())
+      {
         auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.USER,
                 "Deletion of user " + user.getUsername() + " failed. User is GROUPLEAD.");
         List<SimpleGroupDto> affectedGroups = groupRepository.findAllSimpleGroupDtosByGroupLead(username);

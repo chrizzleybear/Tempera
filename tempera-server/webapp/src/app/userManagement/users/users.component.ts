@@ -12,7 +12,16 @@ import { UserCreateComponent } from '../user-create/user-create.component';
 import { MessagesModule } from 'primeng/messages';
 import { ToastModule } from "primeng/toast";
 import { MessageService } from "primeng/api";
-import { DeletionResponseDto, UserManagementControllerService, UserxDto } from '../../../api';
+import {
+  DeletionResponseDto,
+  SimpleGroupDto,
+  SimpleProjectDto, SimpleUserDto,
+  UserManagementControllerService, Userx,
+  UserxDto,
+} from '../../../api';
+import { DropdownModule } from 'primeng/dropdown';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import RolesEnum = Userx.RolesEnum;
 
 @Component({
   selector: 'app-users',
@@ -28,6 +37,9 @@ import { DeletionResponseDto, UserManagementControllerService, UserxDto } from '
     UserCreateComponent,
     MessagesModule,
     ToastModule,
+    DropdownModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
@@ -46,6 +58,10 @@ export class UsersComponent implements OnInit {
   displayDeletionPopup: boolean = false;
   deletionResponse: DeletionResponseDto | null;
   deletionResponseMessage: string = '';
+  affectedProjects: SimpleProjectDto[] = [];
+  affectedGroups: SimpleGroupDto[] = [];
+  availableManagers: { label: string, value: UserxDto} [] | undefined;
+  availableUsers: SimpleUserDto[] = [];
 
   constructor(private usersService: UserManagementControllerService, private router: Router, private messageService: MessageService) {
     this.deletionResponse = null;
@@ -75,14 +91,14 @@ export class UsersComponent implements OnInit {
   /**
    * Deletes a user based on the user ID. If deletion is successful, a success message is displayed.
    * If deletion fails, an error message with a hint, why it failed is displayed.
-   * @param userId The ID of the user to delete.
+   * @param username The ID of the user to delete.
    */
-  deleteSelectedUser(userId: string): void {
-    console.log('Delete user with ID: ', userId);
-    this.usersService.deleteUser(userId).subscribe({
+  deleteSelectedUser(username: string): void {
+    console.log('Delete user with ID: ', username);
+    this.usersService.deleteUser(username).subscribe({
       next: (response) => {
         console.log('User deleted:', response);
-        this.evaluateResponse(response);
+        this.evaluateResponse(response, username);
         this.loadUsers();
       },
       error: (error) => {
@@ -95,23 +111,38 @@ export class UsersComponent implements OnInit {
   /**
    * Evaluates the response of an API call and displays a success or error message.
    * @param response The response of the API call.
+   * @param username The ID of the user that is going to be deleted.
    */
-  evaluateResponse(response: DeletionResponseDto): void {
+  evaluateResponse(response: DeletionResponseDto, username: string): void {
+    this.deletionResponse = response;
+    console.log(this.deletionResponse?.responseType);
+
     if (response.responseType === 'SUCCESS') {
       this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User deleted' });
     } else if (response.responseType === 'ERROR') {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'User could not be deleted' });
     } else if (response.responseType === 'MANAGER') {
-      this.deletionResponse = response;
-      // Now we can build our own deletion Response (define it in the component, so that it can store
-      // the affected Projects and Groups and the message) -> and then display it in the dialog
-      this.deletionResponseMessage = "The user could not be deleted, because he is a manager of the following projects:"
-    } else if (response.responseType === 'GROUPLEAD') {
-      this.deletionResponseMessage = "The user could not be deleted, because he is a group lead of the following groups:"
-    }else if (response.responseType === 'ADMIN') {
-      this.deletionResponseMessage = "The user could not be deleted, because he is an admin."
-    }
+
+      this.availableManagers = this.users.filter(user => {
+        const rolesSet = new Set(user.roles);
+        return rolesSet.has(RolesEnum.Manager) && user.username !== username;
+      }).map(
+        manager => ({ label: `${manager.firstName} ${manager.lastName}`, value: manager }),
+      )
+      this.deletionResponseMessage = "The user could not be deleted, because they are still managing some Projects."
+      console.log('response', response.affectedProjects)
+      this.affectedProjects = response.affectedProjects ?? [];
       this.displayDeletionPopup = true;
+    } else if (response.responseType === 'GROUPLEAD') {
+      this.availableUsers = this.users.filter(user => user.username !== username);
+      this.deletionResponseMessage = "The user could not be deleted, because he is a group lead of the following groups:"
+      this.affectedGroups = response.affectedGroups ?? [];
+      this.displayDeletionPopup = true;
+    }else if (response.responseType === 'ADMIN') {
+
+      this.deletionResponseMessage = "The user could not be deleted, because he is an admin."
+      this.displayDeletionPopup = true;
+    }
     }
 
   loadUsers() {
@@ -160,7 +191,10 @@ export class UsersComponent implements OnInit {
     if (success) {
       this.returnToUsers();
     }
+  }
 
+  jumpToProject(projectId: string) {
+    this.router.navigate(['/project', projectId]);
   }
 
   /**
