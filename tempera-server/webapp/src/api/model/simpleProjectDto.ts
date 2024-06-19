@@ -12,9 +12,10 @@
 
 
 export interface SimpleProjectDto { 
-    projectId?: string;
-    name?: string;
-    description?: string;
-    manager?: string;
+    projectId: string;
+    isActive: boolean;
+    name: string;
+    description: string;
+    manager: string;
 }
 

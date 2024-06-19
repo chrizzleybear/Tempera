@@ -1,4 +1,6 @@
 package at.qe.skeleton.rest.frontend.dtos;
 
-public record GroupDetailsDto(String id, String name, String description, SimpleUserDto groupLead) {
+import jakarta.validation.constraints.NotNull;
+
+public record GroupDetailsDto(@NotNull String id, @NotNull String name, @NotNull String description, @NotNull SimpleUserDto groupLead) {
 }

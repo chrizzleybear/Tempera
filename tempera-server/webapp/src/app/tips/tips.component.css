@@ -1,0 +1,3 @@
+:host ::ng-deep .p-tabview {
+  background: var(--surface-card);
+}

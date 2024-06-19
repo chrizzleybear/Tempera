@@ -15,6 +15,8 @@ public class Project {
 
   private String name;
   private String description;
+
+  private boolean isActive;
   @ManyToOne(fetch = FetchType.LAZY) private Userx manager;
 
 
@@ -26,11 +28,24 @@ public class Project {
     this.name = name;
     this.description = description;
     this.manager = manager;
+    this.isActive = true;
 //    this.contributors = new ArrayList<>();
   }
 
-  public Project() {}
+  public Project() {
+    this.isActive = true;
+  }
 
+  public void activate() {
+    this.isActive = true;
+  }
+  public void deactivate() {
+    this.isActive = false;
+  }
+
+    public boolean isActive() {
+        return isActive;
+    }
   public Set<GroupxProject> getGroupxProjects() {
     return groupxProjects;
   }

@@ -1,25 +1,23 @@
-package at.qe.skeleton.rest.frontend.mappersAndFrontendServices;
+package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
+import at.qe.skeleton.exceptions.MissingTemperaStationException;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.State;
 import at.qe.skeleton.model.enums.Visibility;
-import at.qe.skeleton.rest.frontend.dtos.ColleagueStateDto;
-import at.qe.skeleton.rest.frontend.dtos.ExtendedProjectDto;
-import at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto;
-import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
+import at.qe.skeleton.rest.frontend.dtos.*;
+import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.GroupxProjectMapper;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateDashboardDataRequest;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
 import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
-import at.qe.skeleton.services.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @Service
-public class DashboardDataMapper {
+public class DashboardDataService {
 
   private final UserxService userService;
   private final TemperaStationService temperaService;
@@ -28,14 +26,17 @@ public class DashboardDataMapper {
   private final ProjectService projectService;
   private final GroupxProjectMapper groupxProjectMapper;
 
-  public DashboardDataMapper(
-          UserxService userService,
+  private final ThresholdService thresholdService;
+
+  public DashboardDataService(
           TemperaStationService temperaService,
           MeasurementService measurementService,
           TimeRecordService timeRecordService,
           UserxService userxService,
           ProjectService projectService,
-          GroupxProjectMapper groupxProjectMapper) {
+          GroupxProjectMapper groupxProjectMapper,
+          ThresholdService thresholdService) {
+    this.thresholdService = thresholdService;
     this.temperaService = temperaService;
     this.measurementService = measurementService;
     this.timeRecordService = timeRecordService;
@@ -60,10 +61,7 @@ public class DashboardDataMapper {
       String username = colleague.getUsername();
 
       String workplace;
-      if (temperaService.findByUsername(username).isEmpty()) {
-        throw new RuntimeException("User has no temperaStation assigned");
-      }
-      TemperaStation temperaStation = temperaService.findByUsername(username).get();
+      TemperaStation temperaStation = temperaService.findByUsername(username).orElseThrow(() ->new MissingTemperaStationException("User has no temperaStation assigned"));
 
       if (temperaStation.isEnabled()) {
         workplace = temperaStation.getAccessPoint().getRoom().toString();
@@ -97,9 +95,9 @@ public class DashboardDataMapper {
    * the user itself and the states of the colleagues (if they are visible and their temperaStation
    * is enabled).
    *
-   * @param String username The username of the user for which the data should be mapped.
+   * @param  username The username of the user for which the data should be mapped.
    * @return DashboardDataResponse If there are no existing measurements for this user, it will
-   *     return null as values. If there is no existing * TimeRecord for this user, it will return
+   *     return null as FrontendMeasurementDto. If there is no existing * TimeRecord for this user, it will return
    *     null as stateTimeStamp. If there is no default project assigned to this user, * it will
    *     return null as defaultProject. If there are no projects assigned to this user, it will
    *     return an empty list as projects.
@@ -145,6 +143,13 @@ public class DashboardDataMapper {
     Double irradiance = irradianceMeasurement.map(Measurement::getValue).orElse(null);
     Double nmvoc = nmvocMeasurement.map(Measurement::getValue).orElse(null);
 
+    Set<Threshold> thresholds = thresholdService.getThresholdsByUsername(username);
+
+    FrontendMeasurementDto temperatureDto = measurementService.createFrontendMeasurementDto(temperature, thresholds, SensorType.TEMPERATURE);
+    FrontendMeasurementDto humidityDto = measurementService.createFrontendMeasurementDto(humidity, thresholds, SensorType.HUMIDITY);
+    FrontendMeasurementDto irradianceDto = measurementService.createFrontendMeasurementDto(irradiance, thresholds, SensorType.IRRADIANCE);
+    FrontendMeasurementDto nmvocDto = measurementService.createFrontendMeasurementDto(nmvoc, thresholds, SensorType.NMVOC);
+
     Optional<ExternalRecord> externalRecordOptional =
         timeRecordService.findLatestExternalRecordByUser(user);
     String stateTimeStamp =
@@ -165,17 +170,17 @@ public class DashboardDataMapper {
         projectService.getSimpleGroupxProjectDtoByUser(user.getUsername()).stream().toList();
 
     return new DashboardDataResponse(
-        temperature,
-        humidity,
-        irradiance,
-        nmvoc,
+        temperatureDto,
+        humidityDto,
+        irradianceDto,
+        nmvocDto,
         user.getStateVisibility(),
         user.getState(),
         stateTimeStamp,
         projectDto,
         defaultGxpDto,
-availableGxps,
-            colleagueStateDtos);
+        availableGxps,
+        colleagueStateDtos);
   }
 
 
@@ -184,7 +189,7 @@ availableGxps,
       UpdateDashboardDataRequest request, Userx user) throws CouldNotFindEntityException {
     SimpleGroupxProjectDto gxpDto = request.groupxProject();
 
-    InternalRecord record =
+    InternalRecord internalRecord =
             timeRecordService
                     .findLatestInternalRecordByUser(user)
                     .orElseThrow(
@@ -192,7 +197,7 @@ availableGxps,
 
     if (gxpDto != null) {
     GroupxProject groupxProject = projectService.findByGroupAndProject(Long.valueOf(gxpDto.groupId()), Long.valueOf(gxpDto.projectId()));
-    groupxProject.addInternalRecord(record);
+    groupxProject.addInternalRecord(internalRecord);
     projectService.saveGroupxProject(groupxProject);
     }
 

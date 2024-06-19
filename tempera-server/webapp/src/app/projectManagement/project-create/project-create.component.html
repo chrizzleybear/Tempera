@@ -1,38 +1,66 @@
 <div>
-  <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
-    <!-- Validator messages -->
-    <div class="mb-2">
-      <p-message *ngIf="projectForm.controls['name'].errors?.['required'] && projectForm.controls['name'].touched"
-                 severity="error" text="Project Name is required." styleClass="mr-2"></p-message>
-      <p-message *ngIf="projectForm.controls['description'].errors?.['required'] && projectForm.controls['description'].touched"
-                 severity="error" text="Description is required." styleClass="mr-2"></p-message>
-      <p-message *ngIf="projectForm.controls['manager'].errors?.['required'] && projectForm.controls['manager'].touched"
-                 severity="error" text="Manager is required." styleClass="mr-2"></p-message>
+  <div class="flex">
+    <div>
+    <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+      <!-- Validator messages -->
+      <div class="mb-2">
+        <p-message *ngIf="projectForm.controls['name'].errors?.['required'] && projectForm.controls['name'].touched"
+                   severity="error" text="Project Name is required." styleClass="mr-2"></p-message>
+        <p-message
+          *ngIf="projectForm.controls['description'].errors?.['required'] && projectForm.controls['description'].touched"
+          severity="error" text="Description is required." styleClass="mr-2"></p-message>
+        <p-message
+          *ngIf="projectForm.controls['manager'].errors?.['required'] && projectForm.controls['manager'].touched"
+          severity="error" text="Manager is required." styleClass="mr-2"></p-message>
+      </div>
+      <div class="p-field">
+        <label for="name">Project Name: </label>
+        <input id="name" type="text" pInputText formControlName="name">
+      </div>
+      <br>
+      <div class="p-field">
+        <label for="description">Description: </label>
+        <input id="description" type="text" pInputText formControlName="description">
+      </div>
+      <br>
+      <div class="p-field">
+        <label for="manager">Manager: </label>
+        <p-dropdown [options]="managers "
+                    [editable]="true"
+                    [filter]="true"
+                    [virtualScroll]="true"
+                    [virtualScrollItemSize]="38"
+                    appendTo="body"
+                    optionLabel="label"
+                    formControlName="manager"
+                    placeholder="Select a Manager"
+                    id="manager"></p-dropdown>
+      </div>
+      <br>
+
+      <button pButton type="submit" label="Create Project" [disabled]="!projectForm.valid"></button>
+
+
+    </form>
     </div>
-    <div class="p-field">
-      <label for="name">Project Name: </label>
-      <input id="name" type="text" pInputText formControlName="name">
+
+
+    <div class="ml-auto mt-1.5">
+      <form  [formGroup]="reactivateForm"  (ngSubmit)="reactivateProject()">
+      <div class="p-field"  >
+        <p-dropdown [options]="deactivatedProjectOptions "
+                    [filter]="true"
+                    formControlName="project"
+                    [style]="{'width':'300px'}"
+                    appendTo="body"
+                    optionLabel="label"
+                    placeholder="Deactivated Projects"
+                    id="dectivated_projects"></p-dropdown>
+      </div>
+      <br>
+      <button pButton label="Reactivate Project" [disabled]="!deactiveProjectsExist"
+              class="ml-auto" type="submit"></button>
+      </form>
     </div>
-    <br>
-    <div class="p-field">
-      <label for="description">Description: </label>
-      <input id="description" type="text" pInputText formControlName="description">
-    </div>
-    <br>
-    <div class="p-field">
-      <label for="manager">Manager: </label>
-      <p-dropdown [options]="managers "
-                  [editable]="true"
-                  [filter]="true"
-                  [virtualScroll]="true"
-                  [virtualScrollItemSize]="38"
-                  appendTo="body"
-                  optionLabel="label"
-                  formControlName="manager"
-                  placeholder="Select a Manager"
-                  id="manager"></p-dropdown>
-    </div>
-    <br>
-    <button pButton type="submit" label="Create Project" [disabled]="!projectForm.valid"></button>
-  </form>
+  </div>
 </div>

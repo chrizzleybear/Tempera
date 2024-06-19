@@ -1,20 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { Project } from '../../models/project.model';
-import { ProjectService } from '../../_services/project.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { User } from '../../models/user.model';
-import { GroupService } from '../../_services/group.service';
-import { ContributorAssignmentDTO } from '../../models/projectDtos';
 import { MessageModule } from 'primeng/message';
 import { NgIf } from '@angular/common';
 import { MessagesModule } from 'primeng/messages';
 import { from } from 'rxjs';
 import { concatMap, toArray } from 'rxjs/operators';
+import {
+  ContributorAssignmentDto,
+  GroupManagementControllerService,
+  ProjectControllerService,
+  SimpleProjectDto,
+  SimpleUserDto, UserxDto,
+} from '../../../api';
 
 @Component({
   selector: 'app-group-projects',
@@ -37,42 +40,44 @@ import { concatMap, toArray } from 'rxjs/operators';
  * This component is responsible for managing projects of groups.
  */
 export class GroupProjectsComponent implements OnInit {
-  projects: Project[] = [];
+  projects: SimpleProjectDto[] = [];
   messages: any;
   displayAddMemberDialog: boolean = false;
   displayDeleteMemberDialog: boolean = false;
-  selectedProject: Project | undefined;
-  members: User[] = [];
-  contributors: User[] = [];
-  availableProjectContributors: User[] = [];
-  filteredMembers: User[] = [];
-  selectedMembers: User[] = [];
-  groupId!: number;
+  selectedProject: SimpleProjectDto | undefined;
+  members: SimpleUserDto[] = [];
+  contributors: SimpleUserDto[] = [];
+  availableProjectContributors: SimpleUserDto[] = [];
+  filteredMembers: SimpleUserDto[] = [];
+  selectedMembers: SimpleUserDto[] = [];
+  groupId!: string ;
   groupName: string | null | undefined;
-  constructor(private projectService: ProjectService, private groupService: GroupService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private projectService: ProjectControllerService, private groupService: GroupManagementControllerService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
-    this.groupId = Number(this.route.snapshot.paramMap.get('id'));
-    this.groupName = this.route.snapshot.paramMap.get('name');
+    this.route.paramMap.subscribe(params => {
+      this.groupId = params.get('id')!;
+      this.groupName = params.get('name')!;
+    });
     if (this.groupId) {
       this.loadProjects(this.groupId);
       this.loadGroupMembers(this.groupId);
     }
   }
 
-  private loadProjects(groupId: number) {
-    this.projectService.getProjectsOfGroup(groupId).subscribe({
+  private loadProjects(groupId: string) {
+    this.projectService.getProjectsByGroupId(groupId).subscribe({
       next: (projects) => {
         console.log('Loaded projects:', groupId);
         console.log('Project of group projects:', projects);
-        this.projects = projects;
+        this.projects = projects.filter(project => project.isActive);
       },
       error: (error) => {
         console.error('Error loading projects:', error);
       }
     });
   }
-  private loadProjectContributors(projectId: number) {
+  private loadProjectContributors(projectId: string) {
     this.projectService.getContributors(this.groupId, projectId).subscribe({
       next: (contributors) => {
         this.contributors = contributors;
@@ -85,8 +90,8 @@ export class GroupProjectsComponent implements OnInit {
     });
     }
 
-  private loadGroupMembers(groupId: number) {
-    this.groupService.getGroupMembers(groupId).subscribe({
+  private loadGroupMembers(groupId: string) {
+    this.groupService.getMembers(groupId).subscribe({
       next: (members) => {
         console.log('Loaded group members:', members);
         this.members = members;
@@ -103,7 +108,7 @@ export class GroupProjectsComponent implements OnInit {
     this.router.navigate(['/project', project.projectId]);
   }
 
-  addContributorsToProjectDialog(project: Project) {
+  addContributorsToProjectDialog(project: SimpleProjectDto) {
     this.displayAddMemberDialog = true;
     this.selectedMembers = [];
     this.selectedProject = project;
@@ -111,12 +116,12 @@ export class GroupProjectsComponent implements OnInit {
   }
 
   private addContributorToProject(memberId: string) {
-    const dto: ContributorAssignmentDTO = {
+    const dto: ContributorAssignmentDto = {
       projectId: this.selectedProject!.projectId,
-      groupId: this.groupId!,
+      groupId: this.groupId,
       contributorId: memberId
     };
-    return this.projectService.addMemberToProject(dto);
+    return this.projectService.addContributor(dto);
   }
 
   /**
@@ -126,7 +131,7 @@ export class GroupProjectsComponent implements OnInit {
   addContributorsToProject() {
     from(this.selectedMembers.map(member => member.username))
       .pipe(
-        concatMap(memberId => this.addContributorToProject(memberId)),
+        concatMap(memberId => this.addContributorToProject(memberId!)),
         toArray()
       )
       .subscribe({
@@ -144,26 +149,25 @@ export class GroupProjectsComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     if (filterValue) {
       this.filteredMembers = this.availableProjectContributors.filter(user =>
-        user.username.toLowerCase().includes(filterValue.toLowerCase()) ||
-        user.firstName.toLowerCase().includes(filterValue.toLowerCase()) ||
-        user.lastName.toLowerCase().includes(filterValue.toLowerCase())
+        user.username!.toLowerCase().includes(filterValue.toLowerCase()) ||
+        user.firstName!.toLowerCase().includes(filterValue.toLowerCase()) ||
+        user.lastName!.toLowerCase().includes(filterValue.toLowerCase())
       );
     } else {
       this.filteredMembers = this.availableProjectContributors;
     }
   }
 
-  deleteContributorDialog(project: Project) {
+  deleteContributorDialog(project: SimpleProjectDto) {
     this.displayDeleteMemberDialog = true;
     this.selectedProject = project;
     this.loadProjectContributors(project.projectId);
-    this.availableProjectContributors = project.contributors!;
   }
 
   deleteContributorsFromProject() {
     from(this.selectedMembers.map(member => member.username))
       .pipe(
-        concatMap(memberId => this.deleteContributorFromProject(this.selectedProject!.projectId, memberId)),
+        concatMap(memberId => this.deleteContributorFromProject(this.selectedProject!.projectId, memberId!)),
         toArray()
       )
       .subscribe({
@@ -178,13 +182,8 @@ export class GroupProjectsComponent implements OnInit {
     this.displayDeleteMemberDialog = false;
   }
 
-  private deleteContributorFromProject(projectId: number, memberId: string) {
-    const dto: ContributorAssignmentDTO = {
-      projectId: projectId,
-      groupId: this.groupId!,
-      contributorId: memberId
-    };
-    return this.projectService.removeMemberFromProject(dto);
+  private deleteContributorFromProject(projectId: string, memberId: string) {
+    return this.projectService.removeContributor(projectId, this.groupId, memberId);
   }
   resetMembers() {
     this.selectedMembers = [];
@@ -192,4 +191,6 @@ export class GroupProjectsComponent implements OnInit {
     this.filteredMembers = [];
     this.selectedProject = undefined;
   }
+
+  protected readonly onkeyup = onkeyup;
 }
