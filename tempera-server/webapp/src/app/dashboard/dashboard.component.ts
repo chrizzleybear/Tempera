@@ -110,6 +110,8 @@ export class DashboardComponent implements OnInit {
 
   public visibilityOptions: VisibilityEnum[] = Object.values(VisibilityEnum);
 
+  public visibilityDisabled = false;
+
   /**
    * This observable handles fetching the dashboard data every minute
    */
@@ -172,6 +174,7 @@ export class DashboardComponent implements OnInit {
           this.form.controls.visibility.setValue(this.dashboardData.visibility);
           if (this.user?.roles?.includes(RolesEnum.Admin)) {
             this.form.controls.visibility.disable();
+            this.visibilityDisabled = true;
           }
           if (this.dashboardData.project) {
             this.form.controls.project.setValue(this.dashboardData.project);

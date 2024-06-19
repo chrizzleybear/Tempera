@@ -1,5 +1,5 @@
 <div class="flex items-center justify-center min-h-screen min-w-screen overflow-hidden" style="background-color: var(--surface-ground);">
-  <div
+  <div class="w-full md:w-[40rem] m-4"
     style="border-radius:56px; padding:0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%);">
     <div class="w-full py-20 px-8 sm:px-20 flex flex-col items-center justify-center"
          style="border-radius:53px; background-color: var(--surface-card);">
@@ -9,23 +9,23 @@
       @if (!isLoggedIn) {
         <form name="form" [formGroup]="this.form" (ngSubmit)="this.form.valid && this.onSubmit()">
           <!--  Username Input-->
-          <label for="username" class="text-2xl inline-block">Username</label>
+          <label for="username" class="text-2xl block mb-2">Username</label>
           <input pInputText placeholder="Username" type="text" name="username" formControlName="username" id="username"
-                 class="block w-full md:w-96" />
+                 class="block w-[18rem] md:w-[32rem]" />
           <p-message *ngIf="this.form.controls.username.errors?.['required'] && this.form.controls.username.touched"
                      [text]="'Username is required!'"
                      severity="error" styleClass="w-full mt-2"></p-message>
 
           <!--  Password Input  -->
-          <label for="password" class="text-2xl mt-6 inline-block">Password</label>
+          <label for="password" class="text-2xl block mb-2 mt-6">Password</label>
           <input pInputText placeholder="Password" type="password" name="password" formControlName="password"
-                 id="password" class="block w-full md:w-96" />
+                 id="password" class="block w-[18rem] md:w-[32rem]" />
           <p-message *ngIf="this.form.controls.password.errors?.['required'] && this.form.controls.password.touched"
                      [text]="'Password is required!'"
                      severity="error" styleClass="w-full mt-2"></p-message>
           <!--  Submit  -->
           <p-button [disabled]="!this.form.valid" styleClass="w-full mt-8" type="submit" label="Login"></p-button>
-          <p-message *ngIf="this.submitted && this.isLoginFailed" [text]="errorMessage" severity="error"></p-message>
+          <p-message *ngIf="this.submitted && this.isLoginFailed" [text]="errorMessage" styleClass="w-full mt-2" severity="error"></p-message>
         </form>
       } @else {
         <div>Logged in as {{ roles }}</div>
