@@ -45,6 +45,7 @@ export class HumidityTableComponent implements OnInit{
   }
 
   private fetchHumidityData(): void {
+    this.fetchDate();
     let startDateTime: Date = this.rangeDates[0];
     let endDateTime: Date = this.rangeDates[1];
     this.climateDataControllerService.getMeasurementsBySensorType(
