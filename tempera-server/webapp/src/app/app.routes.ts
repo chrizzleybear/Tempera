@@ -19,18 +19,18 @@ import { RoomsComponent } from './roomManagement/rooms/rooms.component';
 import { FloorPlanComponent } from './roomManagement/floor-plan/floor-plan.component';
 import { RoomDetailsComponent } from './roomManagement/room-details/room-details.component';
 import { TimetableComponent } from './timetable/timetable.component';
-import { AccesspointsComponent } from './accessPointManagement/access-points/accespoints.component';
-import { TemperaStationsComponent } from './temperaManagement/tempera-stations/tempera-stations.component';
+import {AccesspointsComponent} from "./accessPointManagement/access-points/accespoints.component";
+import {TemperaStationsComponent} from "./temperaManagement/tempera-stations/tempera-stations.component";
 import {
-  TemperaStationDetailsComponent,
-} from './temperaManagement/tempera-station-details/tempera-station-details.component';
-import {
-  AccessPointDetailsComponent,
-} from './accessPointManagement/access-point-details/access-point-details.component';
+  TemperaStationDetailsComponent
+} from "./temperaManagement/tempera-station-details/tempera-station-details.component";
+import {AccessPointDetailsComponent} from "./accessPointManagement/access-point-details/access-point-details.component";
 import { AccumulatedTimeComponent } from './accumulated-time/accumulated-time.component';
-import { OverviewChartsComponent } from './climateCharts/overview-charts.component';
+import {OverviewTablesComponent} from "./climateTables/overview-tables/overview-tables.component";
 import {TipsComponent} from "./tips/tips.component";
 import { AuditLogsComponent } from './audit-logs/audit-logs.component';
+import {OverviewChartsComponent} from "./climateCharts/overview-charts.component";
+
 
 export const routes: Routes = [
   {
@@ -53,12 +53,13 @@ export const routes: Routes = [
           { path: 'group/projects/:name/:id', component: GroupProjectsComponent },
           { path: 'timetable', component: TimetableComponent },
           { path: 'accumulated-time', component: AccumulatedTimeComponent },
-          { path: 'accessPoints', component: AccesspointsComponent },
-          { path: 'accessPoint/:id', component: AccessPointDetailsComponent },
-          { path: 'temperaStations', component: TemperaStationsComponent },
-          { path: 'temperaStation/:id', component: TemperaStationDetailsComponent },
-          { path: 'accumulated-time', component: AccumulatedTimeComponent },
-          { path: 'climateChart', component: OverviewChartsComponent },
+          { path: 'accessPoints', component: AccesspointsComponent},
+          { path: 'accessPoint/:id', component: AccessPointDetailsComponent},
+          { path: 'temperaStations', component: TemperaStationsComponent},
+          { path: 'temperaStation/:id', component: TemperaStationDetailsComponent},
+          { path: 'accumulated-time', component: AccumulatedTimeComponent},
+          {path: 'climateChart', component: OverviewChartsComponent},
+          { path: 'climateTable', component: OverviewTablesComponent},
           { path: 'audit-logs', component: AuditLogsComponent },
           { path: 'tips', component: TipsComponent },
         ],

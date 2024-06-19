@@ -74,13 +74,15 @@ export class AppMenuComponent implements OnInit {
             routerLink: ['/rooms'],
             visible: this.storageService.getUser()?.roles.includes('ADMIN'),
           },
+
           {
             label: 'Climate Chart',
             icon: 'pi pi-fw pi-cloud',
             routerLink: ['/climateChart'],
             visible: this.storageService.getUser()?.roles.includes('ADMIN')
           },
-          { label: 'Access Points',
+          {
+            label: 'Access Points',
             icon: 'pi pi-fw pi-wifi',
             routerLink: ['/accessPoints'],
             visible: this.storageService.getUser()?.roles.includes('ADMIN'),
@@ -102,6 +104,11 @@ export class AppMenuComponent implements OnInit {
             routerLink: ['/tips'],
             visible: this.storageService.getUser()?.roles.includes('ADMIN')
           },
+          {
+            label: 'Climate Table',
+            icon: 'pi pi-fw pi-table',
+            routerLink: ['/climateTable']
+          }
         ],
       },
     ];
