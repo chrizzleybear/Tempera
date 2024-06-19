@@ -6,6 +6,7 @@ import {TableModule} from "primeng/table";
 import {CalendarModule} from "primeng/calendar";
 import {DropdownModule} from "primeng/dropdown";
 import {FormsModule} from "@angular/forms";
+import {PanelModule} from "primeng/panel";
 
 @Component({
   selector: 'app-humidity-table',
@@ -16,7 +17,8 @@ import {FormsModule} from "@angular/forms";
     NgIf,
     CalendarModule,
     DropdownModule,
-    FormsModule
+    FormsModule,
+    PanelModule
   ],
   templateUrl: './humidity-table.component.html',
   styleUrl: './humidity-table.component.css'
@@ -41,34 +43,33 @@ export class HumidityTableComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    this.fetchHumidityData();
+    this.fetchDate();
   }
 
-  private fetchHumidityData(): void {
-    this.fetchDate();
-    let startDateTime: Date = this.rangeDates[0];
-    let endDateTime: Date = this.rangeDates[1];
+  fetchHumidityData(startDate: Date, endDate: Date): void {
     this.climateDataControllerService.getMeasurementsBySensorType(
       this.accessPointUuid,
       this.temperaStationId,
       this.sensorType,
-      startDateTime.toISOString(),
-      endDateTime.toISOString(),
+      startDate.toISOString(),
+      endDate.toISOString(),
       this.numberOfDisplayedEntries
     ).subscribe({
       next: (data) => {
-        console.log("hpafebi",data);
         this.humidityData = data.measurementDtos;
-        this.filteredData = this.humidityData!;
       },
       error: (error) => {
         this.messageService.add({severity: 'error', summary: 'Data Fetch Failed', detail: 'Unable to fetch humidity data'});
       }
     });
   }
-  onDateFilter() {
-    this.filteredData = this.humidityData!.filter(data =>
-      new Date(data.timestamp!).toDateString() === this.filterDate!.toDateString());
+
+  onDatesSelected() {
+    // check if both dates are selected
+    if (this.rangeDates.length === 2) {
+      console.log(this.rangeDates);
+      this.fetchHumidityData(this.rangeDates[0], this.rangeDates[1]);
+    }
   }
 
   private fetchDate() {
@@ -84,5 +85,8 @@ export class HumidityTableComponent implements OnInit{
     end.setMinutes(0);
     end.setSeconds(0);
     this.rangeDates[1] = end;
+    this.fetchHumidityData(this.rangeDates[0], this.rangeDates[1]);
   }
+
+  protected readonly String = String;
 }

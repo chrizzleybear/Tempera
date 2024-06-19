@@ -6,6 +6,7 @@ import {TableModule} from "primeng/table";
 import {CalendarModule} from "primeng/calendar";
 import {DropdownModule} from "primeng/dropdown";
 import {FormsModule} from "@angular/forms";
+import {PanelModule} from "primeng/panel";
 
 @Component({
   selector: 'app-temperature-table',
@@ -17,18 +18,15 @@ import {FormsModule} from "@angular/forms";
     TableModule,
     CalendarModule,
     DropdownModule,
-    FormsModule
+    FormsModule,
+    PanelModule
   ],
   templateUrl: './temperature-table.component.html',
   styleUrl: './temperature-table.component.css'
 })
 export class TemperatureTableComponent implements OnInit{
 
-  filterDate: Date | undefined;
-
   temperatureData: ClimateMeasurementDto[] | undefined = [];
-  filteredData: ClimateMeasurementDto[] = [];
-
   sensorType: Sensor.SensorTypeEnum = "TEMPERATURE";
   accessPointUuid: string = "123e4567-e89b-12d3-a456-426614174001";
   temperaStationId: string = "tempera_station_1";
@@ -42,38 +40,33 @@ export class TemperatureTableComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    this.fetchTemperatureData();
+    this.fetchDate();
   }
 
-  private fetchTemperatureData(): void {
-    this.fetchDate();
-    let startDateTime: Date = this.rangeDates[0];
-    let endDateTime: Date = this.rangeDates[1];
+  fetchTemperatureData(startDate: Date, endDate: Date): void {
     this.climateDataControllerService.getMeasurementsBySensorType(
       this.accessPointUuid,
       this.temperaStationId,
       this.sensorType,
-      startDateTime.toISOString(),
-      endDateTime.toISOString(),
+      startDate.toISOString(),
+      endDate.toISOString(),
       this.numberOfDisplayedEntries
     ).subscribe({
       next: (data) => {
-        console.log("temp",data);
         this.temperatureData = data.measurementDtos;
-        this.filteredData = this.temperatureData!;
       },
       error: (error) => {
         this.messageService.add({severity: 'error', summary: 'Data Fetch Failed', detail: 'Unable to fetch temperature data'});
       }
     });
   }
-  onDateFilter() {
-    this.filteredData = this.temperatureData!.filter(data =>
-      new Date(data.timestamp!).toDateString() === this.filterDate!.toDateString());
-  }
 
-  onIntervalFilter() {
-
+  onDatesSelected() {
+    // check if both dates are selected
+    if (this.rangeDates.length === 2) {
+      console.log(this.rangeDates);
+      this.fetchTemperatureData(this.rangeDates[0], this.rangeDates[1]);
+    }
   }
 
   private fetchDate() {
@@ -89,5 +82,8 @@ export class TemperatureTableComponent implements OnInit{
     end.setMinutes(0);
     end.setSeconds(0);
     this.rangeDates[1] = end;
+    this.fetchTemperatureData(this.rangeDates[0], this.rangeDates[1]);
   }
+
+  protected readonly String = String;
 }

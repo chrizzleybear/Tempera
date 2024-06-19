@@ -5,6 +5,7 @@ import {TableModule} from "primeng/table";
 import {DatePipe, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {CalendarModule} from "primeng/calendar";
+import {PanelModule} from "primeng/panel";
 
 @Component({
   selector: 'app-irr-table',
@@ -14,17 +15,15 @@ import {CalendarModule} from "primeng/calendar";
     DatePipe,
     FormsModule,
     CalendarModule,
-    NgIf
+    NgIf,
+    PanelModule
   ],
   templateUrl: './irr-table.component.html',
   styleUrl: './irr-table.component.css'
 })
 export class IrrTableComponent implements OnInit{
 
-  filterDate: Date | undefined;
   irrData: ClimateMeasurementDto[] | undefined = [];
-  filteredData: ClimateMeasurementDto[] = [];
-
   sensorType: Sensor.SensorTypeEnum = "IRRADIANCE";
   accessPointUuid: string = "123e4567-e89b-12d3-a456-426614174001";
   temperaStationId: string = "tempera_station_1";
@@ -37,35 +36,32 @@ export class IrrTableComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    this.fetchIrrData();
+    this.fetchDate();
   }
 
-  private fetchIrrData(): void {
-    this.fetchDate();
-    let startDateTime: Date = this.rangeDates[0];
-    let endDateTime: Date = this.rangeDates[1];
+  fetchIrrData(startDate: Date, endDate: Date): void {
     this.climateDataControllerService.getMeasurementsBySensorType(
       this.accessPointUuid,
       this.temperaStationId,
       this.sensorType,
-      startDateTime.toISOString(),
-      endDateTime.toISOString(),
+      startDate.toISOString(),
+      endDate.toISOString(),
       this.numberOfDisplayedEntries
     ).subscribe({
       next: (data) => {
         this.irrData = data.measurementDtos;
-        this.filteredData = this.irrData!;
       },
       error: (error) => {
-        this.messageService.add({severity: 'error', summary: 'Data Fetch Failed', detail: 'Unable to fetch Irradiance data'});
+        this.messageService.add({severity: 'error', summary: 'Data Fetch Failed', detail: 'Unable to fetch temperature data'});
       }
     });
   }
 
-  onDateFilter() {
-    if (this.filterDate && this.irrData) {
-      this.filteredData = this.irrData.filter(data =>
-        new Date(data.timestamp!).toDateString() === this.filterDate!.toDateString());
+  onDatesSelected() {
+    // check if both dates are selected
+    if (this.rangeDates.length === 2) {
+      console.log(this.rangeDates);
+      this.fetchIrrData(this.rangeDates[0], this.rangeDates[1]);
     }
   }
 
@@ -82,6 +78,8 @@ export class IrrTableComponent implements OnInit{
     end.setMinutes(0);
     end.setSeconds(0);
     this.rangeDates[1] = end;
+    this.fetchIrrData(this.rangeDates[0], this.rangeDates[1]);
   }
 
+  protected readonly String = String;
 }

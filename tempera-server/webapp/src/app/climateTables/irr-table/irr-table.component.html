@@ -1,16 +1,22 @@
-<p-table *ngIf="irrData && irrData.length > 0; else noDataTemplate" [value]="filteredData">
+<p-panel>
+  <div class="flex flex-wrap">
+    <div class="flex flex-col pr-4 lg:w-1/4 mb-4">
+      <label for="date-selector" class="mb-1">Select a time interval to display</label>
+      <p-calendar
+        id="date-selector"
+        [(ngModel)]="this.rangeDates"
+        (ngModelChange)="onDatesSelected()"
+        [showTime]="true"
+        [hourFormat]="String(24)"
+        selectionMode="range"
+        [readonlyInput]="true"
+        styleClass="w-full lg:w-[19rem]"
+      />
+    </div>
+  </div>
+  <br>
+<p-table *ngIf="irrData && irrData.length > 0; else noDataTemplate" [value]="irrData">
     <ng-template pTemplate="header">
-        <tr>
-            <th scope="col">
-                <p-calendar
-                    [(ngModel)]="filterDate"
-                    (onSelect)="onDateFilter()"
-                    styleClass="p-column-filter"
-                    placeholder="Filter by date"
-                    appendTo="body"></p-calendar>
-            </th>
-            <th scope="col"></th>
-        </tr>
         <tr>
             <th scope="col" pSortableColumn="timestamp">Timestamp <p-sortIcon field="timestamp"></p-sortIcon></th>
             <th scope="col" pSortableColumn="value">Irradiance (W/m²) <p-sortIcon field="value"></p-sortIcon></th>
@@ -26,4 +32,4 @@
 <ng-template #noDataTemplate>
   <p>No Irradiance data available.</p>
 </ng-template>
-
+</p-panel>

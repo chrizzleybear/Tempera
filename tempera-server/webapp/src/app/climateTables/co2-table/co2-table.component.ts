@@ -5,6 +5,7 @@ import {DatePipe, NgIf} from "@angular/common";
 import {TableModule} from "primeng/table";
 import {CalendarModule} from "primeng/calendar";
 import {FormsModule} from "@angular/forms";
+import {PanelModule} from "primeng/panel";
 
 @Component({
   selector: 'app-co2-table',
@@ -14,17 +15,15 @@ import {FormsModule} from "@angular/forms";
     TableModule,
     NgIf,
     CalendarModule,
-    FormsModule
+    FormsModule,
+    PanelModule
   ],
   templateUrl: './co2-table.component.html',
   styleUrl: './co2-table.component.css'
 })
 export class Co2TableComponent implements OnInit{
 
-  filterDate: Date | undefined;
   co2Data: ClimateMeasurementDto[] | undefined = [];
-  filteredData: ClimateMeasurementDto[] = [];
-
   sensorType: Sensor.SensorTypeEnum = "NMVOC";
   accessPointUuid: string = "123e4567-e89b-12d3-a456-426614174001";
   temperaStationId: string = "tempera_station_1";
@@ -37,25 +36,20 @@ export class Co2TableComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    this.fetchCO2Data();
+    this.fetchDate();
   }
 
-  private fetchCO2Data(): void {
-    this.fetchDate();
-    let startDateTime: Date = this.rangeDates[0];
-    let endDateTime: Date = this.rangeDates[1];
+  fetchCo2Data(startDate: Date, endDate: Date): void {
     this.climateDataControllerService.getMeasurementsBySensorType(
       this.accessPointUuid,
       this.temperaStationId,
       this.sensorType,
-      startDateTime.toISOString(),
-      endDateTime.toISOString(),
+      startDate.toISOString(),
+      endDate.toISOString(),
       this.numberOfDisplayedEntries
     ).subscribe({
       next: (data) => {
-        console.log("hpafebi",data);
         this.co2Data = data.measurementDtos;
-        this.filteredData = this.co2Data!;
       },
       error: (error) => {
         this.messageService.add({severity: 'error', summary: 'Data Fetch Failed', detail: 'Unable to fetch CO2 data'});
@@ -63,10 +57,11 @@ export class Co2TableComponent implements OnInit{
     });
   }
 
-  onDateFilter() {
-    if (this.filterDate && this.co2Data) {
-      this.filteredData = this.co2Data.filter(data =>
-        new Date(data.timestamp!).toDateString() === this.filterDate!.toDateString());
+  onDatesSelected() {
+    // check if both dates are selected
+    if (this.rangeDates.length === 2) {
+      console.log(this.rangeDates);
+      this.fetchCo2Data(this.rangeDates[0], this.rangeDates[1]);
     }
   }
 
@@ -83,5 +78,8 @@ export class Co2TableComponent implements OnInit{
     end.setMinutes(0);
     end.setSeconds(0);
     this.rangeDates[1] = end;
+    this.fetchCo2Data(this.rangeDates[0], this.rangeDates[1]);
   }
+
+  protected readonly String = String;
 }
