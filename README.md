@@ -24,8 +24,13 @@ you can always write an email to Leonardo.Pedri@uibk.ac.at :slight_smile:.
 To run the docker containers for the components, you first have to set environment variables as you would do
 running the components directly on your machine. The variables to be set are:
 
-* SWE_DB_KEY
+* SWE_DB_KEY *(can be chosen freely)*
 * EMAIL_KEY
+ 
+> *The* SWE_DB_KEY *can be chosen freely.*
+> 
+> *The* EMAIL_KEY *must be the key to the spring.mail.username in the application.properties file. You can set your 
+> own email there and use your password here*
 
 You can do this by either adding `export SWE_DB_KEY=...` to your .bashrc or analogue and re-sourcing the shell 
 (`source ~/.bashrc`), or by creating a docker run configuration in your IDE (by clicking the green arrow next to the 
