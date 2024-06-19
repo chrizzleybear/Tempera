@@ -1,15 +1,16 @@
-import {Component, Input} from '@angular/core';
-import {ChartModule} from 'primeng/chart';
-import {Sensor} from '../../../api';
-import {MessagesModule} from 'primeng/messages';
-import {MessageModule} from 'primeng/message';
-import {FormsModule} from '@angular/forms';
-import {InputTextModule} from 'primeng/inputtext';
-import {ToastModule} from 'primeng/toast';
-import {InputNumberModule} from 'primeng/inputnumber';
-import {PanelModule} from 'primeng/panel';
-import {DropdownModule} from 'primeng/dropdown';
-import {ClimateChart} from '../climate-chart';
+import { Component, Input } from '@angular/core';
+import { ChartModule } from 'primeng/chart';
+import { Sensor } from '../../../api';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
+import { FormsModule } from '@angular/forms';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { PanelModule } from 'primeng/panel';
+import { DropdownModule } from 'primeng/dropdown';
+import { ClimateChart } from '../climate-chart';
+import { NgIf } from '@angular/common';
 
 
 type TimeUnit = 'SECONDS' | 'MINUTES' | 'HOURS' | 'DAYS' | 'WEEKS' | 'MONTHS' | 'YEARS'
@@ -28,6 +29,7 @@ const sensorTypes: Sensor.SensorTypeEnum[] = ['TEMPERATURE', 'NMVOC'];
     InputNumberModule,
     PanelModule,
     DropdownModule,
+    NgIf,
   ],
   templateUrl: './temperature-co2-chart.component.html',
   styleUrl: './temperature-co2-chart.component.css',
@@ -42,7 +44,7 @@ export class TemperatureCo2ChartComponent extends ClimateChart {
   protected override color1: string = '#DC143C';
   protected override color2: string = '#228B22';
   protected override label1: string = 'Temperature (°C)';
-  protected override label2: string = 'CO2 (ppm)';
+  protected override label2: string = 'NMVOC (ppm)';
 
   override ngOnInit(): void {
     super.ngOnInit();

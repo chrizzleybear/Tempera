@@ -1,13 +1,15 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {PanelModule} from 'primeng/panel';
-import {CalendarModule} from 'primeng/calendar';
-import {FormsModule} from '@angular/forms';
-import {MessageService} from 'primeng/api';
-import {DropdownModule} from 'primeng/dropdown';
-import {ClimateDataControllerService} from '../../api';
-import {TemperatureCo2ChartComponent} from './temperature-co2-chart/temperature-co2-chart.component';
-import {HumidityIrradianceChartComponent} from './humidity-irradiance-chart/humidity-irradiance-chart.component';
-import {InputNumberModule} from "primeng/inputnumber";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { PanelModule } from 'primeng/panel';
+import { CalendarModule } from 'primeng/calendar';
+import { FormsModule } from '@angular/forms';
+import { MessageService } from 'primeng/api';
+import { DropdownModule } from 'primeng/dropdown';
+import { ClimateDataControllerService } from '../../api';
+import { TemperatureCo2ChartComponent } from './temperature-co2-chart/temperature-co2-chart.component';
+import { HumidityIrradianceChartComponent } from './humidity-irradiance-chart/humidity-irradiance-chart.component';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { ChartModule } from 'primeng/chart';
+import { NgIf } from '@angular/common';
 
 
 @Component({
@@ -21,6 +23,8 @@ import {InputNumberModule} from "primeng/inputnumber";
     FormsModule,
     DropdownModule,
     InputNumberModule,
+    ChartModule,
+    NgIf,
   ],
   templateUrl: './overview-charts.component.html',
   styleUrl: './overview-charts.component.css',
@@ -35,6 +39,7 @@ export class OverviewChartsComponent implements OnInit {
   public accessPoints: string[] = [];
   public temperaStations: string[] = [];
   public numberOfDisplayedEntries: number = 10;
+  public noDataFound: boolean | undefined;
 
   @ViewChild(TemperatureCo2ChartComponent)
   private temperatureCo2ChartComponent: TemperatureCo2ChartComponent | undefined;
@@ -43,6 +48,11 @@ export class OverviewChartsComponent implements OnInit {
   private humidityIrradianceChartComponent: HumidityIrradianceChartComponent | undefined;
 
   constructor(private climateDataControllerService: ClimateDataControllerService, private messageService: MessageService) {
+    if (this.temperatureCo2ChartComponent === undefined || this.humidityIrradianceChartComponent === undefined) {
+      console.log('Chart child components are undefined.');
+      return;
+    }
+    this.noDataFound = this.temperatureCo2ChartComponent.noDataFound && this.humidityIrradianceChartComponent.noDataFound;
   }
 
   // TODO: fix repeated error message output

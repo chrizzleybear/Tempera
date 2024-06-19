@@ -1,15 +1,16 @@
-import {Component, Input} from '@angular/core';
-import {ChartModule} from 'primeng/chart';
-import {Sensor} from '../../../api';
-import {MessagesModule} from 'primeng/messages';
-import {MessageModule} from 'primeng/message';
-import {FormsModule} from '@angular/forms';
-import {InputTextModule} from 'primeng/inputtext';
-import {ToastModule} from 'primeng/toast';
-import {InputNumberModule} from 'primeng/inputnumber';
-import {PanelModule} from 'primeng/panel';
-import {DropdownModule} from 'primeng/dropdown';
-import {ClimateChart} from '../climate-chart';
+import { Component, Input } from '@angular/core';
+import { ChartModule } from 'primeng/chart';
+import { Sensor } from '../../../api';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
+import { FormsModule } from '@angular/forms';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { PanelModule } from 'primeng/panel';
+import { DropdownModule } from 'primeng/dropdown';
+import { ClimateChart } from '../climate-chart';
+import { NgIf } from '@angular/common';
 
 
 @Component({
@@ -25,6 +26,7 @@ import {ClimateChart} from '../climate-chart';
     InputNumberModule,
     PanelModule,
     DropdownModule,
+    NgIf,
   ],
   templateUrl: './humidity-irradiance-chart.component.html',
   styleUrl: './humidity-irradiance-chart.component.css',

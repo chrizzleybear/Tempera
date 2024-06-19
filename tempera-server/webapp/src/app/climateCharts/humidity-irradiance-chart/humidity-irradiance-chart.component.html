@@ -1,2 +1,8 @@
 <p-toast position="bottom-right"></p-toast>
+<div>
+  <h3 class="cool-warning" *ngIf="this.noDataFound">
+    No humidity or irradiance data found for the selected options.
+    Please adjust the selected time window/access point ID/tempera station ID.
+  </h3>
+</div>
 <p-chart type="line" [data]="chartData" [options]="chartOptions"></p-chart>

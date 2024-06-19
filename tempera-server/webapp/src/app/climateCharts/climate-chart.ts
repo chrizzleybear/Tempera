@@ -1,7 +1,7 @@
-import {ClimateDataControllerService, ClimateMeasurementDto} from '../../api';
-import {MessageService} from 'primeng/api';
-import {Sensor} from '../../api/api/sensor';
-import {Injectable, OnDestroy, OnInit} from '@angular/core';
+import { ClimateDataControllerService, ClimateMeasurementDto } from '../../api';
+import { MessageService } from 'primeng/api';
+import { Sensor } from '../../api/api/sensor';
+import { Injectable, OnDestroy, OnInit } from '@angular/core';
 
 
 @Injectable()
@@ -10,6 +10,7 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
   public temperaStationId: string = '';
   public rangeDates: Date[] = [];
   public numberOfDisplayedEntries: number = 10;
+  public noDataFound: boolean = false;
 
   protected sensorTypes: Sensor.SensorTypeEnum[] = [];
   protected color1: string = '';
@@ -35,7 +36,7 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
       this.sensorTypes,
       startDateTime,
       endDateTime,
-      this.numberOfDisplayedEntries
+      this.numberOfDisplayedEntries,
     );
     this.intervalId = setInterval(() => this.getMeasurements(
       this.accessPointUuid,
@@ -43,7 +44,7 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
       this.sensorTypes,
       startDateTime,
       endDateTime,
-      this.numberOfDisplayedEntries
+      this.numberOfDisplayedEntries,
     ), (endDateTime.getTime() - startDateTime.getTime()) / this.numberOfDisplayedEntries + 1_000);
     // divide the selected datetime range by the number of measurements to be
     // displayed and add 1 second to make sure the latest measurement is always
@@ -62,14 +63,21 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
     sensorTypes: Sensor.SensorTypeEnum[],
     startDateTime: Date,
     endDateTime: Date,
-    numberOfDisplayedEntries: number
+    numberOfDisplayedEntries: number,
   ): void {
     for (let sensorType of sensorTypes) {
       this.climateDataControllerService.getMeasurementsBySensorType(
-        accessPointUuid, temperaStationId, sensorType, startDateTime.toISOString(), endDateTime.toISOString(), numberOfDisplayedEntries
+        accessPointUuid, temperaStationId, sensorType, startDateTime.toISOString(), endDateTime.toISOString(), numberOfDisplayedEntries,
       ).subscribe({
         next: climateDataDto => {
-          if (sensorType == 'TEMPERATURE') {
+          if (climateDataDto === null) {
+            this.noDataFound = true;
+            console.log('No data found');
+            this.data1 = [];
+            this.data2 = [];
+            this.updateChart();
+            return;
+          } else if (sensorType == 'TEMPERATURE') {
             this.data1 = climateDataDto.measurementDtos;
           } else if (sensorType == 'NMVOC') {
             this.data2 = climateDataDto.measurementDtos;
@@ -78,6 +86,7 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
           } else if (sensorType == 'IRRADIANCE') {
             this.data2 = climateDataDto.measurementDtos;
           }
+          this.noDataFound = false;
           this.updateChart();
         },
         error: err => {

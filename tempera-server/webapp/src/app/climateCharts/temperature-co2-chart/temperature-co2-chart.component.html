@@ -1,2 +1,8 @@
 <p-toast position="bottom-right"></p-toast>
+<div>
+  <h3 *ngIf="this.noDataFound">
+    No temperature or air quality data found for the selected options.
+    Please adjust the selected time window/access point ID/tempera station ID.
+  </h3>
+</div>
 <p-chart type="line" [data]="chartData" [options]="chartOptions"></p-chart>
