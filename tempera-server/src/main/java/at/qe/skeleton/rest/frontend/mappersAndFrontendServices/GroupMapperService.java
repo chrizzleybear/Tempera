@@ -6,12 +6,11 @@ import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.rest.frontend.dtos.*;
 import at.qe.skeleton.services.GroupService;
 import at.qe.skeleton.services.ProjectService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GroupMapperService {
@@ -70,6 +69,12 @@ public class GroupMapperService {
     public SimpleGroupDto createGroup(SimpleGroupDto group) {
         Groupx groupx = groupService.createGroup(group.name(), group.description(), group.groupLead());
         return mapToSimpleGroupDto(groupx);
+    }
+
+
+    public SimpleGroupDto reactivateGroup(String groupId) {
+        Groupx group = groupService.reactivateGroup(Long.parseLong(groupId));
+        return mapToSimpleGroupDto(group);
     }
 
     public SimpleGroupDto mapToSimpleGroupDto(GroupxProject groupxProject) {

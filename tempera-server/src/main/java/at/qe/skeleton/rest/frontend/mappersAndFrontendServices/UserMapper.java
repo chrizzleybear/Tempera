@@ -4,6 +4,7 @@ import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
 import org.springframework.stereotype.Service;
 
+
 @Service
 public class UserMapper {
 

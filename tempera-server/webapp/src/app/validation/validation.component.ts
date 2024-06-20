@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { UsersService } from '../_services/users.service';
+import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { MessageModule } from 'primeng/message';
@@ -8,6 +7,7 @@ import { ChipsModule } from 'primeng/chips';
 import { ButtonModule } from 'primeng/button';
 import { MessagesModule } from 'primeng/messages';
 import { Message } from 'primeng/api';
+import { UserManagementControllerService } from '../../api';
 
 @Component({
   selector: 'app-validation',
@@ -29,49 +29,22 @@ import { Message } from 'primeng/api';
  * This component is responsible for user validation and enabling a user.
  */
 export class ValidationComponent {
-  userId: string = '';
-  validated: boolean = false;
   enabled: boolean = false;
   messages: Message[] = [];
 
-  constructor(private route: ActivatedRoute, private usersService: UsersService) {
-  }
-
-  /**
-   * Validates a user's credentials.
-   * @param username The username of the user.
-   * @param password The password of the user.
-   * @returns void
-   */
-  validateUser(username: string, password: string) {
-    if (username === undefined || password === undefined) {
-      console.error('Username or password is undefined');
-      return;
-    }
-    this.userId = username;
-    this.usersService.validateUser(username, password).subscribe({
-      next: (data) => {
-        if (data !== null) {
-          this.validated = true;
-          this.messages = [{ severity: 'success', summary: 'Success', detail: 'You have been validated' }];
-        } else {
-          this.messages = [{ severity: 'error', summary: 'Error', detail: 'Wrong username or token' }];
-        }
-      },
-      error: (error) => {
-        console.error('Failed to load user details:', error);
-      },
-    });
+  constructor(private usersService: UserManagementControllerService) {
   }
 
   /**
    * Sets a new password to enable user.
+   * @param username The username of the user.
+   * @param token The token that the user received via email.
    * @param password
    * @param passwordRepeat
    */
-  setPassword(password: string, passwordRepeat: string) {
+  setPassword(username: string, token: string, password: string, passwordRepeat: string) {
     if (password === passwordRepeat) {
-      this.usersService.enableUser(this.userId, password).subscribe({
+      this.usersService.enableUser({username: username,token: token , password: password}).subscribe({
         next: (data) => {
           if (data !== null) {
             this.enabled = true;
@@ -80,6 +53,9 @@ export class ValidationComponent {
             this.messages = [{ severity: 'error', summary: 'Error', detail: 'Failed to enable user' }];
           }
         },
+        error: () => {
+          this.messages = [{ severity: 'error', summary: 'Error', detail: 'Failed to enable user with this combination of username and token' }];
+        }
       });
     } else {
       this.messages = [{ severity: 'error', summary: 'Error', detail: 'Passwords do not match' }];

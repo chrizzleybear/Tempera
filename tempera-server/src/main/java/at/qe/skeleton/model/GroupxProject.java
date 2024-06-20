@@ -72,7 +72,6 @@ public class GroupxProject implements Persistable<GroupxProjectId>{
             throw new IllegalStateException("GroupxProject is not active");
         }
         contributors.add(contributor);
-        contributor.getGroupxProjects().add(this);
     }
     @PreAuthorize("hasRole('GROUPLEAD') or hasRole('ADMIN')")
     public void removeContributor(Userx contributor) {
@@ -136,7 +135,7 @@ public class GroupxProject implements Persistable<GroupxProjectId>{
     }
 
     public Set<Userx> getContributors() {
-        return contributors;
+        return new HashSet<>(contributors); // return mutable collection
     }
 
 

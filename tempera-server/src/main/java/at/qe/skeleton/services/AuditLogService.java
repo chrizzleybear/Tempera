@@ -22,9 +22,12 @@ public class AuditLogService {
 
     private final UserxRepository userxRepository;
 
+    private final LoggingService loggingService;
+
     public AuditLogService(AuditLogRepository auditLogRepository, UserxRepository userxRepository) {
         this.auditLogRepository = auditLogRepository;
         this.userxRepository = userxRepository;
+        this.loggingService = new LoggingService();
     }
 
     public boolean logEvent(LogEvent actionType, LogAffectedType affectedType, String message) {
@@ -37,6 +40,7 @@ public class AuditLogService {
             user = null;
         }
         AuditLog a = new AuditLog(user, actionType, affectedType, message);
+        loggingService.logEvent(actionType, affectedType, "AUDIT-LOG: " + message);
         return auditLogRepository.save(a) != null;
     }
 

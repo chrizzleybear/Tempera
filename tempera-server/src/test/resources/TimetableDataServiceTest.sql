@@ -1,3 +1,4 @@
+DELETE FROM audit_log;
 DELETE FROM internal_record;
 DELETE FROM external_record;
 DELETE FROM measurement;
@@ -15,8 +16,6 @@ DELETE FROM userx_userx_role;
 DELETE FROM userx WHERE default_project_id Is Not NULL;
 DELETE FROM project;
 DELETE FROM userx;
-
-
 
 INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE, state, state_visibility) VALUES(TRUE, 'Admin', 'Istrator', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'admin', 'admin', '2016-01-01 00:00:00', 'DEEPWORK', 'PUBLIC');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('admin', 'ADMIN');

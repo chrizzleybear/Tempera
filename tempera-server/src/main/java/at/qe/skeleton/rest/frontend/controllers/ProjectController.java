@@ -29,12 +29,14 @@ public class ProjectController {
   }
 
   @GetMapping("/all")
+    @PreAuthorize("hasAuthority('MANAGER')")
     public ResponseEntity<List<SimpleProjectDto>> getAllSimpleProjects() {
       List<SimpleProjectDto> projects = projectMapperService.getAllSimpleProjects();
       return ResponseEntity.ok(projects);
     }
 
   @GetMapping("/allDetailed")
+  @PreAuthorize("hasAuthority('MANAGER')")
   public ResponseEntity<List<ProjectDetailsDto>> getAllDetailedProjects() {
     List<ProjectDetailsDto> projects = projectMapperService.getAllDetailedProjects();
     return ResponseEntity.ok(projects);
@@ -50,6 +52,7 @@ public ResponseEntity<SimpleProjectDto> reactivateProject(@PathVariable String p
 
 
   @PutMapping("/update")
+  @PreAuthorize("hasAuthority('MANAGER')")
   public ResponseEntity<SimpleProjectDto> updateProject(@RequestBody SimpleProjectDto projectData) {
 
     SimpleProjectDto updatedProject = projectMapperService.updateProject(projectData);
@@ -57,18 +60,21 @@ public ResponseEntity<SimpleProjectDto> reactivateProject(@PathVariable String p
   }
 
   @PostMapping("/create")
+  @PreAuthorize("hasAuthority('MANAGER')")
   public ResponseEntity<SimpleProjectDto> createProject(@RequestBody SimpleProjectDto projectData) {
     SimpleProjectDto createdProject = projectMapperService.createProject(projectData);
     return ResponseEntity.ok(createdProject);
   }
 
   @DeleteMapping("/delete/{projectId}")
+  @PreAuthorize("hasAuthority('MANAGER')")
   public ResponseEntity<MessageResponse> deleteProject(@PathVariable String projectId) {
     projectService.deleteProject(Long.parseLong(projectId));
     return ResponseEntity.ok().body(new MessageResponse("Project deleted successfully!"));
   }
 
   @GetMapping("/loadExtendedProject/{projectId}")
+  @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('GROUPLEAD')")
   public ResponseEntity<ExtendedProjectDto> getProjectDetailedById(@PathVariable String projectId) {
       try{
         ExtendedProjectDto projectDto = projectMapperService.loadExtendedProjectDto(Long.parseLong(projectId));
@@ -80,6 +86,7 @@ public ResponseEntity<SimpleProjectDto> reactivateProject(@PathVariable String p
   }
 
     @GetMapping("/loadSimpleProject/{projectId}")
+    @PreAuthorize("hasAuthority('MANAGER')")
     public ResponseEntity<SimpleProjectDto> getProjectSimpleById(@PathVariable String projectId) {
         try{
             SimpleProjectDto projectDto = projectMapperService.loadSimpleProjectDto(projectId);
@@ -92,18 +99,21 @@ public ResponseEntity<SimpleProjectDto> reactivateProject(@PathVariable String p
 
 
   @GetMapping("/getActiveGroupsOfProject/{projectId}")
+  @PreAuthorize("hasAuthority('MANAGER')")
   public ResponseEntity<List<SimpleGroupDto>> getActiveGroupsByProjectId(@PathVariable String projectId) {
     List<SimpleGroupDto> activeGroups = projectMapperService.getAllActiveSimpleGroups(projectId);
     return ResponseEntity.ok(activeGroups);
   }
 
   @GetMapping("/getDeactivatedGroupsOfProject/{projectId}")
-public ResponseEntity<List<SimpleGroupDto>> getDeactivatedGroupsByProjectId(@PathVariable String projectId) {
+  @PreAuthorize("hasAuthority('MANAGER')")
+  public ResponseEntity<List<SimpleGroupDto>> getDeactivatedGroupsByProjectId(@PathVariable String projectId) {
     List<SimpleGroupDto> deactivatedGroups = projectMapperService.getAllDeactivatedSimpleGroups(projectId);
     return ResponseEntity.ok(deactivatedGroups);
   }
 
   @PostMapping("/addGroup")
+  @PreAuthorize("hasAuthority('MANAGER')")
   public ResponseEntity<ExtendedProjectDto> addGroupToProject(
       @RequestBody minimalGxpDto minimalGxpDto) {
     try{
@@ -116,6 +126,7 @@ public ResponseEntity<List<SimpleGroupDto>> getDeactivatedGroupsByProjectId(@Pat
   }
 
   @DeleteMapping("/removeGroup/{projectId}/{groupId}")
+  @PreAuthorize("hasAuthority('MANAGER')")
   public ResponseEntity<Void> removeGroupFromProject(
       @PathVariable String projectId, @PathVariable String groupId){
     try {
@@ -128,6 +139,7 @@ public ResponseEntity<List<SimpleGroupDto>> getDeactivatedGroupsByProjectId(@Pat
   }
 
   @PostMapping("/addContributor")
+  @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('GROUPLEAD')")
   public ResponseEntity<ExtendedProjectDto> addContributor(
       @RequestBody ContributorAssignmentDto contributorAssignmentDto) {
     try {
@@ -143,6 +155,7 @@ public ResponseEntity<List<SimpleGroupDto>> getDeactivatedGroupsByProjectId(@Pat
   }
 
   @DeleteMapping("/removeContributor/{projectId}/{groupId}/{contributorId}")
+  @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('GROUPLEAD')")
   public ResponseEntity<ExtendedProjectDto> removeContributor(
       @PathVariable String projectId, @PathVariable String groupId, @PathVariable String contributorId) {
     try {
@@ -156,12 +169,14 @@ public ResponseEntity<List<SimpleGroupDto>> getDeactivatedGroupsByProjectId(@Pat
   }
 
   @GetMapping("/projectsOfGroup/{groupId}")
+  @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('GROUPLEAD')")
   public ResponseEntity<List<SimpleProjectDto>> getProjectsByGroupId(@PathVariable String groupId) {
     List<SimpleProjectDto> projects = projectMapperService.getSimpleProjectsByGroupId(Long.parseLong(groupId));
     return ResponseEntity.ok(projects);
   }
 
     @GetMapping("/contributors/{groupId}/{projectId}")
+    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('GROUPLEAD')")
     public ResponseEntity<List<SimpleUserDto>> getContributors(@PathVariable String groupId, @PathVariable String projectId) {
       List<SimpleUserDto> contributors = projectMapperService.findAllContributorsByGroupIdAndProjectId(Long.parseLong(groupId), Long.parseLong(projectId));
       return ResponseEntity.ok(contributors);
