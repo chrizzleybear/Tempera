@@ -6,8 +6,6 @@ import {Co2TableComponent} from "../co2-table/co2-table.component";
 import {IrrTableComponent} from "../irr-table/irr-table.component";
 import {ToastModule} from "primeng/toast";
 import {TemperaStationService} from "../../_services/tempera-station.service";
-import {TemperaStation} from "../../models/temperaStation.model";
-import {AccessPoint} from "../../models/accessPoint.model";
 import {User} from "../../models/user.model";
 import {StorageService} from "../../_services/storage.service";
 import {MessageService} from "primeng/api";
