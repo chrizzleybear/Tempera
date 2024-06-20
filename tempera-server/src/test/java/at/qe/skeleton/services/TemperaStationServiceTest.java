@@ -144,11 +144,11 @@ public class TemperaStationServiceTest {
         Userx user1 = createUser("user1", "John", "Doe", "john.doe@example.com");
         Userx user2 = createUser("user2", "Jane", "Smith", "jane.smith@example.com");
         TemperaStation station1 = createMockTemperaStation("1", "user1", true, true, UUID.randomUUID().toString());
-        TemperaStation station2 = createMockTemperaStation("2", "user2", true, true, UUID.randomUUID().toString());
+        TemperaStation station2 = createMockTemperaStation("2", "not user 2", true, true, UUID.randomUUID().toString());
         when(temperaStationRepository.findAll()).thenReturn(Arrays.asList(station1, station2));
         int resultAfter = temperaStationService.getAvailableUsers().size();
 
-        assertEquals(resultBefore, resultAfter+1);
+        assertEquals(resultBefore, resultAfter);
     }
 
     // Helper method to create a mock Userx object
