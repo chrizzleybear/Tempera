@@ -7,5 +7,6 @@ public enum LogEvent {
   LOGIN,
   LOGOUT,
   WARN,
-  LOAD
+  LOAD,
+  ERROR
 }
