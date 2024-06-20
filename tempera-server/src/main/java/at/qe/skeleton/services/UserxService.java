@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -253,11 +254,22 @@ public class UserxService implements UserDetailsService {
     return null;
   }
 
-  public void enableUser(String username, String password) {
+  public void enableUser(String username, String token, String password) {
     Userx user = userRepository.findFirstByUsername(username);
     if (user == null) {
       throw new IllegalArgumentException("User not found");
     }
+
+    if (!passwordEncoder.matches(token, user.getPassword())) {
+      auditLogService.logEvent(LogEvent.WARN, LogAffectedType.USER,
+              "Could not validate user with details " + user.getUsername() + ", " + user.getPassword() + " ."
+      );
+      throw new BadCredentialsException("Invalid token");
+    }
+    auditLogService.logEvent(LogEvent.LOAD, LogAffectedType.USER,
+            "Successfully validated user " + user.getUsername() + "."
+    );
+
     user.setPassword(passwordEncoder.encode(password));
     user.setEnabled(true);
     auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.USER,

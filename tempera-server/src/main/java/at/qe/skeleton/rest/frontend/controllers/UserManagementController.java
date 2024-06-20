@@ -1,8 +1,9 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
-import at.qe.skeleton.rest.frontend.dtos.CredentialsDto;
 import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.rest.frontend.payload.request.EnableUserRequest;
+import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
 import at.qe.skeleton.services.AuthenticationService;
 import at.qe.skeleton.services.UserxService;
 import org.springframework.http.HttpStatus;
@@ -74,17 +75,11 @@ public class UserManagementController {
     }
   }
 
-  @PostMapping("/validate")
-  public ResponseEntity<UserxDto> validateUser(@RequestBody CredentialsDto credentials) {
-    UserxDto isValidUser = userxService.validateUser(credentials.username(), credentials.password());
-    return ResponseEntity.ok(isValidUser);
-  }
-
   @PostMapping("/enable")
-  public ResponseEntity<Map<String, String>> enableUser(
-      @RequestBody CredentialsDto credentials) {
-    userxService.enableUser(credentials.username(), credentials.password());
-    return ResponseEntity.ok(Map.of("message", "User enabled"));
+  public ResponseEntity<MessageResponse> enableUser(
+      @RequestBody EnableUserRequest request) {
+    userxService.enableUser(request.username(), request.token(), request.password());
+    return ResponseEntity.ok(new MessageResponse("User enabled"));
   }
 
   @GetMapping("/managers")
