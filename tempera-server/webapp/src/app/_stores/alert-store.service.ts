@@ -1,8 +1,9 @@
-import { DestroyRef, Injectable } from '@angular/core';
+import { DestroyRef, EventEmitter, Injectable } from '@angular/core';
 import { BehaviorSubject, distinctUntilChanged, exhaustMap, timer } from 'rxjs';
 import { AlertControllerService, AlertDto } from '../../api';
 import { MessageService } from 'primeng/api';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { SensorType } from '../models/threshold.model';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +11,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class AlertStoreService {
   private alerts$ = new BehaviorSubject<AlertDto[]>([]);
 
+  /*
+  Emitting this display the corresponding hint popup.
+   */
+  public showHint = new EventEmitter<SensorType>();
 
   constructor(private alertControllerService: AlertControllerService, private messageService: MessageService, private destroyRef: DestroyRef) {
   }

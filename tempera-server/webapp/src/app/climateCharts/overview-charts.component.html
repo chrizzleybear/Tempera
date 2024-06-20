@@ -1,0 +1,69 @@
+<p-panel>
+  <div class="flex flex-wrap">
+    <div class="flex flex-col pr-4 lg:w-1/4 mb-4">
+      <label for="date-selector" class="mb-1">Select a time interval to display</label>
+      <p-calendar
+        id="date-selector"
+        [(ngModel)]="this.rangeDates"
+        (ngModelChange)="onDateChange($event)"
+        [showTime]="true"
+        [hourFormat]="String(24)"
+        selectionMode="range"
+        [readonlyInput]="true"
+        styleClass="w-full lg:w-[19rem]"
+      />
+    </div>
+    <div class="flex flex-col pr-4 lg:w-1/4 mb-4">
+      <label for="access-point-selector" class="mb-1">Select an access point</label>
+      <p-dropdown
+        id="access-point-selector"
+        [options]="this.accessPoints"
+        [(ngModel)]="this.accessPointUuid"
+        (ngModelChange)="onAccessPointSelectionChange($event)"
+        placeholder="Select an access point"
+        [editable]="true"
+      />
+    </div>
+    <div class="flex flex-col pr-4 lg:w-1/4 mb-4">
+      <label for="tempera-station-selector" class="mb-1">Select a tempera station</label>
+      <p-dropdown
+        id="tempera-station-selector"
+        [options]="this.temperaStations"
+        [(ngModel)]="this.temperaStationId"
+        (ngModelChange)="onTemperaStationSelectionChange($event)"
+        placeholder="Select a tempera station"
+        [editable]="true"
+      />
+    </div>
+    <div class="flex flex-col lg:w-1/4 mb-4">
+      <label for="n-datapoints-selector" class="mb-1">Select the max. number of points to display</label>
+      <p-inputNumber
+        id="n-datapoints-selector"
+        [(ngModel)]="this.numberOfDisplayedEntries"
+        (ngModelChange)="onDataPointsChange($event)"
+        placeholder="Select a tempera station"
+        mode='decimal'
+        [min]="1"
+        [max]="50"
+        [showButtons]="true"
+        buttonLayout="horizontal"
+      />
+    </div>
+  </div>
+  <div class="w-full flex flex-wrap">
+    <app-humidity-irradiance-chart
+      class="w-full lg:w-1/2 pr-4 mb-4"
+      [accessPointUuid]="this.accessPointUuid"
+      [temperaStationId]="this.temperaStationId"
+      [rangeDates]="this.rangeDates"
+      [numberOfDisplayedEntries]="this.numberOfDisplayedEntries"
+    ></app-humidity-irradiance-chart>
+    <app-temperature-co2-chart
+      class="w-full lg:w-1/2"
+      [accessPointUuid]="this.accessPointUuid"
+      [temperaStationId]="this.temperaStationId"
+      [rangeDates]="this.rangeDates"
+      [numberOfDisplayedEntries]="this.numberOfDisplayedEntries"
+    ></app-temperature-co2-chart>
+  </div>
+</p-panel>
