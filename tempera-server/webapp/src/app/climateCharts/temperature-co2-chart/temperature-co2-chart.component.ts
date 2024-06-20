@@ -12,10 +12,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ClimateChart } from '../climate-chart';
 import { NgIf } from '@angular/common';
 
-
-type TimeUnit = 'SECONDS' | 'MINUTES' | 'HOURS' | 'DAYS' | 'WEEKS' | 'MONTHS' | 'YEARS'
-const sensorTypes: Sensor.SensorTypeEnum[] = ['TEMPERATURE', 'NMVOC'];
-
 @Component({
   selector: 'app-temperature-co2-chart',
   standalone: true,
