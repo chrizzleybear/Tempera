@@ -1,3 +1,4 @@
+DELETE FROM audit_log;
 DELETE FROM internal_record;
 DELETE FROM external_record;
 DELETE FROM measurement;

@@ -46,8 +46,6 @@ public class ProjectService {
   private static final String PROJECT_NOT_FOUND = "Project not found";
   private static final String GROUP_NOT_FOUND = "Group not found";
 
-  // todo: write tests for project Service to test the functionality of GroupxProject in particular
-
   @Transactional
   public Project createProject(String name, String description, String manager) {
     Userx managerUser =
@@ -201,9 +199,20 @@ if(groupxProjectOptional.isPresent()){
    * @param groupxProject
    */
   public void deactivateGroupxProject (GroupxProject groupxProject) {
-    groupxProject.setActive(false);
-    groupxProject.removeAllContributors();
-    groupxProjectRepository.save(groupxProject);
+
+      String gName;
+      try {
+          gName = groupxProject.getGroup().getName();
+      } catch (NullPointerException e) {
+          gName = "[removed]";
+      }
+      auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.GROUP,
+              "Project " + groupxProject.getProject().getName() + " of group " + gName + "has been deactivated."
+      );
+
+      groupxProject.setActive(false);
+      groupxProject.removeAllContributors();
+      groupxProjectRepository.save(groupxProject);
   }
 
   @Transactional
@@ -271,7 +280,6 @@ if(groupxProjectOptional.isPresent()){
                     new CouldNotFindEntityException(
                         "Could not find GroupxProject with GroupId %d and ProjectID %d"
                             .formatted(groupId, projectId)));
-
     Userx contributor =
         userxRepository
             .findByUsername(username)

@@ -43,7 +43,7 @@ public class Project {
     this.isActive = false;
   }
 
-    public boolean isActive() {
+  public boolean isActive() {
         return isActive;
     }
   public Set<GroupxProject> getGroupxProjects() {
@@ -92,6 +92,10 @@ public class Project {
 //    this.contributors.remove(contributor);
 //    contributor.getProjects().remove(this);
 //  }
+
+  public void setGroupxProjects(Set<GroupxProject> groupxProjects) {
+    this.groupxProjects = groupxProjects;
+  }
 
   public String getName() {
     return name;
