@@ -1,6 +1,7 @@
 package at.qe.skeleton.jwt;
 
 import java.io.IOException;
+import java.util.List;
 
 import at.qe.skeleton.services.UserxService;
 import jakarta.servlet.FilterChain;
@@ -15,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 // This code was taken from: https://www.bezkoder.com/angular-17-spring-boot-jwt-auth/
@@ -24,7 +26,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
   @Autowired private UserxService userxDetailsService;
 
-  private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
+  private static final Logger authFilterlogger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
   @Override
   protected void doFilterInternal(
@@ -46,14 +48,25 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authentication);
       }
     } catch (Exception e) {
-      logger.error("Cannot set user authentication: {}", e);
+      authFilterlogger.error("Cannot set user authentication: {}", e.getMessage());
     }
 
     filterChain.doFilter(request, response);
   }
 
   private String parseJwt(HttpServletRequest request) {
-    String jwt = jwtUtils.getJwtFromCookies(request);
-    return jwt;
+    return jwtUtils.getJwtFromCookies(request);
+  }
+
+  @Override
+  protected boolean shouldNotFilter(HttpServletRequest request) {
+    AntPathMatcher pathMatcher = new AntPathMatcher();
+    List<String> excludeUrlPatterns = List.of(
+            "/api/auth/signin"
+    );
+
+    return excludeUrlPatterns
+            .stream()
+            .anyMatch(p -> pathMatcher.match(p, request.getServletPath()));
   }
 }

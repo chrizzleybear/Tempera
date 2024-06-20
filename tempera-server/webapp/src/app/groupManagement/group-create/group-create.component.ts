@@ -8,6 +8,7 @@ import { DropdownOptionUser, User } from '../../models/user.model';
 import { MessageModule } from 'primeng/message';
 import { NgIf } from '@angular/common';
 import { GroupManagementControllerService, SimpleGroupDto } from '../../../api';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-group-create',
@@ -34,7 +35,7 @@ export class GroupCreateComponent implements OnInit {
 
   @Output() createCompleted = new EventEmitter<boolean>();
 
-  constructor(private fb: FormBuilder, private groupService: GroupManagementControllerService, private usersService: UsersService) {
+  constructor(private fb: FormBuilder, private groupService: GroupManagementControllerService, private messageService: MessageService, private usersService: UsersService) {
     this.groupForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required]],
@@ -85,10 +86,18 @@ export class GroupCreateComponent implements OnInit {
       this.groupService.reactivateGroup(groupId).subscribe({
         next: (response) => {
           console.log('Group reactivated:', response);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Group reactivated successfully',
+          });
           this.reactivateForm.reset();
           this.createCompleted.emit(true);
         },
-        error: (error) => console.error('Error reactivating group:', error),
+        error: (error) => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error creating group' });
+          console.error('Error reactivating group:', error);
+        },
       });
     }
   }
@@ -106,11 +115,15 @@ export class GroupCreateComponent implements OnInit {
       this.groupService.createGroup(dto,
       ).subscribe({
         next: (response) => {
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Group created successfully' });
           console.log('Group created:', response);
           this.groupForm.reset();
           this.createCompleted.emit(true);
         },
-        error: (error) => console.error('Error creating group:', error),
+        error: (error) => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error creating group' });
+          console.error('Error creating group:', error);
+        },
       });
     }
   }

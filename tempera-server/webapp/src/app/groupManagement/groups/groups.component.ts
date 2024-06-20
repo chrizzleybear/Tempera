@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { GroupCreateComponent } from '../group-create/group-create.component';
 import { GroupEditComponent } from '../group-edit/group-edit.component';
 import { GroupManagementControllerService, SimpleGroupDto } from '../../../api';
+import {MessageService} from "primeng/api";
+import {ToastModule} from "primeng/toast";
 
 @Component({
   selector: 'app-groups',
@@ -23,6 +25,7 @@ import { GroupManagementControllerService, SimpleGroupDto } from '../../../api';
     DialogModule,
     GroupCreateComponent,
     GroupEditComponent,
+    ToastModule,
 
   ],
   templateUrl: './groups.component.html',
@@ -42,13 +45,14 @@ export class GroupsComponent implements OnInit {
   // Event emitter for creating a group - loading latest deactivatedGroups
   @Output() groupCreationEvent: EventEmitter<void> = new EventEmitter<void>();
 
-  constructor(private groupService: GroupManagementControllerService, private router: Router) {}
+  constructor(
+    private groupService: GroupManagementControllerService,
+    private router: Router,
+    private messageService: MessageService) {}
 
   ngOnInit(): void {
     this.loadGroups();
   }
-
-
 
   private loadGroups() {
     this.groupService.getAllGroups().subscribe({
@@ -58,6 +62,7 @@ export class GroupsComponent implements OnInit {
         this.filteredGroups = this.groups;
       },
       error: (error) => {
+        this.messageService.add({severity:'error', summary:'Error', detail:'Error loading groups'});
         console.error("Error loading groups:", error);
       }
     });
@@ -77,10 +82,10 @@ export class GroupsComponent implements OnInit {
     this.groupService.deleteGroup(groupId).subscribe({
       next: (response) => {
         this.loadGroups();
-        this.messages = [{severity:'success', summary:'Success', detail:'Group deleted successfully'}];
+        this.messageService.add({severity:'success', summary:'Success', detail:'Group deleted successfully'});
       },
       error: (error) => {
-        this.messages = [{severity:'error', summary:'Error', detail:'Error deleting group'}];
+        this.messageService.add({severity:'error', summary:'Error', detail:'Error deleting group'});
       }
     });
   }

@@ -14,6 +14,7 @@
     <i class="pi pi-ellipsis-v"></i>
   </button>
 
+  <!--  ngIf is always true here, it's just a workaround to get alerts as a variable  -->
   <ng-container *ngIf="{data: alertStoreService.getAlerts() | async} as alerts">
     <div #topbarmenu class="layout-topbar-menu"
          [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
@@ -34,19 +35,26 @@
             <ng-template pTemplate="header">
               <tr>
                 <th id="message">Message</th>
+                <th id="filler"></th>
+                <th id="severity">Severity</th>
                 <th id="start">Start</th>
                 <th id="end">End</th>
-                <th id="severity">Severity</th>
-                <th id="filler"></th>
+                <th id="filler2"></th>
+                <th id="filler3"></th>
               </tr>
             </ng-template>
             <ng-template let-alertEntry pTemplate="body">
               <tr>
                 <td class="w-80">{{ alertEntry.message }}</td>
+                <td class="text-4xl">{{alertEntry | alertToEmoji}}</td>
+                <td>
+                  <p-tag [value]="showAlertText | wrapFn: alertEntry.severity" [severity]="getAlertSeverity | wrapFn: alertEntry.severity"></p-tag>
+                </td>
                 <td>{{ alertEntry.start | date: 'short' }}</td>
                 <td> {{ alertEntry.end | date: 'short' }} </td>
                 <td>
-                  <p-tag [value]="showAlertText | wrapFn: alertEntry.severity" [severity]="getAlertSeverity | wrapFn: alertEntry.severity"></p-tag>
+                  <p-button styleClass="h-10" label="Hint" severity="info" (onClick)="alertStoreService.showHint.emit(alertEntry.sensorType)"></p-button>
+                </td>
                 <td>
                   <p-button (onClick)="removeAlert(alertEntry.id, (alerts.data.length) - 1)">
                     <i class="pi pi-times"></i>
@@ -73,3 +81,24 @@
     </div>
   </ng-container>
 </div>
+<p-dialog header="Suggestions" contentStyleClass="w-[80vw] lg:w-[33vw]" [(visible)]="tippDialogVisible"
+          [modal]="true">
+  <div class="pl-10" *ngIf="tipSensorType === SensorType.NMVOC && qualityHints; else otherHints">
+    <ul class="list-disc">
+      <li *ngFor="let hint of qualityHints">{{ hint }}</li>
+    </ul>
+  </div>
+  <ng-template #otherHints>
+    <div class="px-10">
+      <strong>If the upper limit is exceeded:</strong>
+      <ul class="list-disc">
+        <li *ngFor="let hint of highHints">{{ hint }}</li>
+      </ul>
+      <br>
+      <strong>If the lower limit is exceeded:</strong>
+      <ul class="list-disc">
+        <li *ngFor="let hint of lowHints">{{ hint }}</li>
+      </ul>
+    </div>
+  </ng-template>
+</p-dialog>

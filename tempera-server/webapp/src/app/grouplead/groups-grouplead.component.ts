@@ -1,6 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {Group} from "../models/group.model";
-import {GroupService} from "../_services/group.service";
 import {Router} from "@angular/router";
 import {StorageService} from "../_services/storage.service";
 import {ButtonModule} from "primeng/button";
@@ -10,10 +8,11 @@ import {GroupEditComponent} from "../groupManagement/group-edit/group-edit.compo
 import {InputTextModule} from "primeng/inputtext";
 import {MessagesModule} from "primeng/messages";
 import {NgForOf, NgIf} from "@angular/common";
-import {SharedModule} from "primeng/api";
+import {MessageService, SharedModule} from "primeng/api";
 import {TableModule} from "primeng/table";
 import {CardModule} from "primeng/card";
 import { GroupManagementControllerService, SimpleGroupDto } from '../../api';
+import {ToastModule} from "primeng/toast";
 
 @Component({
   selector: 'app-groups-grouplead',
@@ -29,7 +28,8 @@ import { GroupManagementControllerService, SimpleGroupDto } from '../../api';
     SharedModule,
     TableModule,
     CardModule,
-    NgForOf
+    NgForOf,
+    ToastModule
   ],
   templateUrl: './groups-grouplead.component.html',
   styleUrl: './groups-grouplead.component.css'
@@ -42,10 +42,9 @@ export class GroupsGroupleadComponent implements OnInit{
 
   groups: SimpleGroupDto[] = [];
   filteredGroups: SimpleGroupDto[] = [];
-  messages: any;
   currentUserId!: string;
 
-  constructor(private groupService: GroupManagementControllerService, private router: Router, private storageService: StorageService) {}
+  constructor(private groupService: GroupManagementControllerService, private router: Router, private storageService: StorageService, private messageService: MessageService) {}
 
   ngOnInit(): void {
     this.currentUserId = this.storageService.getUser()?.username!;
@@ -60,6 +59,7 @@ export class GroupsGroupleadComponent implements OnInit{
         this.filteredGroups = this.groups;
       },
       error: (error) => {
+        this.messageService.add({severity:'error', summary:'Error', detail:'Failed to load groups.'});
         console.error("Error loading groups:", error);
       }
     });
