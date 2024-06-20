@@ -26,6 +26,13 @@ public class AuthenticationService {
 
   @Autowired private AuditLogService auditLogService;
 
+  public AuthenticationService(UserxService userxService, EmailService emailService, PasswordEncoder encode, AuditLogService auditLogService) {
+    this.userxService = userxService;
+    this.emailService = emailService;
+    this.encode = encode;
+    this.auditLogService = auditLogService;
+  }
+
   @Transactional
   @PreAuthorize("hasAuthority('ADMIN')")
   public UserxDto registerUser(UserxDto userxDTO) {
