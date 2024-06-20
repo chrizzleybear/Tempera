@@ -10,6 +10,7 @@ import { UserCreateComponent } from '../user-create/user-create.component';
 import { MessagesModule } from 'primeng/messages';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { forkJoin } from 'rxjs';
 import {
   DeletionResponseDto,
   ProjectControllerService,
@@ -60,6 +61,7 @@ export class UsersComponent implements OnInit {
   deletionResponse: DeletionResponseDto | null;
   deletionResponseMessage: string = '';
   affectedProjects: SimpleProjectDto[] = [];
+  transferredProjects: SimpleProjectDto[] = [];
   numberOfProjectsReassigned: number = 0;
   affectedGroups: SimpleGroupDto[] = [];
   availableManagers: { label: string, value: UserxDto } [] | undefined;
@@ -107,6 +109,7 @@ export class UsersComponent implements OnInit {
    * @param username The ID of the user to delete.
    */
   deleteSelectedUser(username: string): void {
+    this.resetUsers();
     console.log('Delete user with ID: ', username);
     this.deletionRequest(username);
   }
@@ -167,37 +170,49 @@ export class UsersComponent implements OnInit {
     }
   }
 
-
-  transferProject(project: any, manager: any): void {
-
-    console.log('Transfer project:', project, manager);
-    const updatedProject: SimpleProjectDto = {
-      projectId: project.projectId,
-      isActive: project.isActive,
-      name: project.name,
-      description: project.description,
-      manager: manager.value.username ?? '',
-    };
-    this.projectService.updateProject(updatedProject).subscribe({
-      next: (response) => {
-        console.log('Project transferred:', response);
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project transferred' });
-        this.numberOfProjectsReassigned--;
-        this.checkAllProjectsReassigned();
-
-      },
-      error: (error) => {
-        console.error('Error transferring project:', error);
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error transferring project' });
-      },
-    });
+  transferProject(project: SimpleProjectDto, manager: any) : void {
+    project.manager = manager.value.username ?? '';
+    this.transferredProjects.push(project);
+    this.checkAllProjectsReassigned();
   }
 
 
+
+transferAndDelete(): void {
+  const updateProjects$ = this.transferredProjects.map(project =>
+    this.projectService.updateProject(project)
+  );
+
+  forkJoin(updateProjects$).subscribe({
+    next: (responses) => {
+      console.log('All projects transferred:', responses);
+      this.messageService.add({ severity: 'success', summary: 'Success', detail: 'All projects transferred' });
+
+      // Now delete the user
+      this.usersService.deleteUser(this.userNameToDelete).subscribe({
+        next: (response) => {
+          console.log('User deleted:', response);
+          this.evaluateResponse(response, this.userNameToDelete);
+          this.loadUsers();
+          this.displayDeletionPopup = false;
+        },
+        error: (error) => {
+          console.error('Error deleting user:', error);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error deleting user' });
+        },
+      });
+    },
+    error: (error) => {
+      console.error('Error transferring projects:', error);
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error transferring projects' });
+    },
+  });
+}
+
+
   checkAllProjectsReassigned(): void {
-    if (this.numberOfProjectsReassigned === 0) {
+    if (this.affectedProjects.filter(project => this.transferredProjects.some(transferredProject => transferredProject.projectId === project.projectId)).length === this.affectedProjects.length) {
       this.deleteDisabled = false;
-      this.loadUsers();
     }
   }
 
