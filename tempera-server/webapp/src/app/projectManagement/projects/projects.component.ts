@@ -1,16 +1,17 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import {Project} from "../../models/project.model";
-import {MessagesModule} from "primeng/messages";
-import {TableModule} from "primeng/table";
-import {ButtonModule} from "primeng/button";
-import {InputTextModule} from "primeng/inputtext";
-import {NgIf} from "@angular/common";
-import {UserCreateComponent} from "../../userManagement/user-create/user-create.component";
-import {ProjectCreateComponent} from "../project-create/project-create.component";
-import {DialogModule} from "primeng/dialog";
-import {Router} from "@angular/router";
-import {ProjectEditComponent} from "../project-edit/project-edit.component";
+import { Project } from '../../models/project.model';
+import { MessagesModule } from 'primeng/messages';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { NgIf } from '@angular/common';
+import { UserCreateComponent } from '../../userManagement/user-create/user-create.component';
+import { ProjectCreateComponent } from '../project-create/project-create.component';
+import { DialogModule } from 'primeng/dialog';
+import { Router } from '@angular/router';
+import { ProjectEditComponent } from '../project-edit/project-edit.component';
 import { ProjectControllerService, SimpleProjectDto } from '../../../api';
+
 @Component({
   selector: 'app-projects',
   standalone: true,
@@ -116,11 +117,6 @@ export class ProjectsComponent implements OnInit{
     this.displayEditDialog = false;
   }
 
-  viewProjectDetails(project: Project) {
-    console.log("View project details:", project);
-    console.log("Project ID:", project.projectId);
-    this.router.navigate(['/project', project.projectId]);
-  }
   addGroupToProject(project: Project) {
     this.router.navigate(['/project/groups', project.projectId]);
   }

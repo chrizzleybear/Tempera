@@ -8,7 +8,6 @@ import { UsersComponent } from './userManagement/users/users.component';
 import { UserDetailsComponent } from './userManagement/user-details/user-details.component';
 import { ValidationComponent } from './validation/validation.component';
 import { ProjectsComponent } from './projectManagement/projects/projects.component';
-import { ProjectDetailsComponent } from './projectManagement/project-details/project-details.component';
 import { GroupsComponent } from './groupManagement/groups/groups.component';
 import { GroupDetailsComponent } from './groupManagement/group-details/group-details.component';
 import { GroupMembersComponent } from './groupManagement/group-members/group-members.component';
@@ -29,7 +28,7 @@ import {
 } from './accessPointManagement/access-point-details/access-point-details.component';
 import { AccumulatedTimeComponent } from './accumulated-time/accumulated-time.component';
 import { OverviewChartsComponent } from './climateCharts/overview-charts.component';
-import {TipsComponent} from "./tips/tips.component";
+import { TipsComponent } from './tips/tips.component';
 import { AuditLogsComponent } from './audit-logs/audit-logs.component';
 
 export const routes: Routes = [
@@ -48,7 +47,6 @@ export const routes: Routes = [
           { path: 'group/members/:name/:id', component: GroupMembersComponent },
           { path: 'project/groups/:id', component: ProjectGroupsComponent },
           { path: 'projects', component: ProjectsComponent },
-          { path: 'project/:id', component: ProjectDetailsComponent },
           { path: 'myGroups', component: GroupsGroupleadComponent },
           { path: 'group/projects/:name/:id', component: GroupProjectsComponent },
           { path: 'timetable', component: TimetableComponent },

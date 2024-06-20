@@ -130,7 +130,7 @@ public class GroupService {
         "New Group with name " + group.getName() + " was deleted.");
   }
 
-  @PreAuthorize("hasAuthority('GROUPLEAD') or hasAnyAuthority('ADMIN')")
+  @PreAuthorize("hasAuthority('GROUPLEAD') or hasAuthority('ADMIN') or hasAuthority('MANAGER')")
   @Transactional
   public Userx addMember(Long groupId, String memberId) {
     Groupx group =
