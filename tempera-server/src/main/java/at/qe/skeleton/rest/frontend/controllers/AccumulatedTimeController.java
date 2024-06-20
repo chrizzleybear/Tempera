@@ -1,10 +1,7 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
-import at.qe.skeleton.model.enums.State;
+
 import at.qe.skeleton.model.enums.UserxRole;
-import at.qe.skeleton.rest.frontend.dtos.AccumulatedTimeDto;
-import at.qe.skeleton.rest.frontend.dtos.SimpleGroupDto;
-import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
 import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.AccumulatedTimeMapper;
 import at.qe.skeleton.rest.frontend.payload.response.AccumulatedTimeResponse;
 import org.slf4j.Logger;
@@ -20,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 @RestController
@@ -40,7 +36,6 @@ public class AccumulatedTimeController {
     //check for permissions
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     String username = auth.getName();
-    // todo: check for a better way to check for permissions
     if (auth.getAuthorities().contains(new SimpleGrantedAuthority(UserxRole.MANAGER.toString()))){
       logger.info("detected Authorization: Manager");
       return ResponseEntity.ok(accumulatedTimeMapper.getManagerTimeData(username));
@@ -50,36 +45,5 @@ public class AccumulatedTimeController {
       return ResponseEntity.ok(accumulatedTimeMapper.getGroupLeadTimeData(username));
     }
     return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-
-//        var response =
-//                new AccumulatedTimeResponse(
-//                        List.of(
-//                                new AccumulatedTimeDto(
-//                                         "1L",
-//                                         "1L",
-//                                        State.DEEPWORK,
-//                                        "2024-01-01T00:00:00",
-//                                        "2024-01-01T05:00:00"),
-//                                new AccumulatedTimeDto(
-//                                        "2L",
-//                                        "2L",
-//                                        State.AVAILABLE,
-//                                        "2024-01-01T05:00:00",
-//                                        "2024-01-01T13:00:00"),
-//                                new AccumulatedTimeDto(
-//                                        "3L",
-//                                        "3L",
-//                                        State.MEETING,
-//                                        "2024-01-01T13:00:00",
-//                                        "2024-01-01T14:00:00")
-//
-//                        ),
-//                        List.of(
-//                                new SimpleProjectDto("1L", "Project 1", null, "manager1"),
-//                                new SimpleProjectDto("2L", "Project 2", null, "manager1")),
-//                        List.of(
-//                                new SimpleGroupDto("1L", "Group 1", null, "grouplead1"),
-//                                new SimpleGroupDto("2L", "Group 2", null, "grouplead1")));
-//        return ResponseEntity.ok(response);
   }
 }
