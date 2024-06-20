@@ -43,7 +43,7 @@ export class HumidityIrradianceChartComponent extends ClimateChart {
   protected override label1: string = 'Humidity (%)';
   protected override label2: string = 'Irradiance (lux)';
 
-  override ngOnInit(): void {
-    super.ngOnInit();
+  override whenInit(): void {
+    super.whenInit();
   }
 }
