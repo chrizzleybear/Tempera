@@ -305,12 +305,12 @@ export class AuthControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public validateUser1(requestBody: { [key: string]: string; }, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<UserxDto>;
-    public validateUser1(requestBody: { [key: string]: string; }, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<UserxDto>>;
-    public validateUser1(requestBody: { [key: string]: string; }, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<UserxDto>>;
-    public validateUser1(requestBody: { [key: string]: string; }, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public validateUser(requestBody: { [key: string]: string; }, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<UserxDto>;
+    public validateUser(requestBody: { [key: string]: string; }, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<UserxDto>>;
+    public validateUser(requestBody: { [key: string]: string; }, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<UserxDto>>;
+    public validateUser(requestBody: { [key: string]: string; }, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (requestBody === null || requestBody === undefined) {
-            throw new Error('Required parameter requestBody was null or undefined when calling validateUser1.');
+            throw new Error('Required parameter requestBody was null or undefined when calling validateUser.');
         }
 
         let localVarHeaders = this.defaultHeaders;
