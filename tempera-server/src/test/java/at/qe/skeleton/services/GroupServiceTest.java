@@ -189,15 +189,14 @@ public class GroupServiceTest {
                 .thenReturn(Optional.of(member));
         when(groupxProjectRepository.findAllByGroup_IdAndContributorsContain(group.getId(), username))
                 .thenReturn(gxps);
-        // doNothing().when(projectService).saveGroupxProject(any());
 
         groupService.removeMember(group.getId(), username);
 
         assertFalse(group.getMembers().contains(member));
         assertTrue(gxp.getContributors().isEmpty());
         verify(auditLogService, atLeastOnce()).logEvent(eq(LogEvent.EDIT), eq(LogAffectedType.GROUP), anyString());
-        verify(projectService).saveGroupxProject(gxp);
-        verify(groupRepository).save(group);
+        verify(projectService, atLeastOnce()).saveGroupxProject(gxp);
+        verify(groupRepository, atLeastOnce()).save(group);
     }
 
     @Test

@@ -93,6 +93,10 @@ public class Project {
 //    contributor.getProjects().remove(this);
 //  }
 
+  public void setGroupxProjects(Set<GroupxProject> groupxProjects) {
+    this.groupxProjects = groupxProjects;
+  }
+
   public String getName() {
     return name;
   }

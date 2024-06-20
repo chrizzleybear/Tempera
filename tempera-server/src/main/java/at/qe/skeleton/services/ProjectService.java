@@ -269,7 +269,6 @@ if(groupxProjectOptional.isPresent()){
                     new CouldNotFindEntityException(
                         "Could not find GroupxProject with GroupId %d and ProjectID %d"
                             .formatted(groupId, projectId)));
-
     Userx contributor =
         userxRepository
             .findByUsername(username)

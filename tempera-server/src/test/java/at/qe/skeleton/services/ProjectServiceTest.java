@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -294,59 +295,108 @@ public class ProjectServiceTest {
 
     @Test
     public void testAddContributorUserNotFound() {
+        Userx groupLead = new Userx();
+        groupLead.setId("groupLead");
+        groupLead.setRoles(Set.of(UserxRole.GROUPLEAD));
+        groupLead.setGroupxProjects(new HashSet<>());
+        when(userxRepository.findById("groupLead")).thenReturn(Optional.of(groupLead));
 
         Project project = new Project();
         project.setName("Test Project");
+        project.setGroupxProjects(new HashSet<>());
+
+        Groupx group = new Groupx();
+        group.setName("Test Group");
+        group.setGroupLead(groupLead);
+        group.setGroupxProjects(new HashSet<>());
+        when(groupRepository.findById(group.getId())).thenReturn(Optional.of(group));
+        when(groupRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
         GroupxProject groupxProject = new GroupxProject();
+        groupxProject.addGroup(group);
         groupxProject.addProject(project);
+        when(groupxProjectRepository.findByGroup_IdAndProject_Id(group.getId(), project.getId())).thenReturn(Optional.of(groupxProject));
+        when(userxRepository.findByUsername("groupLead")).thenReturn(Optional.of(groupLead));
+        when(userxRepository.findByUsername("userName")).thenReturn(Optional.empty());
 
-
-        when(groupxProjectRepository.findByGroup_IdAndProject_IdFetchContributorsEagerly(1L, 1L)).thenReturn(Optional.of(groupxProject));
-        when(userxRepository.findById("userName")).thenReturn(Optional.empty());
-
-        CouldNotFindEntityException exception = assertThrows(CouldNotFindEntityException.class, () -> {
-            projectService.addContributor(1L, 1L, "userName");
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            projectService.addContributor(group.getId(), project.getId(), "userName");
         });
 
-        assertEquals("Userx with id 1 not present", exception.getMessage());
-        verify(groupxProjectRepository, times(1)).findByGroup_IdAndProject_IdFetchContributorsEagerly(1L, 1L);
-        verify(userxRepository, times(1)).findById(anyString());
+        assertEquals("User not found", exception.getMessage());
+        verify(groupxProjectRepository, times(1)).findByGroup_IdAndProject_Id(group.getId(), project.getId());
+        verify(userxRepository, times(1)).findByUsername(anyString());
         verify(groupxProjectRepository, never()).save(any(GroupxProject.class));
         verify(auditLogService, never()).logEvent(any(), any(), any());
     }
 
     @Test
     public void testRemoveContributor() throws CouldNotFindEntityException {
+        Userx groupLead = new Userx();
+        groupLead.setId("groupLead");
+        groupLead.setRoles(Set.of(UserxRole.GROUPLEAD));
+        groupLead.setGroupxProjects(new HashSet<>());
+        when(userxRepository.findByUsername("groupLead")).thenReturn(Optional.of(groupLead));
+
         Project project = new Project();
         project.setName("Test Project");
+        project.setGroupxProjects(new HashSet<>());
+
+        Groupx group = new Groupx();
+        group.setName("Test Group");
+        group.setGroupLead(groupLead);
+        group.setGroupxProjects(new HashSet<>());
+        when(groupRepository.findById(group.getId())).thenReturn(Optional.of(group));
+        when(groupRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
         GroupxProject groupxProject = new GroupxProject();
+        groupxProject.addGroup(group);
         groupxProject.addProject(project);
-        Userx user = new Userx();
-        user.setId("userName");
+        when(groupxProjectRepository.findByGroup_IdAndProject_Id(group.getId(), project.getId())).thenReturn(Optional.of(groupxProject));
 
-        groupxProject.getContributors().add(user);
-        when(groupxProjectRepository.findByGroup_IdAndProject_IdFetchContributorsEagerly(1L, 1L)).thenReturn(Optional.of(groupxProject));
-        when(userxRepository.findById("userName")).thenReturn(Optional.of(user));
+        groupxProject.addContributor(groupLead);
 
-        projectService.removeContributor(1L, 1L, "userName");
+        projectService.removeContributor(group.getId(), project.getId(), groupLead.getUsername());
 
-        verify(groupxProjectRepository, times(1)).findByGroup_IdAndProject_IdFetchContributorsEagerly(1L, 1L);
-        verify(userxRepository, times(1)).findById(anyString());
+        verify(groupxProjectRepository, times(1)).findByGroup_IdAndProject_Id(group.getId(), project.getId());
+        verify(userxRepository, times(1)).findByUsername(anyString());
         verify(groupxProjectRepository, times(1)).save(groupxProject);
         verify(auditLogService, times(1)).logEvent(any(), any(), any());
-        assertFalse(groupxProject.getContributors().contains(user));
+        assertFalse(groupxProject.getContributors().contains(groupLead));
     }
 
     @Test
     public void testRemoveContributorGroupxProjectNotFound() {
-        when(groupxProjectRepository.findByGroup_IdAndProject_IdFetchContributorsEagerly(1L, 1L)).thenReturn(Optional.empty());
+        Userx groupLead = new Userx();
+        groupLead.setId("groupLead");
+        groupLead.setRoles(Set.of(UserxRole.GROUPLEAD));
+        groupLead.setGroupxProjects(new HashSet<>());
+
+        Project project = new Project();
+        project.setName("Test Project");
+        project.setGroupxProjects(new HashSet<>());
+
+        Groupx group = new Groupx();
+        group.setName("Test Group");
+        group.setGroupLead(groupLead);
+        group.setGroupxProjects(new HashSet<>());
+        when(groupRepository.findById(group.getId())).thenReturn(Optional.of(group));
+        when(groupRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        GroupxProject groupxProject = new GroupxProject();
+        groupxProject.addGroup(group);
+        groupxProject.addProject(project);
+        when(userxRepository.findByUsername("groupLead")).thenReturn(Optional.of(groupLead));
+
+        when(groupxProjectRepository.findByGroup_IdAndProject_Id(group.getId(), project.getId())).thenReturn(Optional.empty());
 
         CouldNotFindEntityException exception = assertThrows(CouldNotFindEntityException.class, () -> {
-            projectService.removeContributor(1L, 1L, "userName");
+            projectService.removeContributor(group.getId(), project.getId(), "groupLead");
         });
 
-        assertEquals("GroupxProject with groupId 1 and projectId 1 are not present", exception.getMessage());
-        verify(groupxProjectRepository, times(1)).findByGroup_IdAndProject_IdFetchContributorsEagerly(1L, 1L);
+        assertEquals("Could not find GroupxProject with GroupId %d and ProjectID %d"
+                .formatted(group.getId(), project.getId()), exception.getMessage());
+        verify(groupxProjectRepository, times(1)).findByGroup_IdAndProject_Id(group.getId(), project.getId());
         verify(userxRepository, never()).findById(anyString());
         verify(groupxProjectRepository, never()).save(any(GroupxProject.class));
         verify(auditLogService, never()).logEvent(any(), any(), any());
@@ -354,22 +404,37 @@ public class ProjectServiceTest {
 
     @Test
     public void testRemoveContributorUserNotFound() {
+        Userx groupLead = new Userx();
+        groupLead.setId("groupLead");
+        groupLead.setRoles(Set.of(UserxRole.GROUPLEAD));
+        when(userxRepository.findById("groupLead")).thenReturn(Optional.of(groupLead));
+
         Project project = new Project();
         project.setName("Test Project");
+        project.setGroupxProjects(new HashSet<>());
+
+        Groupx group = new Groupx();
+        group.setName("Test Group");
+        group.setGroupLead(groupLead);
+        when(groupRepository.findById(group.getId())).thenReturn(Optional.of(group));
+        when(groupRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
         GroupxProject groupxProject = new GroupxProject();
         groupxProject.addProject(project);
 
-        when(groupxProjectRepository.findByGroup_IdAndProject_IdFetchContributorsEagerly(1L, 1L)).thenReturn(Optional.of(groupxProject));
-        when(userxRepository.findById("userName")).thenReturn(Optional.empty());
+        when(groupxProjectRepository.findByGroup_IdAndProject_Id(group.getId(), project.getId())).thenReturn(Optional.of(groupxProject));
+        when(userxRepository.findById("groupLead")).thenReturn(Optional.of(groupLead));
 
-        CouldNotFindEntityException exception = assertThrows(CouldNotFindEntityException.class, () -> {
-            projectService.removeContributor(1L, 1L, "userName");
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            projectService.removeContributor(group.getId(), project.getId(), "groupLead");
         });
 
-        assertEquals("Userx with id 1 not present", exception.getMessage());
-        verify(groupxProjectRepository, times(1)).findByGroup_IdAndProject_IdFetchContributorsEagerly(1L, 1L);
-        verify(userxRepository, times(1)).findById(anyString());
+        assertEquals("User not found", exception.getMessage());
+        verify(groupxProjectRepository, times(1)).findByGroup_IdAndProject_Id(group.getId(), project.getId());
+        verify(userxRepository, times(1)).findByUsername(groupLead.getId());
         verify(groupxProjectRepository, never()).save(any(GroupxProject.class));
     }
+
+
 
 }
