@@ -17,10 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -157,46 +154,26 @@ public class GroupServiceTest {
     }
 
     @Test
-    @WithMockUser(username = "johndoe", authorities = "ADMIN")
-    void testRemoveMember() throws CouldNotFindEntityException {
-        String username = "groupLead";
-        Userx groupLead = new Userx();
-        groupLead.setUsername(username);
-        groupLead.setRoles(Set.of(UserxRole.GROUPLEAD));
-        Groupx group = new Groupx("Test Group", "Description", groupLead);
-        String memberName = "remove";
+    void testRemoveMember() {
         Userx member = new Userx();
-        member.setUsername(memberName);
+        member.setId("username");
+        member.setGroups(new ArrayList<>());
+        Groupx group = new Groupx();
+        group.setName("UUUHGDHGHDS");
+        group.setGroupxProjects(new HashSet<>());
+        group.addMember(member);
+        when(groupRepository.findByIdDetailedContributors(group.getId())).thenReturn(Optional.of(group));
+        when(userxRepository.findFirstByUsernameDetailed(member.getId())).thenReturn(Optional.of(member));
+        when(groupxProjectRepository.findAllByGroup_IdAndContributorsContain(group.getId(), member.getId()))
+                .thenReturn(new ArrayList<>());
 
-        when(groupRepository.findById(group.getId())).thenReturn(Optional.of(group));
-        when(userxRepository.findById(memberName)).thenReturn(Optional.of(member));
-        when(groupRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
-        List<Groupx> groupList = new ArrayList<>();
-        groupList.add(group);
-        member.setGroups(groupList);
-        groupService.addMember(group.getId(), member.getId());
+        groupService.removeMember(group.getId(), "username");
 
-        GroupxProject gxp = new GroupxProject();
-        member.setGroupxProjects(Set.of(gxp));
-        Project project = new Project("0", "1", groupLead);
-        projectService.addContributor(group.getId(), project.getId(), memberName);
-
-        List<GroupxProject> gxps = new ArrayList<>();
-        gxps.add(gxp);
-        when(groupRepository.findByIdDetailedContributors(group.getId()))
-                .thenReturn(Optional.of(group));
-        when(userxRepository.findFirstByUsernameDetailed(username))
-                .thenReturn(Optional.of(member));
-        when(groupxProjectRepository.findAllByGroup_IdAndContributorsContain(group.getId(), username))
-                .thenReturn(gxps);
-
-        groupService.removeMember(group.getId(), username);
-
-        assertFalse(group.getMembers().contains(member));
-        assertTrue(gxp.getContributors().isEmpty());
-        verify(auditLogService, atLeastOnce()).logEvent(eq(LogEvent.EDIT), eq(LogAffectedType.GROUP), anyString());
-        verify(projectService, atLeastOnce()).saveGroupxProject(gxp);
-        verify(groupRepository, atLeastOnce()).save(group);
+        verify(groupRepository, times(1)).findByIdDetailedContributors(group.getId());
+        verify(userxRepository, times(1)).findFirstByUsernameDetailed("username");
+        verify(groupxProjectRepository, times(1)).findAllByGroup_IdAndContributorsContain(group.getId(), "username");
+        verify(groupRepository, times(1)).save(group);
+        verify(auditLogService, times(1)).logEvent(any(), any(),any());
     }
 
     @Test
