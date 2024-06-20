@@ -1,5 +1,5 @@
 <p-toast position="bottom-right"></p-toast>
-<form *ngIf="this.dashboardData; else noData" name="form" [formGroup]="this.form" (ngSubmit)="this.onSubmit()"
+<form *ngIf="this.dashboardData" name="form" [formGroup]="this.form" (ngSubmit)="this.onSubmit()"
       class="h-full">
   <div class="w-full lg:px-4 flex justify-between mb-4 lg:mb-0">
     <p-dropdown pTooltip="Administrators are not allowed to change their visibility."
@@ -79,6 +79,3 @@
     </div>
   </div>
 </form>
-<ng-template #noData>
-  <h3 class="cool-warning">No data available.</h3>
-</ng-template>
