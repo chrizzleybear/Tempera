@@ -42,7 +42,7 @@ export class TemperatureCo2ChartComponent extends ClimateChart {
   protected override label1: string = 'Temperature (°C)';
   protected override label2: string = 'NMVOC (ppm)';
 
-  override ngOnInit(): void {
-    super.ngOnInit();
+  override whenInit(): void {
+    super.whenInit();
   }
 }
