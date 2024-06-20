@@ -16,10 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoggingServiceTest {
 
-    private static final String LOG_DIR_PATH = File.separator + "logs";
-    private static final String LOG_WARNING_PATH = LOG_DIR_PATH + File.separator + "warning.log";
-    private static final String LOG_INFO_PATH = LOG_DIR_PATH + File.separator + "info.log";
-
+    private static final String LOG_DIR_PATH = Paths.get("logs").toString();
+    private static final String LOG_WARNING_NAME = "warning.log";
+    private static final String LOG_INFO_NAME = "info.log";
+    private static final String LOG_WARNING_PATH = LOG_DIR_PATH + File.separator + LOG_WARNING_NAME;
+    private static final String LOG_INFO_PATH = LOG_DIR_PATH + File.separator + LOG_INFO_NAME;
     private LoggingService loggingService;
 
     @BeforeEach
@@ -80,13 +81,13 @@ public class LoggingServiceTest {
                     break;
                 }
             }
-            assertTrue(found, "Log file does not contain the expected message: " + expectedLogEntry);
+            assertTrue(found);
         }
     }
 
     private String getExpectedLogEntry(LogEvent actionType, LogAffectedType affectedType, String message) {
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        return timestamp + " - " + actionType + " - " + affectedType + " - " + message;
+        return timestamp + " - [TEMPERA] - " + actionType + " - " + affectedType + " - " + message;
     }
 }
 

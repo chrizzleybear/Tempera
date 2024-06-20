@@ -19,8 +19,8 @@ public class LoggingService {
     private static final String LOG_DIR_PATH = Paths.get("logs").toString();
     private static final String LOG_WARNING_NAME = "warning.log";
     private static final String LOG_INFO_NAME = "info.log";
-    private static final String LOG_WARNING_PATH = LOG_DIR_PATH + "/" + LOG_WARNING_NAME;
-    private static final String LOG_INFO_PATH = LOG_DIR_PATH + "/" + LOG_INFO_NAME;
+    private static final String LOG_WARNING_PATH = LOG_DIR_PATH + File.separator + LOG_WARNING_NAME;
+    private static final String LOG_INFO_PATH = LOG_DIR_PATH + File.separator + LOG_INFO_NAME;
     private static final Logger log = LoggerFactory.getLogger(LoggingService.class);
 
     private File warningLogFile;
@@ -74,10 +74,12 @@ public class LoggingService {
             default -> false;
         };
         File logFile = severe ? warningLogFile : infoLogFile;
+        log.info("Writing to log file: {}", logFile.getPath());
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(logFile, true))) {
             String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            writer.write(timestamp + " - " + actionType + " - " + affectedType + " - " + message);
+            writer.write(timestamp + " - [TEMPERA] - " + actionType + " - " + affectedType + " - " + message);
             writer.newLine();
+            log.info("Successfully wrote to log file: {}", logFile.getPath());
         } catch (IOException e) {
             log.error("Failed to write to log file: " + e.getMessage());
         }
