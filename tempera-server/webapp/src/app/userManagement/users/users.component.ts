@@ -13,16 +13,16 @@ import { MessageService } from 'primeng/api';
 import { forkJoin } from 'rxjs';
 import {
   DeletionResponseDto,
+  GroupManagementControllerService,
   ProjectControllerService,
   SimpleGroupDto,
   SimpleProjectDto,
-  SimpleUserDto,
   UserManagementControllerService,
   Userx,
   UserxDto,
 } from '../../../api';
 import { DropdownModule } from 'primeng/dropdown';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import RolesEnum = Userx.RolesEnum;
 
 @Component({
@@ -62,25 +62,22 @@ export class UsersComponent implements OnInit {
   deletionResponseMessage: string = '';
   affectedProjects: SimpleProjectDto[] = [];
   transferredProjects: SimpleProjectDto[] = [];
-  numberOfProjectsReassigned: number = 0;
   affectedGroups: SimpleGroupDto[] = [];
+  transferredGroups: SimpleGroupDto[] = [];
   availableManagers: { label: string, value: UserxDto } [] | undefined;
-  availableUsers: SimpleUserDto[] = [];
+  availableUsers: {label: string, value : UserxDto}[] | undefined;
   deleteDisabled: boolean = true;
   userNameToDelete: string = '';
   form: FormGroup;
 
 
-  constructor(private fb: FormBuilder, private projectService: ProjectControllerService, private usersService: UserManagementControllerService, private router: Router, private messageService: MessageService) {
+  constructor(private fb: FormBuilder, private groupService: GroupManagementControllerService, private projectService: ProjectControllerService, private usersService: UserManagementControllerService, private router: Router, private messageService: MessageService) {
     this.deletionResponse = null;
     this.form = this.fb.group({
       row: this.fb.array([]),
     });
   }
 
-  get rows() {
-    return this.form.get('row') as FormArray;
-  }
 
   ngOnInit(): void {
     this.loadUsers();
@@ -145,8 +142,6 @@ export class UsersComponent implements OnInit {
     } else if (response.responseType === 'ERROR') {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'User could not be deleted' });
     } else if (response.responseType === 'MANAGER') {
-
-
       this.availableManagers = this.users.filter(user => {
         const rolesSet = new Set(user.roles);
         return rolesSet.has(RolesEnum.Manager) && user.username !== username;
@@ -156,10 +151,11 @@ export class UsersComponent implements OnInit {
       this.deletionResponseMessage = 'The user could not be deleted, because they are still managing some Projects.';
       console.log('response', response.affectedProjects);
       this.affectedProjects = response.affectedProjects ?? [];
-      this.numberOfProjectsReassigned = this.affectedProjects.length;
       this.displayDeletionPopup = true;
     } else if (response.responseType === 'GROUPLEAD') {
-      this.availableUsers = this.users.filter(user => user.username !== username);
+      this.availableUsers = this.users.filter(user => user.username !== username).map(
+        user => ({ label: `${user.firstName} ${user.lastName}`, value: user }),
+      )
       this.deletionResponseMessage = 'The user could not be deleted, because he is a group lead of the following groups:';
       this.affectedGroups = response.affectedGroups ?? [];
       this.displayDeletionPopup = true;
@@ -176,9 +172,15 @@ export class UsersComponent implements OnInit {
     this.checkAllProjectsReassigned();
   }
 
+  transferGroup(group: SimpleGroupDto, user: any) : void {
+    group.groupLead = user.value.username ?? '';
+    this.transferredGroups.push(group);
+    this.checkAllGroupsReassigned();
+  }
 
 
-transferAndDelete(): void {
+
+transferAndDeleteProjects(): void {
   const updateProjects$ = this.transferredProjects.map(project =>
     this.projectService.updateProject(project)
   );
@@ -209,9 +211,46 @@ transferAndDelete(): void {
   });
 }
 
+transferAndDeleteGroups(): void {
+const updateGroups$ = this.transferredGroups.map(group =>
+    this.groupService.updateGroup(group)
+  );
+
+  forkJoin(updateGroups$).subscribe({
+    next: (responses) => {
+      console.log('All groups transferred:', responses);
+      this.messageService.add({ severity: 'success', summary: 'Success', detail: 'All groups transferred' });
+
+      // Now delete the user
+      this.usersService.deleteUser(this.userNameToDelete).subscribe({
+        next: (response) => {
+          console.log('User deleted:', response);
+          this.evaluateResponse(response, this.userNameToDelete);
+          this.loadUsers();
+          this.displayDeletionPopup = false;
+        },
+        error: (error) => {
+          console.error('Error deleting user:', error);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error deleting user' });
+        },
+      });
+    },
+    error: (error) => {
+      console.error('Error transferring groups:', error);
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error transferring groups' });
+    },
+  });
+}
+
 
   checkAllProjectsReassigned(): void {
     if (this.affectedProjects.filter(project => this.transferredProjects.some(transferredProject => transferredProject.projectId === project.projectId)).length === this.affectedProjects.length) {
+      this.deleteDisabled = false;
+    }
+  }
+
+  checkAllGroupsReassigned(): void {
+    if (this.affectedGroups.filter(group => this.transferredGroups.some(transferredGroup => transferredGroup.id === group.id)).length === this.affectedGroups.length) {
       this.deleteDisabled = false;
     }
   }
@@ -220,7 +259,6 @@ transferAndDelete(): void {
     this.loadUsers();
     this.deleteDisabled = true;
     this.displayDeletionPopup = false;
-    this.numberOfProjectsReassigned = 0;
     this.affectedProjects = [];
     this.affectedGroups = [];
     this.userNameToDelete = '';
@@ -263,12 +301,6 @@ transferAndDelete(): void {
   }
 
   onEditCompleted(success: boolean) {
-    if (success) {
-      this.returnToUsers();
-    }
-  }
-
-  onCreateCompleted(success: boolean) {
     if (success) {
       this.returnToUsers();
     }
