@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 @Component
 @Scope("application")
@@ -192,6 +194,7 @@ public class MeasurementService {
                         && t.getThresholdType().equals(ThresholdType.UPPERBOUND_WARNING))
             .findFirst()
             .orElseThrow(() -> new ThresholdNotAvailableException(sensorType, ThresholdType.UPPERBOUND_WARNING));
+
     if (value <= lowerWarnThreshold.getValue()) {
         return Optional.of(lowerWarnThreshold);
     } else if (value <= lowerInfoThreshold.getValue() ) {
@@ -199,7 +202,7 @@ public class MeasurementService {
       // airquality does not have upper limit. it is measured via ohm and high values are good (look at wiki).
     } else if (value >= upperWarnThreshold.getValue() && sensorType!=SensorType.NMVOC) {
         return Optional.of(upperWarnThreshold);
-    } else if (value >= upperInfoThreshold.getValue() &&sensorType!=SensorType.NMVOC) {
+    } else if (value >= upperInfoThreshold.getValue() && sensorType!=SensorType.NMVOC) {
       return Optional.of(upperInfoThreshold);
     } else {
       return Optional.empty();
@@ -246,4 +249,16 @@ public class MeasurementService {
     return measurementRepository.findFirstBySensorIdOrderById_TimestampDesc(id);
   }
 
+  public Optional<List<Measurement>> find100LatestMeasurementsBySensor(Sensor sensor) {
+    SensorId id = sensor.getSensorId();
+    return measurementRepository.findTop100BySensorIdOrderById_TimestampAsc(id);
+  }
+
+  public Optional<List<Measurement>> getMeasurementsBetween(MeasurementId start, MeasurementId end) {
+    return measurementRepository.findByIdBetweenOrderByIdAsc(start, end);
+  }
+
+  public List<Measurement> loadAllMeasurementsFromTempera() {
+    return measurementRepository.findAll();
+  }
 }

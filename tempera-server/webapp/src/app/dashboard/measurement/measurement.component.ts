@@ -8,6 +8,7 @@ import { WrapFnPipe } from '../../_pipes/wrap-fn.pipe';
 import { AirQualityPipe } from '../../_pipes/air-quality.pipe';
 import { DialogModule } from 'primeng/dialog';
 import { MeasurementColorPipe } from './measurement-color.pipe';
+import { AlertStoreService } from '../../_stores/alert-store.service';
 
 @Component({
   selector: 'app-measurement',
@@ -33,15 +34,10 @@ export class MeasurementComponent {
 
   @Input({ required: true }) sensorType!: SensorType;
 
-  @Input() highHints?: string[];
-
-  @Input() lowHints?: string[];
-
-  @Input() qualityHints?: string[];
-
-  public dialogVisible = false;
-
   protected readonly SensorType = SensorType;
+
+  constructor(private alertStoreService: AlertStoreService) {
+  }
 
   getUnit(sensorType: SensorType): string {
     switch (sensorType) {
@@ -54,5 +50,9 @@ export class MeasurementComponent {
       default:
         return '';
     }
+  }
+
+  openHints() {
+    this.alertStoreService.showHint.emit(this.sensorType);
   }
 }
