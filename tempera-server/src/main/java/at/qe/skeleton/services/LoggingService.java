@@ -9,13 +9,14 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class LoggingService {
 
     // Log file paths
-    private static final String LOG_DIR_PATH = "tempera-server/logs";
+    private static final String LOG_DIR_PATH = Paths.get("logs").toString();
     private static final String LOG_WARNING_NAME = "warning.log";
     private static final String LOG_INFO_NAME = "info.log";
     private static final String LOG_WARNING_PATH = LOG_DIR_PATH + "/" + LOG_WARNING_NAME;
@@ -34,20 +35,20 @@ public class LoggingService {
             File logDir = new File(LOG_DIR_PATH);
             if (!logDir.exists()) {
                 if (logDir.mkdirs()) {
-                    log.info("Logs directory created: {}", logDir.toString());
-                };
+                    log.info("Log directory created: " + LOG_DIR_PATH);
+                }
             }
             warningLogFile = new File(LOG_WARNING_PATH);
             if (!warningLogFile.exists()) {
                 if (warningLogFile.createNewFile()) {
-                    log.info("Log warning file created: {}", warningLogFile);
-                };
+                   log.info("Warning log file created: " + LOG_WARNING_PATH);
+                }
             }
             infoLogFile = new File(LOG_INFO_PATH);
             if (!infoLogFile.exists()) {
                 if (infoLogFile.createNewFile()) {
-                    log.info("Log info file created: {}", infoLogFile);
-                };
+                    log.info("Info log file created: " + LOG_INFO_PATH);
+                }
             }
         } catch (IOException e) {
             System.err.println("Failed to create log files: " + e.getMessage());
@@ -78,7 +79,7 @@ public class LoggingService {
             writer.write(timestamp + " - " + actionType + " - " + affectedType + " - " + message);
             writer.newLine();
         } catch (IOException e) {
-            System.err.println("Failed to write to log file: " + e.getMessage());
+            log.error("Failed to write to log file: " + e.getMessage());
         }
     }
 }

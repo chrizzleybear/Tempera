@@ -40,7 +40,7 @@ public class AuditLogService {
             user = null;
         }
         AuditLog a = new AuditLog(user, actionType, affectedType, message);
-        loggingService.logEvent(actionType, affectedType, message);
+        loggingService.logEvent(actionType, affectedType, "AUDIT-LOG: " + message);
         return auditLogRepository.save(a) != null;
     }
 

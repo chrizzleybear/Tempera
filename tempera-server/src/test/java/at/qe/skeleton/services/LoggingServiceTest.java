@@ -16,9 +16,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoggingServiceTest {
 
-    private static final String LOG_DIR_PATH = "tempera-server/logs";
-    private static final String LOG_WARNING_PATH = LOG_DIR_PATH + "/warning.log";
-    private static final String LOG_INFO_PATH = LOG_DIR_PATH + "/info.log";
+    private static final String LOG_DIR_PATH = File.separator + "logs";
+    private static final String LOG_WARNING_PATH = LOG_DIR_PATH + File.separator + "warning.log";
+    private static final String LOG_INFO_PATH = LOG_DIR_PATH + File.separator + "info.log";
 
     private LoggingService loggingService;
 
