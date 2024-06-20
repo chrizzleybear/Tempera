@@ -74,6 +74,8 @@ INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUE
 INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -3, -12);
 INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -2, -12);
 INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -3, -11);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -3, -10);
+
 
 
 INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-1, -1, 'admin');
@@ -108,32 +110,48 @@ INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id,
 INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -10, 'clarkkent');
 INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -10, 'bobjones');
 INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -10, 'chriswilliams');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-3, -1, 'mariatheresa');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-3, -3, 'mariatheresa');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-3, -11, 'mariatheresa');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-4, -4, 'mariatheresa');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-4, -4, 'clarkkent');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-4, -4, 'brucewayne');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-4, -5, 'mariatheresa');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-4, -5, 'clarkkent');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-4, -5, 'brucewayne');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-4, -9, 'mariatheresa');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-4, -9, 'chriswilliams');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-4, -9, 'peterparker');
+
 
 
 INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-1, 'johndoe');
 INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-1, 'alicebrown');
-INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'alicebrown');
-INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'alicebrown');
 INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-1, 'chriswilliams');
-INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'chriswilliams');
-INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'chriswilliams');
 INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-1, 'admin');
-INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'admin');
-INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'admin');
-INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'brucewayne');
-INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'brucewayne');
-INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'peterparker');
-INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'peterparker');
-INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'tonystark');
-INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'tonystark');
-INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'clarkkent');
-INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'clarkkent');
 INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-2, 'johndoe');
 INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-2, 'chriswilliams');
 INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-2, 'admin');
 INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-2, 'bobjones');
 INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-2, 'clarkkent');
 INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-2, 'alicebrown');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'alicebrown');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'chriswilliams');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'admin');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'brucewayne');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'peterparker');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'tonystark');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'clarkkent');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'mariatheresa');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'alicebrown');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'chriswilliams');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'admin');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'brucewayne');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'peterparker');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'tonystark');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'clarkkent');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'mariatheresa');
+
 
 
 
@@ -186,9 +204,23 @@ INSERT INTO public.external_record (duration, start, time_end, user_username, st
 INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (431999, '2024-06-15 07:00:30.000000', '2024-06-20 07:00:29.990000', 'johndoe', 'OUT_OF_OFFICE');
 INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (86399, '2024-06-20 07:00:30.000000', '2024-06-21 07:00:29.990000', 'johndoe', 'DEEPWORK');
 INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (1, '2024-06-21 07:00:30.000000', null, 'johndoe', 'AVAILABLE');
-INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (691199, '2024-05-21 07:00:30.000000', '2024-05-29 07:00:29.990000', 'bobjones', 'AVAILABLE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (691199, '2024-05-21 07:00:30.000000', '2024-05-24 07:00:29.990000', 'bobjones', 'AVAILABLE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (691199, '2024-05-24 07:00:30.000000', '2024-05-26 07:00:29.990000', 'bobjones', 'DEEPWORK');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (691199, '2024-05-26 07:00:30.000000', '2024-05-29 07:00:29.990000', 'bobjones', 'MEETING');
 INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (1814399, '2024-05-29 07:00:30.000000', '2024-06-19 07:00:29.990000', 'bobjones', 'DEEPWORK');
 INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (1, '2024-06-19 07:00:30.000000', null, 'bobjones', 'MEETING');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (172799, '2024-06-01 07:00:30.000000', '2024-06-03 07:00:29.990000', 'mariatheresa', 'MEETING');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (259199, '2024-06-03 07:00:30.000000', '2024-06-06 07:00:29.990000', 'mariatheresa', 'DEEPWORK');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (86399, '2024-06-06 07:00:30.000000', '2024-06-07 07:00:29.990000', 'mariatheresa', 'AVAILABLE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (172799, '2024-06-07 07:00:30.000000', '2024-06-09 07:00:29.990000', 'mariatheresa', 'OUT_OF_OFFICE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (259199, '2024-06-09 07:00:30.000000', '2024-06-12 07:00:29.990000', 'mariatheresa', 'MEETING');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (345599, '2024-06-12 07:00:30.000000', '2024-06-16 07:00:29.990000', 'mariatheresa', 'DEEPWORK');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (86399, '2024-06-16 07:00:30.000000', '2024-06-17 07:00:29.990000', 'mariatheresa', 'AVAILABLE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (86399, '2024-06-17 07:00:30.000000', '2024-06-18 07:00:29.990000', 'mariatheresa', 'OUT_OF_OFFICE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (86399, '2024-06-18 07:00:30.000000', '2024-06-19 07:00:29.990000', 'mariatheresa', 'AVAILABLE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (86399, '2024-06-19 07:00:30.000000', '2024-06-20 07:00:29.990000', 'mariatheresa', 'MEETING');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (86399, '2024-06-20 07:00:30.000000', '2024-06-21 07:00:29.990000', 'mariatheresa', 'OUT_OF_OFFICE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (1, '2024-06-21 07:00:30.000000', null, 'mariatheresa', 'AVAILABLE');
 
 
 INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-16 12:00:00.000000', null, -1, null, '2024-05-16 12:00:00.000000', '2024-05-16 13:00:00.000000', 'admin', null);
@@ -213,44 +245,61 @@ INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, sta
 INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-14 13:00:00.000000', -2, -20, -10, '2024-05-14 13:00:00.000000', '2024-05-14 17:00:00.000000', 'johndoe', null);
 INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-14 17:00:00.000000', -2, -26, -10, '2024-05-14 17:00:00.000000', '2024-05-15 10:00:00.000000', 'johndoe', null);
 INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-18 10:00:00.000000', -1, -8, -4, '2024-05-18 10:00:00.000000', '2024-05-18 14:00:00.000000', 'admin', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-17 15:00:00.000000', null, 1, null, '2024-05-17 16:00:00.000000', '2024-05-18 09:00:00.000000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-17 15:00:00.000000', null, -99, null, '2024-05-17 16:00:00.000000', '2024-05-18 09:00:00.000000', 'admin', null);
 INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-17 15:00:00.000000', null, -7, null, '2024-05-17 15:00:00.000000', '2024-05-17 16:00:00.000000', 'admin', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-19 14:00:00.000000', -1, 27, -6, '2024-05-22 14:00:00.000000', '2024-05-25 14:00:00.000000', 'admin', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-19 14:00:00.000000', -1, 28, -2, '2024-05-25 14:00:00.000000', '2024-05-29 14:00:00.000000', 'admin', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-19 08:00:30.000000', null, 6, null, '2024-06-19 08:00:30.000000', '2024-06-19 10:00:29.990000', 'admin', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-19 14:00:00.000000', -1, 29, -1, '2024-05-29 14:00:00.000000', '2024-06-18 10:16:29.990000', 'admin', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-19 19:00:30.000000', null, 10, null, '2024-06-19 19:00:30.000000', '2024-06-20 06:14:29.990000', 'admin', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-20 07:00:30.000000', -2, 17, -7, '2024-05-20 07:00:30.000000', '2024-05-23 07:00:00.000000', 'johndoe', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-20 07:00:30.000000', -2, 30, -9, '2024-05-23 07:00:00.000000', '2024-05-24 07:00:00.000000', 'johndoe', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-20 06:14:30.000000', -1, 11, -1, '2024-06-20 06:14:30.000000', '2024-06-20 07:14:29.990000', 'admin', 'Now is the time to shine :)');
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-19 14:00:30.000000', -1, 9, -3, '2024-06-19 14:00:30.000000', '2024-06-19 19:00:29.990000', 'admin', 'Look at this description');
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-19 12:00:30.000000', -1, 8, -4, '2024-06-19 12:00:30.000000', '2024-06-19 14:00:29.990000', 'admin', 'We worked really hard on this!');
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-19 10:00:30.000000', -1, 7, -3, '2024-06-19 10:00:30.000000', '2024-06-19 12:00:29.990000', 'admin', 'Some Description blabla');
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-20 07:14:30.000000', null, 12, null, '2024-06-20 07:14:30.000000', '2024-06-20 12:14:29.990000', 'admin', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-20 16:14:30.000000', null, 14, null, '2024-06-20 16:14:30.000000', '2024-06-20 18:14:29.990000', 'admin', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-07 07:00:30.000000', -2, 20, -8, '2024-06-07 07:00:30.000000', '2024-06-15 07:00:29.990000', 'johndoe', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-20 12:14:30.000000', -1, 13, -4, '2024-06-20 12:14:30.000000', '2024-06-20 16:14:29.990000', 'admin', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-20 18:14:30.000000', -1, 15, -6, '2024-06-20 18:14:30.000000', '2024-06-21 07:00:29.990000', 'admin', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-21 07:00:30.000000', -1, 16, -3, '2024-06-21 07:00:30.000000', null, 'admin', null);
+
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-19 14:00:00.000000', -1, -127, -6, '2024-05-22 14:00:00.000000', '2024-05-25 14:00:00.000000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-19 14:00:00.000000', -1, -128, -2, '2024-05-25 14:00:00.000000', '2024-05-29 14:00:00.000000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-19 08:00:30.000000', null, -106, null, '2024-06-19 08:00:30.000000', '2024-06-19 10:00:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-19 14:00:00.000000', -1, -129, -1, '2024-05-29 14:00:00.000000', '2024-06-18 10:16:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-19 19:00:30.000000', null, -110, null, '2024-06-19 19:00:30.000000', '2024-06-20 06:14:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-20 07:00:30.000000', -2, -117, -7, '2024-05-20 07:00:30.000000', '2024-05-23 07:00:00.000000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-20 07:00:30.000000', -2, -130, -9, '2024-05-23 07:00:00.000000', '2024-05-24 07:00:00.000000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-20 06:14:30.000000', -1, -111, -1, '2024-06-20 06:14:30.000000', '2024-06-20 07:14:29.990000', 'admin', 'Now is the time to shine :)');
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-19 14:00:30.000000', -1, -109, -3, '2024-06-19 14:00:30.000000', '2024-06-19 19:00:29.990000', 'admin', 'Look at this description');
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-19 12:00:30.000000', -1, -180, -4, '2024-06-19 12:00:30.000000', '2024-06-19 14:00:29.990000', 'admin', 'We worked really hard on this!');
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-19 10:00:30.000000', -1, -177, -3, '2024-06-19 10:00:30.000000', '2024-06-19 12:00:29.990000', 'admin', 'Some Description blabla');
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-20 07:14:30.000000', null, -112, null, '2024-06-20 07:14:30.000000', '2024-06-20 12:14:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-20 16:14:30.000000', null, -114, null, '2024-06-20 16:14:30.000000', '2024-06-20 18:14:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-07 07:00:30.000000', -2, -120, -8, '2024-06-07 07:00:30.000000', '2024-06-15 07:00:29.990000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-20 12:14:30.000000', -1, -113, -4, '2024-06-20 12:14:30.000000', '2024-06-20 16:14:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-20 18:14:30.000000', -1, -115, -6, '2024-06-20 18:14:30.000000', '2024-06-21 07:00:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-21 07:00:30.000000', -1, -116, -3, '2024-06-21 07:00:30.000000', null, 'admin', null);
 INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-15 15:00:00.000000', -2, -22, -11, '2024-05-15 15:00:00.000000', '2024-05-20 07:00:29.990000', 'johndoe', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-25 07:00:30.000000', null, 18, null, '2024-05-25 07:00:30.000000', '2024-05-29 07:00:29.990000', 'johndoe', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-15 07:00:30.000000', null, 21, null, '2024-06-15 07:00:30.000000', '2024-06-20 07:00:29.990000', 'johndoe', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-19 07:00:30.000000', null, 26, null, '2024-06-19 07:00:30.000000', null, 'bobjones', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-18 17:00:30.000000', -1, 5, -4, '2024-06-18 17:00:30.000000', '2024-06-19 08:00:29.990000', 'admin', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-18 16:00:30.000000', -1, 4, -3, '2024-06-18 16:00:30.000000', '2024-06-18 17:00:29.990000', 'admin', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-18 14:00:30.000000', -1, 3, -6, '2024-06-18 14:00:30.000000', '2024-06-18 16:00:29.990000', 'admin', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-18 10:16:30.000000', -1, 2, -5, '2024-06-18 10:16:30.000000', '2024-06-18 14:00:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-25 07:00:30.000000', null, -118, null, '2024-05-25 07:00:30.000000', '2024-05-29 07:00:29.990000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-15 07:00:30.000000', null, -121, null, '2024-06-15 07:00:30.000000', '2024-06-20 07:00:29.990000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-19 07:00:30.000000', null, -126, null, '2024-06-19 07:00:30.000000', null, 'bobjones', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-18 17:00:30.000000', -1, -153, -4, '2024-06-18 17:00:30.000000', '2024-06-19 08:00:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-18 16:00:30.000000', -1, -142, -3, '2024-06-18 16:00:30.000000', '2024-06-18 17:00:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-18 14:00:30.000000', -1, -131, -6, '2024-06-18 14:00:30.000000', '2024-06-18 16:00:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-18 10:16:30.000000', -1, -147, -5, '2024-06-18 10:16:30.000000', '2024-06-18 14:00:29.990000', 'admin', null);
 INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-19 14:00:00.000000', -1, -12, -3, '2024-05-19 14:00:00.000000', '2024-05-22 14:00:00.000000', 'admin', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-29 07:00:30.000000', -2, 19, -7, '2024-05-29 07:00:30.000000', '2024-06-04 07:00:00.000000', 'johndoe', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-29 07:00:30.000000', -1, 32, -7, '2024-06-04 07:00:00.000000', '2024-06-07 07:00:29.990000', 'johndoe', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-20 07:00:30.000000', -2, 22, -9, '2024-06-20 07:00:30.000000', '2024-06-21 07:00:29.990000', 'johndoe', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-21 07:00:30.000000', -2, 24, -1, '2024-05-21 07:00:30.000000', '2024-05-29 07:00:29.990000', 'bobjones', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-29 07:00:30.000000', -2, 25, -10, '2024-05-29 07:00:30.000000', '2024-06-06 07:00:30.000000', 'bobjones', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-29 07:00:30.000000', -1, 33, -6, '2024-06-06 07:00:30.000000', '2024-06-10 07:00:00.000000', 'bobjones', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-29 07:00:30.000000', -2, 34, -7, '2024-06-10 07:00:00.000000', '2024-06-19 07:00:29.990000', 'bobjones', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-21 07:00:30.000000', -2, 23, -7, '2024-06-21 07:00:30.000000', null, 'johndoe', null);
-INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-20 07:00:30.000000', -1, 31, -1, '2024-05-24 07:00:00.000000', '2024-05-25 07:00:29.990000', 'johndoe', null);
+
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-29 07:00:30.000000', -2, -219, -7, '2024-05-29 07:00:30.000000', '2024-06-04 07:00:00.000000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-29 07:00:30.000000', -1, -232, -7, '2024-06-04 07:00:00.000000', '2024-06-07 07:00:29.990000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-20 07:00:30.000000', -2, -222, -9, '2024-06-20 07:00:30.000000', '2024-06-21 07:00:29.990000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-21 07:00:30.000000', -2, -224, -1, '2024-05-21 07:00:30.000000', '2024-05-24 07:00:29.990000', 'bobjones', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-24 07:00:30.000000', -2, -290, -1, '2024-05-24 07:00:30.000000', '2024-05-26 07:00:29.990000', 'bobjones', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-26 07:00:30.000000', -2, -291, -1, '2024-05-26 07:00:30.000000', '2024-05-29 07:00:29.990000', 'bobjones', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-29 07:00:30.000000', -2, -225, -10, '2024-05-29 07:00:30.000000', '2024-06-06 07:00:30.000000', 'bobjones', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-29 07:00:30.000000', -1, -233, -6, '2024-06-06 07:00:30.000000', '2024-06-10 07:00:00.000000', 'bobjones', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-29 07:00:30.000000', -2, -234, -7, '2024-06-10 07:00:00.000000', '2024-06-19 07:00:29.990000', 'bobjones', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-21 07:00:30.000000', -2, -223, -7, '2024-06-21 07:00:30.000000', null, 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-20 07:00:30.000000', -1, -231, -1, '2024-05-24 07:00:00.000000', '2024-05-25 07:00:29.990000', 'johndoe', null);
 INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-15 10:00:00.000000', -1, -21, -7, '2024-05-15 10:00:00.000000', '2024-05-15 15:00:00.000000', 'johndoe', null);
+
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-03 07:00:30.000000', -4, -72, -9, '2024-06-03 07:00:30.000000', '2024-06-06 07:00:29.990000', 'mariatheresa', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-09 07:00:30.000000', -4, -75, -9, '2024-06-09 07:00:30.000000', '2024-06-12 07:00:29.990000', 'mariatheresa', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-16 07:00:30.000000', -3, -77, -1, '2024-06-16 07:00:30.000000', '2024-06-17 07:00:29.990000', 'mariatheresa', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-06 07:00:30.000000', -3, -73, -11, '2024-06-06 07:00:30.000000', '2024-06-07 07:00:29.990000', 'mariatheresa', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-01 07:00:30.000000', -3, -71, -3, '2024-06-01 07:00:30.000000', '2024-06-03 07:00:29.990000', 'mariatheresa', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-12 07:00:30.000000', -3, -76, -11, '2024-06-12 07:00:30.000000', '2024-06-16 07:00:29.990000', 'mariatheresa', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-18 07:00:30.000000', -3, -79, -3, '2024-06-18 07:00:30.000000', '2024-06-19 07:00:29.990000', 'mariatheresa', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-07 07:00:30.000000', null, -294, null, '2024-06-07 07:00:30.000000', '2024-06-09 07:00:29.990000', 'mariatheresa', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-17 07:00:30.000000', null, -435, null, '2024-06-17 07:00:30.000000', '2024-06-18 07:00:29.990000', 'mariatheresa', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-19 07:00:30.000000', null, -450, null, '2024-06-19 07:00:30.000000', '2024-06-20 07:00:29.990000', 'mariatheresa', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-20 07:00:30.000000', null, -411, null, '2024-06-20 07:00:30.000000', '2024-06-21 07:00:29.990000', 'mariatheresa', null);
+
 
 
 
@@ -273,7 +322,7 @@ INSERT INTO access_point (id, is_healthy, enabled, room_room_id) VALUES ('222e45
 INSERT INTO access_point (id, is_healthy, enabled, room_room_id) VALUES ('333e4567-e89b-12d3-a456-426614174001', TRUE, TRUE, 'room_6');
 
 INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (TRUE, TRUE, '123e4567-e89b-12d3-a456-426614174001','admin', 'tempera_station_1');
-INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (FALSE, FALSE,'123e4567-e89b-12d3-a456-426614174001', 'mariatheresa', 'tempera_station_disabled_2');
+INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (FALSE, FALSE,'123e4567-e89b-12d3-a456-426614174001', 'brucewayne', 'tempera_station_disabled_2');
 INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (FALSE, FALSE, '123e4567-e89b-12d3-a456-426614174001', 'susikaufgern', 'tempera_station_disabled');
 INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (FALSE, FALSE, '123e4567-e89b-12d3-a456-426614174001', 'elvis', 'tempera_station_disabled_elvis');
 INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (TRUE, TRUE, '111e4567-e89b-12d3-a456-426614174001', 'johndoe', 'TEMP123');
@@ -282,7 +331,7 @@ INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME
 INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (TRUE, TRUE, '222e4567-e89b-12d3-a456-426614174001', 'chriswilliams', 'TEMP127');
 INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (TRUE, TRUE, '222e4567-e89b-12d3-a456-426614174001', 'peterparker', 'TEMP128');
 INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (TRUE, TRUE, '333e4567-e89b-12d3-a456-426614174001', 'tonystark', 'TEMP129');
-INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (TRUE, TRUE, '333e4567-e89b-12d3-a456-426614174001', 'brucewayne', 'TEMP130');
+INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (TRUE, TRUE, '333e4567-e89b-12d3-a456-426614174001', 'mariatheresa', 'TEMP130');
 INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (FALSE, FALSE, '333e4567-e89b-12d3-a456-426614174001', 'clarkkent', 'TEMP131');
 
 INSERT INTO SENSOR (SENSOR_TYPE, SENSOR_ID, TEMPERA_ID, UNIT) VALUES

@@ -20,7 +20,7 @@ export interface AuditLogDto {
     message?: string;
 }
 export namespace AuditLogDto {
-    export type ActionTypeEnum = 'CREATE' | 'EDIT' | 'DELETE' | 'LOGIN' | 'LOGOUT' | 'WARN' | 'LOAD';
+    export type ActionTypeEnum = 'CREATE' | 'EDIT' | 'DELETE' | 'LOGIN' | 'LOGOUT' | 'WARN' | 'LOAD' | 'ERROR';
     export const ActionTypeEnum = {
         Create: 'CREATE' as ActionTypeEnum,
         Edit: 'EDIT' as ActionTypeEnum,
@@ -28,7 +28,8 @@ export namespace AuditLogDto {
         Login: 'LOGIN' as ActionTypeEnum,
         Logout: 'LOGOUT' as ActionTypeEnum,
         Warn: 'WARN' as ActionTypeEnum,
-        Load: 'LOAD' as ActionTypeEnum
+        Load: 'LOAD' as ActionTypeEnum,
+        Error: 'ERROR' as ActionTypeEnum
     };
     export type AffectedTypeEnum = 'USER' | 'PROJECT' | 'GROUP' | 'TEMPERA_STATION' | 'SENSOR' | 'MEASUREMENT' | 'ACCESS_POINT' | 'ROOM' | 'THRESHOLD' | 'TIME_RECORD';
     export const AffectedTypeEnum = {
