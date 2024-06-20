@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UsersService } from '../../_services/users.service';
 import { NgForOf, NgIf } from '@angular/common';
-import { User } from '../../models/user.model';
 import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { Router } from '@angular/router';
@@ -13,14 +11,17 @@ import { MessagesModule } from 'primeng/messages';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import {
-  DeletionResponseDto, ProjectControllerService,
+  DeletionResponseDto,
+  ProjectControllerService,
   SimpleGroupDto,
-  SimpleProjectDto, SimpleUserDto,
-  UserManagementControllerService, Userx,
+  SimpleProjectDto,
+  SimpleUserDto,
+  UserManagementControllerService,
+  Userx,
   UserxDto,
 } from '../../../api';
 import { DropdownModule } from 'primeng/dropdown';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import RolesEnum = Userx.RolesEnum;
 
 @Component({
@@ -59,18 +60,24 @@ export class UsersComponent implements OnInit {
   deletionResponse: DeletionResponseDto | null;
   deletionResponseMessage: string = '';
   affectedProjects: SimpleProjectDto[] = [];
+  numberOfProjectsReassigned: number = 0;
   affectedGroups: SimpleGroupDto[] = [];
   availableManagers: { label: string, value: UserxDto } [] | undefined;
   availableUsers: SimpleUserDto[] = [];
-  projectForm: FormGroup;
+  deleteDisabled: boolean = true;
+  userNameToDelete: string = '';
+  form: FormGroup;
 
 
   constructor(private fb: FormBuilder, private projectService: ProjectControllerService, private usersService: UserManagementControllerService, private router: Router, private messageService: MessageService) {
     this.deletionResponse = null;
-    this.projectForm = this.fb.group({
-      project: ['', [Validators.required]],
-      manager: [null, [Validators.required]],
+    this.form = this.fb.group({
+      row: this.fb.array([]),
     });
+  }
+
+  get rows() {
+    return this.form.get('row') as FormArray;
   }
 
   ngOnInit(): void {
@@ -101,6 +108,11 @@ export class UsersComponent implements OnInit {
    */
   deleteSelectedUser(username: string): void {
     console.log('Delete user with ID: ', username);
+    this.deletionRequest(username);
+  }
+
+
+  deletionRequest(username: string): void {
     this.usersService.deleteUser(username).subscribe({
       next: (response) => {
         console.log('User deleted:', response);
@@ -112,7 +124,7 @@ export class UsersComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error deleting user' });
       },
     });
-  }
+  };
 
   /**
    * Evaluates the response of an API call and displays a success or error message.
@@ -122,9 +134,11 @@ export class UsersComponent implements OnInit {
   evaluateResponse(response: DeletionResponseDto, username: string): void {
     this.deletionResponse = response;
     console.log(this.deletionResponse?.responseType);
+    this.userNameToDelete = username;
 
     if (response.responseType === 'SUCCESS') {
       this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User deleted' });
+      this.resetUsers();
     } else if (response.responseType === 'ERROR') {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'User could not be deleted' });
     } else if (response.responseType === 'MANAGER') {
@@ -139,6 +153,7 @@ export class UsersComponent implements OnInit {
       this.deletionResponseMessage = 'The user could not be deleted, because they are still managing some Projects.';
       console.log('response', response.affectedProjects);
       this.affectedProjects = response.affectedProjects ?? [];
+      this.numberOfProjectsReassigned = this.affectedProjects.length;
       this.displayDeletionPopup = true;
     } else if (response.responseType === 'GROUPLEAD') {
       this.availableUsers = this.users.filter(user => user.username !== username);
@@ -153,33 +168,48 @@ export class UsersComponent implements OnInit {
   }
 
 
-  transferProject() {
-    if (this.projectForm.valid) {
-      const project = this.projectForm.value.project;
-      const manager = this.projectForm.value.manager;
+  transferProject(project: any, manager: any): void {
 
-      console.log('Transfer project:', project, manager);
-      const updatedProject: SimpleProjectDto = {
-        projectId: project.projectId,
-        isActive: project.isActive,
-        name: project.name,
-        description: project.description,
-        manager: manager.username,
-      };
-      this.projectService.updateProject(updatedProject).subscribe({
-        next: (response) => {
-          console.log('Project transferred:', response);
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project transferred' });
-          this.loadUsers();
-        },
-        error: (error) => {
-          console.error('Error transferring project:', error);
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error transferring project' });
-        },
-      });
+    console.log('Transfer project:', project, manager);
+    const updatedProject: SimpleProjectDto = {
+      projectId: project.projectId,
+      isActive: project.isActive,
+      name: project.name,
+      description: project.description,
+      manager: manager.value.username ?? '',
+    };
+    this.projectService.updateProject(updatedProject).subscribe({
+      next: (response) => {
+        console.log('Project transferred:', response);
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project transferred' });
+        this.numberOfProjectsReassigned--;
+        this.checkAllProjectsReassigned();
+
+      },
+      error: (error) => {
+        console.error('Error transferring project:', error);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error transferring project' });
+      },
+    });
+  }
+
+
+  checkAllProjectsReassigned(): void {
+    if (this.numberOfProjectsReassigned === 0) {
+      this.deleteDisabled = false;
+      this.loadUsers();
     }
   }
 
+  resetUsers() {
+    this.loadUsers();
+    this.deleteDisabled = true;
+    this.displayDeletionPopup = false;
+    this.numberOfProjectsReassigned = 0;
+    this.affectedProjects = [];
+    this.affectedGroups = [];
+    this.userNameToDelete = '';
+  }
 
   loadUsers() {
     this.usersService.getAllUsers().subscribe(users => {
