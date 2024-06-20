@@ -49,7 +49,7 @@ export class AlertStoreService {
     * The usage of exhaustMap ensures that a new request is only made if the previous one has completed. Otherwise, the request is ignored.
    */
   startAlertTimer() {
-    timer(0, 1000 * 20).pipe(
+    timer(0, 1000 * 10).pipe(
       exhaustMap(() => this.alertControllerService.getAlerts()),
     )
       .pipe(takeUntilDestroyed(this.destroyRef))
