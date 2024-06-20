@@ -2,17 +2,15 @@ package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
 import at.qe.skeleton.rest.frontend.dtos.*;
-import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.GroupMapperService;
 import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.ProjectMapperService;
 import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
 import at.qe.skeleton.services.ProjectService;
+import java.util.List;
+import java.util.logging.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.logging.Logger;
 
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 @RestController
@@ -158,6 +156,12 @@ public ResponseEntity<List<SimpleGroupDto>> getDeactivatedGroupsByProjectId(@Pat
   @GetMapping("/projectsOfGroup/{groupId}")
   public ResponseEntity<List<SimpleProjectDto>> getProjectsByGroupId(@PathVariable String groupId) {
     List<SimpleProjectDto> projects = projectMapperService.getSimpleProjectsByGroupId(Long.parseLong(groupId));
+    return ResponseEntity.ok(projects);
+  }
+
+  @GetMapping("/activeProjectsOfGroup/{groupId}")
+  public ResponseEntity<List<SimpleProjectDto>> getActiveProjectsByGroupId(@PathVariable String groupId) {
+    List<SimpleProjectDto> projects = projectMapperService.getActiveSimpleProjectsByGroupId(Long.parseLong(groupId));
     return ResponseEntity.ok(projects);
   }
 

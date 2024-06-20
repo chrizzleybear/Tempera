@@ -15,15 +15,13 @@ import at.qe.skeleton.repositories.UserxRepository;
 import at.qe.skeleton.rest.frontend.dtos.SimpleGroupxProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleProjectDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.logging.Logger;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProjectService {
@@ -253,6 +251,17 @@ if(groupxProjectOptional.isPresent()){
     }
     List<GroupxProject> groupxProjects = groupxProjectRepository.findAllByGroup_Id(groupId);
     return groupxProjects.stream().map(GroupxProject::getProject).toList();
+  }
+
+  public List<Project> getActiveProjectsByGroupId(Long groupId) {
+    if (groupRepository.findById(groupId).isEmpty()) {
+      throw new IllegalArgumentException(GROUP_NOT_FOUND);
+    }
+    List<GroupxProject> groupxProjects = groupxProjectRepository.findAllByGroup_Id(groupId);
+    return groupxProjects.stream()
+        .filter(GroupxProject::isActive)
+        .map(GroupxProject::getProject)
+        .toList();
   }
 
   public List<Project> getProjectsByManager(String username) {

@@ -1,30 +1,32 @@
 
-INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE, state, state_visibility) VALUES(TRUE, 'Admin', 'Istrator', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'admin', 'admin', '2016-01-01 00:00:00', 'DEEPWORK', 'PUBLIC');
+INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE, state, state_visibility) VALUES(TRUE, 'Admin', 'Istrator', 'admin.istrator@web.de',  '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'admin', 'admin', '2016-01-01 00:00:00', 'DEEPWORK', 'PUBLIC');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('admin', 'ADMIN');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('admin', 'EMPLOYEE');
-INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE, state, state_visibility) VALUES(TRUE, 'Susi', 'Kaufgern', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'user1', 'admin', '2016-01-01 00:00:00', 'DEEPWORK', 'PRIVATE');
-INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('user1', 'MANAGER');
-INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('user1', 'EMPLOYEE');
-INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE, state, state_visibility) VALUES(TRUE, 'Maria', 'Theresa', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'MariaTheresa', 'admin', '2016-01-01 00:00:00', 'OUT_OF_OFFICE', 'HIDDEN');
-INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('MariaTheresa', 'MANAGER'), ('MariaTheresa', 'EMPLOYEE');
+INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('admin', 'MANAGER');
+INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('admin', 'GROUPLEAD');
+INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE, state, state_visibility) VALUES(TRUE, 'Susi', 'Kaufgern', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'susikaufgern', 'admin', '2016-01-01 00:00:00', 'DEEPWORK', 'PRIVATE');
+INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('susikaufgern', 'MANAGER');
+INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('susikaufgern', 'EMPLOYEE');
+INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE, state, state_visibility) VALUES(TRUE, 'Maria', 'Theresa', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'mariatheresa', 'admin', '2016-01-01 00:00:00', 'OUT_OF_OFFICE', 'HIDDEN');
+INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('mariatheresa', 'MANAGER'), ('mariatheresa', 'EMPLOYEE');
 INSERT INTO USERX (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, CREATE_USER_USERNAME, CREATE_DATE, state, state_visibility) VALUES(TRUE, 'Elvis', 'The King', '$2a$10$UEIwGPJpM6Kfdk3.c6RLDOTtpDfXymwkqAL5LpiRZgizuShpwlq7u', 'elvis', 'elvis', '2016-01-01 00:00:00', 'OUT_OF_OFFICE', 'PUBLIC');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('elvis', 'ADMIN');
 INSERT INTO USERX_USERX_ROLE (USERX_USERNAME, ROLES) VALUES ('elvis', 'EMPLOYEE');
 
 -- some Projects
 INSERT INTO project (id, is_active, name, description, manager_username) VALUES
-                                                                  (-1, true, 'Serious Business', 'This project beuts you aus', 'MariaTheresa'),
-                                                                  (-2, true, 'Expansion', 'This project aims to expand our operations globally.', 'MariaTheresa'),
-                                                                  (-3,true, 'Innovation', 'This project focuses on fostering innovation within the company.', 'MariaTheresa'),
-                                                                  (-4,true, 'Efficiency', 'This project aims to improve efficiency across all departments.', 'MariaTheresa'),
-                                                                  (-5,true, 'Sustainability Initiative', 'This project aims to make our operations more environmentally friendly.', 'MariaTheresa'),
-                                                                  (-6,true, 'Customer Satisfaction Improvement', 'This project focuses on enhancing customer experience and satisfaction.', 'MariaTheresa'),
-                                                                  (-7,true, 'Product Development', 'This project involves developing new products to meet market demands.', 'MariaTheresa'),
-                                                                  (-8,true, 'Cost Reduction Initiative', 'This project aims to identify and implement cost-saving measures across the organization.', 'MariaTheresa'),
-                                                                  (-9, true,'Quality Assurance Enhancement', 'This project focuses on improving the quality control processes to ensure product quality and reliability.', 'MariaTheresa'),
-                                                                  (-10,true, 'Marketing Campaign Launch', 'This project involves planning and executing a new marketing campaign to attract customers.', 'MariaTheresa'),
-                                                                  (-11,true, 'Training and Development Program', 'This project focuses on providing training and development opportunities for employees to enhance their skills and performance.', 'MariaTheresa'),
-                                                                  (-12,true, 'Infrastructure Upgrade', 'This project involves upgrading the company''s IT infrastructure to improve efficiency and security.', 'MariaTheresa');
+                                                                  (-1, true, 'Serious Business', 'This project is all about serious business. You know.', 'mariatheresa'),
+                                                                  (-2, true, 'Expansion', 'This project aims to expand our operations globally.', 'mariatheresa'),
+                                                                  (-3,true, 'Innovation', 'This project focuses on fostering innovation within the company.', 'mariatheresa'),
+                                                                  (-4,true, 'Efficiency', 'This project aims to improve efficiency across all departments.', 'mariatheresa'),
+                                                                  (-5,true, 'Sustainability Initiative', 'This project aims to make our operations more environmentally friendly.', 'mariatheresa'),
+                                                                  (-6,true, 'Customer Satisfaction Improvement', 'This project focuses on enhancing customer experience and satisfaction.', 'mariatheresa'),
+                                                                  (-7,true, 'Product Development', 'This project involves developing new products to meet market demands.', 'mariatheresa'),
+                                                                  (-8,true, 'Cost Reduction Initiative', 'This project aims to identify and implement cost-saving measures across the organization.', 'mariatheresa'),
+                                                                  (-9, true,'Quality Assurance Enhancement', 'This project focuses on improving the quality control processes to ensure product quality and reliability.', 'mariatheresa'),
+                                                                  (-10,true, 'Marketing Campaign Launch', 'This project involves planning and executing a new marketing campaign to attract customers.', 'mariatheresa'),
+                                                                  (-11,true, 'Training and Development Program', 'This project focuses on providing training and development opportunities for employees to enhance their skills and performance.', 'mariatheresa'),
+                                                                  (-12,true, 'Infrastructure Upgrade', 'This project involves upgrading the company''s IT infrastructure to improve efficiency and security.', 'mariatheresa');
 
 -- these users can be used to display as colleagues for john doe
 INSERT INTO userx (enabled, default_group_id, default_project_id, state, state_visibility, create_date, update_date, create_user_username, update_user_username, username, email, first_name, last_name, password) VALUES
@@ -43,101 +45,213 @@ INSERT INTO userx_userx_role (userx_username, roles) VALUES ('brucewayne', 'MANA
 
 
 -- add some Groups to test db
-INSERT INTO groupx (id, active, group_lead_username, description, name) VALUES (-1, true, 'peterparker', 'this is just for testing', 'Research Team');
-INSERT INTO groupx (id, active, group_lead_username, description, name) VALUES (-2, true, 'peterparker', 'this is also just for testing', 'Security Team');
-INSERT INTO groupx (id, active, group_lead_username, description, name) VALUES (-3, true, 'tonystark', 'this is also just for testing', 'Marketing Team');
-INSERT INTO groupx (id, active, group_lead_username, description, name) VALUES (-4, true, 'tonystark', 'this is also just for testing', 'Expert Team');
+INSERT INTO public.groupx (active, id, group_lead_username, description, name) VALUES (true, -3, 'tonystark', 'this is also just for testing', 'Marketing Team');
+INSERT INTO public.groupx (active, id, group_lead_username, description, name) VALUES (true, -1, 'peterparker', 'Dedicated to hard research in the field of Money.', 'Research Team');
+INSERT INTO public.groupx (active, id, group_lead_username, description, name) VALUES (true, -4, 'tonystark', 'Consisting of the finest of experts, these experts sure know stuff.', 'Expert Team');
+INSERT INTO public.groupx (active, id, group_lead_username, description, name) VALUES (true, -2, 'admin', 'this is also just for testing', 'Security Team');
+
 
 -- add some of the created projects to some GroupxProject Objects:
--- add Serious Business, Expansion, Innovation, Efficiency,Sustainability and Customer Satisfaction to testGroup1
-INSERT INTO groupx_project_object (is_active, group_id, project_id)
-VALUES (true, -1, -1), (true, -1, -2), (true, -1, -3), (true, -1, -4), (true, -1,-5), (true, -1, -6);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -1, -1);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -1, -2);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -1, -3);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -1, -4);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -1, -5);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -1, -6);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -2, -7);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -2, -1);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -2, -8);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -2, -9);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -2, -10);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -1, -7);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -3, -1);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -4, -2);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -4, -4);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (false, -2, -11);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -3, -3);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -4, -5);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -4, -9);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -3, -12);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -2, -12);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -3, -11);
 
--- add Product Development, Cost Reduction, Quality Assurance, Marketing Campaign Launch, Training and Development and Infrastructure Upgrade to testGroup2
-INSERT INTO groupx_project_object (is_active, group_id, project_id)
-Values (true, -2, -7), (true, -2, -1), (true, -2, -8), (true, -2, -9), (true, -2, -10), (true, -2, -11), (true, -2, -12), (true, -1, -7);
 
-INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username)
-VALUES (-1, -1, 'admin'), (-2, -1, 'admin'), (-1, -2, 'admin'), (-1, -3, 'admin'), (-1, -4, 'admin'), (-1, -5, 'admin'), (-1, -6, 'admin'), (-1, -6, 'bobjones'), (-1, -6, 'chriswilliams'), (-1, -6, 'peterparker'), (-1, -6, 'tonystark'), (-1, -6, 'brucewayne'), (-1, -6, 'clarkkent');
-INSERT INTO groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username)
-VALUES (-2, -7, 'johndoe'), (-2, -8, 'johndoe'), (-2, -9, 'johndoe'), (-2, -10, 'johndoe'), (-2, -11, 'johndoe'), (-2, -12, 'johndoe'), (-1, -7, 'johndoe');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-1, -1, 'admin');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -1, 'admin');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-1, -2, 'admin');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-1, -3, 'admin');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-1, -4, 'admin');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-1, -5, 'admin');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-1, -6, 'admin');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-1, -6, 'bobjones');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-1, -6, 'chriswilliams');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-1, -6, 'peterparker');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-1, -6, 'tonystark');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-1, -6, 'brucewayne');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-1, -6, 'clarkkent');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -7, 'johndoe');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -8, 'johndoe');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -9, 'johndoe');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -10, 'johndoe');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-1, -7, 'johndoe');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -7, 'chriswilliams');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -7, 'admin');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -7, 'bobjones');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -7, 'clarkkent');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -1, 'bobjones');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -1, 'clarkkent');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -1, 'alicebrown');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -8, 'clarkkent');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -8, 'admin');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -8, 'chriswilliams');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -10, 'admin');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -10, 'clarkkent');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -10, 'bobjones');
+INSERT INTO public.groupx_project_object_contributors (groupx_projects_group_id, groupx_projects_project_id, contributors_username) VALUES (-2, -10, 'chriswilliams');
 
-INSERT INTO groupx_members (groups_id, members_username) VALUES (-1, 'johndoe'), (-2, 'johndoe');
-INSERT INTO groupx_members (groups_id, members_username) VALUES (-1, 'alicebrown'), (-3, 'alicebrown'), (-4, 'alicebrown');
-INSERT INTO groupx_members (groups_id, members_username) VALUES (-1, 'chriswilliams'), (-2, 'chriswilliams'), (-3, 'chriswilliams'), (-4, 'chriswilliams');
-INSERT INTO groupx_members (groups_id, members_username) VALUES (-1, 'admin'), (-2, 'admin'), (-3, 'admin'), (-4, 'admin');
-INSERT INTO groupx_members (groups_id, members_username) VALUES (-2, 'bobjones');
-INSERT INTO groupx_members (groups_id, members_username) VALUES (-3, 'brucewayne'), (-4, 'brucewayne');
-INSERT INTO groupx_members (groups_id, members_username) VALUES (-3, 'peterparker'), (-4, 'peterparker');
-INSERT INTO groupx_members (groups_id, members_username) VALUES (-3, 'tonystark'), (-4, 'tonystark');
-INSERT INTO groupx_members (groups_id, members_username) VALUES (-3, 'clarkkent'), (-4, 'clarkkent');
+
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-1, 'johndoe');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-1, 'alicebrown');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'alicebrown');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'alicebrown');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-1, 'chriswilliams');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'chriswilliams');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'chriswilliams');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-1, 'admin');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'admin');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'admin');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'brucewayne');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'brucewayne');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'peterparker');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'peterparker');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'tonystark');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'tonystark');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-3, 'clarkkent');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-4, 'clarkkent');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-2, 'johndoe');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-2, 'chriswilliams');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-2, 'admin');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-2, 'bobjones');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-2, 'clarkkent');
+INSERT INTO public.groupx_members (groups_id, members_username) VALUES (-2, 'alicebrown');
+
 
 
 -- Testdata for TimeRecordService
-INSERT INTO external_record (duration, start, time_end, user_username, state)
-VALUES
-    (30, '2024-05-16 12:00:00', '2024-05-16 13:00:00', 'admin', 'DEEPWORK'),
-    (45, '2024-05-16 13:00:00', '2024-05-16 15:00:00', 'admin', 'DEEPWORK'),
-    (90, '2024-05-16 15:00:00', '2024-05-17 08:00:00', 'admin', 'MEETING'),
-    (120, '2024-05-17 08:00:00', '2024-05-17 11:00:00', 'admin', 'MEETING'),
-    (60, '2024-05-17 11:00:00', '2024-05-17 15:00:00', 'admin', 'AVAILABLE'),
-    (300, '2024-05-17 15:00:00', '2024-05-18 09:00:00', 'admin', 'OUT_OF_OFFICE'),
-    (200, '2024-05-18 10:00:00', '2024-05-18 14:00:00', 'admin', 'AVAILABLE'),
-    (100, '2024-05-18 14:00:00', '2024-05-18 16:00:00', 'admin', 'MEETING'),
-    (50, '2024-05-18 16:00:00', '2024-05-19 09:00:00', 'admin', 'OUT_OF_OFFICE'),
-    (400, '2024-05-19 09:00:00', '2024-05-19 14:00:00', 'admin', 'AVAILABLE'),
-    (150, '2024-05-19 14:00:00', null, 'admin', 'DEEPWORK');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (30, '2024-05-16 12:00:00.000000', '2024-05-16 13:00:00.000000', 'admin', 'DEEPWORK');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (45, '2024-05-16 13:00:00.000000', '2024-05-16 15:00:00.000000', 'admin', 'DEEPWORK');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (90, '2024-05-16 15:00:00.000000', '2024-05-17 08:00:00.000000', 'admin', 'MEETING');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (120, '2024-05-17 08:00:00.000000', '2024-05-17 11:00:00.000000', 'admin', 'MEETING');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (60, '2024-05-17 11:00:00.000000', '2024-05-17 15:00:00.000000', 'admin', 'AVAILABLE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (300, '2024-05-17 15:00:00.000000', '2024-05-18 09:00:00.000000', 'admin', 'OUT_OF_OFFICE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (200, '2024-05-18 10:00:00.000000', '2024-05-18 14:00:00.000000', 'admin', 'AVAILABLE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (100, '2024-05-18 14:00:00.000000', '2024-05-18 16:00:00.000000', 'admin', 'MEETING');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (50, '2024-05-18 16:00:00.000000', '2024-05-19 09:00:00.000000', 'admin', 'OUT_OF_OFFICE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (400, '2024-05-19 09:00:00.000000', '2024-05-19 14:00:00.000000', 'admin', 'AVAILABLE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (3400, '2024-05-11 09:30:00.000000', '2024-05-11 10:00:00.000000', 'johndoe', 'DEEPWORK');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (60, '2024-05-11 10:00:00.000000', '2024-05-11 13:00:00.000000', 'johndoe', 'MEETING');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (45, '2024-05-11 13:00:00.000000', '2024-05-11 18:00:00.000000', 'johndoe', 'OUT_OF_OFFICE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (45, '2024-05-11 18:00:00.000000', '2024-05-12 11:00:00.000000', 'johndoe', 'OUT_OF_OFFICE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (90, '2024-05-12 11:00:00.000000', '2024-05-12 14:00:00.000000', 'johndoe', 'AVAILABLE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (120, '2024-05-12 14:00:00.000000', '2024-05-12 17:00:00.000000', 'johndoe', 'MEETING');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (120, '2024-05-12 17:00:00.000000', '2024-05-12 08:00:00.000000', 'johndoe', 'OUT_OF_OFFICE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (30, '2024-05-13 08:00:00.000000', '2024-05-13 11:00:00.000000', 'johndoe', 'AVAILABLE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (30, '2024-05-13 11:00:00.000000', '2024-05-13 17:00:00.000000', 'johndoe', 'DEEPWORK');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (150, '2024-05-13 17:00:00.000000', '2024-05-14 09:00:00.000000', 'johndoe', 'OUT_OF_OFFICE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (300, '2024-05-14 09:00:00.000000', '2024-05-14 13:00:00.000000', 'johndoe', 'AVAILABLE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (200, '2024-05-14 13:00:00.000000', '2024-05-14 17:00:00.000000', 'johndoe', 'DEEPWORK');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (200, '2024-05-14 17:00:00.000000', '2024-05-15 10:00:00.000000', 'johndoe', 'OUT_OF_OFFICE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (100, '2024-05-15 10:00:00.000000', '2024-05-15 15:00:00.000000', 'johndoe', 'DEEPWORK');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (2578589, '2024-05-19 14:00:00.000000', '2024-06-18 10:16:29.990000', 'admin', 'DEEPWORK');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (13439, '2024-06-18 10:16:30.000000', '2024-06-18 14:00:29.990000', 'admin', 'DEEPWORK');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (7199, '2024-06-18 14:00:30.000000', '2024-06-18 16:00:29.990000', 'admin', 'MEETING');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (3599, '2024-06-18 16:00:30.000000', '2024-06-18 17:00:29.990000', 'admin', 'AVAILABLE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (53999, '2024-06-18 17:00:30.000000', '2024-06-19 08:00:29.990000', 'admin', 'DEEPWORK');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (7199, '2024-06-19 08:00:30.000000', '2024-06-19 10:00:29.990000', 'admin', 'OUT_OF_OFFICE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (7199, '2024-06-19 10:00:30.000000', '2024-06-19 12:00:29.990000', 'admin', 'AVAILABLE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (7199, '2024-06-19 12:00:30.000000', '2024-06-19 14:00:29.990000', 'admin', 'DEEPWORK');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (17999, '2024-06-19 14:00:30.000000', '2024-06-19 19:00:29.990000', 'admin', 'MEETING');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (40439, '2024-06-19 19:00:30.000000', '2024-06-20 06:14:29.990000', 'admin', 'OUT_OF_OFFICE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (3599, '2024-06-20 06:14:30.000000', '2024-06-20 07:14:29.990000', 'admin', 'DEEPWORK');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (17999, '2024-06-20 07:14:30.000000', '2024-06-20 12:14:29.990000', 'admin', 'MEETING');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (14399, '2024-06-20 12:14:30.000000', '2024-06-20 16:14:29.990000', 'admin', 'DEEPWORK');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (7199, '2024-06-20 16:14:30.000000', '2024-06-20 18:14:29.990000', 'admin', 'AVAILABLE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (45959, '2024-06-20 18:14:30.000000', '2024-06-21 07:00:29.990000', 'admin', 'OUT_OF_OFFICE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (1, '2024-06-21 07:00:30.000000', null, 'admin', 'MEETING');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (403229, '2024-05-15 15:00:00.000000', '2024-05-20 07:00:29.990000', 'johndoe', 'MEETING');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (431999, '2024-05-20 07:00:30.000000', '2024-05-25 07:00:29.990000', 'johndoe', 'MEETING');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (345599, '2024-05-25 07:00:30.000000', '2024-05-29 07:00:29.990000', 'johndoe', 'OUT_OF_OFFICE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (777599, '2024-05-29 07:00:30.000000', '2024-06-07 07:00:29.990000', 'johndoe', 'DEEPWORK');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (691199, '2024-06-07 07:00:30.000000', '2024-06-15 07:00:29.990000', 'johndoe', 'AVAILABLE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (431999, '2024-06-15 07:00:30.000000', '2024-06-20 07:00:29.990000', 'johndoe', 'OUT_OF_OFFICE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (86399, '2024-06-20 07:00:30.000000', '2024-06-21 07:00:29.990000', 'johndoe', 'DEEPWORK');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (1, '2024-06-21 07:00:30.000000', null, 'johndoe', 'AVAILABLE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (691199, '2024-05-21 07:00:30.000000', '2024-05-29 07:00:29.990000', 'bobjones', 'AVAILABLE');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (1814399, '2024-05-29 07:00:30.000000', '2024-06-19 07:00:29.990000', 'bobjones', 'DEEPWORK');
+INSERT INTO public.external_record (duration, start, time_end, user_username, state) VALUES (1, '2024-06-19 07:00:30.000000', null, 'bobjones', 'MEETING');
 
-INSERT INTO internal_record (id, group_id, project_id, start, time_end, ext_rec_start, user_name)
-VALUES
-    (-1, null, null, '2024-05-16 12:00:00', '2024-05-16 13:00:00', '2024-05-16 12:00:00', 'admin'),
-    (-3, -1, -2, '2024-05-16 13:00:00', '2024-05-16 15:00:00', '2024-05-16 13:00:00', 'admin'),
-    (-4, null, null, '2024-05-16 15:00:00', '2024-05-17 08:00:00', '2024-05-16 15:00:00', 'admin'),
-    (-5, -1, -3, '2024-05-17 08:00:00', '2024-05-17 11:00:00', '2024-05-17 08:00:00', 'admin'),
-    (-6, null, null, '2024-05-17 11:00:00', '2024-05-17 15:00:00', '2024-05-17 11:00:00', 'admin'),
-    (-7, null, null, '2024-05-17 15:00:00', '2024-05-18 09:00:00', '2024-05-17 15:00:00', 'admin'),
-    (-8, null, null, '2024-05-18 10:00:00', '2024-05-18 14:00:00', '2024-05-18 10:00:00', 'admin'),
-    (-9, -1, -5, '2024-05-18 14:00:00', '2024-05-18 16:00:00', '2024-05-18 14:00:00', 'admin'),
-    (-10, null, null, '2024-05-18 16:00:00', '2024-05-19 09:00:00', '2024-05-18 16:00:00', 'admin'),
-    (-11, -1, -6, '2024-05-19 09:00:00', '2024-05-19 14:00:00', '2024-05-19 09:00:00', 'admin'),
-    (-12, null, null, '2024-05-19 14:00:00', null, '2024-05-19 14:00:00', 'admin');
 
-INSERT INTO external_record (duration, start, time_end, user_username, state)
-VALUES
-    (3400, '2024-05-11 09:30:00', '2024-05-11 10:00:00', 'johndoe', 'DEEPWORK'),
-    (60, '2024-05-11 10:00:00', '2024-05-11 13:00:00', 'johndoe', 'MEETING'),
-    (45, '2024-05-11 13:00:00', '2024-05-11 18:00:00', 'johndoe', 'OUT_OF_OFFICE'),
-    (45, '2024-05-11 18:00:00', '2024-05-12 11:00:00', 'johndoe', 'OUT_OF_OFFICE'),
-    (90, '2024-05-12 11:00:00', '2024-05-12 14:00:00', 'johndoe', 'AVAILABLE'),
-    (120, '2024-05-12 14:00:00', '2024-05-12 17:00:00', 'johndoe', 'MEETING'),
-    (120, '2024-05-12 17:00:00', '2024-05-12 08:00:00', 'johndoe', 'OUT_OF_OFFICE'),
-    (30, '2024-05-13 08:00:00', '2024-05-13 11:00:00', 'johndoe', 'AVAILABLE'),
-    (30, '2024-05-13 11:00:00', '2024-05-13 17:00:00', 'johndoe', 'DEEPWORK'),
-    (150, '2024-05-13 17:00:00', '2024-05-14 09:00:00', 'johndoe', 'OUT_OF_OFFICE'),
-    (300, '2024-05-14 09:00:00', '2024-05-14 13:00:00', 'johndoe', 'AVAILABLE'),
-    (200, '2024-05-14 13:00:00', '2024-05-14 17:00:00', 'johndoe', 'DEEPWORK'),
-    (200, '2024-05-14 17:00:00', '2024-05-15 10:00:00', 'johndoe', 'OUT_OF_OFFICE'),
-    (100, '2024-05-15 10:00:00', '2024-05-15 15:00:00', 'johndoe', 'DEEPWORK'),
-    (50, '2024-05-15 15:00:00', null, 'johndoe', 'MEETING');
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-16 12:00:00.000000', null, -1, null, '2024-05-16 12:00:00.000000', '2024-05-16 13:00:00.000000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-16 13:00:00.000000', -1, -3, -2, '2024-05-16 13:00:00.000000', '2024-05-16 15:00:00.000000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-16 15:00:00.000000', null, -4, null, '2024-05-16 15:00:00.000000', '2024-05-17 08:00:00.000000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-17 08:00:00.000000', -1, -5, -3, '2024-05-17 08:00:00.000000', '2024-05-17 11:00:00.000000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-17 11:00:00.000000', null, -6, null, '2024-05-17 11:00:00.000000', '2024-05-17 15:00:00.000000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-18 14:00:00.000000', -1, -9, -5, '2024-05-18 14:00:00.000000', '2024-05-18 16:00:00.000000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-18 16:00:00.000000', null, -10, null, '2024-05-18 16:00:00.000000', '2024-05-19 09:00:00.000000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-19 09:00:00.000000', -1, -11, -6, '2024-05-19 09:00:00.000000', '2024-05-19 14:00:00.000000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-11 09:30:00.000000', -1, -2, -1, '2024-05-11 09:30:00.000000', '2024-05-11 10:00:00.000000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-11 10:00:00.000000', null, -13, null, '2024-05-11 10:00:00.000000', '2024-05-11 12:59:59.000000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-11 13:00:00.000000', -2, -14, -7, '2024-05-11 13:00:00.000000', '2024-05-11 17:59:59.000000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-11 18:00:00.000000', -2, -23, -7, '2024-05-11 18:00:00.000000', '2024-05-12 11:00:00.000000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-12 11:00:00.000000', null, -15, null, '2024-05-12 11:00:00.000000', '2024-05-12 13:59:59.000000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-12 14:00:00.000000', -2, -16, -8, '2024-05-12 14:00:00.000000', '2024-05-12 16:59:59.000000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-12 17:00:00.000000', null, -17, null, '2024-05-12 17:00:00.000000', '2024-05-13 10:59:59.000000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-13 08:00:00.000000', -2, -18, -9, '2024-05-13 08:00:00.000000', '2024-05-13 11:00:00.000000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-13 11:00:00.000000', -2, -24, -9, '2024-05-13 11:00:00.000000', '2024-05-13 17:00:00.000000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-13 17:00:00.000000', -2, -25, -9, '2024-05-13 17:00:00.000000', '2024-05-14 09:00:00.000000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-14 09:00:00.000000', null, -19, null, '2024-05-14 09:00:00.000000', '2024-05-14 13:00:00.000000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-14 13:00:00.000000', -2, -20, -10, '2024-05-14 13:00:00.000000', '2024-05-14 17:00:00.000000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-14 17:00:00.000000', -2, -26, -10, '2024-05-14 17:00:00.000000', '2024-05-15 10:00:00.000000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-18 10:00:00.000000', -1, -8, -4, '2024-05-18 10:00:00.000000', '2024-05-18 14:00:00.000000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-17 15:00:00.000000', null, 1, null, '2024-05-17 16:00:00.000000', '2024-05-18 09:00:00.000000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-17 15:00:00.000000', null, -7, null, '2024-05-17 15:00:00.000000', '2024-05-17 16:00:00.000000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-19 14:00:00.000000', -1, 27, -6, '2024-05-22 14:00:00.000000', '2024-05-25 14:00:00.000000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-19 14:00:00.000000', -1, 28, -2, '2024-05-25 14:00:00.000000', '2024-05-29 14:00:00.000000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-19 08:00:30.000000', null, 6, null, '2024-06-19 08:00:30.000000', '2024-06-19 10:00:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-19 14:00:00.000000', -1, 29, -1, '2024-05-29 14:00:00.000000', '2024-06-18 10:16:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-19 19:00:30.000000', null, 10, null, '2024-06-19 19:00:30.000000', '2024-06-20 06:14:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-20 07:00:30.000000', -2, 17, -7, '2024-05-20 07:00:30.000000', '2024-05-23 07:00:00.000000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-20 07:00:30.000000', -2, 30, -9, '2024-05-23 07:00:00.000000', '2024-05-24 07:00:00.000000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-20 06:14:30.000000', -1, 11, -1, '2024-06-20 06:14:30.000000', '2024-06-20 07:14:29.990000', 'admin', 'Now is the time to shine :)');
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-19 14:00:30.000000', -1, 9, -3, '2024-06-19 14:00:30.000000', '2024-06-19 19:00:29.990000', 'admin', 'Look at this description');
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-19 12:00:30.000000', -1, 8, -4, '2024-06-19 12:00:30.000000', '2024-06-19 14:00:29.990000', 'admin', 'We worked really hard on this!');
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-19 10:00:30.000000', -1, 7, -3, '2024-06-19 10:00:30.000000', '2024-06-19 12:00:29.990000', 'admin', 'Some Description blabla');
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-20 07:14:30.000000', null, 12, null, '2024-06-20 07:14:30.000000', '2024-06-20 12:14:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-20 16:14:30.000000', null, 14, null, '2024-06-20 16:14:30.000000', '2024-06-20 18:14:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-07 07:00:30.000000', -2, 20, -8, '2024-06-07 07:00:30.000000', '2024-06-15 07:00:29.990000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-20 12:14:30.000000', -1, 13, -4, '2024-06-20 12:14:30.000000', '2024-06-20 16:14:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-20 18:14:30.000000', -1, 15, -6, '2024-06-20 18:14:30.000000', '2024-06-21 07:00:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-21 07:00:30.000000', -1, 16, -3, '2024-06-21 07:00:30.000000', null, 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-15 15:00:00.000000', -2, -22, -11, '2024-05-15 15:00:00.000000', '2024-05-20 07:00:29.990000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-25 07:00:30.000000', null, 18, null, '2024-05-25 07:00:30.000000', '2024-05-29 07:00:29.990000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-15 07:00:30.000000', null, 21, null, '2024-06-15 07:00:30.000000', '2024-06-20 07:00:29.990000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-19 07:00:30.000000', null, 26, null, '2024-06-19 07:00:30.000000', null, 'bobjones', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-18 17:00:30.000000', -1, 5, -4, '2024-06-18 17:00:30.000000', '2024-06-19 08:00:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-18 16:00:30.000000', -1, 4, -3, '2024-06-18 16:00:30.000000', '2024-06-18 17:00:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-18 14:00:30.000000', -1, 3, -6, '2024-06-18 14:00:30.000000', '2024-06-18 16:00:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-18 10:16:30.000000', -1, 2, -5, '2024-06-18 10:16:30.000000', '2024-06-18 14:00:29.990000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-19 14:00:00.000000', -1, -12, -3, '2024-05-19 14:00:00.000000', '2024-05-22 14:00:00.000000', 'admin', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-29 07:00:30.000000', -2, 19, -7, '2024-05-29 07:00:30.000000', '2024-06-04 07:00:00.000000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-29 07:00:30.000000', -1, 32, -7, '2024-06-04 07:00:00.000000', '2024-06-07 07:00:29.990000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-20 07:00:30.000000', -2, 22, -9, '2024-06-20 07:00:30.000000', '2024-06-21 07:00:29.990000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-21 07:00:30.000000', -2, 24, -1, '2024-05-21 07:00:30.000000', '2024-05-29 07:00:29.990000', 'bobjones', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-29 07:00:30.000000', -2, 25, -10, '2024-05-29 07:00:30.000000', '2024-06-06 07:00:30.000000', 'bobjones', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-29 07:00:30.000000', -1, 33, -6, '2024-06-06 07:00:30.000000', '2024-06-10 07:00:00.000000', 'bobjones', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-29 07:00:30.000000', -2, 34, -7, '2024-06-10 07:00:00.000000', '2024-06-19 07:00:29.990000', 'bobjones', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-06-21 07:00:30.000000', -2, 23, -7, '2024-06-21 07:00:30.000000', null, 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-20 07:00:30.000000', -1, 31, -1, '2024-05-24 07:00:00.000000', '2024-05-25 07:00:29.990000', 'johndoe', null);
+INSERT INTO public.internal_record (ext_rec_start, group_id, id, project_id, start, time_end, user_name, description) VALUES ('2024-05-15 10:00:00.000000', -1, -21, -7, '2024-05-15 10:00:00.000000', '2024-05-15 15:00:00.000000', 'johndoe', null);
 
-
-INSERT INTO internal_record (id, group_id, project_id, start, time_end, ext_rec_start, user_name)
-VALUES
-    (-2, -1, -1, '2024-05-11 09:30:00', '2024-05-11 10:00:00', '2024-05-11 09:30:00', 'johndoe'),
-    (-13, null, null, '2024-05-11 10:00:00', '2024-05-11 12:59:59', '2024-05-11 10:00:00', 'johndoe'),
-    (-14, -2, -7, '2024-05-11 13:00:00', '2024-05-11 17:59:59', '2024-05-11 13:00:00', 'johndoe'),
-    (-23, -2, -7, '2024-05-11 18:00:00', '2024-05-12 11:00:00', '2024-05-11 18:00:00', 'johndoe'),
-    (-15, null, null, '2024-05-12 11:00:00', '2024-05-12 13:59:59', '2024-05-12 11:00:00', 'johndoe'),
-    (-16, -2, -8, '2024-05-12 14:00:00', '2024-05-12 16:59:59', '2024-05-12 14:00:00', 'johndoe'),
-    (-17, null, null, '2024-05-12 17:00:00', '2024-05-13 10:59:59', '2024-05-12 17:00:00', 'johndoe'),
-    (-18, -2, -9, '2024-05-13 08:00:00', '2024-05-13 11:00:00', '2024-05-13 08:00:00', 'johndoe'),
-    (-24, -2, -9, '2024-05-13 11:00:00', '2024-05-13 17:00:00', '2024-05-13 11:00:00', 'johndoe'),
-    (-25, -2, -9, '2024-05-13 17:00:00', '2024-05-14 09:00:00', '2024-05-13 17:00:00', 'johndoe'),
-    (-19, null, null, '2024-05-14 09:00:00', '2024-05-14 13:00:00', '2024-05-14 09:00:00', 'johndoe'),
-    (-20, -2, -10, '2024-05-14 13:00:00', '2024-05-14 17:00:00', '2024-05-14 13:00:00', 'johndoe'),
-    (-26, -2, -10, '2024-05-14 17:00:00', '2024-05-15 10:00:00', '2024-05-14 17:00:00', 'johndoe'),
-    (-21, null, null, '2024-05-15 10:00:00', '2024-05-15 15:00:00', '2024-05-15 10:00:00', 'johndoe'),
-    (-22, -2, -11, '2024-05-15 15:00:00', null, '2024-05-15 15:00:00', 'johndoe');
 
 
 -------------------------------------------MEASUREMENT CHAIN----------------------------------------
@@ -159,8 +273,8 @@ INSERT INTO access_point (id, is_healthy, enabled, room_room_id) VALUES ('222e45
 INSERT INTO access_point (id, is_healthy, enabled, room_room_id) VALUES ('333e4567-e89b-12d3-a456-426614174001', TRUE, TRUE, 'room_6');
 
 INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (TRUE, TRUE, '123e4567-e89b-12d3-a456-426614174001','admin', 'tempera_station_1');
-INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (FALSE, FALSE,'123e4567-e89b-12d3-a456-426614174001', 'MariaTheresa', 'tempera_station_disabled_2');
-INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (FALSE, FALSE, '123e4567-e89b-12d3-a456-426614174001', 'user1', 'tempera_station_disabled');
+INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (FALSE, FALSE,'123e4567-e89b-12d3-a456-426614174001', 'mariatheresa', 'tempera_station_disabled_2');
+INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (FALSE, FALSE, '123e4567-e89b-12d3-a456-426614174001', 'susikaufgern', 'tempera_station_disabled');
 INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (FALSE, FALSE, '123e4567-e89b-12d3-a456-426614174001', 'elvis', 'tempera_station_disabled_elvis');
 INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (TRUE, TRUE, '111e4567-e89b-12d3-a456-426614174001', 'johndoe', 'TEMP123');
 INSERT INTO TEMPERA_STATION (IS_HEALTHY, ENABLED, access_point_id, USER_USERNAME, ID) VALUES (TRUE, TRUE, '111e4567-e89b-12d3-a456-426614174001', 'bobjones', 'TEMP125');
@@ -336,6 +450,399 @@ VALUES (430.222, -4, '2024-05-15 09:02:00', 'tempera_station_1'),
        (900.0, -13, '2024-05-10T14:30:00', 'TEMP129'),
        (890.0, -13, '2024-05-11T15:45:00', 'TEMP130'),
        (890.0, -13, '2024-05-11T15:45:00', 'TEMP131');
+
+
+
+--some Measurements for the presentation on 20th July 2024
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (18.5, -1, '2024-06-14 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (250, -2, '2024-06-14 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -3, '2024-06-14 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (12000, -4, '2024-06-14 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (19.2, -1, '2024-06-14 02:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (210, -2, '2024-06-14 02:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (42, -3, '2024-06-14 02:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (11000, -4, '2024-06-14 02:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (20, -1, '2024-06-14 04:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (280, -2, '2024-06-14 04:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (55, -3, '2024-06-14 04:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (3000, -4, '2024-06-14 04:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (21.5, -1, '2024-06-14 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -2, '2024-06-14 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (60, -3, '2024-06-14 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (15000, -4, '2024-06-14 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (22.8, -1, '2024-06-14 08:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (290, -2, '2024-06-14 08:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (45, -3, '2024-06-14 08:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (13000, -4, '2024-06-14 08:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (24, -1, '2024-06-14 10:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (300, -2, '2024-06-14 10:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (40, -3, '2024-06-14 10:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (10000, -4, '2024-06-14 10:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (26, -1, '2024-06-14 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (250, -2, '2024-06-14 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (35, -3, '2024-06-14 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (17000, -4, '2024-06-14 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (23.5, -1, '2024-06-14 14:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (220, -2, '2024-06-14 14:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (70, -3, '2024-06-14 14:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (20000, -4, '2024-06-14 14:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (21.8, -1, '2024-06-14 16:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (270, -2, '2024-06-14 16:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -3, '2024-06-14 16:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (25000, -4, '2024-06-14 16:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (20, -1, '2024-06-14 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (200, -2, '2024-06-14 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (60, -3, '2024-06-14 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (30000, -4, '2024-06-14 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (19, -1, '2024-06-15 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (220, -2, '2024-06-15 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (48, -3, '2024-06-15 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (15000, -4, '2024-06-15 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (18.5, -1, '2024-06-15 02:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -2, '2024-06-15 02:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -3, '2024-06-15 02:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (12000, -4, '2024-06-15 02:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (21, -1, '2024-06-15 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (260, -2, '2024-06-15 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (47, -3, '2024-06-15 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (14000, -4, '2024-06-15 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (22.5, -1, '2024-06-15 08:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (280, -2, '2024-06-15 08:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (55, -3, '2024-06-15 08:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (11000, -4, '2024-06-15 08:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (24, -1, '2024-06-15 10:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (300, -2, '2024-06-15 10:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (52, -3, '2024-06-15 10:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (16000, -4, '2024-06-15 10:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (26, -1, '2024-06-15 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -2, '2024-06-15 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (60, -3, '2024-06-15 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (3000, -4, '2024-06-15 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (23.5, -1, '2024-06-15 14:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (270, -2, '2024-06-15 14:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (40, -3, '2024-06-15 14:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (10000, -4, '2024-06-15 14:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (25, -1, '2024-06-15 16:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -2, '2024-06-15 16:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (70, -3, '2024-06-15 16:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (18000, -4, '2024-06-15 16:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (24, -1, '2024-06-15 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (290, -2, '2024-06-15 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (42, -3, '2024-06-15 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (30000, -4, '2024-06-15 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (20.5, -1, '2024-06-16 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (250, -2, '2024-06-16 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -3, '2024-06-16 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (18000, -4, '2024-06-16 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (21, -1, '2024-06-16 03:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (275, -2, '2024-06-16 03:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (45, -3, '2024-06-16 03:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (20000, -4, '2024-06-16 03:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (19.5, -1, '2024-06-16 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (220, -2, '2024-06-16 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (55, -3, '2024-06-16 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (25000, -4, '2024-06-16 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (22, -1, '2024-06-16 09:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (280, -2, '2024-06-16 09:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (60, -3, '2024-06-16 09:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (15000, -4, '2024-06-16 09:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (26, -1, '2024-06-16 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -2, '2024-06-16 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (70, -3, '2024-06-16 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (14000, -4, '2024-06-16 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (23.5, -1, '2024-06-16 15:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (260, -2, '2024-06-16 15:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (40, -3, '2024-06-16 15:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (12000, -4, '2024-06-16 15:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (24, -1, '2024-06-16 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (300, -2, '2024-06-16 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -3, '2024-06-16 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (10000, -4, '2024-06-16 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (22.5, -1, '2024-06-16 21:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (240, -2, '2024-06-16 21:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (55, -3, '2024-06-16 21:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (27000, -4, '2024-06-16 21:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (18, -1, '2024-06-16 23:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (200, -2, '2024-06-16 23:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (30, -3, '2024-06-16 23:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (3000, -4, '2024-06-16 23:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (21.5, -1, '2024-06-16 23:59:59.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (230, -2, '2024-06-16 23:59:59.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (60, -3, '2024-06-16 23:59:59.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (16000, -4, '2024-06-16 23:59:59.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (18.5, -1, '2024-06-17 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (250, -2, '2024-06-17 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -3, '2024-06-17 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (12000, -4, '2024-06-17 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (19, -1, '2024-06-17 03:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (200, -2, '2024-06-17 03:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (55, -3, '2024-06-17 03:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (15000, -4, '2024-06-17 03:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (21.5, -1, '2024-06-17 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (220, -2, '2024-06-17 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (60, -3, '2024-06-17 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (10000, -4, '2024-06-17 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (24, -1, '2024-06-17 09:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (270, -2, '2024-06-17 09:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (45, -3, '2024-06-17 09:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (20000, -4, '2024-06-17 09:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (26, -1, '2024-06-17 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -2, '2024-06-17 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (40, -3, '2024-06-17 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (30000, -4, '2024-06-17 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (23, -1, '2024-06-17 15:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (260, -2, '2024-06-17 15:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (30, -3, '2024-06-17 15:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (25000, -4, '2024-06-17 15:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (22, -1, '2024-06-17 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (240, -2, '2024-06-17 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -3, '2024-06-17 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (15000, -4, '2024-06-17 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (20, -1, '2024-06-17 21:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (230, -2, '2024-06-17 21:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (60, -3, '2024-06-17 21:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (14000, -4, '2024-06-17 21:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (19, -1, '2024-06-17 23:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (210, -2, '2024-06-17 23:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (55, -3, '2024-06-17 23:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (13000, -4, '2024-06-17 23:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (18.5, -1, '2024-06-17 23:59:59.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (200, -2, '2024-06-17 23:59:59.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -3, '2024-06-17 23:59:59.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (12000, -4, '2024-06-17 23:59:59.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (20.5, -1, '2024-06-18 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (250, -2, '2024-06-18 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (55, -3, '2024-06-18 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (18000, -4, '2024-06-18 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (18, -1, '2024-06-18 03:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (200, -2, '2024-06-18 03:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (42, -3, '2024-06-18 03:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (15000, -4, '2024-06-18 03:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (21.5, -1, '2024-06-18 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (290, -2, '2024-06-18 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (60, -3, '2024-06-18 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (13000, -4, '2024-06-18 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (19.8, -1, '2024-06-18 09:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -2, '2024-06-18 09:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (57, -3, '2024-06-18 09:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (10000, -4, '2024-06-18 09:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (24, -1, '2024-06-18 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (240, -2, '2024-06-18 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (46, -3, '2024-06-18 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (20000, -4, '2024-06-18 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (22.5, -1, '2024-06-18 15:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (230, -2, '2024-06-18 15:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (49, -3, '2024-06-18 15:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (14000, -4, '2024-06-18 15:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (26, -1, '2024-06-18 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (280, -2, '2024-06-18 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (40, -3, '2024-06-18 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (3000, -4, '2024-06-18 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (23.5, -1, '2024-06-18 21:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (270, -2, '2024-06-18 21:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (30, -3, '2024-06-18 21:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (25000, -4, '2024-06-18 21:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (21, -1, '2024-06-18 23:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (220, -2, '2024-06-18 23:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (70, -3, '2024-06-18 23:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (12000, -4, '2024-06-18 23:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (19.5, -1, '2024-06-18 23:59:59.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (260, -2, '2024-06-18 23:59:59.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -3, '2024-06-18 23:59:59.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (30000, -4, '2024-06-18 23:59:59.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (20.6, -1, '2024-06-19 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (222.2, -2, '2024-06-19 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (44.2, -3, '2024-06-19 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (24313.2, -4, '2024-06-19 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (20.5, -1, '2024-06-19 02:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -2, '2024-06-19 02:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (53.9, -3, '2024-06-19 02:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (15777.7, -4, '2024-06-19 02:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (19.8, -1, '2024-06-19 04:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (250.4, -2, '2024-06-19 04:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (56.6, -3, '2024-06-19 04:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (14029.3, -4, '2024-06-19 04:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (18.8, -1, '2024-06-19 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (213.1, -2, '2024-06-19 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (51.3, -3, '2024-06-19 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (16159.1, -4, '2024-06-19 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (22.5, -1, '2024-06-19 08:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (244.4, -2, '2024-06-19 08:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (52.4, -3, '2024-06-19 08:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (18547.5, -4, '2024-06-19 08:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (23.1, -1, '2024-06-19 10:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -2, '2024-06-19 10:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (59.6, -3, '2024-06-19 10:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (11123.3, -4, '2024-06-19 10:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (19.8, -1, '2024-06-19 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (251.8, -2, '2024-06-19 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (46.6, -3, '2024-06-19 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (29041.5, -4, '2024-06-19 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (20.1, -1, '2024-06-19 14:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (239.2, -2, '2024-06-19 14:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (56.1, -3, '2024-06-19 14:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (10926.1, -4, '2024-06-19 14:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (21.9, -1, '2024-06-19 16:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (216.1, -2, '2024-06-19 16:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (43.2, -3, '2024-06-19 16:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (17715.1, -4, '2024-06-19 16:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (19.1, -1, '2024-06-19 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (242.6, -2, '2024-06-19 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (54.5, -3, '2024-06-19 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (13896.1, -4, '2024-06-19 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (19.5, -1, '2024-06-20 08:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (210, -2, '2024-06-20 08:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -3, '2024-06-20 08:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (15000, -4, '2024-06-20 08:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (21, -1, '2024-06-20 10:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (250, -2, '2024-06-20 10:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (47, -3, '2024-06-20 10:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (17000, -4, '2024-06-20 10:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (23, -1, '2024-06-20 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (290, -2, '2024-06-20 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (42, -3, '2024-06-20 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (13000, -4, '2024-06-20 12:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (24.5, -1, '2024-06-20 14:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -2, '2024-06-20 14:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (60, -3, '2024-06-20 14:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (11000, -4, '2024-06-20 14:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (22, -1, '2024-06-20 16:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (220, -2, '2024-06-20 16:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (55, -3, '2024-06-20 16:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (12000, -4, '2024-06-20 16:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (26, -1, '2024-06-20 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (240, -2, '2024-06-20 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (40, -3, '2024-06-20 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (10000, -4, '2024-06-20 18:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (20, -1, '2024-06-20 20:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -2, '2024-06-20 20:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (70, -3, '2024-06-20 20:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (3000, -4, '2024-06-20 20:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (18.5, -1, '2024-06-20 22:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (200, -2, '2024-06-20 22:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (43, -3, '2024-06-20 22:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (22000, -4, '2024-06-20 22:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (19, -1, '2024-06-20 23:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (270, -2, '2024-06-20 23:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (58, -3, '2024-06-20 23:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (14000, -4, '2024-06-20 23:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (20.5, -1, '2024-06-20 23:59:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (230, -2, '2024-06-20 23:59:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (45, -3, '2024-06-20 23:59:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (12000, -4, '2024-06-20 23:59:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (20.5, -1, '2024-06-21 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (250, -2, '2024-06-21 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -3, '2024-06-21 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (12000, -4, '2024-06-21 00:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (21, -1, '2024-06-21 01:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -2, '2024-06-21 01:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (40, -3, '2024-06-21 01:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (15000, -4, '2024-06-21 01:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (23, -1, '2024-06-21 02:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (270, -2, '2024-06-21 02:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (45, -3, '2024-06-21 02:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (18000, -4, '2024-06-21 02:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (19, -1, '2024-06-21 04:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (220, -2, '2024-06-21 04:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (55, -3, '2024-06-21 04:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (25000, -4, '2024-06-21 04:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (18.5, -1, '2024-06-21 05:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (240, -2, '2024-06-21 05:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (70, -3, '2024-06-21 05:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (27000, -4, '2024-06-21 05:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (22, -1, '2024-06-21 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (200, -2, '2024-06-21 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (60, -3, '2024-06-21 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (14000, -4, '2024-06-21 06:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (19.2, -1, '2024-06-21 06:06:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (220, -2, '2024-06-21 06:06:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (48, -3, '2024-06-21 06:06:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (17000, -4, '2024-06-21 06:06:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (20.5, -1, '2024-06-21 06:12:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -2, '2024-06-21 06:12:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (55, -3, '2024-06-21 06:12:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (13000, -4, '2024-06-21 06:12:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (21.8, -1, '2024-06-21 06:18:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (250, -2, '2024-06-21 06:18:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (42, -3, '2024-06-21 06:18:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (11000, -4, '2024-06-21 06:18:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (22.5, -1, '2024-06-21 06:24:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (230, -2, '2024-06-21 06:24:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (47, -3, '2024-06-21 06:24:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (28000, -4, '2024-06-21 06:24:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (23, -1, '2024-06-21 06:30:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (270, -2, '2024-06-21 06:30:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (60, -3, '2024-06-21 06:30:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (12000, -4, '2024-06-21 06:30:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (24, -1, '2024-06-21 06:36:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (300, -2, '2024-06-21 06:36:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (44, -3, '2024-06-21 06:36:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (25000, -4, '2024-06-21 06:36:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (26, -1, '2024-06-21 06:42:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -2, '2024-06-21 06:42:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (30, -3, '2024-06-21 06:42:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (3000, -4, '2024-06-21 06:42:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (21.5, -1, '2024-06-21 06:54:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (260, -2, '2024-06-21 06:54:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (52, -3, '2024-06-21 06:54:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (18000, -4, '2024-06-21 06:54:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (19.5, -1, '2024-06-21 07:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (270, -2, '2024-06-21 07:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -3, '2024-06-21 07:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (15000, -4, '2024-06-21 07:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -2, '2024-06-21 07:10:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (230, -2, '2024-06-21 07:20:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (21.2, -1, '2024-06-21 07:10:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (60, -3, '2024-06-21 07:10:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (25000, -4, '2024-06-21 07:10:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (23, -1, '2024-06-21 07:20:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (57, -3, '2024-06-21 07:20:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (28000, -4, '2024-06-21 07:20:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (22.8, -1, '2024-06-21 06:48:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (200, -2, '2024-06-21 06:48:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (65, -3, '2024-06-21 06:48:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (14000, -4, '2024-06-21 06:48:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (24.8, -1, '2024-06-21 07:30:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (19.8, -1, '2024-06-21 07:05:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (250, -2, '2024-06-21 07:05:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (55, -3, '2024-06-21 07:05:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (20000, -4, '2024-06-21 07:05:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (22.6, -1, '2024-06-21 07:15:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (270, -2, '2024-06-21 07:15:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (53, -3, '2024-06-21 07:15:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (16000, -4, '2024-06-21 07:15:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (24.3, -1, '2024-06-21 07:25:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (260, -2, '2024-06-21 07:25:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (42, -3, '2024-06-21 07:25:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (18000, -4, '2024-06-21 07:25:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (280, -2, '2024-06-21 07:30:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (65, -3, '2024-06-21 07:30:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (22000, -4, '2024-06-21 07:30:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (25.5, -1, '2024-06-21 07:35:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (220, -2, '2024-06-21 07:35:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (58, -3, '2024-06-21 07:35:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (3000, -4, '2024-06-21 07:35:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (23.7, -1, '2024-06-21 07:40:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (280, -2, '2024-06-21 07:40:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (48, -3, '2024-06-21 07:40:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (21000, -4, '2024-06-21 07:40:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (20.5, -1, '2024-06-21 07:45:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (270, -2, '2024-06-21 07:45:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (50, -3, '2024-06-21 07:45:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (12000, -4, '2024-06-21 07:45:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (23, -1, '2024-06-21 07:50:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (230, -2, '2024-06-21 07:50:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (55, -3, '2024-06-21 07:50:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (13000, -4, '2024-06-21 07:50:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (22.5, -1, '2024-06-21 07:55:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (260, -2, '2024-06-21 07:55:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (60, -3, '2024-06-21 07:55:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (16000, -4, '2024-06-21 07:55:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (20.3, -1, '2024-06-21 08:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (270, -2, '2024-06-21 08:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (55, -3, '2024-06-21 08:00:00.000000', 'tempera_station_1');
+INSERT INTO public.measurement (measurement_value, sensor_sensor_id, timestamp, sensor_tempera_id) VALUES (18000, -4, '2024-06-21 08:00:00.000000', 'tempera_station_1');
+
 
 -- Default tips
 -- 1. add ThresholdTips, a lower and upper one for each of the sensors
