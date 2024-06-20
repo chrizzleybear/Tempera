@@ -199,9 +199,20 @@ if(groupxProjectOptional.isPresent()){
    * @param groupxProject
    */
   public void deactivateGroupxProject (GroupxProject groupxProject) {
-    groupxProject.setActive(false);
-    groupxProject.removeAllContributors();
-    groupxProjectRepository.save(groupxProject);
+
+      String gName;
+      try {
+          gName = groupxProject.getGroup().getName();
+      } catch (NullPointerException e) {
+          gName = "[removed]";
+      }
+      auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.GROUP,
+              "Project " + groupxProject.getProject().getName() + " of group " + gName + "has been deactivated."
+      );
+
+      groupxProject.setActive(false);
+      groupxProject.removeAllContributors();
+      groupxProjectRepository.save(groupxProject);
   }
 
   @Transactional

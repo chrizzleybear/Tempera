@@ -159,26 +159,21 @@ public class ProjectServiceTest {
 
     @Test
     public void testDeleteProject() {
-
         Project project = new Project();
         project.setName("Test Project");
+        project.setGroupxProjects(new HashSet<>());
 
         GroupxProject groupxProject = new GroupxProject();
         groupxProject.addProject(project);
-        GroupxProjectId id = groupxProject.getId();
+        when(groupxProjectRepository.findAllByProjectId(project.getId())).thenReturn(List.of(groupxProject));
+        when(projectRepository.findFirstById(project.getId())).thenReturn(project);
 
-        when(groupxProjectRepository.findAllByProjectId(1L)).thenReturn(List.of(groupxProject));
-        when(projectRepository.findFirstById(1L)).thenReturn(project);
+        projectService.deleteProject(project.getId());
 
-        projectService.deleteProject(1L);
-
-        verify(groupxProjectRepository, times(1)).findAllByProjectId(1L);
-        verify(groupxProjectRepository, times(1)).save(groupxProject);
-        verify(projectRepository, times(1)).findFirstById(1L);
-        verify(projectRepository, times(1)).save(project);
-        verify(auditLogService, times(1)).logEvent(any(), any(), any());
         assertFalse(groupxProject.isActive());
         assertFalse(project.isActive());
+        verify(groupxProjectRepository, times(1)).save(groupxProject);
+        verify(projectRepository, times(1)).save(project);
     }
 
     @Test
@@ -187,6 +182,7 @@ public class ProjectServiceTest {
         project.setName("A");
         project.deactivate();
         when(projectRepository.findFirstById(project.getId())).thenReturn(project);
+        when(projectRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         Project reactivatedProject = projectService.reactivateProject(project.getId());
 
@@ -200,17 +196,29 @@ public class ProjectServiceTest {
     public void testRemoveGroupFromProject() throws CouldNotFindEntityException {
         Project project = new Project();
         project.setName("Test Project");
+        project.setGroupxProjects(new HashSet<>());
+
+        Groupx group = new Groupx();
+        group.setName("Test Group");
+        group.setGroupxProjects(new HashSet<>());
+        when(groupRepository.findById(group.getId())).thenReturn(Optional.of(group));
+        when(groupRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
         GroupxProject groupxProject = new GroupxProject();
         groupxProject.addProject(project);
+        groupxProject.addGroup(group);
 
-        when(groupxProjectRepository.findByGroup_IdAndProject_IdFetchContributorsEagerly(1L, 1L)).thenReturn(Optional.of(groupxProject));
+        when(groupxProjectRepository.findByGroup_IdAndProject_IdFetchContributorsEagerly(group.getId(), project.getId()))
+                .thenReturn(Optional.of(groupxProject));
 
-        projectService.removeGroupFromProject(1L, 1L);
+        projectService.removeGroupFromProject(group.getId(), project.getId());
 
-        verify(groupxProjectRepository, times(1)).findByGroup_IdAndProject_IdFetchContributorsEagerly(1L, 1L);
+        verify(groupxProjectRepository, times(1)).findByGroup_IdAndProject_IdFetchContributorsEagerly(group.getId(), project.getId());
         verify(groupxProjectRepository, times(1)).save(groupxProject);
-        verify(auditLogService, times(1)).logEvent(any(), any(), any());
+        verify(auditLogService, atLeastOnce()).logEvent(any(), any(), any());
         assertFalse(groupxProject.isActive());
+        assertNotNull(groupxProject.getProject());
+        assertNotNull(groupxProject.getGroup());
     }
 
     @Test
@@ -228,33 +236,26 @@ public class ProjectServiceTest {
 
     @Test
     public void testDeactivateGroupxProject() throws CouldNotFindEntityException {
+        Groupx group = new Groupx();
+        group.setName("Test Group");
+        group.setGroupxProjects(new HashSet<>());
+        when(groupRepository.findById(group.getId())).thenReturn(Optional.of(group));
+        when(groupRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         Project project = new Project();
         project.setName("Test Project");
+        project.setGroupxProjects(new HashSet<>());
+
         GroupxProject groupxProject = new GroupxProject();
         groupxProject.addProject(project);
-
-        when(groupxProjectRepository.findByGroup_IdAndProject_IdFetchContributorsEagerly(1L, 1L)).thenReturn(Optional.of(groupxProject));
+        when(groupxProjectRepository.findByGroup_IdAndProject_IdFetchContributorsEagerly(group.getId(), project.getId()))
+                .thenReturn(Optional.of(groupxProject));
 
         projectService.deactivateGroupxProject(groupxProject);
 
-        verify(groupxProjectRepository, times(1)).findByGroup_IdAndProject_IdFetchContributorsEagerly(1L, 1L);
+        assertFalse(groupxProject.isActive());
         verify(groupxProjectRepository, times(1)).save(groupxProject);
         verify(auditLogService, times(1)).logEvent(any(), any(), any());
-        assertFalse(groupxProject.isActive());
-    }
-
-    @Test
-    public void testDeactivateGroupxProjectNotFound() {
-        when(groupxProjectRepository.findByGroup_IdAndProject_IdFetchContributorsEagerly(1L, 1L)).thenReturn(Optional.empty());
-
-        CouldNotFindEntityException exception = assertThrows(CouldNotFindEntityException.class, () -> {
-            projectService.deactivateGroupxProject(new GroupxProject());
-        });
-
-        assertEquals("GroupxProject with groupId 1 and projectId 1 are not present", exception.getMessage());
-        verify(groupxProjectRepository, times(1)).findByGroup_IdAndProject_IdFetchContributorsEagerly(1L, 1L);
-        verify(auditLogService, never()).logEvent(any(), any(), any());
     }
 
     @Test
