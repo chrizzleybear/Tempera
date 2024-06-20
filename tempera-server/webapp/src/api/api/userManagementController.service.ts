@@ -19,11 +19,11 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
+import { DeletionResponseDto } from '../model/deletionResponseDto';
+// @ts-ignore
 import { EnableUserRequest } from '../model/enableUserRequest';
 // @ts-ignore
 import { MessageResponse } from '../model/messageResponse';
-// @ts-ignore
-import { DeletionResponseDto } from '../model/deletionResponseDto';
 // @ts-ignore
 import { UserxDto } from '../model/userxDto';
 

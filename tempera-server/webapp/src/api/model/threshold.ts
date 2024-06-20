@@ -19,6 +19,7 @@ export interface Threshold {
     sensorType?: Threshold.SensorTypeEnum;
     thresholdType?: Threshold.ThresholdTypeEnum;
     value?: number;
+    modification?: Modification;
     tip?: ThresholdTip;
     ofLowerBoundType?: boolean;
     modificationReason?: Modification;
