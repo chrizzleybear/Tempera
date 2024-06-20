@@ -11,6 +11,7 @@ import {NgIf} from "@angular/common";
 import {MessageModule} from "primeng/message";
 import {GroupUpdateDTO} from "../../models/groupDtos";
 import { SimpleGroupDto } from '../../../api';
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-group-edit',
@@ -37,7 +38,8 @@ export class GroupEditComponent implements OnInit, OnChanges{
   constructor(
     private fb: FormBuilder,
     private groupService: GroupService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private messageService: MessageService
   ) {
     this.groupForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -66,6 +68,7 @@ export class GroupEditComponent implements OnInit, OnChanges{
         this.populateForm();
       },
       error: (error) => {
+        this.messageService.add({severity:'error', summary:'Error', detail:'Error loading users'});
         console.error('Error loading users:', error);
       }
     });
@@ -77,7 +80,6 @@ export class GroupEditComponent implements OnInit, OnChanges{
       description: this.group.description,
       groupLead: this.groupLeads.find(lead => lead.value === this.group.groupLead)
     });
-    console.log('Populated form:', this.groupForm.value);
   }
 
   onSubmit() {
@@ -90,10 +92,12 @@ export class GroupEditComponent implements OnInit, OnChanges{
       };
       this.groupService.updateGroup(dto).subscribe({
         next: (response) => {
+          this.messageService.add({severity:'success', summary:'Success', detail:'Group updated successfully'});
           console.log('Group updated:', response);
           this.editComplete.emit(response);
         },
         error: (error) => {
+          this.messageService.add({severity:'error', summary:'Error', detail:'Error updating group'});
           console.error('Error updating group:', error);
         }
       });

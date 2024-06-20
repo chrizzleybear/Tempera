@@ -8,6 +8,7 @@ import {PaginatorModule} from "primeng/paginator";
 import {User} from "../../models/user.model";
 import {UsersService} from "../../_services/users.service";
 import { ExtendedProjectDto, ProjectControllerService, SimpleProjectDto } from '../../../api';
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-project-edit',
@@ -31,7 +32,11 @@ export class ProjectEditComponent implements OnChanges, OnInit {
   @Input({required: true}) project!: SimpleProjectDto;
   @Output() editComplete = new EventEmitter<boolean>();
 
-  constructor(private fb: FormBuilder, private projectService: ProjectControllerService, private usersService: UsersService) {
+  constructor(
+    private fb: FormBuilder,
+    private projectService: ProjectControllerService,
+    private usersService: UsersService,
+    private messageService: MessageService) {
     this.projectForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required]],
@@ -52,6 +57,7 @@ export class ProjectEditComponent implements OnChanges, OnInit {
       },
       error: (error) => {
         console.error('Failed to load project details:', error);
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Failed to load project details'});
       }
     });
   }
@@ -84,10 +90,12 @@ export class ProjectEditComponent implements OnChanges, OnInit {
       this.projectService.updateProject(dto).subscribe({
         next: (response) => {
           console.log('Project updated successfully:', response);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Project updated successfully'});
           this.editComplete.emit(true);
         },
         error: (error) => {
           console.error("Error updating project:", error);
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error updating project'});
           this.editComplete.emit(false);
         }
       });
@@ -98,11 +106,10 @@ export class ProjectEditComponent implements OnChanges, OnInit {
   fetchManagers() {
     this.usersService.getAllManagers().subscribe({
       next: (users: User[]) => {
-        console.log('Loaded users:', users);
         this.managers = users.map(user => ({ label: `${user.firstName} ${user.lastName}`, value: user.username }));
         this.populateForm();
       },
-      error: (error) => console.error('Error loading users:', error)
+      error: (error) => this.messageService.add({severity: 'error', summary: 'Error', detail: 'Failed to load managers'})
     });
   }
 }

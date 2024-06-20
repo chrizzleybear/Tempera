@@ -11,6 +11,8 @@ import {DialogModule} from "primeng/dialog";
 import {Router} from "@angular/router";
 import {ProjectEditComponent} from "../project-edit/project-edit.component";
 import { ProjectControllerService, SimpleProjectDto } from '../../../api';
+import {MessageService} from "primeng/api";
+import {ToastModule} from "primeng/toast";
 @Component({
   selector: 'app-projects',
   standalone: true,
@@ -23,7 +25,8 @@ import { ProjectControllerService, SimpleProjectDto } from '../../../api';
     UserCreateComponent,
     ProjectCreateComponent,
     DialogModule,
-    ProjectEditComponent
+    ProjectEditComponent,
+    ToastModule
   ],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.css'
@@ -36,12 +39,11 @@ export class ProjectsComponent implements OnInit{
 
   projects: SimpleProjectDto[] = [];
   filteredProjects: SimpleProjectDto[] = [];
-  messages: any;
   displayCreateDialog: boolean = false;
   displayEditDialog: boolean = false;
   selectedProject: SimpleProjectDto | undefined;
 
-  constructor(private projectService: ProjectControllerService, private router: Router) {
+  constructor(private projectService: ProjectControllerService, private router: Router, private messageService: MessageService) {
 
   }
   ngOnInit(): void {
@@ -85,28 +87,26 @@ export class ProjectsComponent implements OnInit{
       this.projectService.deleteProject(projectId).subscribe({
         next: (response) => {
           this.loadProjects();
-          this.messages = [{severity:'success', summary:'Success', detail:'Project deleted successfully'}];
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Project deleted successfully'});
         },
         error: (err) => {
-          this.messages = [{severity:'error', summary:'Error', detail:`Error ${err} deleting project`}];
+          console.error('Error deleting project:', err);
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error deleting project'});
         }
       })
   };
 
   onCreateCompleted(success: boolean) {
     if (success) {
-      this.messages = [{severity:'success', summary:'Success', detail:'Project created successfully'}];
       this.returnToProjects();
     }
   }
   editProject(project: SimpleProjectDto) {
-    console.log("Edit project:", project);
     this.selectedProject = project;
     this.displayEditDialog = true;
   }
   onEditCompleted(success: boolean) {
     if (success) {
-      this.messages = [{severity:'success', summary:'Success', detail:'Project updated successfully'}];
       this.returnToProjects();
     }
   }
@@ -117,8 +117,6 @@ export class ProjectsComponent implements OnInit{
   }
 
   viewProjectDetails(project: Project) {
-    console.log("View project details:", project);
-    console.log("Project ID:", project.projectId);
     this.router.navigate(['/project', project.projectId]);
   }
   addGroupToProject(project: Project) {

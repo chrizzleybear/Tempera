@@ -1,4 +1,4 @@
-<p-messages [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
+<p-toast></p-toast>
 <div class="mb-4">
   <input type="text" pInputText placeholder="Search" (input)="applyFilter($event)" class="mr-2">
   <button type="button" pButton label="Add New Group" icon="pi pi-plus" (click)="createGroup()" class="mr-2"></button>
@@ -11,7 +11,6 @@
       <th scope="col" pSortableColumn="groupLeadId">Group Lead ID <p-sortIcon field="groupLeadId"></p-sortIcon></th>
       <th></th>
       <th></th>
-      <th></th>
 
     </tr>
   </ng-template>
@@ -22,9 +21,6 @@
       <td>{{ group.groupLead}}</td>
       <td>
         <p-button label="Details" (onClick)="viewGroupDetails(group); $event.stopPropagation()" icon="pi pi-eye"></p-button>
-      </td>
-      <td>
-        <p-button label="Members" (onClick)="members(group); $event.stopPropagation()" icon="pi pi-users"></p-button>
       </td>
       <td>
         <p-button label="Delete" icon="pi pi-trash" (onClick)="deleteGroup(group.id); $event.stopPropagation()"></p-button>
