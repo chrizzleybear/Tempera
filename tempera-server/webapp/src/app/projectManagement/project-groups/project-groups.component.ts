@@ -54,7 +54,13 @@ export class ProjectGroupsComponent implements OnInit {
   groupToBeRemoved?: SimpleGroupDto;
   messages: any;
 
-  constructor(private projectControllerService: ProjectControllerService, private confirmationService: ConfirmationService, private route: ActivatedRoute, private router: Router, private groupControllerService: GroupManagementControllerService, private messageService: MessageService) {
+  constructor(
+    private projectControllerService: ProjectControllerService,
+    private confirmationService: ConfirmationService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private groupControllerService: GroupManagementControllerService,
+    private messageService: MessageService) {
 
   }
 

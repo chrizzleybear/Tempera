@@ -8,6 +8,7 @@ import { User } from '../../models/user.model';
 import { MessageModule } from 'primeng/message';
 import { NgIf } from '@angular/common';
 import { ProjectControllerService, SimpleProjectDto } from '../../../api';
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-project-create',
@@ -32,7 +33,11 @@ export class ProjectCreateComponent implements OnInit{
   deactiveProjectsExist: boolean = false;
   @Output() createComplete = new EventEmitter<boolean>();
 
-  constructor(private fb: FormBuilder, private projectService: ProjectControllerService, private usersService: UsersService) {
+  constructor(
+    private fb: FormBuilder,
+    private projectService: ProjectControllerService,
+    private usersService: UsersService,
+    private messageService: MessageService) {
     this.projectForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required]],
@@ -66,7 +71,10 @@ export class ProjectCreateComponent implements OnInit{
           this.deactiveProjectsExist = true;
         }
       },
-      error: (error) => console.error('Error loading projects:', error),
+      error: (error) => {
+        console.error('Error fetching deactivated projects:', error);
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Failed to load deactivated projects'});
+      }
     });
   }
 
@@ -114,15 +122,18 @@ export class ProjectCreateComponent implements OnInit{
       this.projectService.createProject(dto).subscribe({
         next: () => {
           this.projectForm.reset();
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Project created successfully'});
           console.log('Project created successfully');
           this.createComplete.emit(true);
         },
         error: (error) => {
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error creating project'});
           console.error('Error adding project:', error);
           this.createComplete.emit(false);
         },
       });
     } else {
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'Invalid form'});
       console.error('Invalid form');
     }
   }
