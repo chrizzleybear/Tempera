@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ClimateDataControllerService, ClimateMeasurementDto, Sensor} from "../../../api";
 import {MessageService} from "primeng/api";
 import {TableModule} from "primeng/table";
@@ -25,8 +25,8 @@ export class IrrTableComponent implements OnInit{
 
   irrData: ClimateMeasurementDto[] | undefined = [];
   sensorType: Sensor.SensorTypeEnum = "IRRADIANCE";
-  accessPointUuid: string = "123e4567-e89b-12d3-a456-426614174001";
-  temperaStationId: string = "tempera_station_1";
+  @Input() temperaStationId: string | undefined;
+  @Input() accessPointUuid: string | undefined;
   numberOfDisplayedEntries: number = 20;
   rangeDates: Date[] = [];
 
@@ -40,9 +40,10 @@ export class IrrTableComponent implements OnInit{
   }
 
   fetchIrrData(startDate: Date, endDate: Date): void {
+    console.log(this.temperaStationId, this.accessPointUuid)
     this.climateDataControllerService.getMeasurementsBySensorType(
-      this.accessPointUuid,
-      this.temperaStationId,
+      this.accessPointUuid!,
+      this.temperaStationId!,
       this.sensorType,
       startDate.toISOString(),
       endDate.toISOString(),

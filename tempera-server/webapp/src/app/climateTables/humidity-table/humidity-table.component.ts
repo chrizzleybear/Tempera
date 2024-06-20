@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {MessageService} from "primeng/api";
 import {ClimateDataControllerService, ClimateMeasurementDto, Sensor} from "../../../api";
 import {DatePipe, NgIf} from "@angular/common";
@@ -25,14 +25,10 @@ import {PanelModule} from "primeng/panel";
 })
 export class HumidityTableComponent implements OnInit{
 
-  filterDate: Date | undefined;
-
   humidityData: ClimateMeasurementDto[] | undefined = [];
-  filteredData: ClimateMeasurementDto[] = [];
-
   sensorType: Sensor.SensorTypeEnum = "HUMIDITY";
-  accessPointUuid: string = "123e4567-e89b-12d3-a456-426614174001";
-  temperaStationId: string = "tempera_station_1";
+  @Input() temperaStationId: string | undefined;
+  @Input() accessPointUuid: string | undefined;
 
   numberOfDisplayedEntries: number = 10;
   rangeDates: Date[] = [];
@@ -48,8 +44,8 @@ export class HumidityTableComponent implements OnInit{
 
   fetchHumidityData(startDate: Date, endDate: Date): void {
     this.climateDataControllerService.getMeasurementsBySensorType(
-      this.accessPointUuid,
-      this.temperaStationId,
+      this.accessPointUuid!,
+      this.temperaStationId!,
       this.sensorType,
       startDate.toISOString(),
       endDate.toISOString(),
