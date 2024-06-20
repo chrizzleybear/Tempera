@@ -26,7 +26,12 @@ export class AppMenuComponent implements OnInit {
       {
         label: 'Home',
         items: [
-          { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
+          {
+            label: 'Dashboard',
+            icon: 'pi pi-fw pi-home',
+            routerLink: ['/'],
+            visible: this.storageService.getUser()?.roles.includes(RolesEnum.Employee),
+          },
         ],
       },
       {
@@ -79,7 +84,7 @@ export class AppMenuComponent implements OnInit {
             label: 'Climate Chart',
             icon: 'pi pi-fw pi-cloud',
             routerLink: ['/climateChart'],
-            visible: this.storageService.getUser()?.roles.includes('ADMIN')
+            visible: this.storageService.getUser()?.roles.includes('ADMIN'),
           },
           {
             label: 'Access Points',
@@ -99,16 +104,17 @@ export class AppMenuComponent implements OnInit {
             routerLink: ['/audit-logs'],
             visible: this.storageService.getUser()?.roles.includes('ADMIN'),
           },
-          { label: 'Tips',
+          {
+            label: 'Tips',
             icon: 'pi pi-fw pi-info-circle',
             routerLink: ['/tips'],
-            visible: this.storageService.getUser()?.roles.includes('ADMIN')
+            visible: this.storageService.getUser()?.roles.includes('ADMIN'),
           },
           {
             label: 'Climate Table',
             icon: 'pi pi-fw pi-table',
-            routerLink: ['/climateTable']
-          }
+            routerLink: ['/climateTable'],
+          },
         ],
       },
     ];
