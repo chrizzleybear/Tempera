@@ -1,4 +1,6 @@
 <div>
+  <div class="flex">
+    <div>
     <form [formGroup]="groupForm" (ngSubmit)="onSubmit()">
       <!-- Validator messages -->
       <div class="mb-2">
@@ -35,4 +37,27 @@
         <br>
         <p-button pButton type="submit" label="Create Group" [disabled]="!groupForm.valid"></p-button>
     </form>
+    </div>
+
+    <!-- reactivation form ------------------------------------------------>
+
+    <div class="ml-auto mt-1.5">
+      <form [formGroup]="reactivateForm" (ngSubmit)="reactivateGroup()">
+        <div class="p-field">
+          <p-dropdown [options]="deactivatedGroupOptions "
+                      [filter]="true"
+                      formControlName="group"
+                      [style]="{'width':'300px'}"
+                      appendTo="body"
+                      optionLabel="label"
+                      placeholder="Deactivated Groups"
+                      id="dectivated_groups"></p-dropdown>
+        </div>
+        <br>
+        <button pButton label="Reactivate Group" [disabled]="!deactivatedGroupsExist"
+                class="ml-auto" type="submit"></button>
+      </form>
+    </div>
+
+  </div>
 </div>

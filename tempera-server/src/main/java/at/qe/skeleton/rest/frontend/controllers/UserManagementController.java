@@ -1,16 +1,17 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
+import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.rest.frontend.dtos.CredentialsDto;
 import at.qe.skeleton.rest.frontend.dtos.DeletionResponseDto;
 import at.qe.skeleton.rest.frontend.dtos.UserxDto;
-import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.services.AuthenticationService;
 import at.qe.skeleton.services.UserxService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
@@ -39,10 +40,9 @@ public class UserManagementController {
     return ResponseEntity.ok(user);
   }
 
+  @PreAuthorize("hasAuthority('ADMIN')")
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<DeletionResponseDto> deleteUser(@PathVariable String id) {
-    //todo: werfen alle methoden die richtigen fehler?
-
     DeletionResponseDto response= userxService.deleteUser(id);
     return ResponseEntity.ok(response);
   }

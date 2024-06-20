@@ -10,12 +10,11 @@ import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.GroupxProjectRepository;
 import at.qe.skeleton.repositories.UserxRepository;
 import at.qe.skeleton.rest.frontend.dtos.SimpleGroupDto;
+import java.util.List;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Component
 @Scope("application")
@@ -103,6 +102,13 @@ public class GroupService {
         LogEvent.EDIT,
         LogAffectedType.GROUP,
         "Group with name " + group.getName() + " was edited.");
+    return groupRepository.save(group);
+  }
+
+  @PreAuthorize("hasAuthority('MANAGER') or hasAnyAuthority('ADMIN')")
+  public Groupx reactivateGroup(Long groupId){
+    Groupx group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException(INVALID_GROUP_ID));
+    group.activate();
     return groupRepository.save(group);
   }
 

@@ -1,20 +1,17 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.*;
+import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.model.enums.*;
 import at.qe.skeleton.repositories.ExternalRecordRepository;
 import at.qe.skeleton.repositories.GroupRepository;
 import at.qe.skeleton.repositories.ProjectRepository;
-import at.qe.skeleton.rest.frontend.dtos.*;
-import at.qe.skeleton.model.Userx;
 import at.qe.skeleton.repositories.UserxRepository;
-
-import java.util.Collection;
+import at.qe.skeleton.rest.frontend.dtos.*;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-
-import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.UserMapper;
 import org.springframework.context.annotation.Scope;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -148,7 +145,8 @@ public class UserxService implements UserDetailsService {
 
   /**
    * Warning: This will delete all external and Internal Records of that user. Also you cant delete
-   * an admin.
+   * an admin. If a user is a manager and has projects, the deletion will fail and it will trigger a
+   * project or group reassignment (done by hand) if the user is still leading groups or managing projects.
    *
    * @param username the username of the user to delete
    */
