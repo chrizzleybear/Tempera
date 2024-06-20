@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import at.qe.skeleton.rest.frontend.dtos.AccessPointDto;
 
@@ -28,6 +29,7 @@ public class AccessPointController {
     @Autowired private TemperaStationService temperaStationService;
 
     @GetMapping("/all")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<AccessPointDto>> getAllAccesspoints() {
         List<AccessPoint> accessPoints = accessPointService.getAllAccesspoints();
         List<AccessPointDto> accessPointDtos = accessPoints.stream()
@@ -43,6 +45,7 @@ public class AccessPointController {
     }
 
     @GetMapping("/load/{accesspointId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<AccessPointDto> getAccesspointById(@PathVariable String accesspointId) {
         try {
             AccessPoint a = accessPointService.getAccessPointById(UUID.fromString(accesspointId));
@@ -59,6 +62,7 @@ public class AccessPointController {
     }
 
     @GetMapping("/load/room/{roomId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<AccessPoint> getAccesspointsByRoomId(@PathVariable String roomId) {
         try {
             AccessPoint a = accessPointService.getAccessPointByRoomId(roomId);
@@ -69,6 +73,7 @@ public class AccessPointController {
     }
 
     @PutMapping("/create")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<AccessPointDto> createAccesspoint(@RequestBody AccessPointDto accessPointDto) {
         // String id, String roomId
         try {
@@ -85,6 +90,7 @@ public class AccessPointController {
     }
 
     @PutMapping("/update")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<AccessPointDto> updateAccesspoint(@RequestBody AccessPointDto accessPointDto) {
         try {
             System.out.println("accessPointDto: " + accessPointDto);
@@ -101,6 +107,7 @@ public class AccessPointController {
     }
 
     @DeleteMapping("/delete/{accesspointId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<MessageResponse> deleteAccesspoint(@PathVariable String accesspointId) {
         try {
             accessPointService.delete(accessPointService.getAccessPointById(UUID.fromString(accesspointId)));
@@ -110,12 +117,14 @@ public class AccessPointController {
         }
     }
     @GetMapping("/availableRooms")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<Room>> getAvailableRooms() {
         List<Room> rooms = accessPointService.getAvailableRooms();
         return ResponseEntity.ok(rooms);
     }
 
     @GetMapping("/tempera/{accesspointId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<TemperaStationDto>> getTemperaStations(@PathVariable String accesspointId) {
         try {
             AccessPoint a = accessPointService.getAccessPointById(UUID.fromString(accesspointId));

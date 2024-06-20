@@ -10,6 +10,7 @@ import at.qe.skeleton.services.RoomService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,12 +31,14 @@ public class RoomController {
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<Room>> getAllRooms() {
         List<Room> rooms = roomService.getAllRooms();
         return ResponseEntity.ok(rooms);
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> createRoom(@RequestBody String roomId) {
         try {
             roomService.createRoom(roomId);
@@ -46,6 +49,7 @@ public class RoomController {
     }
 
   @DeleteMapping("/delete/{roomId}")
+  @PreAuthorize("hasAuthority('ADMIN')")
   public ResponseEntity<String> deleteRoom(@PathVariable String roomId) {
     try {
       roomService.deleteRoom(roomId);
@@ -56,6 +60,7 @@ public class RoomController {
   }
 
   @PostMapping("/addThreshold/{roomId}")
+  @PreAuthorize("hasAuthority('ADMIN')")
   public ResponseEntity<String> addThresholdToRoom(
       @PathVariable String roomId, @RequestBody Threshold threshold) {
     try {
@@ -69,6 +74,7 @@ public class RoomController {
   }
 
   @DeleteMapping("/removeThreshold/{roomId}")
+  @PreAuthorize("hasAuthority('ADMIN')")
   public ResponseEntity<String> removeThresholdFromRoom(
       @PathVariable String roomId, @RequestBody Threshold threshold) {
     try {
@@ -82,6 +88,7 @@ public class RoomController {
   }
 
     @GetMapping("/load/{roomId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Room> getRoomById(@PathVariable String roomId) {
         try {
             Room room = roomService.getRoomById(roomId);
@@ -92,18 +99,21 @@ public class RoomController {
     }
 
     @GetMapping("/available")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<Room>> getAvailableRooms() {
         List<Room> rooms = roomService.getAvailableRooms();
         return ResponseEntity.ok(rooms);
     }
 
     @PutMapping("/threshold/update")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Threshold> updateThreshold(@RequestBody ThresholdUpdateDto dto) {
         Threshold updatedThreshold = roomService.updateThreshold(dto);
         return ResponseEntity.ok(updatedThreshold);
     }
 
     @GetMapping("/floor")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<FloorComponent>> getFloorComponents() {
         List<FloorComponent> floorComponents = flo.getAllFloorComponents();
         return ResponseEntity.ok(floorComponents);
@@ -111,6 +121,7 @@ public class RoomController {
 
   //dummy methods
     @GetMapping("/accesspoint/{roomId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<AccessPointDto> getAccessPoints(@PathVariable String roomId) {
         try{
         AccessPoint ap = this.roomService.getAccesspoint(roomId);

@@ -17,6 +17,7 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.logging.Logger;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
@@ -46,6 +47,7 @@ public class ClimateDataController {
   }
 
   @GetMapping("/measurements/{accessPointUuid}/{temperaId}/{sensorType}")
+  @PreAuthorize("hasAuthority('ADMIN')")
   public ResponseEntity<ClimateDataDto> getMeasurementsBySensorType(
       @PathVariable UUID accessPointUuid,
       @PathVariable String temperaId,
@@ -121,6 +123,7 @@ public class ClimateDataController {
   }
 
   @GetMapping("/measurements/access-points")
+  @PreAuthorize("hasAuthority('ADMIN')")
   public ResponseEntity<List<AccessPointDto>> getEnabledAccessPoints() {
     return ResponseEntity.ok(
         this.accessPointService.getAllAccesspoints().stream()
@@ -140,6 +143,7 @@ public class ClimateDataController {
   }
 
   @GetMapping("/measurements/tempera-stations")
+  @PreAuthorize("hasAuthority('ADMIN')")
   public ResponseEntity<List<TemperaStationDto>> getTemperaStations() {
     return ResponseEntity.ok(
         this.temperaStationService.getAllTemperaStations().stream()

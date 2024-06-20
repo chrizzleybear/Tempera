@@ -7,6 +7,7 @@ import at.qe.skeleton.services.AuthenticationService;
 import at.qe.skeleton.services.UserxService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +28,7 @@ public class UserManagementController {
   }
 
   @GetMapping("/all")
+  @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('MANAGER') or hasAuthority('GROUPLEAD')")
   public ResponseEntity<List<UserxDto>> getAllUsers() {
     List<UserxDto> users =
         userxService.getAllUsers().stream().map(userxService::convertToDTO).toList();
@@ -34,12 +36,14 @@ public class UserManagementController {
   }
 
   @GetMapping("/load/{id}")
+  @PreAuthorize("hasAuthority('ADMIN')")
   public ResponseEntity<UserxDto> getUser(@PathVariable String id) {
     UserxDto user = userxService.loadUserDTOById(id);
     return ResponseEntity.ok(user);
   }
 
   @DeleteMapping("/delete/{id}")
+  @PreAuthorize("hasAuthority('ADMIN')")
   public ResponseEntity<Map<String, String>> deleteUser(@PathVariable String id) {
     userxService.deleteUser(id);
     Map<String, String> response = new HashMap<>();
@@ -48,12 +52,14 @@ public class UserManagementController {
   }
 
   @PutMapping("/update")
+  @PreAuthorize("hasAuthority('ADMIN')")
   public ResponseEntity<UserxDto> updateUser(@RequestBody UserxDto userxDto) {
     Userx updatedUser = userxService.updateUser(userxDto);
     return ResponseEntity.ok(userxService.convertToDTO(updatedUser));
   }
 
   @PostMapping("/create")
+  @PreAuthorize("hasAuthority('ADMIN')")
   public ResponseEntity<?> createUser(@RequestBody UserxDto userxDto) {
     try {
       UserxDto createdUser = authenticationService.registerUser(userxDto);
@@ -82,12 +88,14 @@ public class UserManagementController {
   }
 
   @GetMapping("/managers")
-    public ResponseEntity<List<UserxDto>> getManagers() {
-        List<UserxDto> managers = userxService.getManagers().stream().map(userxService::convertToDTO).toList();
-        return ResponseEntity.ok(managers);
-    }
+  @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('MANAGER')")
+  public ResponseEntity<List<UserxDto>> getManagers() {
+      List<UserxDto> managers = userxService.getManagers().stream().map(userxService::convertToDTO).toList();
+      return ResponseEntity.ok(managers);
+  }
 
     @PostMapping("/resend")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Map<String, String>> resendValidation(@RequestBody UserxDto userxDTO) {
         try {
             authenticationService.resendValidation(userxDTO);
