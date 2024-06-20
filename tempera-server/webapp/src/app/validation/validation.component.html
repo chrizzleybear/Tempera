@@ -5,9 +5,8 @@
     <div class="w-full py-20 px-8 sm:px-20 flex flex-col items-center justify-center"
          style="border-radius:53px; background-color: var(--surface-card);">
       <h1 class="text-4xl bold mb-8">User Validation</h1>
-
-      <div *ngIf="!validated">
-        <form #validateForm="ngForm" (ngSubmit)="validateUser(validateForm.value.username, validateForm.value.token)"
+        <form #passwordForm="ngForm" *ngIf="!enabled"
+              (ngSubmit)="setPassword(passwordForm.value.username, passwordForm.value.token, passwordForm.value.password, passwordForm.value.passwordRepeat)"
               class="w-full flex flex-col items-center">
           <label for="username" class="text-2xl inline-block">Username</label>
           <input pInputText placeholder="Username" type="text" id="username" name="username" ngModel required
@@ -16,15 +15,6 @@
           <label for="token" class="text-2xl mt-6 inline-block">Token</label>
           <input pInputText placeholder="Token" type="text" id="token" name="token" ngModel required
                  class="block w-full md:w-96 p-inputtext-sm" />
-
-          <p-button type="submit" label="Validate" [disabled]="!validateForm.valid" styleClass="w-full mt-8"></p-button>
-        </form>
-      </div>
-
-      <div *ngIf="validated && !enabled">
-        <form #passwordForm="ngForm"
-              (ngSubmit)="setPassword(passwordForm.value.password, passwordForm.value.passwordRepeat)"
-              class="w-full flex flex-col items-center">
           <label for="password" class="text-2xl inline-block">New Password</label>
           <input pInputText placeholder="New Password" type="password" id="password" name="password" ngModel required
                  minlength="6" class="block w-full md:w-96 p-inputtext-sm" />
@@ -36,8 +26,6 @@
           <p-button type="submit" label="Set Password" [disabled]="!passwordForm.valid"
                     styleClass="w-full mt-8"></p-button>
         </form>
-      </div>
-
       <div *ngIf="enabled">
         <h2 class="text-2xl">Password set successfully!</h2>
         <p-button label="Login" routerLink="/login" styleClass="mt-8"></p-button>

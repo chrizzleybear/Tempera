@@ -34,9 +34,9 @@ model/climateDataDto.ts
 model/climateMeasurementDto.ts
 model/colleagueStateDto.ts
 model/contributorAssignmentDto.ts
-model/credentialsDto.ts
 model/dashboardDataResponse.ts
 model/deletionResponseDto.ts
+model/enableUserRequest.ts
 model/extendedGroupDto.ts
 model/extendedProjectDto.ts
 model/externalRecordDto.ts
