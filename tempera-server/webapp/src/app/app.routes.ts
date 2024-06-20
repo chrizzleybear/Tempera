@@ -8,7 +8,6 @@ import { UsersComponent } from './userManagement/users/users.component';
 import { UserDetailsComponent } from './userManagement/user-details/user-details.component';
 import { ValidationComponent } from './validation/validation.component';
 import { ProjectsComponent } from './projectManagement/projects/projects.component';
-import { ProjectDetailsComponent } from './projectManagement/project-details/project-details.component';
 import { GroupsComponent } from './groupManagement/groups/groups.component';
 import { GroupDetailsComponent } from './groupManagement/group-details/group-details.component';
 import { GroupMembersComponent } from './groupManagement/group-members/group-members.component';
@@ -49,7 +48,6 @@ export const routes: Routes = [
           { path: 'group/members/:name/:id', component: GroupMembersComponent, canActivate: [hasAnyOfPermissionsGuard([RolesEnum.Grouplead])] },
           { path: 'project/groups/:id', component: ProjectGroupsComponent, canActivate: [hasAnyOfPermissionsGuard([RolesEnum.Manager])] },
           { path: 'projects', component: ProjectsComponent, canActivate: [hasAnyOfPermissionsGuard([RolesEnum.Manager])] },
-          { path: 'project/:id', component: ProjectDetailsComponent, canActivate: [hasAnyOfPermissionsGuard([RolesEnum.Manager, RolesEnum.Grouplead])] },
           { path: 'myGroups', component: GroupsGroupleadComponent, canActivate: [hasAnyOfPermissionsGuard([RolesEnum.Grouplead])] },
           { path: 'group/projects/:name/:id', component: GroupProjectsComponent, canActivate: [hasAnyOfPermissionsGuard([RolesEnum.Grouplead])] },
           { path: 'timetable', component: TimetableComponent, canActivate: [hasAnyOfPermissionsGuard([RolesEnum.Employee])] },

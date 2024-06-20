@@ -5,13 +5,11 @@ import at.qe.skeleton.rest.frontend.dtos.*;
 import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.GroupMapperService;
 import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.UserMapper;
 import at.qe.skeleton.services.GroupService;
-import at.qe.skeleton.services.UserxService;
+import java.util.List;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
@@ -40,6 +38,12 @@ public class GroupManagementController {
   @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('GROUPLEAD')")
   public ResponseEntity<SimpleGroupDto> createGroup(@RequestBody SimpleGroupDto groupData) {
     SimpleGroupDto group = groupMapperService.createGroup(groupData);
+    return ResponseEntity.ok(group);
+  }
+
+  @PostMapping("/reactivateGroup")
+  public ResponseEntity<SimpleGroupDto> reactivateGroup(@RequestBody String groupId) {
+    SimpleGroupDto group = groupMapperService.reactivateGroup(groupId);
     return ResponseEntity.ok(group);
   }
 
