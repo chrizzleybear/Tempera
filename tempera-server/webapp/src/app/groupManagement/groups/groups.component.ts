@@ -1,18 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { Group } from "../../models/group.model";
-import { GroupService } from '../../_services/group.service';
-import { MessagesModule } from "primeng/messages";
-import { TableModule } from "primeng/table";
-import { ButtonModule } from "primeng/button";
-import { InputTextModule } from "primeng/inputtext";
-import { NgIf } from "@angular/common";
-import { DialogModule } from "primeng/dialog";
-import { Router } from "@angular/router";
-import {GroupCreateComponent} from "../group-create/group-create.component";
-import {GroupEditComponent} from "../group-edit/group-edit.component";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Group } from '../../models/group.model';
+import { MessagesModule } from 'primeng/messages';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { NgIf } from '@angular/common';
+import { DialogModule } from 'primeng/dialog';
+import { Router } from '@angular/router';
+import { GroupCreateComponent } from '../group-create/group-create.component';
+import { GroupEditComponent } from '../group-edit/group-edit.component';
 import { GroupManagementControllerService, SimpleGroupDto } from '../../../api';
 import {MessageService} from "primeng/api";
 import {ToastModule} from "primeng/toast";
+
 @Component({
   selector: 'app-groups',
   standalone: true,
@@ -41,6 +41,9 @@ export class GroupsComponent implements OnInit {
   displayCreateDialog: boolean = false;
   displayEditDialog: boolean = false;
   selectedGroup: SimpleGroupDto | undefined;
+  messages: any;
+  // Event emitter for creating a group - loading latest deactivatedGroups
+  @Output() groupCreationEvent: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(
     private groupService: GroupManagementControllerService,
@@ -72,6 +75,7 @@ export class GroupsComponent implements OnInit {
 
   createGroup() {
     this.displayCreateDialog = true;
+    this.groupCreationEvent.emit();
   }
 
   deleteGroup(groupId: string) {

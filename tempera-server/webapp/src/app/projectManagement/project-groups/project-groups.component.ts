@@ -92,35 +92,36 @@ export class ProjectGroupsComponent implements OnInit {
     this.router.navigate(['group', groupId]);
   }
 
-  confirm(event: Event, groupId: string) {
-    this.groupControllerService.getSimpleGroup(groupId).subscribe({
-      next: (group: SimpleGroupDto) => {
-        this.groupToBeRemoved = group;
-      },
-      error: err => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to remove Group' });
-        console.error(err);
-      },
-    });
-    this.confirmationService.confirm({
-      target: event.target ?? undefined,
-      header: 'Are you sure?',
-      message: 'All Contributors will be removed...',
-      icon: 'pi pi-exclamation-circle',
-      accept: () => {
-        this.removeGroupFromProject();
-      },
-    });
-  }
+  // confirm(event: Event, groupId: string) {
+  //   this.groupControllerService.getSimpleGroup(groupId).subscribe({
+  //     next: (group: SimpleGroupDto) => {
+  //       this.groupToBeRemoved = group;
+  //     },
+  //     error: err => {
+  //       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to remove Group' });
+  //       console.error(err);
+  //     },
+  //   });
+  //   this.confirmationService.confirm({
+  //     target: event.target ?? undefined,
+  //     header: 'Are you sure?',
+  //     message: 'All Contributors will be removed...',
+  //     icon: 'pi pi-exclamation-circle',
+  //     accept: () => {
+  //       this.removeGroupFromProject();
+  //     },
+  //   });
+  // }
 
 
-  removeGroupFromProject() {
-    const groupId = this.groupToBeRemoved?.id ?? '';
+  removeGroupFromProject(group: SimpleGroupDto) {
+    const name = group.name;
+    const groupId = group.id;
     this.projectControllerService.removeGroupFromProject(this.projectId.toString(), groupId).subscribe({
       next: () => {
         console.log(groupId, ` removed Group ${groupId}from project with ID: `, this.projectId);
         this.fetchActiveGroupsOfThisProject(this.projectId);
-        this.messageService.add({ severity: 'success', summary: 'Success!', detail: `You have removed Group ${this.groupToBeRemoved?.name} from this Project` });
+        this.messageService.add({ severity: 'success', summary: 'Success!', detail: `You have removed Group ${name} from this Project` });
         this.displayRemoveDialog = false;
         this.groupToBeRemoved = undefined;
       },
