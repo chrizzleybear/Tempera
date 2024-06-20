@@ -33,21 +33,10 @@
         </button>
       </td>
       <td>
-        <button type="button" pButton label="Delete" icon="pi pi-trash"
-                (click)="confirm($event, group.id)" class="right-button-delete"></button>
+        <button type="button" pButton label="Remove From Project" icon="pi pi-minus"
+                (click)="removeGroupFromProject(group)" class="right-button-delete"></button>
       </td>
-
     </tr>
-    <p-confirmPopup>
-      <ng-template pTemplate="content" let-message>
-        <div class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border p-3 mb-3"
-             style="flex-direction: column;align-items: center; justify-content: center;">
-          <i [class]="message.icon" class="text-6xl"></i>
-          <p>{{ message.header }}</p>
-          <p>{{ message.message }}</p>
-        </div>
-      </ng-template>
-    </p-confirmPopup>
   </ng-template>
 </p-table>
 
