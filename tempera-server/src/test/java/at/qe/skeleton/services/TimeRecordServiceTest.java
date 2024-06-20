@@ -40,9 +40,9 @@ class TimeRecordServiceTest {
   @Autowired private ExternalRecordRepository externalRecordRepository;
   @Autowired private InternalRecordRepository internalRecordRepository;
     @Autowired private TemperaStationRepository temperaStationRepository;
-@Autowired private SensorRepository sensorRepository;
-@Autowired private UserxRepository userxRepository;
-@Autowired private AccessPointRepository accessPointRepository;
+    @Autowired private SensorRepository sensorRepository;
+    @Autowired private UserxRepository userxRepository;
+    @Autowired private AccessPointRepository accessPointRepository;
 
   @Mock private ExternalRecordRepository externalRecordRepositoryMock;
   @Mock private InternalRecordRepository internalRecordRepositoryMock;

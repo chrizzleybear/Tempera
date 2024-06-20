@@ -1,3 +1,4 @@
+DELETE FROM audit_log;
 DELETE FROM internal_record;
 DELETE FROM external_record;
 DELETE FROM measurement;
@@ -12,7 +13,6 @@ DELETE FROM groupx_project_object_contributors;
 DELETE FROM groupx_project_object;
 DELETE FROM groupx;
 DELETE FROM userx_userx_role;
-DELETE FROM userx WHERE default_project_id Is Not NULL;
 DELETE FROM project;
 DELETE FROM userx;
 

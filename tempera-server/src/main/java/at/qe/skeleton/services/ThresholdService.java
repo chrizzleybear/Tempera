@@ -30,7 +30,8 @@ public class ThresholdService {
     @Autowired
     public ThresholdService(ThresholdRepository thresholdRepository,
                             TemperaStationRepository temperaStationRepository,
-                            ThresholdTipRepository thresholdTipRepository, AuditLogService auditLogService) {
+                            ThresholdTipRepository thresholdTipRepository,
+                            AuditLogService auditLogService) {
         this.thresholdRepository = thresholdRepository;
         this.temperaStationRepository = temperaStationRepository;
         this.thresholdTipRepository = thresholdTipRepository;

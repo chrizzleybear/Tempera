@@ -40,7 +40,6 @@ public class AccessPointController {
                         a.isHealthy()
                 ))
                 .collect(Collectors.toList());
-
         return ResponseEntity.ok(accessPointDtos);
     }
 

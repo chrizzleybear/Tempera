@@ -123,4 +123,8 @@ public class Threshold implements Serializable {
   public String toString() {
     return String.valueOf(id);
   }
+
+  public Modification getModification() {
+    return modification;
+  }
 }

@@ -38,10 +38,28 @@ public class RoomService {
         this.roomRepository = roomRepository;
     }
 
+    /**
+     * Used for testing purposes.
+     *
+     * @param roomRepository
+     * @param thresholdRepository
+     * @param thresholdTipRepository
+     * @param accessPointRepository
+     * @param auditLogService
+     */
+    public RoomService(RoomRepository roomRepository, ThresholdRepository thresholdRepository, ThresholdTipRepository thresholdTipRepository, AccessPointRepository accessPointRepository, AuditLogService auditLogService) {
+        this.roomRepository = roomRepository;
+        this.thresholdRepository = thresholdRepository;
+        this.thresholdTipRepository = thresholdTipRepository;
+        this.accessPointRepository = accessPointRepository;
+        this.auditLogService = auditLogService;
+    }
+
     @Transactional
     public List<Room> getAllRooms() {
         return roomRepository.findAll();
     }
+
     @Transactional
     public Room createRoom(String roomId) {
         if (roomRepository.existsById(roomId)) {
