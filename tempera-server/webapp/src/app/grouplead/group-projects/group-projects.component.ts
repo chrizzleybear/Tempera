@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Project } from '../../models/project.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import {MessageService, SharedModule} from 'primeng/api';
+import { MessageService, SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
@@ -16,9 +16,9 @@ import {
   GroupManagementControllerService,
   ProjectControllerService,
   SimpleProjectDto,
-  SimpleUserDto, UserxDto,
+  SimpleUserDto,
 } from '../../../api';
-import {ToastModule} from "primeng/toast";
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-group-projects',
@@ -72,7 +72,7 @@ export class GroupProjectsComponent implements OnInit {
   }
 
   private loadProjects(groupId: string) {
-    this.projectService.getProjectsByGroupId(groupId).subscribe({
+    this.projectService.getActiveProjectsByGroupId(groupId).subscribe({
       next: (projects) => {
         console.log('Loaded projects:', groupId);
         console.log('Project of group projects:', projects);

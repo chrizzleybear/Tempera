@@ -6,13 +6,10 @@ import at.qe.skeleton.model.GroupxProject;
 import at.qe.skeleton.model.Project;
 import at.qe.skeleton.rest.frontend.dtos.*;
 import at.qe.skeleton.services.ProjectService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.io.IOException;
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProjectMapperService {
@@ -94,6 +91,12 @@ public class ProjectMapperService {
         List<Project> projects = projectService.getProjectsByGroupId(groupId);
         return projects.stream().map(this::mapToSimpleProjectDto).toList();
     }
+
+    public List<SimpleProjectDto> getActiveSimpleProjectsByGroupId(Long groupId) {
+        List<Project> projects = projectService.getActiveProjectsByGroupId(groupId);
+        return projects.stream().map(this::mapToSimpleProjectDto).toList();
+    }
+
     public List<SimpleUserDto> findAllContributorsByGroupIdAndProjectId(Long groupId, Long projectId) {
         GroupxProject groupxProject = projectService.findByGroupAndProject(groupId, projectId);
         GroupxProjectDto groupxProjectdto = groupxProjectMapper.mapToGroupxProjectDto(groupxProject);
