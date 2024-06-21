@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {User} from "../../models/user.model";
 import {ActivatedRoute} from "@angular/router";
 import {GroupService} from "../../_services/group.service";
-import {SharedModule} from "primeng/api";
+import {MessageService, SharedModule} from "primeng/api";
 import {TableModule} from "primeng/table";
 import {ButtonModule} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
@@ -12,6 +12,8 @@ import {MessagesModule} from "primeng/messages";
 import {GroupMemberDTO} from "../../models/groupDtos";
 import { from } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
+import { GroupManagementControllerService, MemberAssigmentDto, SimpleUserDto } from '../../../api';
+import {ToastModule} from "primeng/toast";
 
 @Component({
   selector: 'app-group-members',
@@ -22,7 +24,8 @@ import { concatMap } from 'rxjs/operators';
     ButtonModule,
     InputTextModule,
     DialogModule,
-    MessagesModule
+    MessagesModule,
+    ToastModule
   ],
   templateUrl: './group-members.component.html',
   styleUrl: './group-members.component.css'
@@ -33,21 +36,24 @@ import { concatMap } from 'rxjs/operators';
  */
 export class GroupMembersComponent implements OnInit{
 
-  members: User[] = [];
-  users: User[] = [];
+  members: SimpleUserDto[] = [];
+  users: SimpleUserDto[] = [];
   displayAddDialog: boolean = false;
-  groupId: number | null | undefined;
+  groupId: string | null | undefined;
   groupName: string | null | undefined;
-  filteredMembers: User[] = [];
-  filteredUsers: User[] = [];
-  selectedUsers: User[] = [];
-  messages: any;
+  filteredMembers: SimpleUserDto[] = [];
+  filteredUsers: SimpleUserDto[] = [];
+  selectedUsers: SimpleUserDto[] = [];
 
-  constructor(private groupService: GroupService, private userService: UsersService ,private route: ActivatedRoute) {
+  constructor(
+    private groupService: GroupManagementControllerService,
+    private userService: UsersService ,
+    private route: ActivatedRoute,
+    private messageService: MessageService) {
 
   }
   ngOnInit(): void {
-    this.groupId = Number(this.route.snapshot.paramMap.get('id'));
+    this.groupId = this.route.snapshot.paramMap.get('id');
     this.groupName = this.route.snapshot.paramMap.get('name');
     this.loadMembersAndUsers(this.groupId!);
   }
@@ -56,9 +62,9 @@ export class GroupMembersComponent implements OnInit{
    * Load all members and users that are not members of the group.
    * @param groupId
    */
-  loadMembersAndUsers(groupId: number) {
+  loadMembersAndUsers(groupId: string) {
     // Load members
-    this.groupService.getGroupMembers(groupId).subscribe({
+    this.groupService.getMembers(groupId).subscribe({
       next: members => {
         this.members = members;
         this.filteredMembers = [...members];
@@ -113,29 +119,35 @@ export class GroupMembersComponent implements OnInit{
         next: response => {
           console.log("Member added successfully:", response);
           this.loadMembersAndUsers(this.groupId!);
-          this.messages = [{severity:'success', summary:'Success', detail:'Members added successfully'}];
+          this.messageService.add({severity:'success', summary:'Success', detail:'Member added successfully'});
         },
-        error: err => console.error("Error adding member:", err)
+        error: err => {
+          this.messageService.add({severity:'error', summary:'Error', detail:'Error adding member'});
+          console.error("Error adding member:", err)
+        }
       });
     this.displayAddDialog = false;
     this.selectedUsers = [];
   }
   private addMember(userId: string) {
-    const dto: GroupMemberDTO = {
+    const dto: MemberAssigmentDto = {
       groupId: this.groupId!,
       memberId: userId
     };
 
-    return this.groupService.addGroupMember(dto);
+    return this.groupService.addMember(dto);
   }
     deleteMember(userId: string) {
-    this.groupService.deleteGroupMember(this.groupId!, userId).subscribe({
+    this.groupService.removeMember(this.groupId!, userId).subscribe({
       next: response => {
         console.log("Member deleted successfully:", response);
         this.loadMembersAndUsers(this.groupId!);
-        this.messages = [{severity:'success', summary:'Success', detail:'Member deleted successfully'}];
+        this.messageService.add({severity:'success', summary:'Success', detail:'Member deleted successfully'});
       },
-      error: err => console.error("Error deleting member:", err)
+      error: err => {
+        this.messageService.add({severity:'error', summary:'Error', detail:'Error deleting member'});
+        console.error("Error deleting member:", err)
+      }
     });
     }
 }

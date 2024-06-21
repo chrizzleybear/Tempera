@@ -5,6 +5,7 @@ import {AccessPointService} from "../../_services/access-point.service";
 import {NgIf} from "@angular/common";
 import {CardModule} from "primeng/card";
 import {TableModule} from "primeng/table";
+import {TemperaStation} from "../../models/temperaStation.model";
 
 @Component({
   selector: 'app-access-point-details',
@@ -20,6 +21,7 @@ import {TableModule} from "primeng/table";
 export class AccessPointDetailsComponent implements OnInit{
   accessPoint: AccessPoint | undefined;
   accessPointId: string | null | undefined;
+  temperaStations: TemperaStation[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -29,14 +31,14 @@ export class AccessPointDetailsComponent implements OnInit{
   ngOnInit() {
     this.accessPointId = this.route.snapshot.paramMap.get('id');
     if (this.accessPointId) {
-      this.fetchAccessPointDetails(Number(this.accessPointId));
+      this.fetchAccessPointDetails(this.accessPointId);
     }
   }
-
-  fetchAccessPointDetails(id: number) {
-    this.accessPointService.getAccesspointsByRoomId("room_1").subscribe({
+  fetchAccessPointDetails(id: string) {
+    this.accessPointService.getAccesspointById(id).subscribe({
       next: (data) => {
         this.accessPoint = data;
+        this.fetchStations(id);
         console.log('Access Point details: ', this.accessPoint);
       },
       error: (error) => {
@@ -44,5 +46,15 @@ export class AccessPointDetailsComponent implements OnInit{
       }
     });
   }
-
+  fetchStations(id: string) {
+    this.accessPointService.getTemperaStations(id).subscribe({
+      next: (data) => {
+        this.temperaStations = data;
+        console.log('Stations:', data);
+      },
+      error: (error) => {
+        console.error('Failed to load stations:', error);
+      }
+    });
+  }
 }

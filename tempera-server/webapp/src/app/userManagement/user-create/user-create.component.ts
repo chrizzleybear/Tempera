@@ -5,6 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { NgIf } from '@angular/common';
 import { MessageModule } from 'primeng/message';
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-user-create',
@@ -32,8 +33,9 @@ export class UserCreateComponent {
      * Constructor for UserCreateComponent that initializes the create form.
      * @param fb to create the form
      * @param usersService
+     * @param messageService
      */
-  constructor(private fb: FormBuilder, private usersService: UsersService) {
+  constructor(private fb: FormBuilder, private usersService: UsersService, private messageService: MessageService) {
     this.roles = ['ADMIN', 'EMPLOYEE', 'MANAGER', 'GROUPLEAD'];
     this.userForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
@@ -63,16 +65,19 @@ export class UserCreateComponent {
       this.usersService.saveUser(this.userForm.value).subscribe({
         next: (response) => {
             console.log('User created:', response);
-          this.userForm.reset();
-          this.creatComplete.emit(true);
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User created successfully' });
+            this.userForm.reset();
+            this.creatComplete.emit(true);
         },
         error: (error) => {
           console.error('Error updating user:', error);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.message });
           this.creatComplete.emit(false);
         },
       });
     } else {
       console.error('Invalid form');
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Invalid form' });
     }
   }
 }

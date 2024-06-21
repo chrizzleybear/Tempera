@@ -1,6 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {Group} from "../models/group.model";
-import {GroupService} from "../_services/group.service";
 import {Router} from "@angular/router";
 import {StorageService} from "../_services/storage.service";
 import {ButtonModule} from "primeng/button";
@@ -10,9 +8,11 @@ import {GroupEditComponent} from "../groupManagement/group-edit/group-edit.compo
 import {InputTextModule} from "primeng/inputtext";
 import {MessagesModule} from "primeng/messages";
 import {NgForOf, NgIf} from "@angular/common";
-import {SharedModule} from "primeng/api";
+import {MessageService, SharedModule} from "primeng/api";
 import {TableModule} from "primeng/table";
 import {CardModule} from "primeng/card";
+import { GroupManagementControllerService, SimpleGroupDto } from '../../api';
+import {ToastModule} from "primeng/toast";
 
 @Component({
   selector: 'app-groups-grouplead',
@@ -28,7 +28,8 @@ import {CardModule} from "primeng/card";
     SharedModule,
     TableModule,
     CardModule,
-    NgForOf
+    NgForOf,
+    ToastModule
   ],
   templateUrl: './groups-grouplead.component.html',
   styleUrl: './groups-grouplead.component.css'
@@ -39,12 +40,11 @@ import {CardModule} from "primeng/card";
  */
 export class GroupsGroupleadComponent implements OnInit{
 
-  groups: Group[] = [];
-  filteredGroups: Group[] = [];
-  messages: any;
+  groups: SimpleGroupDto[] = [];
+  filteredGroups: SimpleGroupDto[] = [];
   currentUserId!: string;
 
-  constructor(private groupService: GroupService, private router: Router, private storageService: StorageService) {}
+  constructor(private groupService: GroupManagementControllerService, private router: Router, private storageService: StorageService, private messageService: MessageService) {}
 
   ngOnInit(): void {
     this.currentUserId = this.storageService.getUser()?.username!;
@@ -52,28 +52,28 @@ export class GroupsGroupleadComponent implements OnInit{
   }
 
   private loadGroups() {
-    this.groupService.getGroupByLead(this.currentUserId).subscribe({
+    this.groupService.getGroupsByGroupLead(this.currentUserId).subscribe({
       next: (groups) => {
         console.log("Loaded groups:", groups);
-        this.groups = groups;
-        this.filteredGroups = groups;
+        this.groups = groups.filter(g => g.isActive);
+        this.filteredGroups = this.groups;
       },
       error: (error) => {
+        this.messageService.add({severity:'error', summary:'Error', detail:'Failed to load groups.'});
         console.error("Error loading groups:", error);
       }
     });
   }
 
-  viewGroupDetails(group: Group) {
+  viewGroupDetails(group: SimpleGroupDto) {
     this.router.navigate(['/group', group.id]);
   }
 
-  members(group: Group) {
+  members(group: SimpleGroupDto) {
     this.router.navigate(['/group/members',group.name, group.id]);
   }
 
-  projects(group: Group) {
+  projects(group: SimpleGroupDto) {
     this.router.navigate(['/group/projects', group.name, group.id]);
-
   }
 }

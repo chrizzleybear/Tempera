@@ -1,25 +1,21 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.*;
-import at.qe.skeleton.model.enums.State;
-import at.qe.skeleton.model.enums.UserxRole;
+import at.qe.skeleton.model.Userx;
+import at.qe.skeleton.model.enums.*;
 import at.qe.skeleton.repositories.ExternalRecordRepository;
 import at.qe.skeleton.repositories.GroupRepository;
-import at.qe.skeleton.rest.frontend.dtos.UserStateDto;
-import at.qe.skeleton.rest.frontend.dtos.UserxDto;
-import at.qe.skeleton.model.Userx;
-import at.qe.skeleton.model.enums.Visibility;
+import at.qe.skeleton.repositories.ProjectRepository;
 import at.qe.skeleton.repositories.UserxRepository;
-
-import java.util.Collection;
+import at.qe.skeleton.rest.frontend.dtos.*;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,20 +35,31 @@ import org.springframework.transaction.annotation.Transactional;
 @Scope("application")
 public class UserxService implements UserDetailsService {
 
-  @Autowired private UserxRepository userRepository;
-  @Autowired private PasswordEncoder passwordEncoder;
-  @Autowired private TemperaStationService temperaStationService;
-  @Autowired private ExternalRecordRepository externalRecordRepository;
-  @Autowired private GroupRepository groupRepository;
-  @Autowired private ProjectService projectService;
+  private final UserxRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
+  private final ExternalRecordRepository externalRecordRepository;
+  private final GroupRepository groupRepository;
+  private final ProjectService projectService;
+  private final AuditLogService auditLogService;
+  private final ProjectRepository projectRepository;
+
+  public UserxService(UserxRepository userRepository, PasswordEncoder passwordEncoder, ExternalRecordRepository externalRecordRepository, GroupRepository groupRepository, ProjectService projectService, AuditLogService auditLogService,
+                      ProjectRepository projectRepository) {
+    this.userRepository = userRepository;
+    this.passwordEncoder = passwordEncoder;
+    this.externalRecordRepository = externalRecordRepository;
+    this.groupRepository = groupRepository;
+    this.projectService = projectService;
+    this.auditLogService = auditLogService;
+    this.projectRepository = projectRepository;
+  }
 
   /**
    * Returns a collection of all users.
+   * We cant preauthorize this method only for admins. We need to allow all users to see all users.
    *
    * @return
    */
-  // todo: we cant preAuthorize this method because we need to get all users to display them in the
-  // dashboard... or is there another way?
   @PreAuthorize(
       "hasAuthority('ADMIN') or hasAuthority('EMPLOYEE') or hasAuthority('MANAGER') or hasAuthority('GROUPLEAD')")
   public Collection<Userx> getAllUsers() {
@@ -77,9 +84,9 @@ public class UserxService implements UserDetailsService {
 
 
   /**
-   * Saves the user. This method will also set {@link Userx#createDate} for new entities or {@link
-   * Userx#updateDate} for updated entities. The user requesting this operation will also be stored
-   * as {@link Userx#createDate} or {@link Userx#updateUser} respectively.
+   * Saves the user. This method will also set createDate for new entities or
+   * updateDate for updated entities. The user requesting this operation will also be stored
+   * as createDate or updateUser respectively.
    *
    * @param user the user to save
    * @return the updated user
@@ -97,15 +104,16 @@ public class UserxService implements UserDetailsService {
         throw new JpaSystemException(new RuntimeException("Password can't be empty"));
       }
       user.setPassword(passwordEncoder.encode(password));
-
+      auditLogService.logEvent(LogEvent.CREATE, LogAffectedType.USER,
+              "New user " + user.getUsername() + " was saved.");
     } else {
       user.setUpdateDate(LocalDateTime.now());
       user.setUpdateUser(getAuthenticatedUser());
+      auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.USER,
+              "User " + user.getUsername() + " was saved.");
     }
     return userRepository.save(user);
   }
-
-
 
   private Userx getAuthenticatedUser() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -138,34 +146,37 @@ public class UserxService implements UserDetailsService {
 
   /**
    * Warning: This will delete all external and Internal Records of that user. Also you cant delete
-   * an admin.
+   * an admin. If a user is a manager and has projects, the deletion will fail and it will trigger a
+   * project or group reassignment (done by hand) if the user is still leading groups or managing projects.
    *
-   * @param id
+   * @param username the username of the user to delete
    */
   @Transactional
   @PreAuthorize("hasAuthority('ADMIN')")
-  public void deleteUser(String id) {
+  public DeletionResponseDto deleteUser(String username) {
 
-    Optional<Userx> userx = userRepository.findById(id);
+    Optional<Userx> userx = userRepository.findByUsername(username);
     if (userx.isPresent()) {
       Userx user = userx.get();
       if (user.getRoles().contains(UserxRole.ADMIN)) {
-        return;
+        auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.USER,
+                "Deletion of user " + user.getUsername() + " failed. User is ADMIN.");
+        return  new DeletionResponseDto(DeletionResponseType.ADMIN, null, null);
       }
-      if (user.getRoles().contains(UserxRole.MANAGER)
-          || user.getRoles().contains(UserxRole.GROUPLEAD)) {
-        List<Project> projects = projectService.getProjectsByManager(user.getUsername());
-        for (var project : projects) {
-          project.setManager(null);
-          projectService.saveProject(project);
-        }
-        List<Groupx> groups = groupRepository.findByGroupLead(user);
-        for (var group : groups) {
-          group.setGroupLead(null);
-          groupRepository.save(group);
-        }
+      if (user.getRoles().contains(UserxRole.MANAGER) && !projectRepository.findAllByManager_Username(username).isEmpty())
+        {
+        auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.USER,
+                "Deletion of user " + user.getUsername() + " failed. User is MANAGER.");
+        List<SimpleProjectDto> affectedProjects = projectRepository.findAllSimpleProjectDtosByManager(username);
+        return new DeletionResponseDto(DeletionResponseType.MANAGER, affectedProjects, null);
       }
-
+      if (user.getRoles().contains(UserxRole.GROUPLEAD) && !groupRepository.findAllByGroupLead_Username(username).isEmpty())
+      {
+        auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.USER,
+                "Deletion of user " + user.getUsername() + " failed. User is GROUPLEAD.");
+        List<SimpleGroupDto> affectedGroups = groupRepository.findAllSimpleGroupDtosByGroupLead(username);
+        return new DeletionResponseDto(DeletionResponseType.GROUPLEAD, null, affectedGroups);
+        }
       List<GroupxProject> groupxProjects = projectService.findAllGroupxProjectsOfAUser(user);
       for (var groupxProject : groupxProjects) {
         groupxProject.removeContributor(user);
@@ -176,13 +187,25 @@ public class UserxService implements UserDetailsService {
         user.removeGroup(group);
       }
       externalRecordRepository.deleteAllByUser(user);
+      auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.TIME_RECORD,
+              "External time records of user " + user.getUsername() + " were deleted.");
+
       user.removeTemperaStation();
+      auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.TEMPERA_STATION,
+              "Station of user " + user.getUsername() + " was deleted.");
+
       // we are saving the user so that all the other objects, where we set the user reference to null are being
       // saved via cascading
       saveUser(user);
       userRepository.delete(user);
-    }
+      auditLogService.logEvent(LogEvent.DELETE, LogAffectedType.USER,
+              "User " + user.getUsername()  + " was deleted.");
+      return new DeletionResponseDto(DeletionResponseType.SUCCESS, null, null);
+      }
+    return new DeletionResponseDto(DeletionResponseType.ERROR, null, null);
   }
+
+
 
   @PreAuthorize("hasAuthority('ADMIN')")
   public Userx updateUser(UserxDto userxDTO) {
@@ -199,6 +222,8 @@ public class UserxService implements UserDetailsService {
     user.setEnabled(userxDTO.enabled());
     user.setUpdateDate(LocalDateTime.now());
     user.setUpdateUser(getAuthenticatedUser());
+    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.USER,
+            "User " + user.getUsername() + " with roles " + user.getRoles() + " was edited.");
     return userRepository.save(user);
   }
 
@@ -228,19 +253,37 @@ public class UserxService implements UserDetailsService {
   public UserxDto validateUser(String username, String password) {
     Userx user = userRepository.findFirstByUsername(username);
     if (passwordEncoder.matches(password, user.getPassword())) {
+      auditLogService.logEvent(LogEvent.LOAD, LogAffectedType.USER,
+              "Successfully validated user " + user.getUsername() + "."
+      );
       return convertToDTO(user);
     }
+    auditLogService.logEvent(LogEvent.WARN, LogAffectedType.USER,
+            "Could not validate user with details " + user.getUsername() + ", " + user.getPassword() + " ."
+    );
     return null;
   }
 
-  public void enableUser(String username, String password) {
+  public void enableUser(String username, String token, String password) {
     Userx user = userRepository.findFirstByUsername(username);
     if (user == null) {
       throw new IllegalArgumentException("User not found");
     }
+
+    if (!passwordEncoder.matches(token, user.getPassword())) {
+      auditLogService.logEvent(LogEvent.WARN, LogAffectedType.USER,
+              "Could not validate user with details " + user.getUsername() + ", " + user.getPassword() + " ."
+      );
+      throw new BadCredentialsException("Invalid token");
+    }
+    auditLogService.logEvent(LogEvent.LOAD, LogAffectedType.USER,
+            "Successfully validated user " + user.getUsername() + "."
+    );
+
     user.setPassword(passwordEncoder.encode(password));
     user.setEnabled(true);
-    // log "Enable user with username: " + username
+    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.USER,
+            "User " + user.getUsername() + " was enabled.");
     userRepository.save(user);
   }
 
@@ -252,8 +295,8 @@ public class UserxService implements UserDetailsService {
     return externalRecordRepository.findUserStatesByUserList(users);
   }
 
-  public State switchState(ExternalRecord record) {
-    Userx user = record.getUser();
+  public State switchState(ExternalRecord externalRecord) {
+    Userx user = externalRecord.getUser();
     State state = user.getState();
     user.setState(state);
     return state;

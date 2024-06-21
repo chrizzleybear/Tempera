@@ -1,8 +1,9 @@
+<p-toast></p-toast>
 <div class="flex flex-col w-full">
   <div class="text-center text-4xl">Your Groups</div>
   <div class="flex flex-wrap justify-center mt-4">
     <div class="w-full md:w-1/2 p-2" *ngFor="let group of filteredGroups">
-      <div class="card bg-white shadow-lg rounded-lg" (click)="viewGroupDetails(group)">
+      <div class="card shadow-lg rounded-lg" (click)="viewGroupDetails(group)" style="background-color: var(--surface-card);">
         <div class="p-4">
           <div class="text-xl font-bold">{{ group.name }}</div>
           <br>

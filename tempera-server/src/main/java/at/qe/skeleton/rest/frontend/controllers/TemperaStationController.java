@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class TemperaStationController {
     private TemperaStationService temperaStationService;
 
     @GetMapping("/all")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<TemperaStationDto>> getAllTemperaStations() {
         List<TemperaStationDto> temperaStations = temperaStationService.getAllTemperaStations();
 
@@ -31,6 +33,7 @@ public class TemperaStationController {
     }
 
     @GetMapping("/load/{temperaStationId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<TemperaStationDto> getTemperaStationById(@PathVariable String temperaStationId) {
         try {
             TemperaStation t = temperaStationService.findById(temperaStationId);
@@ -41,7 +44,8 @@ public class TemperaStationController {
         }
     }
     @DeleteMapping("/delete/{temperaStationId}")
-        public ResponseEntity<MessageResponse> deleteTemperaStationById(@PathVariable String temperaStationId) {
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<MessageResponse> deleteTemperaStationById(@PathVariable String temperaStationId) {
         try {
             TemperaStation t = temperaStationService.findById(temperaStationId);
             temperaStationService.delete(t);
@@ -52,6 +56,7 @@ public class TemperaStationController {
     }
 
     @PutMapping("/update")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<MessageResponse> updateTemperaStation(@RequestBody TemperaStationDto temperaStationDto) {
         try {
             temperaStationService.updateTemperaStation(temperaStationDto.id(), temperaStationDto.enabled(), temperaStationDto.user());
@@ -62,12 +67,19 @@ public class TemperaStationController {
     }
 
     @PutMapping("/create")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<MessageResponse> createTemperaStation(@RequestBody TemperaStationDto temperaStationDto) {
-        temperaStationService.createTemperaStation(temperaStationDto.id(), temperaStationDto.enabled(), temperaStationDto.user(), temperaStationDto.accessPointId());
-        return ResponseEntity.ok(new MessageResponse("TemperaStation was created."));
+        try {
+            TemperaStation t = temperaStationService.createTemperaStation(temperaStationDto);
+            return ResponseEntity.ok(new MessageResponse("TemperaStation was created with id " + t.getId() + "."));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
+
     @GetMapping("sensors/{temperaStationId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<SensorDto>> getTemperaStationSensors(@PathVariable String temperaStationId) {
         try {
             TemperaStation t = temperaStationService.findById(temperaStationId);
@@ -81,6 +93,7 @@ public class TemperaStationController {
     }
 
     @GetMapping("availableUsers")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<SimpleUserDto>> getAvailableUsers() {
         List<SimpleUserDto> users = temperaStationService.getAvailableUsers();
         return ResponseEntity.ok(users);

@@ -1,4 +1,4 @@
-<p-messages [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
+<p-toast></p-toast>
 <div class="mb-4">
   <input type="text" pInputText placeholder="Search" (input)="applyFilter($event)" class="mr-2">
   <button type="button" pButton label="Add New Group" icon="pi pi-plus" (click)="createGroup()" class="mr-2"></button>
@@ -11,19 +11,16 @@
       <th scope="col" pSortableColumn="groupLeadId">Group Lead ID <p-sortIcon field="groupLeadId"></p-sortIcon></th>
       <th></th>
       <th></th>
-      <th></th>
+
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-group>
-    <tr (click)="viewGroupDetails(group)">
+    <tr>
       <td>{{ group.name }}</td>
       <td>{{ group.description }}</td>
       <td>{{ group.groupLead}}</td>
       <td>
-        <p-button label="Members" (onClick)="members(group); $event.stopPropagation()" icon="pi pi-users"></p-button>
-      </td>
-      <td>
-        <p-button label="Edit" (onClick)="editGroup(group); $event.stopPropagation()" icon="pi pi-pencil"></p-button>
+        <p-button label="Details" (onClick)="viewGroupDetails(group); $event.stopPropagation()" icon="pi pi-eye"></p-button>
       </td>
       <td>
         <p-button label="Delete" icon="pi pi-trash" (onClick)="deleteGroup(group.id); $event.stopPropagation()"></p-button>
@@ -32,7 +29,7 @@
   </ng-template>
 </p-table>
 <p-dialog header="Create Group" [(visible)]="displayCreateDialog" [modal]="true" [style]="{width: '50vw'}" [closable]="true">
-  <app-group-create (createCompleted)="onCreateCompleted($event)"></app-group-create>
+  <app-group-create [groupCreationEvent]="groupCreationEvent" (createCompleted)="onCreateCompleted($event)"></app-group-create>
 </p-dialog>
 <div *ngIf="selectedGroup">
   <p-dialog header="Edit Group" [(visible)]="displayEditDialog" [modal]="true" [style]="{width: '50vw'}" [closable]="true">

@@ -9,9 +9,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
-import static at.qe.skeleton.model.enums.SensorType.TEMPERATURE;
+
 
 @Service
 public class AlertMapper {
@@ -23,21 +24,22 @@ public class AlertMapper {
   }
 
   public List<AlertDto> getAlerts(String username) {
-
     List<Alert> alerts = alertService.getRelevantAlertsDetailed(username);
     if (alerts.isEmpty()) {
-      return null;
+      return new ArrayList<>();
     }
-    for (Alert alert : alerts) {
+    var iter = alerts.listIterator();
+    while (iter.hasNext()) {
+      var alert = iter.next();
       Alert lastAcknowledgedAlert =
-          alertService.findLastAcknowledgedAlertBySensorAndThreshold(
-              alert.getSensor(), alert.getThreshold());
+              alertService.findLastAcknowledgedAlertBySensorAndThreshold(
+                      alert.getSensor(), alert.getThreshold());
       if (lastAcknowledgedAlert == null) {
         continue;
       }
-      LocalDateTime acknowledgedAt = alert.getAcknowledgedAt();
+      LocalDateTime acknowledgedAt = lastAcknowledgedAlert.getAcknowledgedAt();
       if (LocalDateTime.now().isBefore(acknowledgedAt.plusHours(1))) {
-        alerts.remove(alert);
+        iter.remove();
       }
     }
     return alerts.stream().map(this::mapAlertToAlertDto).toList();
@@ -60,10 +62,15 @@ public class AlertMapper {
           case LOWERBOUND_INFO, UPPERBOUND_INFO -> AlertSeverity.INFO;
           case LOWERBOUND_WARNING, UPPERBOUND_WARNING -> AlertSeverity.WARNING;
         };
+    Boolean isUpperBound =
+        switch (alert.getThreshold().getThresholdType()) {
+          case LOWERBOUND_INFO, LOWERBOUND_WARNING -> false;
+          case UPPERBOUND_INFO, UPPERBOUND_WARNING -> true;
+        };
     String start = alert.getFirstIncident().format(DateTimeFormatter.ISO_DATE_TIME);
     String end = alert.getLastIncident().format(DateTimeFormatter.ISO_DATE_TIME);
     return new AlertDto(
-        alert.getId().toString(), message, start, end, severity, alert.getSensor().getSensorType());
+        alert.getId().toString(), message, start, end, severity, alert.getSensor().getSensorType(), isUpperBound);
   }
 
   private String messageBuilder(Alert alert) {
@@ -73,7 +80,6 @@ public class AlertMapper {
           case HUMIDITY -> "Humidity";
           case IRRADIANCE -> "Irradiance";
           case NMVOC -> "AirQuality";
-          default -> "Unknown";
         };
 
     String[] severity = new String[3];
@@ -82,20 +88,23 @@ public class AlertMapper {
         severity[0] = "Heads up!";
         severity[1] = "a little low";
         severity[2] = "down to";
+        break;
       case LOWERBOUND_WARNING:
         severity[0] = "Oh no!";
         severity[1] = "too low";
         severity[2] = "down to";
+        break;
       case UPPERBOUND_INFO:
         severity[0] = "Heads up!";
         severity[1] = "a little high";
         severity[2] = "up to";
+        break;
       case UPPERBOUND_WARNING:
         severity[0] = "Oh no!";
         severity[1] = "too high";
         severity[2] = "up to";
+        break;
     }
-    ;
     return "%s The %s is %s. Values have reached %s %s %s."
         .formatted(
             severity[0],

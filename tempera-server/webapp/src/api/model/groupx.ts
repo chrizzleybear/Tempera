@@ -17,6 +17,7 @@ export interface Groupx {
     id?: number;
     name?: string;
     description?: string;
+    active?: boolean;
     groupLead?: Userx;
     members?: Array<Userx>;
     groupxProjects?: Set<GroupxProject>;

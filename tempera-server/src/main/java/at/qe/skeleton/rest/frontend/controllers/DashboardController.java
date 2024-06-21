@@ -1,7 +1,7 @@
 package at.qe.skeleton.rest.frontend.controllers;
 
 import at.qe.skeleton.model.Userx;
-import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.DashboardDataMapper;
+import at.qe.skeleton.services.DashboardDataService;
 import at.qe.skeleton.rest.frontend.payload.request.UpdateDashboardDataRequest;
 import at.qe.skeleton.rest.frontend.payload.response.DashboardDataResponse;
 import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
@@ -20,18 +20,18 @@ public class DashboardController {
 
   private static final Logger logger = LoggerFactory.getLogger(DashboardController.class);
 
-  private final DashboardDataMapper dashboardDataMapper;
+  private final DashboardDataService dashboardDataService;
   private final UserxService userXService;
 
-  public DashboardController(DashboardDataMapper dashboardDataMapper, UserxService userXService) {
+  public DashboardController(DashboardDataService dashboardDataService, UserxService userXService) {
     this.userXService = userXService;
-    this.dashboardDataMapper = dashboardDataMapper;
+    this.dashboardDataService = dashboardDataService;
   }
 
   @GetMapping("/dashboardData")
   @PreAuthorize("hasAuthority('EMPLOYEE') or hasAuthority('MODERATOR') or hasAuthority('ADMIN')")
   public ResponseEntity<DashboardDataResponse> getDashboardData(@RequestParam String username) {
-    DashboardDataResponse homeDataResponse = dashboardDataMapper.mapUserToHomeDataResponse(username);
+    DashboardDataResponse homeDataResponse = dashboardDataService.mapUserToHomeDataResponse(username);
     return ResponseEntity.ok(homeDataResponse);
   }
 
@@ -43,7 +43,7 @@ public class DashboardController {
     try{
     String userName = SecurityContextHolder.getContext().getAuthentication().getName();
     Userx user = userXService.loadUser(userName);
-    response = dashboardDataMapper.updateUserVisibilityAndTimeStampProject(request, user);
+    response = dashboardDataService.updateUserVisibilityAndTimeStampProject(request, user);
     } catch (Exception e) {
       logger.error("Error updating dashboard data: " + e.getMessage());
       return ResponseEntity.badRequest().body(new MessageResponse("Error updating dashboard data: " + e.getMessage()));

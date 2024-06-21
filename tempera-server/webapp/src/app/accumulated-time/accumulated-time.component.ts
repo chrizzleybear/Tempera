@@ -15,6 +15,10 @@ import { TagModule } from 'primeng/tag';
 import StateEnum = ColleagueStateDto.StateEnum;
 import { DisplayHelper } from '../_helpers/display-helper';
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
+import { FilterMatchMode } from 'primeng/api';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { ButtonModule } from 'primeng/button';
+import { NgIf } from '@angular/common';
 
 interface InternalAccumulatedTimeDto extends AccumulatedTimeDto {
   startTime: Date;
@@ -31,15 +35,22 @@ interface InternalAccumulatedTimeDto extends AccumulatedTimeDto {
     ChartModule,
     TagModule,
     WrapFnPipe,
+    ButtonModule,
+    MultiSelectModule,
+    NgIf,
   ],
   templateUrl: './accumulated-time.component.html',
   styleUrl: './accumulated-time.component.css',
 })
 export class AccumulatedTimeComponent implements OnInit {
   public accumulatedTimes: InternalAccumulatedTimeDto[] = [];
+  public allProjects: SimpleProjectDto[] = [];
+  public allGroups: SimpleGroupDto[] = [];
+  public activeProjects: SimpleProjectDto[] = [];
+  public activeGroups: SimpleGroupDto[] = [];
   public availableProjects: SimpleProjectDto[] = [];
   public availableGroups: SimpleGroupDto[] = [];
-
+  public onlyActiveProjectsAndGroupsShown: boolean = false;
   public stateTimes: TotalTimeWithStates = {
     AVAILABLE: 0,
     MEETING: 0,
@@ -57,6 +68,8 @@ export class AccumulatedTimeComponent implements OnInit {
   * This reference to the PrimeNG table is used because its entries also reflect the correct order if the table is sorted and the available entries when filtered.
   */
   @ViewChild('table') table!: Table;
+  // @ViewChild('projectFilter') projectFilterOverlay!: MultiSelect;
+
 
   chart: any;
 
@@ -71,10 +84,21 @@ export class AccumulatedTimeComponent implements OnInit {
               ...entry,
               startTime: new Date(entry.startTimestamp),
               endTime: new Date(entry.endTimestamp),
+
             }),
           ) ?? [];
-          this.availableProjects = response.availableProjects ?? [];
-          this.availableGroups = response.availableGroups ?? [];
+          // need to seperate between active and all projects and groups
+          // available Projects changes between active and all projects when the filter is applied
+          this.allProjects = response.availableProjects;
+          this.allGroups = response.availableGroups;
+
+          this.activeProjects = this.allProjects.filter(project => project.isActive);
+          this.activeGroups = this.allGroups.filter(group => group.isActive);
+
+
+          this.availableProjects = this.allProjects;
+          this.availableGroups = this.allGroups;
+
         },
         error: error => {
           console.error('Error while fetching accumulated time data', error);
@@ -111,6 +135,36 @@ export class AccumulatedTimeComponent implements OnInit {
         },
       },
     });
+  }
+
+  /*
+* Filters the table-data so only active projects & groups are being
+* taken into account. If the array that the filter compares against the filter has
+* problems, thats why the if-clauses are there.
+ */
+  filterActiveProjects() {
+
+    this.availableProjects = this.activeProjects;
+    this.availableGroups = this.activeGroups;
+
+    this.table?.filter(true, 'projectIsActive', FilterMatchMode.EQUALS)
+    this.table?.filter(true, 'groupIsActive', FilterMatchMode.EQUALS)
+    this.onlyActiveProjectsAndGroupsShown = true;
+  }
+
+  /*
+* Removes the filter condition for the table-data so all projects & groups are being
+* taken into account. If the array that the filter compares against the filter has
+* problems, thats why the if-clause is there.
+*/
+  removeOnlyActiveProjectsFilter() {
+
+    this.availableProjects = this.allProjects;
+    this.availableGroups = this.allGroups;
+    this.table?.filter([false, true], 'projectIsActive', FilterMatchMode.IN)
+    this.table?.filter([false, true], 'groupIsActive', FilterMatchMode.IN)
+
+    this.onlyActiveProjectsAndGroupsShown = false;
   }
 
   /*

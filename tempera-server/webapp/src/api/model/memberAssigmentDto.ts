@@ -12,7 +12,7 @@
 
 
 export interface MemberAssigmentDto { 
-    groupId?: number;
-    memberId?: string;
+    groupId: string;
+    memberId: string;
 }
 

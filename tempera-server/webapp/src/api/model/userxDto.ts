@@ -13,12 +13,12 @@
 
 export interface UserxDto { 
     username: string;
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    password?: string;
-    enabled?: boolean;
-    roles?: Set<UserxDto.RolesEnum>;
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    enabled: boolean;
+    roles: Set<UserxDto.RolesEnum>;
 }
 export namespace UserxDto {
     export type RolesEnum = 'ADMIN' | 'MANAGER' | 'GROUPLEAD' | 'EMPLOYEE';

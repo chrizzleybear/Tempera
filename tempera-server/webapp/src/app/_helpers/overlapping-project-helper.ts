@@ -6,10 +6,8 @@ export class OverlappingProjectHelper {
   /*
    * Calculates and returns the duplicated projects
    */
-  static getDuplicatedProjects(availableProjects: SimpleGroupxProjectDto[]): Map<string, {
-    projects: SimpleGroupxProjectDto[];
-    originalName: string
-  }> {
+  static getDuplicatedProjects(availableProjects: SimpleGroupxProjectDto[]): Map<string, {projects: SimpleGroupxProjectDto[]; originalName: string }>
+  {
     let duplicatedProjects = new Map<string, { projects: SimpleGroupxProjectDto[], originalName: string }>();
 
     availableProjects?.map(x => x?.projectId!).forEach(id => {
@@ -22,6 +20,17 @@ export class OverlappingProjectHelper {
       }
     });
     return duplicatedProjects;
+  }
+
+  static removeDuplicatProjects(availableProjects: SimpleGroupxProjectDto[]) : SimpleGroupxProjectDto[] {
+    var seen : Set<string> = new Set();
+    return availableProjects.filter(project => {
+      if (seen.has(project.projectId)) {
+        return false;
+      }
+      seen.add(project.projectId);
+      return true;
+    })
   }
 
   /*

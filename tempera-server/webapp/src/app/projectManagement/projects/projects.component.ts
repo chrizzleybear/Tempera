@@ -1,16 +1,18 @@
-import {Component, OnInit} from '@angular/core';
-import {Project} from "../../models/project.model";
-import {ProjectService} from '../../_services/project.service';
-import {MessagesModule} from "primeng/messages";
-import {TableModule} from "primeng/table";
-import {ButtonModule} from "primeng/button";
-import {InputTextModule} from "primeng/inputtext";
-import {NgIf} from "@angular/common";
-import {UserCreateComponent} from "../../userManagement/user-create/user-create.component";
-import {ProjectCreateComponent} from "../project-create/project-create.component";
-import {DialogModule} from "primeng/dialog";
-import {Router} from "@angular/router";
-import {ProjectEditComponent} from "../project-edit/project-edit.component";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Project } from '../../models/project.model';
+import { MessagesModule } from 'primeng/messages';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { NgIf } from '@angular/common';
+import { UserCreateComponent } from '../../userManagement/user-create/user-create.component';
+import { ProjectCreateComponent } from '../project-create/project-create.component';
+import { DialogModule } from 'primeng/dialog';
+import { Router } from '@angular/router';
+import { ProjectEditComponent } from '../project-edit/project-edit.component';
+import { ProjectControllerService, SimpleProjectDto } from '../../../api';
+import {MessageService} from "primeng/api";
+import {ToastModule} from "primeng/toast";
 @Component({
   selector: 'app-projects',
   standalone: true,
@@ -23,7 +25,8 @@ import {ProjectEditComponent} from "../project-edit/project-edit.component";
     UserCreateComponent,
     ProjectCreateComponent,
     DialogModule,
-    ProjectEditComponent
+    ProjectEditComponent,
+    ToastModule
   ],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.css'
@@ -34,14 +37,13 @@ import {ProjectEditComponent} from "../project-edit/project-edit.component";
  */
 export class ProjectsComponent implements OnInit{
 
-  projects: Project[] = [];
-  filteredProjects: Project[] = [];
-  messages: any;
+  projects: SimpleProjectDto[] = [];
+  filteredProjects: SimpleProjectDto[] = [];
   displayCreateDialog: boolean = false;
   displayEditDialog: boolean = false;
-  selectedProject: Project | undefined;
+  selectedProject: SimpleProjectDto | undefined;
 
-  constructor(private projectService: ProjectService, private router: Router) {
+  constructor(private projectService: ProjectControllerService, private router: Router, private messageService: MessageService) {
 
   }
   ngOnInit(): void {
@@ -50,11 +52,11 @@ export class ProjectsComponent implements OnInit{
   }
 
   private loadProjects() {
-    this.projectService.getAllProjects().subscribe({
+    this.projectService.getAllSimpleProjects().subscribe({
       next: (projects) => {
         console.log("Loaded projects:", projects);
-        this.projects = projects;
-        this.filteredProjects = projects;
+        this.projects = projects.filter(project => project.isActive);
+        this.filteredProjects = this.projects;
       },
       error: (error) => {
         console.error("Error loading projects:", error);
@@ -72,35 +74,39 @@ export class ProjectsComponent implements OnInit{
         this.filteredProjects = this.projects;
       }
   }
+
+  // Event emitter for creating a project - loading latest deactivatedProjects
+  @Output() projectCreationEvent: EventEmitter<void> = new EventEmitter<void>();
+
+
   createProject() {
     this.displayCreateDialog = true;
+    this.projectCreationEvent.emit();
   }
-    deleteProject(projectId: number) {
+    deleteProject(projectId: string) {
       this.projectService.deleteProject(projectId).subscribe({
         next: (response) => {
           this.loadProjects();
-          this.messages = [{severity:'success', summary:'Success', detail:'Project deleted successfully'}];
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Project deleted successfully'});
         },
-        error: (error) => {
-          this.messages = [{severity:'error', summary:'Error', detail:'Error deleting project'}];
+        error: (err) => {
+          console.error('Error deleting project:', err);
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error deleting project'});
         }
       })
   };
 
   onCreateCompleted(success: boolean) {
     if (success) {
-      this.messages = [{severity:'success', summary:'Success', detail:'Project created successfully'}];
       this.returnToProjects();
     }
   }
-  editProject(project: Project) {
-    console.log("Edit project:", project);
+  editProject(project: SimpleProjectDto) {
     this.selectedProject = project;
     this.displayEditDialog = true;
   }
   onEditCompleted(success: boolean) {
     if (success) {
-      this.messages = [{severity:'success', summary:'Success', detail:'Project updated successfully'}];
       this.returnToProjects();
     }
   }
@@ -110,11 +116,6 @@ export class ProjectsComponent implements OnInit{
     this.displayEditDialog = false;
   }
 
-  viewProjectDetails(project: Project) {
-    console.log("View project details:", project);
-    console.log("Project ID:", project.projectId);
-    this.router.navigate(['/project', project.projectId]);
-  }
   addGroupToProject(project: Project) {
     this.router.navigate(['/project/groups', project.projectId]);
   }

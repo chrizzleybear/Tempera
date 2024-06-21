@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { Group } from "../../models/group.model";
-import { GroupService } from '../../_services/group.service';
-import { MessagesModule } from "primeng/messages";
-import { TableModule } from "primeng/table";
-import { ButtonModule } from "primeng/button";
-import { InputTextModule } from "primeng/inputtext";
-import { NgIf } from "@angular/common";
-import { DialogModule } from "primeng/dialog";
-import { Router } from "@angular/router";
-import {GroupCreateComponent} from "../group-create/group-create.component";
-import {GroupEditComponent} from "../group-edit/group-edit.component";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Group } from '../../models/group.model';
+import { MessagesModule } from 'primeng/messages';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { NgIf } from '@angular/common';
+import { DialogModule } from 'primeng/dialog';
+import { Router } from '@angular/router';
+import { GroupCreateComponent } from '../group-create/group-create.component';
+import { GroupEditComponent } from '../group-edit/group-edit.component';
+import { GroupManagementControllerService, SimpleGroupDto } from '../../../api';
+import {MessageService} from "primeng/api";
+import {ToastModule} from "primeng/toast";
+
 @Component({
   selector: 'app-groups',
   standalone: true,
@@ -22,6 +25,7 @@ import {GroupEditComponent} from "../group-edit/group-edit.component";
     DialogModule,
     GroupCreateComponent,
     GroupEditComponent,
+    ToastModule,
 
   ],
   templateUrl: './groups.component.html',
@@ -32,14 +36,19 @@ import {GroupEditComponent} from "../group-edit/group-edit.component";
  * This component is responsible for managing and displaying all groups.
  */
 export class GroupsComponent implements OnInit {
-  groups: Group[] = [];
-  filteredGroups: Group[] = [];
+  groups: SimpleGroupDto[] = [];
+  filteredGroups: SimpleGroupDto[] = [];
   displayCreateDialog: boolean = false;
   displayEditDialog: boolean = false;
-  selectedGroup: Group | undefined;
+  selectedGroup: SimpleGroupDto | undefined;
   messages: any;
+  // Event emitter for creating a group - loading latest deactivatedGroups
+  @Output() groupCreationEvent: EventEmitter<void> = new EventEmitter<void>();
 
-  constructor(private groupService: GroupService, private router: Router) {}
+  constructor(
+    private groupService: GroupManagementControllerService,
+    private router: Router,
+    private messageService: MessageService) {}
 
   ngOnInit(): void {
     this.loadGroups();
@@ -49,15 +58,15 @@ export class GroupsComponent implements OnInit {
     this.groupService.getAllGroups().subscribe({
       next: (groups) => {
         console.log("Loaded groups:", groups);
-        this.groups = groups;
-        this.filteredGroups = groups;
+        this.groups = groups.filter(g => g.isActive);
+        this.filteredGroups = this.groups;
       },
       error: (error) => {
+        this.messageService.add({severity:'error', summary:'Error', detail:'Error loading groups'});
         console.error("Error loading groups:", error);
       }
     });
   }
-
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.filteredGroups = filterValue ? this.groups.filter(group =>
@@ -66,16 +75,17 @@ export class GroupsComponent implements OnInit {
 
   createGroup() {
     this.displayCreateDialog = true;
+    this.groupCreationEvent.emit();
   }
 
-  deleteGroup(groupId: number) {
+  deleteGroup(groupId: string) {
     this.groupService.deleteGroup(groupId).subscribe({
       next: (response) => {
         this.loadGroups();
-        this.messages = [{severity:'success', summary:'Success', detail:'Group deleted successfully'}];
+        this.messageService.add({severity:'success', summary:'Success', detail:'Group deleted successfully'});
       },
       error: (error) => {
-        this.messages = [{severity:'error', summary:'Error', detail:'Error deleting group'}];
+        this.messageService.add({severity:'error', summary:'Error', detail:'Error deleting group'});
       }
     });
   }
@@ -85,7 +95,7 @@ export class GroupsComponent implements OnInit {
     this.router.navigate(['/group', group.id]);
   }
 
-  editGroup(group: Group) {
+  editGroup(group: SimpleGroupDto) {
     console.log("Edit group:", group);
     this.selectedGroup = group;
     this.displayEditDialog = true;

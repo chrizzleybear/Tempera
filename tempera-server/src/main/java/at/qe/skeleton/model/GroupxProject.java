@@ -2,6 +2,7 @@ package at.qe.skeleton.model;
 
 import jakarta.persistence.*;
 import org.springframework.data.domain.Persistable;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -57,16 +58,22 @@ public class GroupxProject implements Persistable<GroupxProjectId>{
     @OneToMany(mappedBy = "groupxProject", cascade = CascadeType.ALL)
     private Set<InternalRecord> internalRecords;
 
+    private boolean isActive;
+
     public GroupxProject() {
         contributors = new HashSet<>();
         internalRecords = new HashSet<>();
+        isActive = true;
     }
 
+    @PreAuthorize("hasRole('GROUPLEAD') or hasRole('ADMIN')")
     public void addContributor(Userx contributor) {
+        if (!isActive){
+            throw new IllegalStateException("GroupxProject is not active");
+        }
         contributors.add(contributor);
-        contributor.getGroupxProjects().add(this);
     }
-
+    @PreAuthorize("hasRole('GROUPLEAD') or hasRole('ADMIN')")
     public void removeContributor(Userx contributor) {
         contributor.getGroupxProjects().remove(this);
         contributors.remove(contributor);
@@ -74,6 +81,12 @@ public class GroupxProject implements Persistable<GroupxProjectId>{
     public void removeInternalRecords(){
         internalRecords.forEach(internalRecord -> internalRecord.setGroupxProject(null));
         internalRecords.clear();
+    }
+
+    @PreAuthorize("hasRole('GROUPLEAD') or hasRole('ADMIN') or hasRole('MANAGER')")
+    public void removeAllContributors(){
+        contributors.forEach(contributor -> contributor.getGroupxProjects().remove(this));
+        contributors.clear();
     }
 
 
@@ -91,15 +104,25 @@ public class GroupxProject implements Persistable<GroupxProjectId>{
         //todo remove policy Überlegen
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
     public Project getProject() {
         return project;
     }
 
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
     public void addProject(Project project) {
         this.project = project;
         project.getGroupxProjects().add(this);
     }
 
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
     public void removeProject() {
         this.project.getGroupxProjects().remove(this);
         this.project = null;
@@ -112,7 +135,7 @@ public class GroupxProject implements Persistable<GroupxProjectId>{
     }
 
     public Set<Userx> getContributors() {
-        return contributors;
+        return new HashSet<>(contributors); // return mutable collection
     }
 
 

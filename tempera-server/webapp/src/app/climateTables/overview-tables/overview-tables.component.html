@@ -1,0 +1,15 @@
+<p-toast></p-toast>
+<p-tabView>
+  <p-tabPanel header="Temperature" *ngIf="temperaStationId">
+    <app-temperature-table [temperaStationId]="temperaStationId" [accessPointUuid]="accessPointId"></app-temperature-table>
+  </p-tabPanel>
+  <p-tabPanel header="Humidity" *ngIf="temperaStationId">
+    <app-humidity-table [temperaStationId]="temperaStationId" [accessPointUuid]="accessPointId"></app-humidity-table>
+  </p-tabPanel>
+  <p-tabPanel header="NMVOC" *ngIf="temperaStationId">
+    <app-co2-table [temperaStationId]="temperaStationId" [accessPointUuid]="accessPointId"></app-co2-table>
+  </p-tabPanel>
+  <p-tabPanel header="Irradiance" *ngIf="temperaStationId">
+    <app-irr-table [temperaStationId]="temperaStationId" [accessPointUuid]="accessPointId"></app-irr-table>
+  </p-tabPanel>
+</p-tabView>

@@ -1,4 +1,4 @@
-<p-messages [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
+<p-toast></p-toast>
 <div *ngIf="!displayEditDialog && !displayCreateDialog">
   <div class="mb-4">
     <input type="text" pInputText placeholder="Search" (input)="applyFilter($event)" class="mr-2">
@@ -19,10 +19,10 @@
           <p-sortIcon field="lastName"></p-sortIcon>
         </th>
         <th scope="col">Roles</th>
-        <th scope="col">Enabled</th>
+        <th scope="col">Status</th>
         <!--  Empty headers for styling    -->
-        <th></th>
-        <th></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-user>
@@ -35,7 +35,7 @@
             <li *ngFor="let role of user.roles">{{ role }}</li>
           </ul>
         </td>
-        <td>{{ user.enabled ? "Yes" : "No" }}</td>
+        <td>{{ user.enabled ? "Enabled" : "Disabled" }}</td>
         <td>
           <p-button label="Edit" (onClick)="editUser(user); $event.stopPropagation()" icon="pi pi-pencil"></p-button>
         </td>
@@ -47,6 +47,99 @@
     </ng-template>
   </p-table>
 </div>
+
+<!------------------Dialogs------------------>
+<p-dialog header="Header" [(visible)]="displayDeletionPopup" [modal]="true" [style]="{width: '50rem'}"
+          [closable]="true">
+  <ng-template pTemplate="header">
+    <div class="inline-flex align-items-center justify-content-center gap-2">
+      <i class="pi pi-exclamation-triangle text-4xl text-red-500"></i> <!-- This is the icon -->
+      <span class="text-2xl font-bold max-w-full overflow-auto">
+      {{ deletionResponseMessage }}
+    </span>
+    </div>
+  </ng-template>
+
+
+  <div *ngIf="deletionResponse?.responseType === DeletionResponseDto.ResponseTypeEnum.Admin">
+    <p>Admins are a special breed. You cant really delete them. Try taking their rights instead.</p>
+  </div>
+  <!-- If the deletion response is a manager, show the affected projects -->
+  <div *ngIf="deletionResponse?.responseType === DeletionResponseDto.ResponseTypeEnum.Manager">
+    <p>Please transfer these projects to another manager in order to delete {{userNameToDelete}}.</p>
+    <br>
+    <p-table [value]="affectedProjects" [rows]="6" responsiveLayout="scroll">
+      <ng-template pTemplate="header">
+        <tr>
+          <th scope="col" pSortableColumn="name">Project
+          </th>
+          <th scope="col">Transfer Responsibility To</th>
+          <th scope="col"></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-project>
+        <tr>
+          <td>{{ project.name }}</td>
+          <td>
+            <div class="p-field">
+              <p-dropdown [options]="availableManagers"
+                          [editable]="true"
+                          [virtualScroll]="true"
+                          emptyMessage="No other managers available. Please add a new manager."
+                          appendTo="body"
+                          optionLabel="label"
+                          placeholder="Select new Manager"
+                          id="newManager"
+                          (onChange)="transferProject(project, $event.value)"></p-dropdown>
+            </div>
+          </td>
+          <td></td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <p-button (onClick)="transferAndDeleteProjects()" [disabled]="deleteDisabled" label="Delete User" icon="pi pi-trash"
+              class="mt-4"></p-button>
+  </div>
+
+
+  <!-- If the deletion response is a grouplead, show the affected groups -->
+
+  <div *ngIf="deletionResponse?.responseType === DeletionResponseDto.ResponseTypeEnum.Grouplead">
+    <p>Please transfer these groups to another user in order to delete {{userNameToDelete}}.</p>
+    <br>
+    <p-table [value]="affectedGroups" [rows]="6" responsiveLayout="scroll">
+      <ng-template pTemplate="header">
+        <tr>
+          <th scope="col" pSortableColumn="name">Group
+          </th>
+          <th scope="col">Transfer Responsibility To</th>
+          <th scope="col"></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-group>
+        <tr>
+          <td>{{ group.name }}</td>
+          <td>
+            <div class="p-field">
+              <p-dropdown [options]="availableUsers"
+                          [editable]="true"
+                          [virtualScroll]="true"
+                          emptyMessage="No other user available. Please add a new User."
+                          appendTo="body"
+                          optionLabel="label"
+                          placeholder="Select new GroupLead"
+                          id="newGroupLead"
+                          (onChange)="transferGroup(group, $event.value)"></p-dropdown>
+            </div>
+          </td>
+          <td></td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <p-button (onClick)="transferAndDeleteGroups()" [disabled]="deleteDisabled" label="Delete User" icon="pi pi-trash"
+              class="mt-4"></p-button>
+  </div>
+</p-dialog>
 <p-dialog header="Edit User" [(visible)]="displayEditDialog" [modal]="true" [style]="{width: '50vw'}" [closable]="true">
   <div *ngIf="selectedUser">
     <app-user-edit [user]="selectedUser" (editCompleted)="onEditCompleted($event)"></app-user-edit>
@@ -54,7 +147,7 @@
 </p-dialog>
 <p-dialog header="Create User" [(visible)]="displayCreateDialog" [modal]="true" [style]="{width: '50vw'}"
           [closable]="true">
-  <app-user-create (creatComplete)="onCreateCompleted($event)"></app-user-create>
+  <app-user-create (creatComplete)="onEditCompleted($event)"></app-user-create>
 </p-dialog>
 
 

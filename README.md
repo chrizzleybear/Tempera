@@ -19,15 +19,23 @@ you can always write an email to Leonardo.Pedri@uibk.ac.at :slight_smile:.
 
 ---
 
-### Secrets
+### Environment variables
 
-In order to run the web server docker, an email key and database password must be provided.
-To avoid saving them in plain text inside the compose.yaml, they are read from text files you
-have to create and write the password/key in. So, in the same directory as the compose.yaml file
-create a *secrets* directory and in it create these files with your password/key in them
+To run the docker containers for the components, you first have to set environment variables as you would do
+running the components directly on your machine. The variables to be set are:
 
-* database_password.txt
-* email_key.txt
+* SWE_DB_KEY *(can be chosen freely)*
+* EMAIL_KEY
+ 
+> *The* SWE_DB_KEY *can be chosen freely.*
+> 
+> *The* EMAIL_KEY *must be the key to the spring.mail.username in the application.properties file. You can set your 
+> own email there and use your password here*
+
+You can do this by either adding `export SWE_DB_KEY=...` to your .bashrc or analogue and re-sourcing the shell 
+(`source ~/.bashrc`), or by creating a docker run configuration in your IDE (by clicking the green arrow next to the 
+services in the *compose.yaml* file) and setting the environment variables as you would for a maven or spring boot
+configuration.
 
 ---
 

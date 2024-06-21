@@ -1,4 +1,4 @@
-<p-messages [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
+<p-toast></p-toast>
 <div class="mb-4">
   <input type="text" pInputText placeholder="Search" (input)="applyFilter($event)" class="mr-2">
   <button type="button" pButton label="Add New Access Point" icon="pi pi-plus" (click)="createAccessPoint()" class="mr-2"></button>
@@ -9,15 +9,18 @@
       <th scope="col" pSortableColumn="id">Access Point ID <p-sortIcon field="id"></p-sortIcon></th>
       <th scope="col" pSortableColumn="room">Room <p-sortIcon field="room"></p-sortIcon></th>
       <th scope="col" pSortableColumn="enabled">Status <p-sortIcon field="enabled"></p-sortIcon></th>
+      <th scope="col" pSortableColumn="isHealthy">Healthy<p-sortIcon field="isHealthy"></p-sortIcon></th>
+      <th></th>
       <th></th>
       <th></th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-accessPoint>
-    <tr (click)="viewAccessPointDetails(accessPoint)">
+    <tr (click)="viewAccessPointDetails(accessPoint)" style="cursor: pointer;">
       <td>{{ accessPoint.id }}</td>
       <td>{{ accessPoint.room }}</td>
       <td>{{ accessPoint.enabled ? 'Enabled' : 'Disabled' }}</td>
+      <td>{{accessPoint.isHealthy}}</td>
       <td>
         <p-button label="Tempera" (onClick)="temperaDialog(accessPoint); $event.stopPropagation()" icon="pi pi-eye"></p-button>
       </td>

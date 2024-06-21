@@ -20,5 +20,4 @@ public interface AccessPointRepository extends AbstractRepository<AccessPoint, U
 
   public List<AccessPoint> findAllByEnabledTrue();
   public Optional<AccessPoint> findByRoom(Room room);
-  boolean existsById(UUID id);
 }

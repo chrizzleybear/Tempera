@@ -40,13 +40,14 @@ class TimeRecordServiceTest {
   @Autowired private ExternalRecordRepository externalRecordRepository;
   @Autowired private InternalRecordRepository internalRecordRepository;
     @Autowired private TemperaStationRepository temperaStationRepository;
-@Autowired private SensorRepository sensorRepository;
-@Autowired private UserxRepository userxRepository;
-@Autowired private AccessPointRepository accessPointRepository;
+    @Autowired private SensorRepository sensorRepository;
+    @Autowired private UserxRepository userxRepository;
+    @Autowired private AccessPointRepository accessPointRepository;
 
   @Mock private ExternalRecordRepository externalRecordRepositoryMock;
   @Mock private InternalRecordRepository internalRecordRepositoryMock;
     @Mock private UserxService mockedUserxService;
+    @Mock private AuditLogService auditLogService;
     private TimeRecordService timeRecordService;
 
 
@@ -57,7 +58,7 @@ class TimeRecordServiceTest {
                 externalRecordRepositoryMock, internalRecordRepositoryMock, mockedUserxService);
     sensorService = new SensorService(sensorRepository);
     timeRecordServiceReal = new TimeRecordService(externalRecordRepository, internalRecordRepository, mockedUserxService);
-    temperaStationService = new TemperaStationService(temperaStationRepository, sensorService, userxRepository, accessPointRepository);
+    temperaStationService = new TemperaStationService(temperaStationRepository, sensorService, userxRepository, accessPointRepository, auditLogService);
 
   }
 

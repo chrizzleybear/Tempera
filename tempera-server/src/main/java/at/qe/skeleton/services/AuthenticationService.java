@@ -1,5 +1,7 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.model.enums.LogAffectedType;
+import at.qe.skeleton.model.enums.LogEvent;
 import at.qe.skeleton.rest.frontend.dtos.UserxDto;
 import at.qe.skeleton.model.Userx;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,37 +24,59 @@ public class AuthenticationService {
   @Autowired private PasswordEncoder encode;
   static int tokenLength = 6;
 
+  @Autowired private AuditLogService auditLogService;
+
+  public AuthenticationService(UserxService userxService, EmailService emailService, PasswordEncoder encode, AuditLogService auditLogService) {
+    this.userxService = userxService;
+    this.emailService = emailService;
+    this.encode = encode;
+    this.auditLogService = auditLogService;
+  }
+
   @Transactional
   @PreAuthorize("hasAuthority('ADMIN')")
   public UserxDto registerUser(UserxDto userxDTO) {
     Userx newUser = userxService.convertToEntity(userxDTO);
+    if(userxService.loadUser(newUser.getUsername()) != null) {
+      throw new IllegalArgumentException("Username already exists");
+    }
     userxService.saveUser(newUser);
     sendValidationEmail(newUser);
+    auditLogService.logEvent(LogEvent.CREATE, LogAffectedType.USER,
+            "New user " + newUser.getUsername() + " with id " + newUser.getId() + " was registered.");
     return userxService.convertToDTO(newUser);
   }
 
-  // Encode username for security
   public void sendValidationEmail(Userx user) {
     String password = generateAndSaveActivationToken(user);
-    emailService.sendEmail(
-        user.getEmail(),
-        "Registration successful",
-        "Hello "
-            + user.getFirstName()
-            + " "
-            + user.getLastName()
-            + ",\n\n"
-            + "Your registration was successful.\nYour username is: "
-            + user.getUsername()
-            + "\n"
-            + "Your password is: "
-            + password
-            + " \n\n"
-            + "Please follow the link to set your password.\n\n"
-            + "http://localhost:4200/validate"
-            + "\n\n"
-            + "Best regards,\n"
-            + "The Tempera Team");
+    try {
+      emailService.sendEmail(
+              user.getEmail(),
+              "Registration successful",
+              "Hello "
+                      + user.getFirstName()
+                      + " "
+                      + user.getLastName()
+                      + ",\n\n"
+                      + "Your registration was successful.\nYour username is: "
+                      + user.getUsername()
+                      + "\n"
+                      + "Your password is: "
+                      + password
+                      + " \n\n"
+                      + "Please follow the link to set your new password.\n\n"
+                      + "http://localhost:4200/validate"
+                      + "\n\n"
+                      + "Best regards,\n"
+                      + "The Tempera Team");
+      auditLogService.logEvent(LogEvent.LOGIN, LogAffectedType.USER,
+              "Validation Email was sent to " + user.getUsername());
+    }
+    catch (Exception e) {
+      auditLogService.logEvent(LogEvent.WARN, LogAffectedType.USER,
+              "Validation Email to " + user.getUsername() + " could not be send.");
+      throw new RuntimeException("Registration email could not be sent");
+    }
   }
 
   private String generateAndSaveActivationToken(Userx user) {
@@ -76,46 +100,28 @@ public class AuthenticationService {
   @Transactional
   @PreAuthorize("hasAuthority('ADMIN')")
   public void resendValidation(UserxDto userxDTO) {
-    Userx user = userxService.convertToEntity(userxDTO);
+    Userx user = userxService.loadUser(userxDTO.username());
     String password = generateAndSaveActivationToken(user);
     emailService.sendEmail(
         user.getEmail(),
-        "Registration successful",
+        "Reset Password",
         "Hello "
             + user.getFirstName()
             + " "
             + user.getLastName()
             + ",\n\n"
-            + "Your registration was successful. Your username is: "
+            + "Your username is: "
             + user.getUsername()
             + "\n"
             + "Your password is: "
             + password
             + " \n\n"
-            + "Please follow the link to set your password.\n\n"
-            + "http://localhost:4200/validate/"
-            + user.getUsername()
+            + "Please follow the link to set your new password.\n\n"
+            + "http://localhost:4200/validate"
             + "\n\n"
             + "Best regards,\n"
             + "The Tempera Team");
-  }
-
-  public void validateUser(String username, String password) {
-    Userx user = userxService.loadUser(username);
-    if (user == null) {
-      throw new IllegalArgumentException("User not found");
-    }
-    if (!encode.matches(password, user.getPassword())) {
-      throw new IllegalArgumentException("Password incorrect");
-    }
-  }
-
-  public void setPassword(String username, String password, String passwordRepeat) {
-    if (!password.equals(passwordRepeat)) {
-      throw new IllegalArgumentException("Passwords do not match");
-    }
-    Userx user = userxService.loadUser(username);
-    user.setPassword(encode.encode(password));
-    userxService.saveUser(user);
+    auditLogService.logEvent(LogEvent.LOGIN, LogAffectedType.USER,
+            "Resent Validation Email to " + user.getUsername());
   }
 }

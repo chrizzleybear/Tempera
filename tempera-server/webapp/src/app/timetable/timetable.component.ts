@@ -5,7 +5,7 @@ import {
 } from '../../api';
 import { Table, TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
-import { DatePipe, NgForOf, NgIf, NgStyle } from '@angular/common';
+import { DatePipe, NgClass, NgForOf, NgIf, NgStyle } from '@angular/common';
 import { TagModule } from 'primeng/tag';
 import { DisplayHelper } from '../_helpers/display-helper';
 import { WrapFnPipe } from '../_pipes/wrap-fn.pipe';
@@ -19,7 +19,7 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { MultiSelectModule } from 'primeng/multiselect';
+import { MultiSelect, MultiSelectModule } from 'primeng/multiselect';
 import StateEnum = ColleagueStateDto.StateEnum;
 import { ButtonModule } from 'primeng/button';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
@@ -28,7 +28,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { TooltipModule } from 'primeng/tooltip';
 import { MessageModule } from 'primeng/message';
 import { MessagesModule } from 'primeng/messages';
-import { MessageService } from 'primeng/api';
+import { FilterMatchMode, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { CardModule } from 'primeng/card';
@@ -38,9 +38,15 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TotalTimeHelper } from '../_helpers/total-time-helper';
 import { OverlappingProjectHelper } from '../_helpers/overlapping-project-helper';
 
+/**
+ * InternalTimetableEntryDto extends TimetableEntryDto with additional properties startTime, endTime and showProjectDropdown.
+ * ShowProjectDropdown is used to determine if the project dropdown should be shown in the table, or not.
+ * If the assigned Project for that entry is no longer available to the user, the dropdown should not be shown.
+ */
 interface InternalTimetableEntryDto extends TimetableEntryDto {
   startTime: Date;
   endTime: Date;
+  isEditable: boolean;
 }
 
 @Component({
@@ -71,6 +77,7 @@ interface InternalTimetableEntryDto extends TimetableEntryDto {
     ProgressSpinnerModule,
     NgStyle,
     NgForOf,
+    NgClass,
   ],
   templateUrl: './timetable.component.html',
   styleUrl: './timetable.component.css',
@@ -80,20 +87,29 @@ export class TimetableComponent implements OnInit {
 
   public availableProjects: SimpleGroupxProjectDto[] = [];
 
+  public deactivatedProjects: SimpleGroupxProjectDto[] = [];
+
+  public filterProjects: SimpleGroupxProjectDto[] = [];
+
   public filterFields: string[] = [];
 
   public stateOptions: StateEnum[] = (Object.values(StateEnum));
 
   public selectedEntry?: InternalTimetableEntryDto;
 
-  protected readonly DisplayHelper = DisplayHelper;
+  public selectedProjects: SimpleGroupxProjectDto[] = [];
+
+  public selectedStates: StateEnum[] = [];
 
   public totalTime: { hours: number, minutes: number } = { hours: 0, minutes: 0 };
 
   public editDescriptionVisible: boolean = false;
 
   public splitVisible: boolean = false;
+
   public calendarVisible: boolean = false;
+
+  public onlyUnassignedProjectsShown: boolean = false;
 
   /*
   Used for handling when a user is assigned to a project from multiple groups
@@ -108,8 +124,10 @@ export class TimetableComponent implements OnInit {
   }>();
 
   protected readonly Date = Date;
+
   protected readonly StateEnum = StateEnum;
 
+  protected readonly DisplayHelper = DisplayHelper;
 
   /*
   * This reference to the PrimeNG table is used because its entries also reflect the correct order if the table is sorted and the available entries when filtered.
@@ -123,6 +141,8 @@ export class TimetableComponent implements OnInit {
       this.calculateTotalTime();
     }
   }
+
+  @ViewChild('projectFilter') projectFilterOverlay!: MultiSelect;
 
   /*
     * Validates that the time is between the start and end time of the time entry.
@@ -157,25 +177,41 @@ export class TimetableComponent implements OnInit {
     }),
   });
 
+
   constructor(public timetableControllerService: TimetableControllerService, private messageService: MessageService, private cd: ChangeDetectorRef) {
   }
 
+
+
   ngOnInit(): void {
+    this.fillTable();
+  }
+
+  fillTable(): void {
     this.timetableControllerService.getTimetableData().subscribe({
         next: data => {
           this.tableEntries = data.tableEntries?.map(entry => ({
             ...entry,
             startTime: new Date(entry.startTimestamp),
             endTime: new Date(entry.endTimestamp),
+            isEditable: !(entry.assignedGroupxProject) ||
+              (data.availableProjects?.some(project =>
+                project.projectId === entry.assignedGroupxProject?.projectId && project.groupId === entry.assignedGroupxProject?.groupId) ?? true),
           })) ?? [];
 
           this.availableProjects = data.availableProjects ?? [];
+          this.deactivatedProjects = this.tableEntries?.filter(entry => !entry.isEditable)?.map(entry => entry.assignedGroupxProject!) ?? [];
+          this.deactivatedProjects = OverlappingProjectHelper.removeDuplicatProjects(this.deactivatedProjects);
+          this.filterProjects = this.availableProjects.concat(this.deactivatedProjects);
+
 
           // Rename projects that have the same projectId
-          this.duplicatedProjects = OverlappingProjectHelper.getDuplicatedProjects(this.availableProjects);
-          OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, this.availableProjects);
-          const assignedProjects = this.tableEntries.filter(x => x?.assignedGroupxProject).map(entry => entry.assignedGroupxProject!)
+          this.duplicatedProjects = OverlappingProjectHelper.getDuplicatedProjects(this.filterProjects);
+          OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, this.filterProjects);
+          // here we need to exclude the deactivated projects, so they are not renamed twice
+          const assignedProjects = this.tableEntries.filter(x => x?.assignedGroupxProject && !this.deactivatedProjects.includes(x.assignedGroupxProject)).map(entry => entry.assignedGroupxProject!);
           OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, assignedProjects);
+
 
           this.filterFields = Object.keys(this.tableEntries?.[0] ?? []);
         },
@@ -192,7 +228,7 @@ export class TimetableComponent implements OnInit {
     // give the project back the original name if it is a duplicate
     let submitProject = structuredClone(newProject);
     if (this.duplicatedProjects.has(submitProject.projectId ?? '')) {
-      submitProject.projectName = this.duplicatedProjects.get(submitProject.projectId!)?.originalName;
+      submitProject.projectName = this.duplicatedProjects.get(submitProject.projectId)?.originalName ?? '';
     }
 
     this.timetableControllerService.updateProject1({
@@ -222,16 +258,10 @@ export class TimetableComponent implements OnInit {
     const time = DateTime.fromJSDate(this.splitForm.controls.time.value!).toString();
     this.timetableControllerService.splitTimeRecord({ entryId: timeEntryId, splitTimestamp: time }).subscribe(
       {
-        next: data => {
+        next: () => {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Time entry split successfully' });
           this.splitVisible = false;
-          this.tableEntries = data.tableEntries?.map(entry => ({
-            ...entry,
-            startTime: new Date(entry.startTimestamp),
-            endTime: new Date(entry.endTimestamp),
-          })) ?? [];
-
-          this.availableProjects = data.availableProjects ?? [];
+          this.fillTable();
         },
         error: () => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to split time entry' });
@@ -272,10 +302,34 @@ export class TimetableComponent implements OnInit {
   /*
   Calculates the total work time with the current active filters
    */
+
   calculateTotalTime() {
     const filteredEntries = TotalTimeHelper.getFilteredEntries<InternalTimetableEntryDto>(this.table);
     this.totalTime = TotalTimeHelper.calculate(filteredEntries);
 
     this.cd.detectChanges();
+  }
+
+  /*
+  * Filters the table so only entries with unassigned projects are shown.
+  * Also filters out entries with the state OutOfOffice.
+   */
+  filterAssignedProjects() {
+    this.table?.filter({}, 'assignedGroupxProject', FilterMatchMode.IS_NOT);
+    this.table?.filter(StateEnum.OutOfOffice, 'state', FilterMatchMode.IS_NOT);
+    this.selectedProjects = [];
+    this.selectedStates = [];
+    this.onlyUnassignedProjectsShown = true;
+    this.projectFilterOverlay.hide();
+  }
+
+  /*
+  * Reset the filters from the filterAssignedProjects method.
+   */
+  removeAssignedProjectsFilter() {
+    this.table?.filter({}, 'assignedGroupxProject', FilterMatchMode.IN);
+    this.table?.filter({}, 'state', FilterMatchMode.IN);
+    this.table?.reset();
+    this.onlyUnassignedProjectsShown = false;
   }
 }

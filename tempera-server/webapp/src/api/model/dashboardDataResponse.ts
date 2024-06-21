@@ -11,16 +11,18 @@
  */
 import { SimpleGroupxProjectDto } from './simpleGroupxProjectDto';
 import { ColleagueStateDto } from './colleagueStateDto';
+import { FrontendMeasurementDto } from './frontendMeasurementDto';
 
 
 export interface DashboardDataResponse { 
-    temperature: number;
-    humidity: number;
-    irradiance: number;
-    nmvoc: number;
+    temperature: FrontendMeasurementDto;
+    humidity: FrontendMeasurementDto;
+    irradiance: FrontendMeasurementDto;
+    nmvoc: FrontendMeasurementDto;
     visibility: DashboardDataResponse.VisibilityEnum;
     state?: DashboardDataResponse.StateEnum;
     stateTimestamp?: string;
+    project?: SimpleGroupxProjectDto;
     defaultProject?: SimpleGroupxProjectDto;
     availableProjects?: Array<SimpleGroupxProjectDto>;
     colleagueStates?: Array<ColleagueStateDto>;

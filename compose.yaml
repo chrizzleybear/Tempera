@@ -20,12 +20,12 @@ services:
       ./tempera-server/
     environment:
       - POSTGRES_USER=g4t1
-      - POSTGRES_PASSWORD=/run/secrets/database_password
+      - POSTGRES_PASSWORD=${SWE_DB_KEY}
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_db:5432/tempera
+      - SPRING_DATASOURCE_PASSWORD=${SWE_DB_KEY}
       - SPRING_DATASOURCE_USERNAME=g4t1
-      - SPRING_DATASOURCE_PASSWORD=/run/secrets/database_password
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - EMAIL_KEY=/run/secrets/email_key
+      - EMAIL_KEY=${EMAIL_KEY}
     depends_on:
       - postgres_db
     ports:
@@ -36,7 +36,7 @@ services:
     restart: always
     environment:
       - POSTGRES_USER=g4t1
-      - POSTGRES_PASSWORD=/run/secrets/database_password
+      - POSTGRES_PASSWORD=${SWE_DB_KEY}
       - POSTGRES_DB=tempera
     ports:
       - 5432:5432
@@ -46,9 +46,3 @@ services:
 #    build: ./tempera-accesspoint/src/tempera/api
 #    ports:
 #      - "80:80"
-
-secrets:
-  database_password:
-    file: ./secrets/database_password.txt
-  email_key:
-    file: ./secrets/email_key.txt
