@@ -10,6 +10,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import {
+  ColleagueStateDto,
   DashboardControllerService,
   DashboardDataResponse,
   SimpleGroupxProjectDto, Threshold,
@@ -116,7 +117,7 @@ export class DashboardComponent implements OnInit {
    * This observable handles fetching the dashboard data every minute
    */
   private getData$(username: string): Observable<DashboardDataResponse> {
-    return timer(0, 1000 * 60).pipe(
+    return timer(0, 1000 * 10).pipe(
       switchMap(() => {
         return this.dashboardControllerService.getDashboardData(username);
       }),
@@ -126,6 +127,8 @@ export class DashboardComponent implements OnInit {
   protected readonly DisplayHelper = DisplayHelper;
   protected readonly Threshold = Threshold;
   protected readonly SensorType = SensorType;
+  protected readonly ColleagueStateDto = ColleagueStateDto;
+  protected readonly StateEnum = DashboardDataResponse.StateEnum;
   protected readonly tempHighHints = tempHighHints;
   protected readonly tempLowHints = tempLowHints;
   protected readonly humidityHighHints = humidityHighHints;
@@ -166,6 +169,13 @@ export class DashboardComponent implements OnInit {
         next: data => {
           this.dashboardData = data;
           this.colleagueTableFilterFields = Object.keys(this.dashboardData?.colleagueStates?.[0] ?? []);
+
+          if (data.state === this.StateEnum.OutOfOffice) {
+            this.form.controls.project.disable();
+          }
+          else {
+            this.form.controls.project.enable();
+          }
 
           this.duplicatedProjects = OverlappingProjectHelper.getDuplicatedProjects(this.dashboardData.availableProjects ?? []);
           OverlappingProjectHelper.renameOverlappingProjects(this.duplicatedProjects, this.dashboardData.availableProjects ?? []);
