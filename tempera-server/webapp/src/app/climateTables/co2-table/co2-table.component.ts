@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ClimateDataControllerService, ClimateMeasurementDto, Sensor} from "../../../api";
 import {MessageService} from "primeng/api";
 import {DatePipe, NgIf} from "@angular/common";
@@ -25,8 +25,8 @@ export class Co2TableComponent implements OnInit{
 
   co2Data: ClimateMeasurementDto[] | undefined = [];
   sensorType: Sensor.SensorTypeEnum = "NMVOC";
-  accessPointUuid: string = "123e4567-e89b-12d3-a456-426614174001";
-  temperaStationId: string = "tempera_station_1";
+  @Input() temperaStationId: string | undefined;
+  @Input() accessPointUuid: string | undefined;
   numberOfDisplayedEntries: number = 10;
   rangeDates: Date[] = [];
 
@@ -41,8 +41,8 @@ export class Co2TableComponent implements OnInit{
 
   fetchCo2Data(startDate: Date, endDate: Date): void {
     this.climateDataControllerService.getMeasurementsBySensorType(
-      this.accessPointUuid,
-      this.temperaStationId,
+      this.accessPointUuid!,
+      this.temperaStationId!,
       this.sensorType,
       startDate.toISOString(),
       endDate.toISOString(),

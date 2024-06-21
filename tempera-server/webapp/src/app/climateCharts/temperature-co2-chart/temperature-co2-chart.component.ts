@@ -12,10 +12,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ClimateChart } from '../climate-chart';
 import { NgIf } from '@angular/common';
 
-
-type TimeUnit = 'SECONDS' | 'MINUTES' | 'HOURS' | 'DAYS' | 'WEEKS' | 'MONTHS' | 'YEARS'
-const sensorTypes: Sensor.SensorTypeEnum[] = ['TEMPERATURE', 'NMVOC'];
-
 @Component({
   selector: 'app-temperature-co2-chart',
   standalone: true,
@@ -46,7 +42,7 @@ export class TemperatureCo2ChartComponent extends ClimateChart {
   protected override label1: string = 'Temperature (°C)';
   protected override label2: string = 'NMVOC (ppm)';
 
-  override ngOnInit(): void {
-    super.ngOnInit();
+  override whenInit(): void {
+    super.whenInit();
   }
 }

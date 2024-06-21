@@ -1,15 +1,17 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {PanelModule} from 'primeng/panel';
-import {CalendarModule} from 'primeng/calendar';
-import {FormsModule} from '@angular/forms';
-import {MessageService} from 'primeng/api';
-import {DropdownModule} from 'primeng/dropdown';
-import {ClimateDataControllerService} from '../../api';
-import {TemperatureCo2ChartComponent} from './temperature-co2-chart/temperature-co2-chart.component';
-import {HumidityIrradianceChartComponent} from './humidity-irradiance-chart/humidity-irradiance-chart.component';
-import {InputNumberModule} from 'primeng/inputnumber';
-import {ChartModule} from 'primeng/chart';
-import {NgIf} from '@angular/common';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { PanelModule } from 'primeng/panel';
+import { CalendarModule } from 'primeng/calendar';
+import { FormsModule } from '@angular/forms';
+import { MessageService } from 'primeng/api';
+import { DropdownModule } from 'primeng/dropdown';
+import { TemperatureCo2ChartComponent } from './temperature-co2-chart/temperature-co2-chart.component';
+import { HumidityIrradianceChartComponent } from './humidity-irradiance-chart/humidity-irradiance-chart.component';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { ChartModule } from 'primeng/chart';
+import { NgIf } from '@angular/common';
+import { TemperaStationService } from '../_services/tempera-station.service';
+import { User } from '../models/user.model';
+import { StorageService } from '../_services/storage.service';
 
 
 @Component({
@@ -34,12 +36,10 @@ export class OverviewChartsComponent implements OnInit {
 
   // Default chart window to 1h prior to how - now if not set by the user
   public rangeDates: Date[] = [new Date(Date.now() - (60 * 60 * 1_000)), new Date()];
-  public accessPointUuid: string = '123e4567-e89b-12d3-a456-426614174001';
-  public temperaStationId: string = 'tempera_station_1';
-  public accessPoints: string[] = [];
-  public temperaStations: string[] = [];
+  public temperaStationId: string | undefined;
+  public accessPointUuid: string | undefined;
   public numberOfDisplayedEntries: number = 10;
-  public noDataFound: boolean | undefined;
+  public currentUser: User | undefined;
 
   @ViewChild(TemperatureCo2ChartComponent)
   private temperatureCo2ChartComponent: TemperatureCo2ChartComponent | undefined;
@@ -47,18 +47,24 @@ export class OverviewChartsComponent implements OnInit {
   @ViewChild(HumidityIrradianceChartComponent)
   private humidityIrradianceChartComponent: HumidityIrradianceChartComponent | undefined;
 
-  constructor(private climateDataControllerService: ClimateDataControllerService, private messageService: MessageService) {
-    if (this.temperatureCo2ChartComponent === undefined || this.humidityIrradianceChartComponent === undefined) {
-      console.log('Chart child components are undefined.');
-      return;
+  constructor(
+    private messageService: MessageService,
+    private temperaStationService: TemperaStationService,
+    private storageService: StorageService) {
+    this.currentUser = this.storageService.getUser();
+    if (!this.currentUser) {
+      messageService.add({ severity: 'error', summary: 'Error', detail: 'No user logged in' });
     }
-    this.noDataFound = this.temperatureCo2ChartComponent.noDataFound && this.humidityIrradianceChartComponent.noDataFound;
   }
 
-  // TODO: fix repeated error message output
-  ngOnInit(): void {
-    this.getAccessPoints();
-    this.getTemperaStations();
+  async ngOnInit() {
+    await this.fetchTemperaAndAccessPoint();
+    if (this.humidityIrradianceChartComponent === undefined || this.temperatureCo2ChartComponent === undefined) {
+      console.log('lsdjfsdalkfj');
+    }
+    await new Promise(r => setTimeout(r, 150));
+    this.humidityIrradianceChartComponent?.whenInit();
+    this.temperatureCo2ChartComponent?.whenInit();
   }
 
   onDateChange(newDates: Date[]): void {
@@ -99,28 +105,34 @@ export class OverviewChartsComponent implements OnInit {
     this.updatePlots();
   }
 
-  onAccessPointSelectionChange(accessPointUuid: string): void {
-    // ugly fix, but without this, the chart component's values are set after completing this method,
-    // and therefore updatePlots() is called still with the old values => app lags behind user input
-    if (this.temperatureCo2ChartComponent === undefined || this.humidityIrradianceChartComponent === undefined) {
-      console.log('Chart child components are undefined.');
-      return;
-    }
-    this.temperatureCo2ChartComponent.accessPointUuid = accessPointUuid;
-    this.humidityIrradianceChartComponent.accessPointUuid = accessPointUuid;
-    this.updatePlots();
-  }
-
-  onTemperaStationSelectionChange(temperaStationId: string): void {
-    // ugly fix, but without this, the chart component's values are set after completing this method,
-    // and therefore updatePlots() is called still with the old values => app lags behind user input
-    if (this.temperatureCo2ChartComponent === undefined || this.humidityIrradianceChartComponent === undefined) {
-      console.log('Chart child components are undefined.');
-      return;
-    }
-    this.temperatureCo2ChartComponent.temperaStationId = temperaStationId;
-    this.humidityIrradianceChartComponent.temperaStationId = temperaStationId;
-    this.updatePlots();
+  async fetchTemperaAndAccessPoint(): Promise<void> {
+    this.temperaStationService.getAllTemperaStations().subscribe({
+      next: (data) => {
+        let temperaStation = data.find((temperaStation) => temperaStation.user === this.currentUser?.id);
+        if (temperaStation === undefined) {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No tempera station found for the current user',
+          });
+          console.error('No tempera station found for the current user');
+          return;
+        }
+        this.temperaStationId = temperaStation?.id;
+        this.accessPointUuid = temperaStation.accessPointId;
+        if (this.temperaStationId === undefined || this.accessPointUuid === undefined) {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No tempera station found for the current user',
+          });
+          console.error('No tempera station found for the current user');
+        }
+      },
+      error: (error) => {
+        console.error(error);
+      },
+    });
   }
 
   onDataPointsChange(numberOfPointsToDisplay: any) {
@@ -138,36 +150,14 @@ export class OverviewChartsComponent implements OnInit {
 
   updatePlots(): void {
     if (this.temperatureCo2ChartComponent !== undefined) {
-      this.temperatureCo2ChartComponent.ngOnInit();
+      this.temperatureCo2ChartComponent.whenInit();
     } else {
       console.log('TemperatureCo2ChartComponent is undefined');
     }
     if (this.humidityIrradianceChartComponent !== undefined) {
-      this.humidityIrradianceChartComponent.ngOnInit();
+      this.humidityIrradianceChartComponent.whenInit();
     } else {
       console.log('HumidityIrradianceChartComponent is undefined');
     }
-  }
-
-  getAccessPoints(): void {
-    this.climateDataControllerService.getEnabledAccessPoints()
-      .subscribe({
-        next: accessPoints => {
-          for (let accessPoint of accessPoints) {
-            this.accessPoints.push(accessPoint.id as string);
-          }
-        },
-      });
-  }
-
-  getTemperaStations(): void {
-    this.climateDataControllerService.getTemperaStations()
-      .subscribe({
-        next: temperaStations => {
-          for (let temperaStation of temperaStations) {
-            this.temperaStations.push(temperaStation.id as string);
-          }
-        },
-      });
   }
 }

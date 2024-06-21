@@ -35,7 +35,7 @@ export class AppMenuComponent implements OnInit {
         ],
       },
       {
-        label: 'UI Components',
+        label: 'My Account',
         items: [
           {
             label: 'Timetable',
@@ -44,16 +44,32 @@ export class AppMenuComponent implements OnInit {
             visible: this.storageService.getUser()?.roles.includes(RolesEnum.Employee),
           },
           {
-            label: 'Accumulated Time',
-            icon: 'pi pi-fw pi-clock',
-            routerLink: ['/accumulated-time'],
-            visible: this.storageService.getUser()?.roles.some(role => role === RolesEnum.Manager || role === RolesEnum.Grouplead),
+            label: 'Climate Chart',
+            icon: 'pi pi-fw pi-cloud',
+            routerLink: ['/climateChart'],
+          },
+          {
+            label: 'Climate Table',
+            icon: 'pi pi-fw pi-table',
+            routerLink: ['/climateTable']
           },
           {
             label: 'My Groups',
             icon: 'pi pi-fw pi-users',
             routerLink: ['/myGroups'],
             visible: this.storageService.getUser()?.roles.includes(RolesEnum.Grouplead),
+          },
+          ]},
+
+      {
+        label: 'Management',
+        visible: this.storageService.getUser()?.roles.some(role => role === RolesEnum.Manager || role === RolesEnum.Grouplead || role === RolesEnum.Admin),
+        items: [
+          {
+            label: 'Accumulated Time',
+            icon: 'pi pi-fw pi-clock',
+            routerLink: ['/accumulated-time'],
+            visible: this.storageService.getUser()?.roles.some(role => role === RolesEnum.Manager || role === RolesEnum.Grouplead),
           },
           {
             label: 'User Management',
@@ -79,13 +95,12 @@ export class AppMenuComponent implements OnInit {
             routerLink: ['/rooms'],
             visible: this.storageService.getUser()?.roles.includes('ADMIN'),
           },
-
-          {
-            label: 'Climate Chart',
-            icon: 'pi pi-fw pi-cloud',
-            routerLink: ['/climateChart'],
-            visible: this.storageService.getUser()?.roles.includes('ADMIN'),
-          },
+        ],
+      },
+      {
+        label: 'Tempera System',
+        visible: this.storageService.getUser()?.roles.includes('ADMIN'),
+        items: [
           {
             label: 'Access Points',
             icon: 'pi pi-fw pi-wifi',
@@ -99,21 +114,16 @@ export class AppMenuComponent implements OnInit {
             visible: this.storageService.getUser()?.roles.includes('ADMIN'),
           },
           {
-            label: 'Audit Logs',
-            icon: 'pi pi-fw pi-list',
-            routerLink: ['/audit-logs'],
-            visible: this.storageService.getUser()?.roles.includes('ADMIN'),
-          },
-          {
             label: 'Tips',
             icon: 'pi pi-fw pi-info-circle',
             routerLink: ['/tips'],
             visible: this.storageService.getUser()?.roles.includes('ADMIN'),
           },
           {
-            label: 'Climate Table',
-            icon: 'pi pi-fw pi-table',
-            routerLink: ['/climateTable'],
+            label: 'Audit Logs',
+            icon: 'pi pi-fw pi-list',
+            routerLink: ['/audit-logs'],
+            visible: this.storageService.getUser()?.roles.includes('ADMIN'),
           },
         ],
       },

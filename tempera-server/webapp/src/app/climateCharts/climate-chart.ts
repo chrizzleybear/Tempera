@@ -1,16 +1,16 @@
 import { ClimateDataControllerService, ClimateMeasurementDto } from '../../api';
 import { MessageService } from 'primeng/api';
 import { Sensor } from '../../api/api/sensor';
-import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 
 
 @Injectable()
-export abstract class ClimateChart implements OnInit, OnDestroy {
+export abstract class ClimateChart implements OnDestroy {
   public accessPointUuid: string = '';
   public temperaStationId: string = '';
   public rangeDates: Date[] = [];
   public numberOfDisplayedEntries: number = 10;
-  public noDataFound: boolean = false;
+  public noDataFound: boolean = true;
 
   protected sensorTypes: Sensor.SensorTypeEnum[] = [];
   protected color1: string = '';
@@ -27,9 +27,11 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
   constructor(public climateDataControllerService: ClimateDataControllerService, private messageService: MessageService) {
   }
 
-  ngOnInit(): void {
+  whenInit(): void {
+    this.ngOnDestroy();
     let startDateTime: Date = this.rangeDates[0];
     let endDateTime: Date = this.rangeDates[1];
+    console.log((endDateTime.getTime() - startDateTime.getTime()) / this.numberOfDisplayedEntries + 500);
     this.getMeasurements(
       this.accessPointUuid,
       this.temperaStationId,
@@ -162,17 +164,6 @@ export abstract class ClimateChart implements OnInit, OnDestroy {
             color: surfaceBorder,
           },
         },
-        xAxes: [{
-          type: 'linear',
-          time: {
-            unit: 'day',
-            tooltipFormat: 'll HH:mm',
-          },
-          scaleLabel: {
-            display: true,
-            labelString: 'Date',
-          },
-        }],
         y: {
           type: 'linear',
           display: true,
