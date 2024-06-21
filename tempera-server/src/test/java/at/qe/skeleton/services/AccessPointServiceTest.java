@@ -136,7 +136,7 @@ public class AccessPointServiceTest {
 
         assertNotNull(updatedStation);
         assertEquals(connectionStatus, updatedStation.isHealthy());
-        verify(auditLogService, atLeastOnce()).logEvent(eq(LogEvent.EDIT), eq(LogAffectedType.ACCESS_POINT), anyString());
+        verify(auditLogService, atLeastOnce()).logEvent(eq(LogEvent.EDIT), eq(LogAffectedType.TEMPERA_STATION), anyString());
         verify(temperaStationService).save(temperaStation);
     }
 

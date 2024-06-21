@@ -137,7 +137,7 @@ public class AccessPointService {
 
     TemperaStation station = queryStation.get();
     station.setIsHealthy(connectionStatus);
-    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.ACCESS_POINT,
+    auditLogService.logEvent(LogEvent.EDIT, LogAffectedType.TEMPERA_STATION,
             "Connection status to station " + station.getId() + "was updated to " + station.isHealthy() + ".");
     return temperaStationService.save(station);
   }
