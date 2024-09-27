@@ -143,3 +143,18 @@ CREATE DATABASE tempera OWNER g4t1;
 
 go to: /tempera-server
 run: mvn spring-boot:run
+
+
+
+# Exploring the Web-App
+
+The web-app is reachable at localhost:4200.  We advise you to use one of the following two login credentials to explore the app:
+
+username: admin
+password:  passwd
+purpose: admin user with all rights  - best for user management and tempera/ room configuration
+
+username: mariatheresa
+password: passwd
+purpose: manager - best for exploring project & group management as well as accumulated time statistics
+
