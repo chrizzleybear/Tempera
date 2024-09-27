@@ -1,7 +1,6 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.exceptions.CouldNotFindEntityException;
-import at.qe.skeleton.exceptions.MissingTemperaStationException;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.enums.SensorType;
 import at.qe.skeleton.model.enums.State;
@@ -61,11 +60,13 @@ public class DashboardDataService {
       String username = colleague.getUsername();
 
       String workplace;
-      TemperaStation temperaStation = temperaService.findByUsername(username).orElseThrow(() ->new MissingTemperaStationException("User has no temperaStation assigned"));
+      Optional<TemperaStation> temperaStation = temperaService.findByUsername(username);
 
-      if (temperaStation.isEnabled()) {
-        workplace = temperaStation.getAccessPoint().getRoom().toString();
-
+      if (temperaStation.isPresent()) {
+        workplace = temperaStation.get().getAccessPoint().getRoom().toString();
+        } else {
+        workplace = "unknown";
+      }
         // for each colleague, check if the user is in one of the groups of the colleague
         List<String> groupOverlap = new ArrayList<>();
         colleague
@@ -85,7 +86,6 @@ public class DashboardDataService {
         colleagueStates.add(
             new ColleagueStateDto(username, workplace, state, isVisible, groupOverlap));
       }
-    }
     return colleagueStates;
   }
 

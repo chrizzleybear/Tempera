@@ -14,8 +14,7 @@ TEMPERA - next generation time tracking
 To run the web-app and the Bluetooth-LE Raspberry app,
 docker images are provided, so you don't have to install anything locally.
 If you don't already have docker on your machine, follow these [instructions](https://docs.docker.com/get-docker/) and
-come back. If you are having trouble installing docker or any other docker/ci-cd relaetd issue,
-you can always write an email to Leonardo.Pedri@uibk.ac.at :slight_smile:.
+come back.
 
 ---
 
@@ -109,3 +108,62 @@ $ docker compose down
 > hostname >> http://back-end:8080.
 > If you want to connect from your machine to a container or from a container to your machine, use localhost:port as
 > usual.
+
+
+# Running the components (Angular front-end, Java back-end) without docker
+Alternatively you can setup angular and postgres locally on your machine without a container like this:
+
+## Run Angular:
+go to folder webapp
+install node-packages: npm install
+start angular: ng serve
+
+
+
+## Setup DB Connection to postgres:
+** On Linux/ Mac: **
+
+Download psql
+set environment variable SWE_DB_KEY to your password (choose one)
+go to: tempera-server/src/main/resources
+run the shellscript db_init.sh
+
+
+** On Windows: **
+Download psql
+set environment variable SWE_DB_KEY to your password (choose one) 
+
+run the following lines in your terminal:
+
+CREATE USER g4t1 WITH PASSWORD <your Password>;
+CREATE DATABASE tempera OWNER g4t1;
+
+
+
+## Run Spring-Boot Project:
+
+go to: /tempera-server
+run: mvn spring-boot:run
+
+
+
+# Exploring the Web-App
+
+The web-app is reachable at localhost:4200.  We advise you to use one of the following two login credentials to explore the app:
+
+username: admin
+password:  passwd
+purpose: admin user with all rights  - best for user management and tempera/ room configuration
+
+username: mariatheresa
+password: passwd
+purpose: manager - best for exploring project & group management as well as accumulated time statistics
+
+# Dependencies and Licensing
+The Effort has been made to create a comprehensive list of all dependencies used in this project.
+We thank all the developers who have contributed to the open-source projects we have used and hope that we have done justice to their work.
+If you find any missing dependencies or licensing information, or if you have any other questions or concerns, please contact us:
+chris-stief@gmx.de
+
+The list can be found in the file DEPENDENCIES.md. 
+The licensing information for the project can be found in the file LICENSE.md.
