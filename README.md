@@ -109,3 +109,37 @@ $ docker compose down
 > hostname >> http://back-end:8080.
 > If you want to connect from your machine to a container or from a container to your machine, use localhost:port as
 > usual.
+
+
+# Running the components (Angular front-end, Java back-end) without docker
+Alternatively you can setup angular and postgres locally on your machine without a container like this:
+
+## Run Angular:
+go to folder webapp
+install node-packages: npm install
+start angular: ng serve
+
+
+
+## Setup DB Connection to postgres:
+** On Linux/ Mac: **
+
+Download psql
+set environment variable SWE_DB_KEY to your password (choose one)
+go to: tempera-server/src/main/resources
+run the shellscript db_init.sh
+
+
+** On Windows: **
+Download psql
+set environment variable SWE_DB_KEY to your password (choose one) 3run the following lines in your terminal:
+
+CREATE USER g4t1 WITH PASSWORD <your Password>;
+CREATE DATABASE tempera OWNER g4t1;
+
+
+
+## Run Spring-Boot Project:
+
+go to: /tempera-server
+run: mvn spring-boot:run

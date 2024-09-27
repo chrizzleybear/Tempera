@@ -74,12 +74,10 @@ public class LoggingService {
             default -> false;
         };
         File logFile = severe ? warningLogFile : infoLogFile;
-        log.info("Writing to log file: {}", logFile.getPath());
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(logFile, true))) {
             String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             writer.write(timestamp + " - [TEMPERA] - " + actionType + " - " + affectedType + " - " + message);
             writer.newLine();
-            log.info("Successfully wrote to log file: {}", logFile.getPath());
         } catch (IOException e) {
             log.error("Failed to write to log file: " + e.getMessage());
         }
