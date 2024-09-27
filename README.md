@@ -159,3 +159,11 @@ username: mariatheresa
 password: passwd
 purpose: manager - best for exploring project & group management as well as accumulated time statistics
 
+# Dependencies and Licensing
+The Effort has been made to create a comprehensive list of all dependencies used in this project.
+We thank all the developers who have contributed to the open-source projects we have used and hope that we have done justice to their work.
+If you find any missing dependencies or licensing information, or if you have any other questions or concerns, please contact us:
+<chris-stief@gmx.de>
+
+The list can be found in the file DEPENDENCIES.md. 
+The licensing information for the project can be found in the file LICENSE.md.
