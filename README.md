@@ -134,10 +134,10 @@ Download psql
 set environment variable SWE_DB_KEY to your password (choose one) 
 
 run the following lines in your terminal:
-
-CREATE USER g4t1 WITH PASSWORD <your Password>;
+```bash
+CREATE USER g4t1 WITH PASSWORD <your Password>; 
 CREATE DATABASE tempera OWNER g4t1;
-
+```
 
 
 ## Run Spring-Boot Project:
@@ -151,12 +151,12 @@ run: mvn spring-boot:run
 
 The web-app is reachable at localhost:4200.  We advise you to use one of the following two login credentials to explore the app:
 
-username: admin
-password:  passwd
+username: admin <br>
+password:  passwd <br>
 purpose: admin user with all rights  - best for user management and tempera/ room configuration
 
-username: mariatheresa
-password: passwd
+username: mariatheresa <br>
+password: passwd <br>
 purpose: manager - best for exploring project & group management as well as accumulated time statistics
 
 # Dependencies and Licensing
