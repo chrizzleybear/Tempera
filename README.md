@@ -132,7 +132,9 @@ run the shellscript db_init.sh
 
 ** On Windows: **
 Download psql
-set environment variable SWE_DB_KEY to your password (choose one) 3run the following lines in your terminal:
+set environment variable SWE_DB_KEY to your password (choose one) 
+
+run the following lines in your terminal:
 
 CREATE USER g4t1 WITH PASSWORD <your Password>;
 CREATE DATABASE tempera OWNER g4t1;
