@@ -14,8 +14,7 @@ TEMPERA - next generation time tracking
 To run the web-app and the Bluetooth-LE Raspberry app,
 docker images are provided, so you don't have to install anything locally.
 If you don't already have docker on your machine, follow these [instructions](https://docs.docker.com/get-docker/) and
-come back. If you are having trouble installing docker or any other docker/ci-cd relaetd issue,
-you can always write an email to Leonardo.Pedri@uibk.ac.at :slight_smile:.
+come back.
 
 ---
 
