@@ -58,9 +58,9 @@ class DashboardDataServiceTest {
     DashboardDataResponse homeDataResponse =
         dashboardDataService.mapUserToHomeDataResponse(johndoe);
     assertEquals(
-        8,
+        9,
         homeDataResponse.colleagueStates().size(),
-        "ColleagueStates size should be 8, for reference look at DashboardDataService.sql");
+        "ColleagueStates size should be 9, for reference look at DashboardDataService.sql");
     assertEquals(
         20.0, homeDataResponse.temperature().value(), "Temperature of johndoe should be 20");
     assertEquals(50.0, homeDataResponse.humidity().value(), "Humidity of johndoe should be 50.0");
@@ -230,9 +230,9 @@ class DashboardDataServiceTest {
     String user = "tonystark";
     DashboardDataResponse homeDataResponse = dashboardDataService.mapUserToHomeDataResponse(user);
     assertEquals(
-        8,
+        9,
         homeDataResponse.colleagueStates().size(),
-        "ColleagueStates size should be 8, for reference look at DashboardDataService.sql");
+        "ColleagueStates size should be 9, for reference look at DashboardDataService.sql");
     assertNull(homeDataResponse.temperature(), "Temperature of johndoe should be 20");
     assertNull(homeDataResponse.humidity(), "Humidity of johndoe should be 50.0");
     assertNull(homeDataResponse.irradiance(), "Irradiance of johndoe should be 1000.0");
