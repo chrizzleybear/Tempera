@@ -134,10 +134,10 @@ Download psql
 set environment variable SWE_DB_KEY to your password (choose one) 
 
 run the following lines in your terminal:
-
-CREATE USER g4t1 WITH PASSWORD <your Password>;
+```bash
+CREATE USER g4t1 WITH PASSWORD <your Password>; 
 CREATE DATABASE tempera OWNER g4t1;
-
+```
 
 
 ## Run Spring-Boot Project:
@@ -151,19 +151,24 @@ run: mvn spring-boot:run
 
 The web-app is reachable at localhost:4200.  We advise you to use one of the following two login credentials to explore the app:
 
-username: admin
-password:  passwd
+username: admin <br>
+password:  passwd <br>
 purpose: admin user with all rights  - best for user management and tempera/ room configuration
 
-username: mariatheresa
-password: passwd
+username: mariatheresa <br>
+password: passwd <br>
 purpose: manager - best for exploring project & group management as well as accumulated time statistics
 
 # Dependencies and Licensing
-The Effort has been made to create a comprehensive list of all dependencies used in this project.
-We thank all the developers who have contributed to the open-source projects we have used and hope that we have done justice to their work.
-If you find any missing dependencies or licensing information, or if you have any other questions or concerns, please contact us:
-chris-stief@gmx.de
+Every effort has been made to compile a comprehensive list of all dependencies used in this project.
 
-The list can be found in the file DEPENDENCIES.md. 
-The licensing information for the project can be found in the file LICENSE.md.
+The list can be found in the file DEPENDENCIES.md. <br>
+The licensing information for the project is available in the file LICENSE.md.
+
+This repository is currently licensed under the MIT License. Please note that earlier commits in the repository history may not include accurate licensing and dependency information, as the project was initially not intended for public release. Some of these earlier commits may also contain dependencies that could potentially conflict with the current licensing of this software.
+
+If you are using an earlier version of this repository, please ensure that you comply with the licenses of all included dependencies at that point in the history.
+
+We would like to extend our gratitude to the developers and contributors of the open-source projects used in this repository. We strive to respect and honor their contributions and hope that we have done justice to their work.
+
+If you notice any missing dependencies, incorrect licensing information, or believe we might be violating any license terms, please feel free to reach out to us at: chris-stief@gmx.de.
