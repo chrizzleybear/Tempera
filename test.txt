@@ -1,2 +1,2 @@
+some more testing for gpg...
 
-just a test if GPG is set up correctly
