@@ -1,0 +1,2 @@
+
+just a test if GPG is set up correctly
