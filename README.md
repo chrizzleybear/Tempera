@@ -142,7 +142,7 @@ CREATE DATABASE tempera OWNER g4t1;
 
 ## Run Spring-Boot Project:
 
-go to: /tempera-server
+go to: /tempera-server <br>
 run: mvn spring-boot:run
 
 
