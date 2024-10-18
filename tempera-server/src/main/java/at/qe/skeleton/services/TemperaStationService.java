@@ -122,6 +122,10 @@ public class TemperaStationService {
     return temperaStationRepository.findFirstByUser_Username(username);
   }
 
+  public Optional<TemperaStationDto> getDtoByUsername(String username) {
+    return temperaStationRepository.getTemperaStationDtoByUsername(username);
+  }
+
   public TemperaStation save(TemperaStation temperaStation) {
     return temperaStationRepository.save(temperaStation);
   }

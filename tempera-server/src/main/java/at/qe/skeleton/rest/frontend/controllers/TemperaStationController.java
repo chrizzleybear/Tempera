@@ -8,6 +8,8 @@ import at.qe.skeleton.rest.frontend.dtos.TemperaStationDto;
 import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.TemperaStationMapper;
 import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
 import at.qe.skeleton.services.TemperaStationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,6 +23,7 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 @RequestMapping(value = "/api/temperastation", produces  = MediaType.APPLICATION_JSON_VALUE)
 public class TemperaStationController {
+    private static final Logger logger = LoggerFactory.getLogger(TemperaStationController.class);
 
     @Autowired
     private TemperaStationService temperaStationService;
@@ -37,12 +40,13 @@ public class TemperaStationController {
 
     @GetMapping("/loadbyname/{username}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<TemperaStationDto> getTemperaStationByName(@PathVariable String username) throws Exception {
+    public ResponseEntity<TemperaStationDto> getTemperaStationByName(@PathVariable String username) throws Exception{
         try {
-            TemperaStationDto temperaStationDto = temperaStationMapper.getTemperaStationDtoByUsername(username);
+            TemperaStationDto temperaStationDto = temperaStationMapper.getTemperaStationDto(username);
             return ResponseEntity.ok(temperaStationDto);
         }
         catch (CouldNotFindEntityException e) {
+            logger.warn(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
