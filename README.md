@@ -149,7 +149,7 @@ run: mvn spring-boot:run
 
 # Exploring the Web-App
 
-The web-app is reachable at localhost:4200. Please refer to the Wiki first for an overview of the features and functionality. We advise you to use one of the following two login credentials to explore the app:
+The web-app is reachable at localhost:4200. Please refer to the [Wiki](https://github.com/chrizzleybear/Tempera/wiki) first for an overview of the features and functionality. We advise you to use one of the following two login credentials to explore the app:
 
 username: admin <br>
 password:  passwd <br>
