@@ -5,6 +5,7 @@ import at.qe.skeleton.model.TemperaStation;
 import at.qe.skeleton.rest.frontend.dtos.SensorDto;
 import at.qe.skeleton.rest.frontend.dtos.SimpleUserDto;
 import at.qe.skeleton.rest.frontend.dtos.TemperaStationDto;
+import at.qe.skeleton.rest.frontend.mappersAndFrontendServices.TemperaStationMapper;
 import at.qe.skeleton.rest.frontend.payload.response.MessageResponse;
 import at.qe.skeleton.services.TemperaStationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,26 @@ public class TemperaStationController {
     @Autowired
     private TemperaStationService temperaStationService;
 
+    @Autowired
+    TemperaStationMapper temperaStationMapper;
+
     @GetMapping("/all")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<TemperaStationDto>> getAllTemperaStations() {
         List<TemperaStationDto> temperaStations = temperaStationService.getAllTemperaStations();
-
         return ResponseEntity.ok(temperaStations);
+    }
+
+    @GetMapping("/loadbyname/{username}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<TemperaStationDto> getTemperaStationByName(@PathVariable String username) throws Exception {
+        try {
+            TemperaStationDto temperaStationDto = temperaStationMapper.getTemperaStationDtoByUsername(username);
+            return ResponseEntity.ok(temperaStationDto);
+        }
+        catch (CouldNotFindEntityException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @GetMapping("/load/{temperaStationId}")
