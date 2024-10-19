@@ -1,0 +1,44 @@
+2024-10-19 14:17:00 - [TEMPERA] - LOGIN - USER - AUDIT-LOG: User admin logged in.
+2024-10-19 14:17:00 - [TEMPERA] - LOAD - MEASUREMENT - AUDIT-LOG: Lastest measurement of station tempera_station_1 was loaded.
+2024-10-19 14:17:00 - [TEMPERA] - LOAD - MEASUREMENT - AUDIT-LOG: Lastest measurement of station tempera_station_1 was loaded.
+2024-10-19 14:17:00 - [TEMPERA] - LOAD - MEASUREMENT - AUDIT-LOG: Lastest measurement of station tempera_station_1 was loaded.
+2024-10-19 14:17:00 - [TEMPERA] - LOAD - MEASUREMENT - AUDIT-LOG: Lastest measurement of station tempera_station_1 was loaded.
+2024-10-19 14:18:23 - [TEMPERA] - EDIT - GROUP - AUDIT-LOG: Member johndoe was removed from group Security Team
+2024-10-19 14:18:23 - [TEMPERA] - EDIT - GROUP - AUDIT-LOG: Member chriswilliams was removed from group Security Team
+2024-10-19 14:18:27 - [TEMPERA] - EDIT - GROUP - AUDIT-LOG: Member mariatheresa was added to group Security Team
+2024-10-19 14:18:48 - [TEMPERA] - DELETE - USER - AUDIT-LOG: Deletion of user admin failed. User is ADMIN.
+2024-10-19 14:18:52 - [TEMPERA] - DELETE - TIME_RECORD - AUDIT-LOG: External time records of user susikaufgern were deleted.
+2024-10-19 14:18:52 - [TEMPERA] - DELETE - TEMPERA_STATION - AUDIT-LOG: Station of user susikaufgern was deleted.
+2024-10-19 14:18:52 - [TEMPERA] - EDIT - USER - AUDIT-LOG: User susikaufgern was saved.
+2024-10-19 14:18:52 - [TEMPERA] - DELETE - USER - AUDIT-LOG: User susikaufgern was deleted.
+2024-10-19 14:18:53 - [TEMPERA] - DELETE - USER - AUDIT-LOG: Deletion of user mariatheresa failed. User is MANAGER.
+2024-10-19 14:19:15 - [TEMPERA] - EDIT - PROJECT - AUDIT-LOG: Project Customer Satisfaction Improvement was updated.
+2024-10-19 14:19:15 - [TEMPERA] - EDIT - PROJECT - AUDIT-LOG: Project Serious Business was updated.
+2024-10-19 14:19:15 - [TEMPERA] - EDIT - PROJECT - AUDIT-LOG: Project Sustainability Initiative was updated.
+2024-10-19 14:19:15 - [TEMPERA] - EDIT - PROJECT - AUDIT-LOG: Project Expansion was updated.
+2024-10-19 14:19:15 - [TEMPERA] - EDIT - PROJECT - AUDIT-LOG: Project Efficiency was updated.
+2024-10-19 14:19:15 - [TEMPERA] - EDIT - PROJECT - AUDIT-LOG: Project Innovation was updated.
+2024-10-19 14:19:15 - [TEMPERA] - EDIT - PROJECT - AUDIT-LOG: Project Marketing Campaign Launch was updated.
+2024-10-19 14:19:15 - [TEMPERA] - EDIT - PROJECT - AUDIT-LOG: Project Infrastructure Upgrade was updated.
+2024-10-19 14:19:15 - [TEMPERA] - EDIT - PROJECT - AUDIT-LOG: Project Product Development was updated.
+2024-10-19 14:19:15 - [TEMPERA] - EDIT - PROJECT - AUDIT-LOG: Project Quality Assurance Enhancement was updated.
+2024-10-19 14:19:15 - [TEMPERA] - EDIT - PROJECT - AUDIT-LOG: Project Cost Reduction Initiative was updated.
+2024-10-19 14:19:15 - [TEMPERA] - EDIT - PROJECT - AUDIT-LOG: Project Training and Development Program was updated.
+2024-10-19 14:19:15 - [TEMPERA] - DELETE - TIME_RECORD - AUDIT-LOG: External time records of user mariatheresa were deleted.
+2024-10-19 14:19:15 - [TEMPERA] - DELETE - TEMPERA_STATION - AUDIT-LOG: Station of user mariatheresa was deleted.
+2024-10-19 14:19:16 - [TEMPERA] - EDIT - USER - AUDIT-LOG: User mariatheresa was saved.
+2024-10-19 14:19:16 - [TEMPERA] - DELETE - USER - AUDIT-LOG: User mariatheresa was deleted.
+2024-10-19 14:19:30 - [TEMPERA] - DELETE - ROOM - AUDIT-LOG: Room room_1 was deleted.
+2024-10-19 14:19:31 - [TEMPERA] - DELETE - ROOM - AUDIT-LOG: Room room_2 was deleted.
+2024-10-19 14:19:32 - [TEMPERA] - DELETE - ROOM - AUDIT-LOG: Room room_3 was deleted.
+2024-10-19 14:19:33 - [TEMPERA] - DELETE - ROOM - AUDIT-LOG: Room room_4 was deleted.
+2024-10-19 14:19:56 - [TEMPERA] - EDIT - ACCESS_POINT - AUDIT-LOG: Edited accesspoint 789e4567-e89b-12d3-a456-426614174001, Room set to room_3, Enabled: false.
+2024-10-19 14:19:57 - [TEMPERA] - DELETE - ACCESS_POINT - AUDIT-LOG: Accesspoint of room room_4 was deleted.
+2024-10-19 14:34:19 - [TEMPERA] - LOAD - MEASUREMENT - AUDIT-LOG: Lastest measurement of station tempera_station_1 was loaded.
+2024-10-19 14:34:19 - [TEMPERA] - LOAD - MEASUREMENT - AUDIT-LOG: Lastest measurement of station tempera_station_1 was loaded.
+2024-10-19 14:34:19 - [TEMPERA] - LOAD - MEASUREMENT - AUDIT-LOG: Lastest measurement of station tempera_station_1 was loaded.
+2024-10-19 14:34:19 - [TEMPERA] - LOAD - MEASUREMENT - AUDIT-LOG: Lastest measurement of station tempera_station_1 was loaded.
+2024-10-19 14:35:38 - [TEMPERA] - LOAD - MEASUREMENT - AUDIT-LOG: Lastest measurement of station tempera_station_1 was loaded.
+2024-10-19 14:35:38 - [TEMPERA] - LOAD - MEASUREMENT - AUDIT-LOG: Lastest measurement of station tempera_station_1 was loaded.
+2024-10-19 14:35:39 - [TEMPERA] - LOAD - MEASUREMENT - AUDIT-LOG: Lastest measurement of station tempera_station_1 was loaded.
+2024-10-19 14:35:39 - [TEMPERA] - LOAD - MEASUREMENT - AUDIT-LOG: Lastest measurement of station tempera_station_1 was loaded.
