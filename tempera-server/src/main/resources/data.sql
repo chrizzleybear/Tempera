@@ -46,31 +46,31 @@ INSERT INTO userx_userx_role (userx_username, roles) VALUES ('brucewayne', 'MANA
 
 -- add some Groups to test db
 INSERT INTO public.groupx (active, id, group_lead_username, description, name) VALUES (true, -3, 'tonystark', 'this is also just for testing', 'Marketing Team');
-INSERT INTO public.groupx (active, id, group_lead_username, description, name) VALUES (true, -1, 'peterparker', 'Dedicated to hard research in the field of Money.', 'Research Team');
-INSERT INTO public.groupx (active, id, group_lead_username, description, name) VALUES (true, -4, 'tonystark', 'Consisting of the finest of experts, these experts sure know stuff.', 'Expert Team');
+INSERT INTO public.groupx (active, id, group_lead_username, description, name) VALUES (false, -1, 'peterparker', 'Dedicated to hard research in the field of Money.', 'Research Team');
+INSERT INTO public.groupx (active, id, group_lead_username, description, name) VALUES (false, -4, 'tonystark', 'Consisting of the finest of experts, these experts sure know stuff.', 'Expert Team');
 INSERT INTO public.groupx (active, id, group_lead_username, description, name) VALUES (true, -2, 'admin', 'this is also just for testing', 'Security Team');
 
 
 -- add some of the created projects to some GroupxProject Objects:
-INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -1, -1);
-INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -1, -2);
-INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -1, -3);
-INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -1, -4);
-INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -1, -5);
-INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -1, -6);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (false, -1, -1);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (false, -1, -2);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (false, -1, -3);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (false, -1, -4);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (false, -1, -5);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (false, -1, -6);
 INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -2, -7);
 INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -2, -1);
 INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -2, -8);
 INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -2, -9);
 INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -2, -10);
-INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -1, -7);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (false, -1, -7);
 INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -3, -1);
-INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -4, -2);
-INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -4, -4);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (false, -4, -2);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (false, -4, -4);
 INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (false, -2, -11);
 INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -3, -3);
-INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -4, -5);
-INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -4, -9);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (false, -4, -5);
+INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (false, -4, -9);
 INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -3, -12);
 INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -2, -12);
 INSERT INTO public.groupx_project_object (is_active, group_id, project_id) VALUES (true, -3, -11);

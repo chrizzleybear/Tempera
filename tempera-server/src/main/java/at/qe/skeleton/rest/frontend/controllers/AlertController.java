@@ -27,7 +27,6 @@ public class AlertController {
   @GetMapping("/all")
   @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'GROUPLEAD', 'EMPLOYEE')")
   public ResponseEntity<List<AlertDto>> getAlerts() {
-    logger.info("getAlerts called");
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
     List<AlertDto> alerts = alertMapper.getAlerts(username);
 

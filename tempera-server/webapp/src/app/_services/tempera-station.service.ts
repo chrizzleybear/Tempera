@@ -5,6 +5,7 @@ import {TemperaStation} from "../models/temperaStation.model";
 import { TemperaStationCreateDto } from "../models/TemperaStationDtos";
 import {Sensor} from "../models/sensor.model";
 import {User} from "../models/user.model";
+import {TemperaStationDto} from "../../api";
 
 
 @Injectable({
@@ -17,6 +18,10 @@ export class TemperaStationService {
 
   getAllTemperaStations(): Observable<TemperaStation[]> {
     return this.http.get<TemperaStation[]>(this.apiUrl+'all');
+  }
+
+  getTemperaStationByUsername(username: string): Observable<TemperaStation> {
+    return this.http.get<TemperaStation>(this.apiUrl + 'loadbyname/' + username);
   }
 
   getTemperaStationById(id: string): Observable<TemperaStation> {

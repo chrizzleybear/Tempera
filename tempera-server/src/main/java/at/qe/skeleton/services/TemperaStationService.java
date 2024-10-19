@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -99,6 +100,7 @@ public class TemperaStationService {
     return this.createTemperaStation(false, dto.user(), dto.accessPointId());
   }
 
+  @Transactional
   public List<TemperaStationDto> getAllTemperaStations() {
     List<TemperaStation> temperaStations = temperaStationRepository.findAll();
     List<TemperaStationDto> temperaStationDtos = temperaStations.stream()
@@ -120,6 +122,10 @@ public class TemperaStationService {
 
   public Optional<TemperaStation> findByUsername(String username) {
     return temperaStationRepository.findFirstByUser_Username(username);
+  }
+
+  public Optional<TemperaStationDto> getDtoByUsername(String username) {
+    return temperaStationRepository.getTemperaStationDtoByUsername(username);
   }
 
   public TemperaStation save(TemperaStation temperaStation) {

@@ -47,7 +47,7 @@ public class ClimateDataController {
   }
 
   @GetMapping("/measurements/{accessPointUuid}/{temperaId}/{sensorType}")
-  @PreAuthorize("hasAuthority('ADMIN')")
+  @PreAuthorize("isAuthenticated()")
   public ResponseEntity<ClimateDataDto> getMeasurementsBySensorType(
       @PathVariable UUID accessPointUuid,
       @PathVariable String temperaId,

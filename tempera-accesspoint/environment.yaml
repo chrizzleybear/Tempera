@@ -8,7 +8,7 @@ dependencies:
   - pip:
       - bleak==0.21.1
       - PyYAML==6.0.1
-      - requests==2.31.0
+      - requests==2.32.0
       - tenacity==8.2.3
       - SQLAlchemy==2.0.29
       - rich==13.7.1

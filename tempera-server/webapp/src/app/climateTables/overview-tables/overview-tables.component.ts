@@ -41,12 +41,14 @@ export class OverviewTablesComponent implements OnInit{
    this.fetchTemperaAndAccessPoint();
   }
 
+
+
   fetchTemperaAndAccessPoint() {
-    this.temperaStationService.getAllTemperaStations().subscribe({
-      next: (data) => {
-        this.currentUser = this.storageService.getUser();
-        this.temperaStationId = data.find((temperaStation) => temperaStation.user === this.currentUser?.id)?.id;
-        this.accessPointId = data.find((temperaStation) => temperaStation.user === this.currentUser?.id)?.accessPointId;
+    this.currentUser = this.storageService.getUser();
+    this.temperaStationService.getTemperaStationByUsername(this.currentUser?.username!).subscribe({
+      next: (TemperaDto) => {
+        this.temperaStationId = TemperaDto.id;
+        this.accessPointId = TemperaDto.accessPointId;
         if(this.temperaStationId === undefined || this.accessPointId === undefined) {
           this.messageService.add({severity:'error', summary:'Error', detail:'No tempera station found for the current user'});
           console.error("No tempera station found for the current user");
