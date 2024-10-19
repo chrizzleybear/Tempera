@@ -1,7 +1,8 @@
 TEMPERA - next generation time tracking
 =======================================
 
-[![pipeline](https://git.uibk.ac.at/informatik/qe/swess24/group4/g4t1/badges/main/pipeline.svg)](https://git.uibk.ac.at/informatik/qe/swess24/group4/g4t1/-/commits/main/)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fchrizzleybear%2FTempera.svg?type=shield&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2Fchrizzleybear%2FTempera?ref=badge_shield&issueType=license)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fchrizzleybear%2FTempera.svg?type=shield&issueType=security)](https://app.fossa.com/projects/git%2Bgithub.com%2Fchrizzleybear%2FTempera?ref=badge_shield&issueType=security)
 
 # Running the components (Angular front-end, Java back-end & Python raspberry) with docker
 
